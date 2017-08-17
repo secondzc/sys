@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/syslink.iml" filepath="$PROJECT_DIR$/syslink.iml" />
+      <module fileurl="file://F:\syslink\syslink\syslink.iml" filepath="F:\syslink\syslink\syslink.iml" />
     </modules>
   </component>
 </project>

@@ -13,4 +13,5 @@ public interface UserService {
     int deleteByIds(String[] ids);
     User queryUserById(Long id);
     User querUserByName(Map<String, Object> params);
+    User getUserByName(String userName);
 }
