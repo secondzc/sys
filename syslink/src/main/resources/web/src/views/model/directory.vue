@@ -312,7 +312,7 @@
                 /* treeNode api */
                 if (this.__currentNode) { // 子分类添加子类
                   this.__currentNode.doCreateChildren([data])
-                } else if (data.parent_id === 0) { // 顶级添加子类
+                } else if (data.parentId === "0") { // 顶级添加子类
                   this.$refs.kzTree.root.doCreateChildren([data])
                 }
               }

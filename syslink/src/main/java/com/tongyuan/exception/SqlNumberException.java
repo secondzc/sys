@@ -6,5 +6,6 @@ package com.tongyuan.exception;
 public class SqlNumberException extends Exception{
     public SqlNumberException(String msg){
         super(msg);
+		//xyx
     }
 }

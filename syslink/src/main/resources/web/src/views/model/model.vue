@@ -71,9 +71,10 @@
 //          this.repositories = res.data.repositories;
 //          //window.alert(this.repositories[0].id+this.repositories[0].name);
 //        });
-          this.$http.post('/api/model/list')
+          var _this = this;
+          _this.$http.post('/api/model/list')
               .then(function (response) {
-              this.repositories = response.data.repositories;
+                  _this.repositories = response.data.repositories;
           })
           .catch(function (error) {
               console.log(error);

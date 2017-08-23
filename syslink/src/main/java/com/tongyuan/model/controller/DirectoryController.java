@@ -393,7 +393,7 @@ public class DirectoryController {
                 Map<String,Object> params = new HashMap<String,Object>();
                params.put("name",name);
                 params.put("parent_id",parent_id);
-                List<Directory> rootDirectoryList = directoryService.queryListByParentNameId(params);
+                List<Directory> rootDirectoryList = directoryService.queryByParentName(params);
                 directoryModel.setName(name);
                 directoryModel.setId(rootDirectoryList.get(0).getId());
                 directoryModel.setParentId(rootDirectoryList.get(0).getParentId()+"");
@@ -419,7 +419,6 @@ public class DirectoryController {
     @ResponseBody
     public JSONObject update(@RequestParam(value = "id",required = false)Long id,
                              @RequestParam(value = "name",required = false)String name,
-                             @RequestParam(value = "parent_id",required = false)Long parent_id,
                              HttpServletRequest request , HttpServletResponse response){
 
         JSONObject jo=new JSONObject();

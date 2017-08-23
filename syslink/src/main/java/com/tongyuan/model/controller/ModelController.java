@@ -528,16 +528,16 @@ public class ModelController {
     @ResponseBody
     public JSONObject list(HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
-        List<JSONObject>  repositoryModelList = new ArrayList<>();
+        List<ModelWeb>  repositoryModelList = new ArrayList<>();
         try {
             List<Model> allModelList = modelService.findAllModel();
             for (int i = 0; i <= allModelList.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
-                modelWeb.setId(allModelList.get(i).getId());
+                modelWeb.setIndex(allModelList.get(i).getId());
                 modelWeb.setName(allModelList.get(i).getName());
-                modelWeb.setImageUrl("/static/img/test1.e3fdbf0.png");
-                JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
-                repositoryModelList.add(jsonObject );
+                modelWeb.setImageUrl("../../assets/test1.png");
+    //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
+                repositoryModelList.add(modelWeb );
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -549,7 +549,7 @@ public class ModelController {
         jo.put("status",1);
         jo.put("code",0);
         jo.put("msg","ok");
-        jo.put("data",repositoryModelList);
+        jo.put("repositories",repositoryModelList);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 }

@@ -19,5 +19,5 @@ public interface DirectoryService {
     public List<Directory> findRootDirectoryList(Map<String, Object> params);
     public List<Directory> queryListByParentId(Long id);
     public List<Directory> queryListById(Long id);
-    public List<Directory> queryListByParentNameId(Map<String, Object> params);
+    public List<Directory> queryByParentName(Map<String, Object> params);
 }

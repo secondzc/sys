@@ -41,9 +41,4 @@ public class UserServiceImpl implements UserService {
     public User querUserByName(Map<String, Object> params) {
         return this.userMapper.querUserByName(params);
     }
-
-    @Override
-    public User getUserByName(String name){
-        return userMapper.getUserByName(name);
-    }
 }
