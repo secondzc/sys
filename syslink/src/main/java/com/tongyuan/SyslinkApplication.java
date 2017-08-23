@@ -6,13 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
 @SpringBootApplication
 @Configuration
@@ -40,11 +36,11 @@ public class SyslinkApplication extends SpringBootServletInitializer {
 	}
 
     //增加一个SpringMVC的DispatcherServlet，接收前台/api开头的请求
-    @Bean
+/*    @Bean
     public ServletRegistrationBean apiV1ServletBean(WebApplicationContext wac) {
         DispatcherServlet servlet = new DispatcherServlet(wac);
         ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/api");
         bean.setName("ApiServlet");
         return bean;
-    }
+    }*/
 }

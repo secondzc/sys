@@ -5,7 +5,7 @@
     </div>
     <el-tree
       ref="kzTree"
-      :data="treeData"
+      :data ="treeData"
       :props="data.defaultProps"
       :expand-on-click-node="false"
       lazy
@@ -86,46 +86,46 @@
     methods: {
       /* 加载子分类 */
       loadTreeNode (treeItem, resolve) {
-        // const url = this.data.url.R;
-        // this.fetch(url, { parent_id: treeItem.id })
-        //     .then(data => {
-        //       resolve(data)
-        //     });
-        this.treeData =       [{
-          id: 1,
-          name: '一级 1',
-          children: [{
-            id: 4,
-            name: '二级 1-1',
-            children: [{
-              id: 9,
-              name: '三级 1-1-1'
-            }, {
-              id: 10,
-              name: '三级 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          name: '一级 2',
-          children: [{
-            id: 5,
-            name: '二级 2-1'
-          }, {
-            id: 6,
-            name: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          name: '一级 3',
-          children: [{
-            id: 7,
-            name: '二级 3-1'
-          }, {
-            id: 8,
-            name: '二级 3-2'
-          }]
-        }];
+         const url = this.data.url.R ;
+         this. fetch(url, { parent_id: treeItem.id })
+             .then(data => {
+               resolve(data)
+             });
+//        this.treeData =       [{
+//          id: 1,
+//          name: '一级 1',
+//          children: [{
+//            id: 4,
+//            name: '二级 1-1',
+//            children: [{
+//              id: 9,
+//              name: '三级 1-1-1'
+//            }, {
+//              id: 10,
+//              name: '三级 1-1-2'
+//            }]
+//          }]
+//        }, {
+//          id: 2,
+//          name: '一级 2',
+//          children: [{
+//            id: 5,
+//            name: '二级 2-1'
+//          }, {
+//            id: 6,
+//            name: '二级 2-2'
+//          }]
+//        }, {
+//          id: 3,
+//          name: '一级 3',
+//          children: [{
+//            id: 7,
+//            name: '二级 3-1'
+//          }, {
+//            id: 8,
+//            name: '二级 3-2'
+//          }]
+//        }];
 
         // let para = {parent_id: treeItem.id };
         // getDirectoryList(para).then((res)=>{
@@ -246,32 +246,36 @@
         }).then(fetchDelOk).catch(e => e)
       },
       /* ajax封装 */
-      fetch (url, data, type = 'GET') {
-        const success = (data, resolve, reject) => {
-          if (data.status === 1) {
-            resolve(data.data)
-          } else {
-            console.error(`${data.code}: ${data.message}`)
-            reject(data)
-          }
-        }
-        return new Promise((resolve, reject) => {
-          if (type.toLowerCase() === 'post') {
-            this.$http.post(url, data)
-                      .then(res => res.json())
-                      .then(data => success(data, resolve, reject))
-          } else {
-            if (data) {
-              const dataUrl = Object.keys(data).map(item => `${item}=${data[item]}`)
-              url = url + (url.indexOf('?') > -1 ? '' : '?') + dataUrl.join('&')
+        fetch (url, data, type = 'GET') {
+            const success = (data, resolve, reject) => {
+                if (data.status === 1) {
+                    resolve(data.data)
+                } else {
+               //     console.error(data.data.code+":"+ data.data.message)
+                    reject(data)
+                }
             }
+            return new Promise((resolve, reject) => {
+                if (type.toLowerCase() === 'post') {
+                    if (data) {
+                        var dataUrl = Object.keys(data).map(item => item+"="+data[item])
+                        url = url + (url.indexOf('?') > -1 ? '' : '?') + dataUrl.join('&')
+                    }
+                    this.$http.post(url)
+                        .then(res => res)
+                        .then(data => success(data.data, resolve, reject))
+                } else {
+                    if (data) {
+                       var dataUrl = Object.keys(data).map(item => item+"="+data[item])
+                        url = url + (url.indexOf('?') > -1 ? '' : '?') + dataUrl.join('&')
+                }
 
-            this.$http.get(url)
-                  .then(res => res.json())
-                  .then(data => success(data, resolve, reject))
-          }
-        })
-      },
+                    this.$http.get(url)
+                        .then(res => res)
+                        .then(data => success(data.data, resolve, reject))
+                }
+            })
+        },
       /* ######## */
       /* 其他 */
       cancelSubmit () {

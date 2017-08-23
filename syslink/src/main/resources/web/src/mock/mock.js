@@ -30,7 +30,7 @@ export default {
     });
 
     //登录
-    mock.onPost('/login').reply(config => {
+    mock.onPost('/api/login').reply(config => {
       let {username, password} = JSON.parse(config.data);
       return new Promise((resolve, reject) => {
         let user = null;
@@ -161,7 +161,7 @@ export default {
 
 
         //获取模型列表
-    mock.onGet('/api/model/list').reply(config => {
+    mock.onGet('/model/list').reply(config => {
       let {name} = config.params;
       let mockModels = _Models.filter(model => {
         if (model && model.name.indexOf(name) == -1) return false;
@@ -178,7 +178,7 @@ export default {
 
 
     //获取项目列表
-    mock.onGet('/api/repository/list').reply(config => {
+    mock.onGet('/repository/list').reply(config => {
       let {name} = config.params;
       let mockRepos = _Repositories.filter(repos => {
         if (name && repos.name.indexOf(name) == -1) return false;

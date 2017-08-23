@@ -10,6 +10,7 @@ import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.LearnService;
 import com.tongyuan.model.service.ModelService;
+import com.tongyuan.pageModel.DirectoryModel;
 import com.tongyuan.pageModel.EasyuiTreeNode;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +36,7 @@ import java.util.*;
  * Created by tengj on 2017/3/13.
  */
 @Controller
-@RequestMapping("/directory")
+@RequestMapping("/api/directory")
 public class DirectoryController {
     @Autowired
     private LearnService learnService;
@@ -373,99 +375,139 @@ public class DirectoryController {
     }
 
     //web端增加模型目录
-    @RequestMapping(value = "/addModelDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/add",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public  void  addModelDirectory(HttpServletRequest request , HttpServletResponse response){
-        String name = request.getParameter("name");
-        String parentDirName = request.getParameter("parentDirName");
+    public  JSONObject  add(@RequestParam(value = "id",required = false)Long id,
+                      @RequestParam(value = "name",required = false)String name,
+                      @RequestParam(value = "parent_id",required = false)Long parent_id,
+                      HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("name",name);
-        params.put("parentDirName",parentDirName);
-        //查找父类对象
-        List<Directory> parentDirList = directoryService.queryListByName(params);
-        Directory directory = new Directory();
-         if (parentDirList.size()<=0){
-             directory.setParentId(0);
-         }else{
-             Directory parentDir = parentDirList.get(0);
-             directory.setParentId(parentDir.getId());
-         }
-         directory.setDeleted(false);
-         directory.setCreateTime(nowDate);
-         directory.setName(name);
-         boolean res = directoryService.add(directory);
-         if(!res){
-             jo.put("message","添加失败!");
-             jo.put("flag",false);
-             ServletUtil.createSuccessResponse(200, jo, response);
-             return;
-         }
-        jo.put("message","添加成功!");
-        jo.put("flag",true);
-        ServletUtil.createSuccessResponse(200, jo, response);
-        return;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            DirectoryModel directoryModel = new DirectoryModel();
+                Directory directory = new Directory();
+                directory.setName(name);
+                directory.setParentId(parent_id);
+                directory.setDeleted(false);
+                directoryService.add(directory);
+                Map<String,Object> params = new HashMap<String,Object>();
+               params.put("name",name);
+                params.put("parent_id",parent_id);
+                List<Directory> rootDirectoryList = directoryService.queryListByParentNameId(params);
+                directoryModel.setName(name);
+                directoryModel.setId(rootDirectoryList.get(0).getId());
+                directoryModel.setParentId(rootDirectoryList.get(0).getParentId()+"");
+                jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("data",jsonObject);
+        return (JSONObject) JSONObject.toJSON(jo);
+
     }
 
     //web端树状目录修改模型名称
     @RequestMapping(value = "/update",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public void update(HttpServletRequest request , HttpServletResponse response){
+    public JSONObject update(@RequestParam(value = "id",required = false)Long id,
+                             @RequestParam(value = "name",required = false)String name,
+                             @RequestParam(value = "parent_id",required = false)Long parent_id,
+                             HttpServletRequest request , HttpServletResponse response){
+
         JSONObject jo=new JSONObject();
-        String name = request.getParameter("name");
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("name",name);
-        List<Directory> directoryList = directoryService.queryListByName(params);
-        if (directoryList.size()<=0){
-            jo.put("message","修改失败!");
-            jo.put("flag",false);
-            ServletUtil.createSuccessResponse(200, jo, response);
-            return;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<Directory> rootDirectoryList = directoryService.queryListById(id);
+            if(rootDirectoryList.size() >0){
+                Directory directory = rootDirectoryList.get(0);
+                directory.setName(name);
+                boolean res = directoryService.update(directory);
+                DirectoryModel directoryModel = new DirectoryModel();
+                directoryModel.setName(name);
+                directoryModel.setId(id);
+                directoryModel.setParentId(directory.getParentId()+"");
+                jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
         }
-        Directory directory = directoryList.get(0);
-        directory.setName(name);
-        boolean res = directoryService.update(directory);
-        if(!res){
-            jo.put("message","修改失败!");
-            jo.put("flag",false);
-            ServletUtil.createSuccessResponse(200, jo, response);
-            return;
-        }
-        jo.put("message","添加成功!");
-        jo.put("flag",true);
-        ServletUtil.createSuccessResponse(200, jo, response);
-        return;
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("data",jsonObject);
+        return (JSONObject) JSONObject.toJSON(jo);
+
     }
 
     @RequestMapping(value="/delete",method = RequestMethod.POST)
     @ResponseBody
-    public void delete(HttpServletRequest request , HttpServletResponse response){
+    public JSONObject delete(@RequestParam(value = "id",required = false)Long id,
+                             @RequestParam(value = "name",required = false)String name,
+                             @RequestParam(value = "parent_id",required = false)Long parent_id,
+                             HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
-        String name = request.getParameter("name");
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("name",name);
-        List<Directory> directoryList = directoryService.queryListByName(params);
-        if (directoryList.size()<=0){
-            jo.put("message","修改失败!");
-            jo.put("flag",false);
-            ServletUtil.createSuccessResponse(200, jo, response);
-            return;
+        try{
+            List<Directory> rootDirectoryList = directoryService.queryListById(id);
+            rootDirectoryList.get(0).setDeleted(true);
+            boolean res = directoryService.update(rootDirectoryList.get(0));
+
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
         }
-        Directory directory = directoryList.get(0);
-        directory.setDeleted(true);
-        boolean res = directoryService.update(directory);
-        if(!res){
-            jo.put("message","修改失败!");
-            jo.put("flag",false);
-            ServletUtil.createSuccessResponse(200, jo, response);
-            return;
-        }
-        jo.put("message","添加成功!");
-        jo.put("flag",true);
-        ServletUtil.createSuccessResponse(200, jo, response);
-        return;
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("data",id);
+        return (JSONObject) JSONObject.toJSON(jo);
+
     }
 
+    @RequestMapping(value="/list",method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
+                           HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        List<JSONObject> directoryModelList = new ArrayList<>();
+        try {
+            List<Directory> rootDirectoryList = directoryService.queryListByParentId(parent_id);
+            for (int i = 0; i <= rootDirectoryList.size() -1; i++) {
+                DirectoryModel directoryModel = new DirectoryModel();
+                directoryModel.setId(rootDirectoryList.get(i).getId());
+                directoryModel.setName(rootDirectoryList.get(i).getName());
+                directoryModel.setParentId(rootDirectoryList.get(i).getParentId()+"");
+                JSONObject jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+                directoryModelList.add(jsonObject );
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("data",directoryModelList);
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
 
 }
 

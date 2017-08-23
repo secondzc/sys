@@ -36,11 +36,11 @@ public class Directory {
     //最后修改时间
     private Date lastUpdateTime;
 
-    @Column( nullable = false)
+    @Column
     //删除标记为
     private String absoluteAddress;
 
-    @Column( nullable = false)
+    @Column
     //删除标记为
     private String relativeAddress;
 

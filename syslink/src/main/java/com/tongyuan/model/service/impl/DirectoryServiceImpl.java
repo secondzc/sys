@@ -61,4 +61,19 @@ public class DirectoryServiceImpl implements DirectoryService{
         return this.directoryMapper.findRootDirectoryList(params);
     }
 
+    @Override
+    public List<Directory> queryListByParentId(Long id) {
+        return this.directoryMapper.queryListByParentId(id);
+    }
+
+    @Override
+    public List<Directory> queryListById(Long id) {
+        return this.directoryMapper.queryListById(id);
+    }
+
+    @Override
+    public List<Directory> queryListByParentNameId(Map<String, Object> params) {
+        return  this.directoryMapper.findRootDirectoryList(params);
+    }
+
 }

@@ -66,11 +66,18 @@
     },
     methods:{
       getRepos: function(){
-        let para ={name: this.filters.name};
-        getReposList(para).then((res)=>{
-          this.repositories = res.data.repositories;
-          //window.alert(this.repositories[0].id+this.repositories[0].name);
-        });
+//        let para ={name: this.filters.name};
+//        getReposList(para).then((res)=>{
+//          this.repositories = res.data.repositories;
+//          //window.alert(this.repositories[0].id+this.repositories[0].name);
+//        });
+          this.$http.post('/api/model/list')
+              .then(function (response) {
+              this.repositories = response.data.repositories;
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
       },
       reflowed: function () {
         this.isBusy = false

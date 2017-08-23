@@ -61,14 +61,14 @@
       },
       handleSubmit2(ev) {
           var _this = this;
-          this.$http.get('/api/loginUser'
+          _this.$http.get('/api/loginUser'
               ,{
-                  params:{
-                      userName:_this.ruleForm2.userName,
-                      password:_this.ruleForm2.password,
-                      rememberMe:_this.ruleForm2.rememberMe,
+                  params: {
+                      userName: _this.ruleForm2.userName,
+                      password: _this.ruleForm2.password,
+                      rememberMe: _this.ruleForm2.rememberMe,
                   },
-                  withCredentials : true
+
               },)
               .then(function (response) {
                   let result = response.data.result;

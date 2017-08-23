@@ -25,10 +25,14 @@ export default {
     return {
       tree: {
         url: {
-          C: '/directory/add',
-          U: '/directory/update',
-          R: '/directory/list',
-          D: '/directory/delete'
+//          C: '/directory/add',
+//          U: '/directory/update',
+//          R: '/directory/list',
+//          D: '/directory/delete'
+            C: '/api/directory/add',
+            U: '/api/directory/update',
+            R: 'api/directory/list',
+            D: '/api/directory/delete'
         }
       }
 

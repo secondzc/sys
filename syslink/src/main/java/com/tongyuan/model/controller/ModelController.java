@@ -11,6 +11,7 @@ import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.VariableService;
 import com.tongyuan.pageModel.EasyuiTreeNode;
+import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.ResourceUtil;
@@ -32,7 +33,7 @@ import java.util.*;
  * Created by xieyx on 2017-6-21.
  */
 @Controller
-@RequestMapping("/model")
+@RequestMapping("/api/model")
 public class ModelController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -521,5 +522,34 @@ public class ModelController {
         jo.put("total", pageInfo.getPages());//总页数
         jo.put("records",pageInfo.getTotal());//查询出的总记录数
         ServletUtil.createSuccessResponse(200, jo, response);
+    }
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject list(HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        List<JSONObject>  repositoryModelList = new ArrayList<>();
+        try {
+            List<Model> allModelList = modelService.findAllModel();
+            for (int i = 0; i <= allModelList.size() -1; i++) {
+                ModelWeb modelWeb = new ModelWeb();
+                modelWeb.setId(allModelList.get(i).getId());
+                modelWeb.setName(allModelList.get(i).getName());
+                modelWeb.setImageUrl("/static/img/test1.e3fdbf0.png");
+                JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
+                repositoryModelList.add(jsonObject );
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("data",repositoryModelList);
+        return (JSONObject) JSONObject.toJSON(jo);
     }
 }

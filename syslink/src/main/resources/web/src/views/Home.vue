@@ -11,8 +11,8 @@
 				</div>
 			</el-col>
 			<el-col :span="8">
-				<a class="item" href="">首页</a>
-				<a class="item" href="">模型中心</a>
+				<a class="item" href="http://syslink.modelica-china.com/issues">首页</a>
+				<span class="item"  @click="gogs()">模型中心</span>
 				<a class="item" href="">仿真中心</a>
 				<a class="item" href="">帮助</a>
 <!-- 				<el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -133,6 +133,11 @@
 				});
 
 
+			},
+			//跳转gogs
+            gogs :function(){
+                var _this = this;
+                _this.$router.push('/main');
 			},
 			//折叠导航栏
 			collapse:function(){

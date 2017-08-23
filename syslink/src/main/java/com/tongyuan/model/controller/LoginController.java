@@ -45,7 +45,7 @@ public class LoginController {
     }*/
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST )
+    @RequestMapping(value = "api/loginUser", method = RequestMethod.GET )
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response){
         String username = request.getParameter("userName");
@@ -86,15 +86,18 @@ public class LoginController {
                 response.addCookie(c);
    //             return "redirect:/model/getMyIndex";
                 map.put("result","1");
+                map.put("errormsg","登陆成功！");
             }else{
                 request.setAttribute("loginFlag",1);
    //             return "login";
                 map.put("result","1");
+                map.put("errormsg","登陆成功！");
             }
         }else{
             request.setAttribute("loginFlag", -1);
           //  return "login";
             map.put("result","0");
+            map.put("errormsg","登陆失败，请输入正确的用户！");
         }
         return map;
     }
