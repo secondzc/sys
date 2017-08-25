@@ -2,6 +2,7 @@ package com.tongyuan.tools;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -51,6 +52,10 @@ public class DateUtil {
 	public static String formatNormalDateString(Date date){
 		String pattern = "yyyy-MM-dd HH:mm:ss";
 		return DateFormatUtils.format(date, pattern);
+	}
+
+	public static Timestamp getCurrentTime(){
+		return new Timestamp(System.currentTimeMillis());
 	}
 	
 }

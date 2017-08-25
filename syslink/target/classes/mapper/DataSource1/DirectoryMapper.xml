@@ -45,7 +45,7 @@
         <include refid="baseColumnList" ></include>
         FROM  directory
         WHERE parent_id = "0"
-        <if test="name!= null and name !=''">
+        <if test="name != null and name !=''">
             AND name = #{name,jdbcType=VARCHAR}
         </if>
         and is_deleted = "0"
@@ -86,5 +86,32 @@
         and parent_id = "0"
         order by create_time desc) m
         where  1=1 GROUP BY NAME
+    </select>
+    <select id="queryListByParentId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where parent_id = #{parentId}
+        and is_deleted = "0"
+    </select>
+    <select id="queryListById" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where id = #{id}
+        and is_deleted = "0"
+    </select>
+    <select id="queryByParentName" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        WHERE
+        is_deleted = "0"
+        <if test="name != null and name !=''">
+            AND name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="parent_id != null and parent_id !=''">
+            AND parent_id = #{parentId,jdbcType=BIGINT}
+        </if>
     </select>
 </mapper>

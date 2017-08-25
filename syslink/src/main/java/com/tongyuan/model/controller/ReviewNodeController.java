@@ -48,7 +48,7 @@ public class ReviewNodeController extends BaseController{
         String description = request.getParameter("description");
         String userName = request.getParameter("userName");
         User user = userService.getUserByName(userName);
-        Long userId = user.getUserId();
+        Long userId = user.getId();
         Long templateId = Long.valueOf(request.getParameter("templateId"));
         String sequence = request.getParameter("sequence");
 

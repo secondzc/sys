@@ -18,7 +18,7 @@
     from learn_resouce
     <where>
       1 = 1
-      <if test="author!= null and author !=''">
+      <if test="author != null and author !=''">
         AND author like CONCAT(CONCAT('%',#{author,jdbcType=VARCHAR}),'%')
       </if>
       <if test="title != null and title !=''">

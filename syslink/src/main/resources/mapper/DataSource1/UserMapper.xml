@@ -19,4 +19,11 @@
         FROM USER
         where user_name = #{userName}
     </select>
+
+    <select id="getUserByName" resultMap="baseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM USER
+        WHERE user_name = #{userName}
+    </select>
 </mapper>
