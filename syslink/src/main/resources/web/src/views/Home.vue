@@ -11,10 +11,11 @@
 				</div>
 			</el-col>
 			<el-col :span="8">
-				<a class="item" href="http://syslink.modelica-china.com/issues">首页</a>
-				<span class="item"  @click="gogs()">模型中心</span>
-				<a class="item" href="">仿真中心</a>
-				<a class="item" href="">帮助</a>
+				<a class="item" href="http://localhost/#/" id="home-page">首页</a>
+				<a class="item"  href="http://localhost:3000/">控制面板</a>
+				<a class="item" href="http://localhost:3000/issues">工单管理</a>
+				<a class="item" href="http://localhost:3000/pulls">合并请求</a>
+				<a class="item" href="http://localhost:3000/explore/repos">探索</a>
 <!-- 				<el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
 					 <el-menu-item index="1">处理中心</el-menu-item>
 					 <el-menu-item index="2">处理中心</el-menu-item>
@@ -165,7 +166,12 @@
 
 <style scoped lang="scss">
 	@import '~scss_vars';
-	
+	.el-col-8 {
+		width: 50%;
+	}
+	#home-page {
+		color: white;
+	}
 	.container {
 		position: absolute;
 		top: 0px;
@@ -197,8 +203,8 @@
 				//width:230px;
 				height:60px;
 				font-size: 22px;
-				padding-left:20px;
-				padding-right:20px;
+				padding-left:80px;
+				padding-right:0px;
 				border-color: rgba(238,241,146,0.3);
 				border-right-width: 1px;
 				border-right-style: solid;
@@ -230,7 +236,7 @@
 				line-height: 38px;
 				position: relative;
    				display: inline-block;
-    			margin-right: 16px;
+    			margin-right: 48px;
     			text-decoration:none;
 			}
 			.item:not(:hover) {
