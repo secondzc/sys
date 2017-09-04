@@ -4,10 +4,11 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.model.domain.Directory;
-import com.tongyuan.model.domain.LearnResouce;
+import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.model.service.LearnService;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.pageModel.DirectoryModel;
@@ -17,15 +18,18 @@ import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.FileX;
 import com.tongyuan.util.ResourceUtil;
 import com.tongyuan.webservice.CommonServiceImp;
+import org.apache.catalina.core.ApplicationPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -45,6 +49,8 @@ public class DirectoryController {
     @Autowired
     private ResourceUtil resourceUtil;
     @Autowired
+    private FileModelService fileModelService;
+    @Autowired
     private FileX fileX;
     @Autowired
     private CommonServiceImp CommonServiceImp;
@@ -62,26 +68,26 @@ public class DirectoryController {
         return "directory";
     }
 
-    @RequestMapping(value = "/test",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public void test(HttpServletRequest request , HttpServletResponse response) throws IOException {
-        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-        String author = request.getParameter("author");
-        String title = request.getParameter("title");
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("page", page);
-        params.put("rows", rows);
-        params.put("author", author);
-        params.put("title", title);
-        List<LearnResouce> learnList=learnService.queryLearnResouceList(params);
-        PageInfo<LearnResouce> pageInfo =new PageInfo<LearnResouce>(learnList);
-
-        JSONObject jo=new JSONObject();
-        jo.put("rows", learnList);
-        jo.put("total", pageInfo.getPages());//总页数
-        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-        ServletUtil.createSuccessResponse(200, jo, response);
+//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
+//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
+//        String author = request.getParameter("author");
+//        String title = request.getParameter("title");
+//        Map<String,Object> params = new HashMap<String,Object>();
+//        params.put("page", page);
+//        params.put("rows", rows);
+//        params.put("author", author);
+//        params.put("title", title);
+//        List<LearnResouce> learnList=learnService.queryLearnResouceList(params);
+//        PageInfo<LearnResouce> pageInfo =new PageInfo<LearnResouce>(learnList);
+//
+//        JSONObject jo=new JSONObject();
+//        jo.put("rows", learnList);
+//        jo.put("total", pageInfo.getPages());//总页数
+//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
+//        ServletUtil.createSuccessResponse(200, jo, response);
 
      //   CommonServiceImp CommonServiceImp = new CommonServiceImp();
 
@@ -163,7 +169,7 @@ public class DirectoryController {
             String unzipPath= ResourceUtil.getFileDriectory();
             //获取实际路径
             String relativePath=currentPath.substring(unzipPath.length(), currentPath.length());
-            Directory directory  = new Directory();
+            FileModel directory  = new FileModel();
             //       directory.setId(UUID.randomUUID().toString());
             //       directory.setParentId(UUID.randomUUID().toString());
             directory.setName(parentF.getName());
@@ -181,16 +187,16 @@ public class DirectoryController {
                 //获取父目录地址
                 String parentPath=parentF.getParent().replace('\\', '/');
                 //创建一个父类目录对象
-                Directory parentDirectory = new Directory();
-                List<Directory> directoryList = new ArrayList<Directory>();
-                directoryList = directoryService.queryListByPath(parentPath);
+                FileModel parentDirectory = new FileModel();
+                List<FileModel> directoryList = new ArrayList<FileModel>();
+                directoryList = fileModelService.queryListByPath(parentPath);
                 if(!directoryList.isEmpty()){
                     parentDirectory = directoryList.get(0);
                     directory.setParentId(parentDirectory.getId());
                 }
             }
 
-            directoryService.add(directory);
+            fileModelService.add(directory);
             result = true;
         }
         catch (Exception e){
@@ -264,8 +270,8 @@ public class DirectoryController {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("page", page);
         params.put("rows", rows);
-        List<Directory> rootDirectoryList = directoryService.findRootDirectoryList(params);
-        PageInfo<Directory> pageInfo =new PageInfo<Directory>(rootDirectoryList);
+        List<FileModel> rootDirectoryList = fileModelService.findRootDirectoryList(params);
+        PageInfo<FileModel> pageInfo =new PageInfo<FileModel>(rootDirectoryList);
 
         JSONObject jo=new JSONObject();
         jo.put("rows", rootDirectoryList);
@@ -278,8 +284,29 @@ public class DirectoryController {
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public void uploadDirectory(HttpServletRequest request , HttpServletResponse response){
-           String dirPath = request.getParameter("dirPath");
+    @CrossOrigin(origins = "http://gogs.modelica-china.com:80", maxAge = 3600)
+    public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
+                                HttpServletRequest request , HttpServletResponse response){
+        StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest)request;
+        MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
+        LinkedMultiValueMap<String ,LinkedList> valueMap = (LinkedMultiValueMap)map;
+        LinkedList<StandardMultipartHttpServletRequest> linkedList = (LinkedList)valueMap.get("file");
+        StandardMultipartHttpServletRequest multiRequest2 = linkedList.get(0);
+        try {
+            ApplicationPart applicationPart = (ApplicationPart) multiRequest2.getPart("part");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+
+        //    LinkedHashMap<String,LinkedList<StandardMultipartHttpServletRequest>> map1 = (MultiValueMap<String, MultipartFile>)map;
+
+
+        //文件上传存放路径
+//        Map<Object,Object> mapReq = (Map<Object, Object>) ((StandardMultipartHttpServletRequest) request).getMultiFileMap().get("file").get(0);
+
+        String dirPath = request.getParameter("dirPath");
         //获取到xml所在的文件位置
         String xmlPath = "";
         //xmlMap 把xml转化成map的格式
@@ -321,9 +348,9 @@ public class DirectoryController {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("name",modelName);
         //查找到项目所在的位置
-        List<Directory> directoryList = directoryService.queryListByName(params);
+        List<FileModel> directoryList = fileModelService.queryListByName(params);
         //选取最近push的一个directory对象
-        Directory directory = new Directory();
+        FileModel directory = new FileModel();
         if(!directoryList.isEmpty()){
             directory = directoryList.get(0);
         }else {
@@ -368,9 +395,9 @@ public class DirectoryController {
             }
         }
         //遍历xmlMap进行数据的插入
-        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()) {
             //解析xmlmap 把数据存放到数据库
-            modelController.insertData(entry,svgPath,nullModel,directory);
+            modelController.insertData(entry, svgPath, nullModel, directory);
         }
     }
 
@@ -391,14 +418,13 @@ public class DirectoryController {
                 directory.setDeleted(false);
                 directoryService.add(directory);
                 Map<String,Object> params = new HashMap<String,Object>();
-               params.put("name",name);
+                params.put("name",name);
                 params.put("parent_id",parent_id);
                 List<Directory> rootDirectoryList = directoryService.queryByParentName(params);
                 directoryModel.setName(name);
                 directoryModel.setId(rootDirectoryList.get(0).getId());
                 directoryModel.setParentId(rootDirectoryList.get(0).getParentId()+"");
                 jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
-
         }catch(Exception e){
             e.printStackTrace();
             jo.put("status","1");

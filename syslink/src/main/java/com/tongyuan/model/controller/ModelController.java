@@ -3,11 +3,13 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.model.domain.Directory;
+import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.domain.Variable;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
 import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.VariableService;
 import com.tongyuan.pageModel.EasyuiTreeNode;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +44,8 @@ public class ModelController {
     private ModelService modelService;
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private FileModelService fileModelService;
     @Autowired
     private ResourceUtil resourceUtil;
     @Autowired
@@ -63,9 +68,9 @@ public class ModelController {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("name",name);
         //查找到项目所在的位置
-        List<Directory> directoryList = directoryService.queryListByName(params);
+        List<FileModel> directoryList = fileModelService.queryListByName(params);
         //选取最近push的一个directory对象
-        Directory directory = new Directory();
+        FileModel directory = new FileModel();
         if(!directoryList.isEmpty()){
             directory = directoryList.get(0);
         }else {
@@ -131,7 +136,7 @@ public class ModelController {
     }
 
 
-    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,Directory directory){
+    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
         //验证model
@@ -526,16 +531,31 @@ public class ModelController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject list(HttpServletRequest request , HttpServletResponse response){
+    public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
+                           HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
+        //过滤后的modelList
+        List<Model> searchModel = new ArrayList<>();
         try {
             List<Model> allModelList = modelService.findAllModel();
-            for (int i = 0; i <= allModelList.size() -1; i++) {
+            if(parent_id != null ){
+                List<Directory> rootDirectoryList = directoryService.queryListByParentId(parent_id);
+                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
+                    for (Model model: allModelList) {
+                        if(model.getDirectoryId() == rootDirectoryList.get(j).getId()){
+                            searchModel.add(model);
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i <= searchModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
-                modelWeb.setIndex(allModelList.get(i).getId());
-                modelWeb.setName(allModelList.get(i).getName());
-                modelWeb.setImageUrl("../../assets/test1.png");
+                modelWeb.setIndex(searchModel.get(i).getId());
+                modelWeb.setName(searchModel.get(i).getName());
+                modelWeb.setImageUrl("../../../assets/test1.png");
+                modelWeb.setDiscription(searchModel.get(i).getDiscription());
+                modelWeb.setType(searchModel.get(i).getType());
     //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
                 repositoryModelList.add(modelWeb );
             }
