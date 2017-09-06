@@ -29,7 +29,7 @@ import java.util.Map;
  * Created by Y470 on 2017/6/24.
  */
 @Controller
-@RequestMapping("/reviewFlowInstance")
+@RequestMapping("/api/reviewFlowInstance")
 public class ReviewFlowInstanceController extends BaseController{
     @Autowired
     private ReviewFlowInstanceService reviewFlowInstanceService;

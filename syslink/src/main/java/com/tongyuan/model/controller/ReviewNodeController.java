@@ -31,7 +31,7 @@ import java.util.Map;
  * Created by Y470 on 2017/6/30.
  */
 @Controller
-@RequestMapping("/reviewNode")
+@RequestMapping("/api/reviewNode")
 public class ReviewNodeController extends BaseController{
     @Autowired
     private NodeService nodeService;
@@ -123,5 +123,10 @@ public class ReviewNodeController extends BaseController{
         }
         //3.
         nodeService.reset(templateId);
+    }
+
+    @PostMapping("addReviewNodes")
+    public void addReviewNodes(HttpServletRequest request, HttpServletResponse response) {
+
     }
 }
