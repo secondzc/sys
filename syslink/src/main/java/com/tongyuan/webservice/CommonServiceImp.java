@@ -70,6 +70,8 @@ public class CommonServiceImp implements CommonService {
 			result = false;
 		}
 		System.out.println("上传完毕！！！");
+
+
 		return result;
 	}
 
@@ -89,6 +91,7 @@ public class CommonServiceImp implements CommonService {
         resourceUtil.getSubFile(parentPath.substring(0,
 				parentPath.length() ),parentPath.substring(0,
 				parentPath.length() ),description);
+
 		return ;
 	}
 }
