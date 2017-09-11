@@ -26,4 +26,5 @@
         FROM USER
         WHERE user_name = #{userName}
     </select>
+
 </mapper>
