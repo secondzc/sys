@@ -1,5 +1,6 @@
 package com.tongyuan.model.dao;
 
+import com.tongyuan.model.domain.CheckorPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +14,6 @@ import java.util.Map;
 public interface NodeInstanceAndNodeMapper {
     List<ReviewNodeInstance> queryAfterAgree(Map<String, Object> map);
     //审核者同意后，map中有nodeInstance.instanceId和node.sequence
-    List<ReviewNodeInstance> queryByReviewer(Map<String, Object> map);
+    List<CheckorPage> queryByReviewer(Map<String, Object> map);
     //呈现给审核者的页面，map中有node.userId
 }
