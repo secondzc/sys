@@ -12,14 +12,15 @@
         <result column="upper_bound" property="upperBound" jdbcType="VARCHAR"/>
         <result column="is_param" property="IsParam" jdbcType="INTEGER"/>
         <result column="is_input" property="IsInput" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"></result>
     </resultMap>
 
     <sql id="baseColumnList" >
-        id,model_id,name,type,default_value,units,lower_bound,upper_bound,is_param,is_input
+        id,model_id,name,type,default_value,units,lower_bound,upper_bound,is_param,is_input,create_time
     </sql>
     <insert id="add" parameterType="com.tongyuan.model.domain.Variable">
-        INSERT INTO variable (model_id, name,type,default_value,units,lower_bound,upper_bound,is_param,is_input) VALUES
-        (#{modelId}, #{name}, #{type},#{defaultValue}, #{units}, #{lowerBound},#{upperBound}, #{IsParam}, #{IsInput})
+        INSERT INTO variable (model_id, name,type,default_value,units,lower_bound,upper_bound,is_param,is_input,create_time) VALUES
+        (#{modelId}, #{name}, #{type},#{defaultValue}, #{units}, #{lowerBound},#{upperBound}, #{IsParam}, #{IsInput},#{createTime})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Variable">
         UPDATE variable SET
@@ -32,4 +33,15 @@
             #{idItem}
         </foreach>
     </delete>
+    <select id="queryListByModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Variable">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM
+        (SELECT
+        <include refid="baseColumnList" ></include>
+        FROM variable
+        WHERE  model_id = #{modelId}
+        order by create_time desc)m
+        where 1=1 GROUP BY NAME
+    </select>
 </mapper>

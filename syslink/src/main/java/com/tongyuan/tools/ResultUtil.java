@@ -113,10 +113,6 @@ public class ResultUtil {
 		}
 		return new SubmitResultInfo(resultInfo);
 	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-	}
 
 }

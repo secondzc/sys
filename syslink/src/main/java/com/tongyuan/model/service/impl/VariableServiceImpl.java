@@ -6,6 +6,8 @@ import com.tongyuan.model.service.VariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017-6-29.
  */
@@ -28,5 +30,10 @@ public class VariableServiceImpl implements VariableService {
     @Override
     public int deleteByIds(String[] ids) {
         return this.variableMapper.deleteByIds(ids);
+    }
+
+    @Override
+    public List<Variable> queryListByModelId(Long modelId) {
+        return this.variableMapper.queryListByModelId(modelId);
     }
 }

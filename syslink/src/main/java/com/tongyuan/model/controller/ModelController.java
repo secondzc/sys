@@ -1,19 +1,12 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
-import com.tongyuan.model.domain.Directory;
-import com.tongyuan.model.domain.FileModel;
-import com.tongyuan.model.domain.Model;
-import com.tongyuan.model.domain.Variable;
+import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
-import com.tongyuan.model.service.DirectoryService;
-import com.tongyuan.model.service.FileModelService;
-import com.tongyuan.model.service.ModelService;
-import com.tongyuan.model.service.VariableService;
-import com.tongyuan.pageModel.EasyuiTreeNode;
+import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.ModelWeb;
+import com.tongyuan.pageModel.TreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.ResourceUtil;
@@ -28,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -45,110 +37,113 @@ public class ModelController {
     @Autowired
     private DirectoryService directoryService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private FileModelService fileModelService;
     @Autowired
     private ResourceUtil resourceUtil;
     @Autowired
     private VariableService variableService;
 
-    @RequestMapping(value = "/test",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public void test(HttpServletRequest request , HttpServletResponse response){
-        JSONObject result=new JSONObject();
-    //    String name = request.getParameter("name");
-        //获取到userName,password
-        // 查询到userId的方法 findByNameAndpassword
-        //xmlMap 把xml转化成map的格式
-        Map<String, Object> xmlMap = new HashMap<String, Object>();
-        //存放解析的所有xmlMap
-        Map<String,Map> xmlAnalysisMap = new HashMap<>();
-        //存放解析svg，info文件所在位置的Map
-        Map<String,String> svgPath = new HashMap<>();
-        String name = "syslink";
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("name",name);
-        //查找到项目所在的位置
-        List<FileModel> directoryList = fileModelService.queryListByName(params);
-        //选取最近push的一个directory对象
-        FileModel directory = new FileModel();
-        if(!directoryList.isEmpty()){
-            directory = directoryList.get(0);
-        }else {
-            return ;
-        }
-        //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
-        //文件所在位置
-        String filePath = directory.getAbsoluteAddress();
-        //获取到xml所在的文件位置
-        String xmlPath = "";
-        xmlPath= resourceUtil.getXmlPath(filePath,xmlPath);
-        //对xml进行解析,遍历xml文件下所有文件
-        if(StringUtil.isNull(xmlPath)){
-            result.put("message","没有找到xml文件！");
-            result.put("flag",false);
-            ServletUtil.createSuccessResponse(200, result, response);
-            return ;
-        }
-        File xmlFilePath = new File(xmlPath);
-        String[] subFiles = xmlFilePath.list();
-        Model model = new Model();
-        model.setName(subFiles[0].split("\\.")[0]);
-        model.setDirectoryId(directory.getId());
-        model.setClasses(ModelClasses.Package.getKey());
-        model.setModelFilePath(filePath);
-        model.setScope(false);
-        model.setUserId(1);
-        model.setDeleted(false);
-        if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
-            modelService.add(model);
-        }
-        //查找最外层空的model
-        Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
-        for (int i = 0; i < subFiles.length; i++) {
-            //查看文件的格式
-            String [] fileNames = subFiles[i].split("\\.");
-            //文件的类型
-            String filePreType = fileNames[fileNames.length-2];
-            String fileType = fileNames[fileNames.length-1];
-            if(("xml").equals(fileType)){
-                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
-                xmlAnalysisMap.put(subFiles[i],xmlMap);
-                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-            }else if("svg".equals(fileType)){
-                  if("icon".equals(filePreType)){
-                      svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                  }else if("diagram".equals(filePreType)){
-                      svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                  }
-            }else if("html".equals(fileType)){
-                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-            }
-        }
-        //遍历xmlMap进行数据的插入
-        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-            //解析xmlmap 把数据存放到数据库
-            insertData(entry,svgPath,nullModel,directory);
-        }
-        result.put("message","xml解析成功!");
-        result.put("flag",true);
-        ServletUtil.createSuccessResponse(200, result, response);
-        return ;
-    }
+//    @RequestMapping(value = "/test",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public void test(HttpServletRequest request , HttpServletResponse response){
+//        JSONObject result=new JSONObject();
+//    //    String name = request.getParameter("name");
+//        //获取到userName,password
+//        // 查询到userId的方法 findByNameAndpassword
+//        //xmlMap 把xml转化成map的格式
+//        Map<String, Object> xmlMap = new HashMap<String, Object>();
+//        //存放解析的所有xmlMap
+//        Map<String,Map> xmlAnalysisMap = new HashMap<>();
+//        //存放解析svg，info文件所在位置的Map
+//        Map<String,String> svgPath = new HashMap<>();
+//        String name = "syslink";
+//        Map<String,Object> params = new HashMap<String,Object>();
+//        params.put("name",name);
+//        //查找到项目所在的位置
+//        List<FileModel> directoryList = fileModelService.queryListByName(params);
+//        //选取最近push的一个directory对象
+//        FileModel directory = new FileModel();
+//        if(!directoryList.isEmpty()){
+//            directory = directoryList.get(0);
+//        }else {
+//            return ;
+//        }
+//        //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
+//        //文件所在位置
+//        String filePath = directory.getAbsoluteAddress();
+//        //获取到xml所在的文件位置
+//        String xmlPath = "";
+//        xmlPath= resourceUtil.getXmlPath(filePath,xmlPath);
+//        //对xml进行解析,遍历xml文件下所有文件
+//        if(StringUtil.isNull(xmlPath)){
+//            result.put("message","没有找到xml文件！");
+//            result.put("flag",false);
+//            ServletUtil.createSuccessResponse(200, result, response);
+//            return ;
+//        }
+//        File xmlFilePath = new File(xmlPath);
+//        String[] subFiles = xmlFilePath.list();
+//        Model model = new Model();
+//        model.setName(subFiles[0].split("\\.")[0]);
+//        model.setDirectoryId(directory.getId());
+//        model.setClasses(ModelClasses.Package.getKey());
+//        model.setModelFilePath(filePath);
+//        model.setScope(false);
+//        model.setUserId(1);
+//        model.setDeleted(false);
+//        if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
+//            modelService.add(model);
+//        }
+//        //查找最外层空的model
+//        Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
+//        for (int i = 0; i < subFiles.length; i++) {
+//            //查看文件的格式
+//            String [] fileNames = subFiles[i].split("\\.");
+//            //文件的类型
+//            String filePreType = fileNames[fileNames.length-2];
+//            String fileType = fileNames[fileNames.length-1];
+//            if(("xml").equals(fileType)){
+//                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
+//                xmlAnalysisMap.put(subFiles[i],xmlMap);
+//                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+//            }else if("svg".equals(fileType)){
+//                  if("icon".equals(filePreType)){
+//                      svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+//                  }else if("diagram".equals(filePreType)){
+//                      svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+//                  }
+//            }else if("html".equals(fileType)){
+//                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+//            }
+//        }
+//        //遍历xmlMap进行数据的插入
+//        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+//            //解析xmlmap 把数据存放到数据库
+//            insertData(entry,svgPath,nullModel,directory);
+//        }
+//        result.put("message","xml解析成功!");
+//        result.put("flag",true);
+//        ServletUtil.createSuccessResponse(200, result, response);
+//        return ;
+//    }
 
 
-    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory){
+    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
         //验证model
-        Model validateModel = new Model();
-        model.setDirectoryId(directory.getId());
+     //   Model validateModel = new Model();
+        model.setFileId(directory.getId());
+        model.setDirectoryId(directoryId);
         model.setParentId(nullModel.getId());
         model.setUserId(nullModel.getUserId());
         model.setScope(false);
         model.setCreateTime(new Date());
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
-        validateModel = modelService.queryModelByName(model.getName());
+        Model validateModel = modelService.queryModelByName(model.getName());
         if( validateModel == null){
             modelService.add(model);
         }else{
@@ -366,6 +361,7 @@ public class ModelController {
                             }*/
                         }
                         if ( 0 == isVar){
+                            variable.setCreateTime(new Date());
                             variableService.add(variable);
                         }
                     }
@@ -373,8 +369,14 @@ public class ModelController {
                     Map<String,String> compotentMap = (Map<String, String>) (Map<String, String>) compMap.get("component");
                     Variable variable = new Variable();
                     variable.setModelId(model.getId());
-                    if(compotentMap.get("IsVariable").equals("False")){
-                         return;
+//                    if(compotentMap.get("IsVariable").equals("False")){
+//                         return;
+//                    }
+                    if(compotentMap.get("IsVariable").equals("True")){
+                        variable.setIsVariable(1);
+                    }
+                    else {
+                        variable.setIsVariable(0);
                     }
                     variable.setName(compotentMap.get("Name"));
                     variable.setType(VariableType.getValueByKey(compotentMap.get("Type")));
@@ -394,6 +396,7 @@ public class ModelController {
                     else {
                         variable.setIsInput(0);
                     }
+                    variable.setCreateTime(new Date());
                     variableService.add(variable);
                  }
                 }
@@ -401,72 +404,72 @@ public class ModelController {
         }
     }
 
-    //获取模型树状图
-    @RequestMapping(value = "/getModelTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public Map<String,List<EasyuiTreeNode>> getModelTree(HttpServletRequest request , HttpServletResponse response){
-        String name = request.getParameter("name");
-        //获取到userName,password
-        // 查询到userId的方法 findByNameAndpassword
-        long userId = 1;
-        Map<String ,List<EasyuiTreeNode>> modelTree = new HashMap<>();
-        List<Model> allModelList = modelService.findAllModel();
-        List<Model> rootModelList = modelService.findRootModel();
-        //公有库模型的树
-        List<EasyuiTreeNode> publicModelTree = new ArrayList<EasyuiTreeNode>();
-        //个人库模型树
-        List<EasyuiTreeNode> privateModelTree = new ArrayList<EasyuiTreeNode>();
-        for (Model model: rootModelList) {
-            if(!model.getScope()){
-                if(model.getUserId() == userId){
-                    privateModelTree.add(tree(model,allModelList,true));
-                }
-            }
-            publicModelTree.add(tree(model,allModelList,true));
-        }
-        modelTree.put("publicModelTree",publicModelTree);
-        modelTree.put("privateModelTree",privateModelTree);
-        return modelTree;
-    }
+//    //获取模型树状图
+//    @RequestMapping(value = "/getModelTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public Map<String,List<EasyuiTreeNode>> getModelTree(HttpServletRequest request , HttpServletResponse response){
+//        String name = request.getParameter("name");
+//        //获取到userName,password
+//        // 查询到userId的方法 findByNameAndpassword
+//        long userId = 1;
+//        Map<String ,List<EasyuiTreeNode>> modelTree = new HashMap<>();
+//        List<Model> allModelList = modelService.findAllModel();
+//        List<Model> rootModelList = modelService.findRootModel();
+//        //公有库模型的树
+//        List<EasyuiTreeNode> publicModelTree = new ArrayList<EasyuiTreeNode>();
+//        //个人库模型树
+//        List<EasyuiTreeNode> privateModelTree = new ArrayList<EasyuiTreeNode>();
+//        for (Model model: rootModelList) {
+//            if(!model.getScope()){
+//                if(model.getUserId() == userId){
+//                    privateModelTree.add(tree(model,allModelList,true));
+//                }
+//            }
+//            publicModelTree.add(tree(model,allModelList,true));
+//        }
+//        modelTree.put("publicModelTree",publicModelTree);
+//        modelTree.put("privateModelTree",privateModelTree);
+//        return modelTree;
+//    }
 
 
-    /**
-     * 递归
-     * @param model
-     * @param recursive
-     * @return
-     */
-    private EasyuiTreeNode tree(Model model,List<Model> allModelList, boolean recursive) {
-        EasyuiTreeNode node = new EasyuiTreeNode();
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        //    attributes.put("taskId", directory.getTask().getTaskId());
-        if(model != null){
-            node.setId(model.getModelFilePath());
-            node.setText(model.getName());
-        }
-        //    node.setAttributes(attributes);
-        if (model != null
-                && allModelList.size() > 0) {
-            if (recursive) {
-                List<Model> modelList = new ArrayList<Model>();
-                for (Model  fileDir: allModelList) {
-                    if(fileDir.getParentId() == model.getId()){
-                        modelList.add(fileDir);
-                    }
-                }
-                //Collections.sort(directoryList, new FilelibraryComparator());
-                List<EasyuiTreeNode> children = new ArrayList<EasyuiTreeNode>();
-                for (Model m : modelList) {
-                    node.setState("closed");
-                    EasyuiTreeNode t = tree(m,allModelList, true);
-                    children.add(t);
-
-                }
-                node.setChildren(children);
-            }
-        }
-        return node;
-    }
+//    /**
+//     * 递归
+//     * @param model
+//     * @param recursive
+//     * @return
+//     */
+//    private EasyuiTreeNode tree(Model model,List<Model> allModelList, boolean recursive) {
+//        EasyuiTreeNode node = new EasyuiTreeNode();
+//        Map<String, Object> attributes = new HashMap<String, Object>();
+//        //    attributes.put("taskId", directory.getTask().getTaskId());
+//        if(model != null){
+//            node.setId(model.getModelFilePath());
+//            node.setText(model.getName());
+//        }
+//        //    node.setAttributes(attributes);
+//        if (model != null
+//                && allModelList.size() > 0) {
+//            if (recursive) {
+//                List<Model> modelList = new ArrayList<Model>();
+//                for (Model  fileDir: allModelList) {
+//                    if(fileDir.getParentId() == model.getId()){
+//                        modelList.add(fileDir);
+//                    }
+//                }
+//                //Collections.sort(directoryList, new FilelibraryComparator());
+//                List<EasyuiTreeNode> children = new ArrayList<EasyuiTreeNode>();
+//                for (Model m : modelList) {
+//                    node.setState("closed");
+//                    EasyuiTreeNode t = tree(m,allModelList, true);
+//                    children.add(t);
+//
+//                }
+//                node.setChildren(children);
+//            }
+//        }
+//        return node;
+//    }
 
     //获取模型列表
     @RequestMapping(value = "/getModelList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -507,27 +510,27 @@ public class ModelController {
   //      return modelListMap;
     }
 
-    //模糊查询model列表
-    @RequestMapping(value = "/vagueSearchModelList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public void vagueSearchModelList(HttpServletRequest request , HttpServletResponse response){
-        Map<String,Object> params = new HashMap<String,Object>();
-        JSONObject jo=new JSONObject();
-        String name = request.getParameter("name");
-        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-        params.put("name",name);
-        params.put("page", page);
-        params.put("rows", rows);
-        List<Model> modelList = modelService.vagueSearchByName(params);
-        PageInfo<Model> pageInfo =new PageInfo<Model>(modelList);
-        jo.put("message","查询成功!");
-        jo.put("flag",true);
-        jo.put("rows", modelList);
-        jo.put("total", pageInfo.getPages());//总页数
-        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-        ServletUtil.createSuccessResponse(200, jo, response);
-    }
+//    //模糊查询model列表
+//    @RequestMapping(value = "/vagueSearchModelList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public void vagueSearchModelList(HttpServletRequest request , HttpServletResponse response){
+//        Map<String,Object> params = new HashMap<String,Object>();
+//        JSONObject jo=new JSONObject();
+//        String name = request.getParameter("name");
+//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
+//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
+//        params.put("name",name);
+//        params.put("page", page);
+//        params.put("rows", rows);
+//        List<Model> modelList = modelService.vagueSearchByName(params);
+//        PageInfo<Model> pageInfo =new PageInfo<Model>(modelList);
+//        jo.put("message","查询成功!");
+//        jo.put("flag",true);
+//        jo.put("rows", modelList);
+//        jo.put("total", pageInfo.getPages());//总页数
+//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
+//        ServletUtil.createSuccessResponse(200, jo, response);
+//    }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
@@ -537,15 +540,45 @@ public class ModelController {
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
         //过滤后的modelList
         List<Model> searchModel = new ArrayList<>();
+        //查询所有direactory
+        List<Directory> allDirectory = directoryService.findAllDirectory();
+        //存放directory的id
+        List<Long> directoryIdList  = new ArrayList<>();
+        List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
         try {
             List<Model> allModelList = modelService.findAllModel();
-            if(parent_id != null ){
-                List<Directory> rootDirectoryList = directoryService.queryListByParentId(parent_id);
-                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
+            if(parent_id != null && parent_id != 0 && rootDirectoryList.size() >0){
+                //仅有一个directory
+                if(rootDirectoryList.size() >0){
+                    Directory oneDirectory = rootDirectoryList.get(0);
+                    getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
+                    directoryIdList.add(oneDirectory.getId());
+                }
+                for (Long id : directoryIdList) {
                     for (Model model: allModelList) {
-                        if(model.getDirectoryId() == rootDirectoryList.get(j).getId()){
-                            searchModel.add(model);
+                        if(model.getDirectoryId() == id){
+                            if(model.getParentId() == 0){
+                                searchModel.add(model);
+                            }
+
                         }
+                    }
+                }
+
+
+//                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
+//                    for (Model model: allModelList) {
+//                        if(model.getDirectoryId() == rootDirectoryList.get(j).getId()){
+//                            searchModel.add(model);
+//                        }
+//                    }
+//                }
+            }
+      //      if(parent_id != null  && rootDirectoryList.size() >0){
+            if(parent_id == 0){
+                for (Model model: allModelList) {
+                    if(model.getParentId() == 0) {
+                        searchModel.add(model);
                     }
                 }
             }
@@ -553,7 +586,10 @@ public class ModelController {
                 ModelWeb modelWeb = new ModelWeb();
                 modelWeb.setIndex(searchModel.get(i).getId());
                 modelWeb.setName(searchModel.get(i).getName());
-                modelWeb.setImageUrl("../../../assets/test1.png");
+//                modelWeb.setImageUrl("../../assets/test1.png");
+                if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
+                    modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+searchModel.get(i).getDiagramSvgPath().substring(7));
+                }
                 modelWeb.setDiscription(searchModel.get(i).getDiscription());
                 modelWeb.setType(searchModel.get(i).getType());
     //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
@@ -572,4 +608,131 @@ public class ModelController {
         jo.put("repositories",repositoryModelList);
         return (JSONObject) JSONObject.toJSON(jo);
     }
+
+    @RequestMapping(value = "/modelVariable",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject modelVariable(@RequestParam(value = "modelId",required = false)String modelId,
+                           HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        //获取model对象
+        Model model =  new Model();
+        List<Variable> variableList = new ArrayList<>();
+        ModelWeb modelWeb = new ModelWeb();
+        try {
+            model = modelService.queryModelById(Long.parseLong(modelId));
+            variableList = variableService.queryListByModelId(Long.parseLong(modelId));
+            User user = userService.queryUserById(model.getUserId());
+            List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
+            modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
+            modelWeb.setName(model.getName());
+            modelWeb.setType(model.getType());
+            modelWeb.setClasses(model.getClasses());
+            modelWeb.setImport(model.getImport());
+            modelWeb.setExtends(model.getExtends());
+            modelWeb.setUserName(user.getUserName());
+            modelWeb.setDiscription(model.getDiscription());
+            if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
+                modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
+            }
+            if(model.getIconSvgPath() != null && model.getIconSvgPath() != ""){
+                modelWeb.setIconSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getIconSvgPath().substring(7));
+            }
+            if(model.getInfoTextPath() != null && model.getInfoTextPath() != ""){
+                modelWeb.setInfoTextPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getInfoTextPath().substring(7));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("tableData",variableList);
+        jo.put("form", modelWeb);
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+    @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
+                           HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        //查询到所有的model
+        List<Model> allModel = modelService.findAllModel();
+        //过滤后的modelList
+        List<Model> searchModel = new ArrayList<>();
+        //树子节点所有id
+        List<Long> modelIdList = new ArrayList<>();
+        TreeObj treeObj = new TreeObj();
+        //返回一个Tree数组对象
+        List<TreeObj> treeObjList = new ArrayList<>();
+        try {
+            //获取根节点模型
+            Model rootModel = modelService.queryModelById(modelId);
+            //获取树节点的所有id
+//            getModelChildTree(rootModel.getId(), allModel,modelIdList);
+//            modelIdList.add(modelId);
+//            //所需要的ModelTree
+//            for (Long id: modelIdList) {
+//                for (Model model: allModel) {
+//                   if(id == model.getId()) {
+//                       searchModel.add(model);
+//                   }
+//                }
+//            }
+            //子节点
+            List<TreeObj> treeChild = new ArrayList<>();
+            treeObj.setId(rootModel.getId());
+            treeObj.setLabel(rootModel.getName());
+            getModelChildTree(modelId,allModel,treeChild);
+            treeObj.setChildren(treeChild);
+            treeObjList.add(treeObj);
+
+        }catch(Exception e) {
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("data",treeObjList);
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+
+    //获取点击树后所有的模型对象
+    public static void getModelTree(Long directoryId,List<Directory> allDirectory,List<Long> directoryIdList){
+        for(int i= 0; i< allDirectory.size() ; i++){
+            if(allDirectory.get(i).getParentId() == directoryId){
+                directoryIdList.add(allDirectory.get(i).getId());
+                getModelTree(allDirectory.get(i).getId(),allDirectory,directoryIdList);
+            }
+        }
+    }
+
+    //获取model树所有子节点的id
+    public static void getModelChildTree(Long modelId,List<Model> allModel,List<TreeObj> treeChild ){
+        for(int i=0; i<allModel.size(); i++){
+            if(allModel.get(i).getParentId() == modelId){
+                 TreeObj treeObj = new TreeObj();
+                 treeObj.setId(allModel.get(i).getId());
+                 treeObj.setLabel(allModel.get(i).getName());
+                 treeChild.add(treeObj);
+            }
+        }
+        if( treeChild != null){
+            for (TreeObj treechild: treeChild) {
+                getModelChildTree(treechild.getId(),allModel,treechild.getChildren());
+            }
+        }
+
+    }
+
 }

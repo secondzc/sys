@@ -34,7 +34,8 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         //自定义项目内目录
         //registry.addResourceHandler("/my/**").addResourceLocations("classpath:/my/");
         //指向外部目录
-        registry.addResourceHandler("/my/**").addResourceLocations("file:E:/my/");
+        registry.addResourceHandler("/FileLibrarys/**").addResourceLocations("file:C:/Temp/FileLibrary");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         super.addResourceHandlers(registry);
     }
 

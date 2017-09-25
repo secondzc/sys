@@ -30,7 +30,7 @@ public class DownThread implements Runnable{
 	public void run(){
 		try{
 			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			con.setRequestProperty("User-Agent","NetFox");
+			con.setRequestProperty("GUser-Agent","NetFox");
 			String sProperty = "bytes="+startPos+"-"+endPos;
 			con.setRequestProperty("RANGE",sProperty);
 			

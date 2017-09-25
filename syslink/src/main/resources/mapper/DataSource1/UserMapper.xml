@@ -12,7 +12,12 @@
     <insert id="add"></insert>
     <update id="update"></update>
     <delete id="deleteByIds"></delete>
-    <select id="queryUserById" resultType="com.tongyuan.model.domain.User"></select>
+    <select id="queryUserById" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.User">
+        SELECT
+        <include refid="baseColumnList"></include>
+        FROM USER
+        where id = #{id}
+    </select>
     <select id="querUserByName" resultMap="baseResultMap"  resultType="com.tongyuan.model.domain.User">
         SELECT
         <include refid="baseColumnList"></include>

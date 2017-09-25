@@ -39,6 +39,11 @@ public class Model {
     //模型目录ID
     private long directoryId;
 
+    @Column(name = "fileId")
+    //文件目录ID
+    private long fileId;
+
+
     @Column(name = "discription", length = 256)
     //模型描述
     private String discription;
@@ -229,5 +234,13 @@ public class Model {
 
     public void setScope(Boolean scope) {
         this.scope = scope;
+    }
+
+    public long getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(long fileId) {
+        this.fileId = fileId;
     }
 }

@@ -19,4 +19,6 @@ public interface ModelMapper {
     public List<Model> findAllModel();
     public List<Model> findRootModel();
     public List<Model> vagueSearchByName(Map<String, Object> params);
+    public Model queryModelById(Long id);
+    List<Model> queryModelByParId(Long id);
 }

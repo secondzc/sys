@@ -8,6 +8,7 @@
         <result column="classes" property="classes" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
+        <result column="file_id" property="fileId" jdbcType="BIGINT"/>
         <result column="discription" property="discription" jdbcType="VARCHAR"/>
         <result column="Import" property="Import" jdbcType="VARCHAR"/>
         <result column="Extends" property="Extends" jdbcType="VARCHAR"/>
@@ -23,18 +24,18 @@
     </resultMap>
 
     <sql id="baseColumnList" >
-        id,parent_id,name,classes,type,directory_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
+        id,parent_id,name,classes,type,directory_id,file_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
         info_text_path,is_deleted,user_id,create_time,last_update_time,scope
     </sql>
 
     <insert id="add" parameterType="com.tongyuan.model.domain.Model">
-        INSERT INTO model (parent_id, name,classes,type,directory_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
-        info_text_path,is_deleted,user_id,create_time,last_update_time,scope) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId}, #{discription},#{Import}, #{Extends},#{modelFilePath}, #{iconSvgPath},
+        INSERT INTO model (parent_id, name,classes,type,directory_id,file_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
+        info_text_path,is_deleted,user_id,create_time,last_update_time,scope) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId},#{fileId}, #{discription},#{Import}, #{Extends},#{modelFilePath}, #{iconSvgPath},
         #{diagramSvgPath}, #{infoTextPath}, #{isDeleted},#{userId}, #{createTime}, #{lastUpdateTime},#{scope})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Model">
         UPDATE model SET
-        parent_id = #{parentId},name = #{name},classes = #{classes},type = #{type},directory_id = #{directoryId},discription = #{discription},Import = #{Import},Extends = #{Extends},model_file_path =#{modelFilePath},icon_svg_path = #{iconSvgPath}
+        parent_id = #{parentId},name = #{name},classes = #{classes},type = #{type},directory_id = #{directoryId},file_id = #{fileId},discription = #{discription},Import = #{Import},Extends = #{Extends},model_file_path =#{modelFilePath},icon_svg_path = #{iconSvgPath}
          ,diagram_svg_path = #{diagramSvgPath},info_text_path = #{infoTextPath},is_deleted = #{isDeleted},user_id = #{userId},create_time = #{createTime},last_update_time = #{lastUpdateTime},scope = #{scope}
         WHERE id = #{id}
     </update>
@@ -94,5 +95,19 @@
         </if>
         order by create_time desc) m
         where  1=1 GROUP BY NAME
+    </select>
+    <select id="queryModelById" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM  model
+        WHERE
+        is_deleted = "0"
+        and id = #{id}
+    </select>
+    <select id="queryModelByParId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM  model
+        where parent_id = #{parentId} and is_deleted = "0"
     </select>
 </mapper>
