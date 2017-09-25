@@ -1,5 +1,10 @@
 <template>
     <section>
+        <!--<div >-->
+        <!--<model-content  @node-click="getRepos"></model-content>-->
+        <!--</div>-->
+        <!--<div><p>{{treeItem}}</p></div>-->
+        <p>{{getRepos}}</p>
       <waterfall
         :align="align"
         :line-gap="300"
@@ -20,30 +25,36 @@
           move-class="item-move"
         >
         <!-- :style="item.style" -->
-          <div class="RepCard"  :index="item.index">
+          <div class="RepCard" id="modelId"  :index="item.index" @click="modelVar">
               <div class="center-aligned">
-                <img v-bind:src="item.imageUrl" class="image">
+                <!--<img v-bind:src="item.imageUrl" class="image">-->
+                  <img src="./../../assets/test1.png" class="image">
               </div>
               <div class="content">
                   <a href="">
-                    <h4>//TODO:项目标题</h4>
+                    <h4 >{{item.name}}</h4>
                   </a>
-                  <small>//TODO:项目说明XXXXXXXXXXXXXXX</small>
+                  <small>{{item.discription}}</small>
               </div>
-              <div class="cardButton">
-                  <a class="user username" href="/circuitdigest">
-                      <img class="avatar round" src="/static/images/avatar-default.png">
-                      //TODO:用户名
+              <div  class="cardButton">
+                  <!--<a class="user username" href="/circuitdigest">-->
+                  <a class="user username" href="javascript:void(0)">
+                      <!--<div v-html="'<img class=\'avatar round\' src=\'file:\///C:\/qq.png\'>'" ></div>-->
+                      <!--<img  class='avatar round'   src='item.imageUrl' >-->
+                      <!--<a href="C:/package2.Test2.A.diagram.svg"></a>-->
+                      <!--<img class="avatar round" src="../../assets/test1.png">-->
+                      <!--//TODO:用户名-->
+                      {{item.type}}
                   </a>
                   <div class="right-buttons">
-                      
                   </div>
               </div>
-
           </div>
+
         </waterfall-slot>
       </waterfall>
     </section>
+
 </template>
 
 <script>
@@ -51,9 +62,12 @@
   //waterfall瀑布流组件
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
+  import kzTree from  './directory.vue'
+  import ModelContent from "./index";
+  import { mapState,mapGetters} from 'vuex'
 
-    
   export default {
+      name : 'model-list',
     data(){
       return {
         filters:{
@@ -61,36 +75,73 @@
         },
         align:'left',
         repositories:[],
-        isBusy: false
+        isBusy: false,
       }
     },
-    methods:{
-      getRepos: function(){
-//        let para ={name: this.filters.name};
-//        getReposList(para).then((res)=>{
-//          this.repositories = res.data.repositories;
-//          //window.alert(this.repositories[0].id+this.repositories[0].name);
-//        });
-          var _this = this;
-          _this.$http.post('/api/model/list')
-              .then(function (response) {
-                  _this.repositories = response.data.repositories;
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
+      computed:{
+          ...mapState({
+              a:state =>state.a
+          }),
+          ...mapGetters(['amsg']),
+          getRepos(){
+              var _this = this;
+              if(_this.amsg != null && _this.amsg != ""){
+                  var url = '/api/model/list?parent_id='+ _this.amsg
+              }else{
+                  _this.amsg = null;
+                  var url = '/api/model/list?parent_id='+ _this.amsg
+                 }
+              _this.$http.post(url)
+                  .then(function (response) {
+                      _this.repositories = response.data.repositories;
+                  })
+                  .catch(function (error) {
+                      console.log(error);
+                  });
+          }
+
       },
+    methods:{
+//      getRepos : function(arg){
+////        let para ={name: this.filters.name};
+////        getReposList(para).then((res)=>{
+////          this.repositories = res.data.repositories;
+////          //window.alert(this.repositories[0].id+this.repositories[0].name);
+////        });
+//          var _this = this;
+////          var param = _this.$attrs.data.parent_id;
+////          if(param != "" || param != null){
+////              var url = '/api/model/list?parent_id='+param
+////          }else{
+////              var url = '/api/model/list'
+////          }
+//          var param = arg;
+//          _this.$http.post('/api/model/list')
+//              .then(function (response) {
+//                  _this.repositories = response.data.repositories;
+//          })
+//          .catch(function (error) {
+//              console.log(error);
+//          });
+//      },
       reflowed: function () {
         this.isBusy = false
-      }
+      },
+        modelVar : function (modelId) {
+            this.$store.dispatch('sendModelId',modelId.currentTarget.attributes[2].value);
+            this.$router.push({path: '/model/packageDiagram'});
+        }
     },
-    mounted(){
-      this.getRepos();
-    },
+
+//    mounted(){
+//      this.getRepos();
+//    },
     components:{
-      Waterfall,
-      WaterfallSlot
-    }
+        ModelContent,
+        Waterfall,
+      WaterfallSlot,
+        kzTree,
+    },
 }
 
 </script>

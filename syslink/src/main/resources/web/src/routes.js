@@ -9,9 +9,12 @@ import user from './views/nav1/user.vue'
 import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
+import FileContent from './views/nav3/index.vue'
 import echarts from './views/charts/echarts.vue'
 import Repository from './views/repository/index.vue'
 import Model from './views/model/index.vue'
+import modelVariable from './views/model/modelVariable.vue' ;
+import packageDiagram from './views/model/packageDiagram.vue'
 
 let routes = [
     {
@@ -44,7 +47,9 @@ let routes = [
         iconCls: 'el-icon-document',
         leaf: true,//只有一个节点
         children: [
-            { path: '/model/index', component: Model, name: '我的模型' }
+            { path: '/model/index', component: Model, name: '我的模型' },
+            // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
+            { path: '/model/packageDiagram', component: packageDiagram, name: '包视图' },
         ]
     },
     {
@@ -54,7 +59,8 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '我的仿真' }
+            // { path: '/page6', component: Page6, name: '我的仿真' }
+            { path: '/nav3/index', component: FileContent, name: '我的仿真' }
         ]
     },
     {
@@ -64,7 +70,7 @@ let routes = [
         iconCls: 'el-icon-share',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '我的分享' }
+            { path: '/page4', component: Page4, name: '我的分享' }
         ]
     },
     {

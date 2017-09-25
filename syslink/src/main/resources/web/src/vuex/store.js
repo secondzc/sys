@@ -1,29 +1,26 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import * as actions from './actions'
-import * as getters from './getters'
-
-Vue.use(Vuex)
-
-// 应用初始状态
-const state = {
-    count: 10
-}
-
-// 定义所需的 mutations
-const mutations = {
-    INCREMENT(state) {
-        state.count++
+import vuex from 'vuex'
+import vue from 'vue'
+import actions from './action'
+import mutations from './mutation'
+vue.use(vuex);
+export default new vuex.Store({
+    state:{
+        amsg: '',
+        bmsg: '',
+        modelId : '',
     },
-    DECREMENT(state) {
-        state.count--
-    }
-}
-
-// 创建 store 实例
-export default new Vuex.Store({
     actions,
-    getters,
-    state,
-    mutations
+    mutations,
+    getters:{
+        amsg(state){
+            console.log(state)
+            return state.amsg
+        },
+        bmsg(state){
+            return state.bmsg
+        },
+        modelId(state){
+            return state.modelId
+        }
+    }
 })
