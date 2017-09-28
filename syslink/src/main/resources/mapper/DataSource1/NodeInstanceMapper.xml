@@ -10,23 +10,6 @@
         <result column="status" property="status" jdbcType="TINYINT"/>
     </resultMap>
 
-    <resultMap id="pageResultMap" type="com.tongyuan.model.domain.DetailPage">
-        <id property="id" column="review_node_instance_id"/>
-        <result property="status" column="review_node_instance_status"/>
-        <result property="createTime" column="review_node_instance_create_time"/>
-        <result property="lastUpdateTime" column="review_node_instance_last_update_time"/>
-        <association property="node" javaType="com.tongyuan.model.domain.ReviewNode">
-            <id property="nodeId" column="review_node_node_id"/>
-            <result property="userId" column="review_node_user_id"/>
-            <result property="description" column="review_node_description"/>
-            <result property="sequence" column="review_node_sequence"/>
-        </association>
-        <association property="user" javaType="com.tongyuan.model.domain.User">
-            <id property="id" column="user_id"/>
-            <result property="userName" column="user_user_name"/>
-        </association>
-    </resultMap>
-
     <sql id="baseColumnList">
         id,create_time,instance_id,last_update_time,node_id,status
     </sql>
@@ -56,24 +39,5 @@
         SET last_update_time=#{lastUpdateTime}
         WHERE id=#{id}
     </update>
-
-    <select id="details" parameterType="java.lang.Long" resultMap="pageResultMap">
-        SELECT
-        A.id AS review_node_instance_id,
-        A.status AS review_node_instance_status,
-        A.create_time AS review_node_instance_create_time,
-        A.last_update_time AS review_node_instance_last_update_time,
-        B.node_id AS review_node_node_id,
-        B.user_id AS review_node_user_id,
-        B.description AS review_node_description,
-        B.sequence AS review_node_sequence,
-        C.id AS user_id,
-        C.user_name AS user_user_name
-
-        FROM review_node_instance A
-        INNER JOIN review_node B ON A.node_id = B.node_id
-        INNER JOIN user C ON B.user_id = C.id
-        WHERE A.instance_id = #{instanceId}
-    </select>
 
 </mapper>

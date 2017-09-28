@@ -32,6 +32,8 @@ import java.util.*;
 public class ModelController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private Date nowDate = new Date();
+
     @Autowired
     private ModelService modelService;
     @Autowired
@@ -44,6 +46,8 @@ public class ModelController {
     private ResourceUtil resourceUtil;
     @Autowired
     private VariableService variableService;
+    @Autowired
+    private ComponentService componentService;
 
 //    @RequestMapping(value = "/test",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
 //    @ResponseBody
@@ -140,14 +144,14 @@ public class ModelController {
         model.setParentId(nullModel.getId());
         model.setUserId(nullModel.getUserId());
         model.setScope(false);
-        model.setCreateTime(new Date());
+        model.setCreateTime(nowDate);
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
         Model validateModel = modelService.queryModelByName(model.getName());
         if( validateModel == null){
             modelService.add(model);
         }else{
-            model.setLastUpdateTime(new Date());
+            model.setLastUpdateTime(nowDate);
             model.setId(validateModel.getId());
             modelService.update(model);
         }
@@ -301,6 +305,11 @@ public class ModelController {
         insertV(xmlMap,model);
       }
     public  void insertV(Map<String,Object> xmlMap,Model model) {
+        //存储组件的id和parentName
+        Map<String,Long> compName = new HashMap<String,Long>();
+
+        //存储变量的自身id和parentname
+        Map<String,Long> variableId = new HashMap<>();
         for (Map.Entry<String, Object> entry : xmlMap.entrySet()) {
             if ("Components".equals(entry.getKey())) {
                 String type = "";
@@ -310,48 +319,56 @@ public class ModelController {
                 Map<String, List> compMap = (Map<String, List>) entry.getValue();
                 type = decideType(compMap.get("component"),type);
                 if("List".equals(type)){
-                    List<Map<String, String>> compList = compMap.get("component");
-                    for (int i = 0; i < compList.size(); i++) {
-                        Variable variable = new Variable();
-                        variable.setModelId(model.getId());
-                        //判断这个组件是否需要插入到数据库
-                        int isVar = 0;
-                        for (Map.Entry<String, String> entryComp : compList.get(i).entrySet()) {
-                            if ("IsVariable".equals(entryComp.getKey())) {
-                                if ("False".equals(entryComp.getValue())) {
-                                    isVar =1;
-                                    continue;
-                                }
-                            }
-                            if ("Name".equals(entryComp.getKey())) {
-                                variable.setName(entryComp.getValue());
-                            }
-                            if ("Type".equals(entryComp.getKey())) {
-                                if ("True".equals(compList.get(i).get("IsArray"))) {
-                                    variable.setType(VariableType.getValueByKey(entryComp.getValue()+"[]"));
-                                }else {
-                                    variable.setType(VariableType.getValueByKey(entryComp.getValue()));
-                                }
-                            }
-                            if ("Value".equals(entryComp.getKey())) {
-                                variable.setDefaultValue(entryComp.getValue());
-                            }
-                            if ("Unit".equals(entryComp.getKey())) {
-                                variable.setUnits(entryComp.getValue());
-                            }
-                            if ("Min".equals(entryComp.getKey())) {
-                                variable.setLowerBound(entryComp.getValue());
-                            }
-                            if ("Max".equals(entryComp.getKey())) {
-                                variable.setUpperBound(entryComp.getValue());
-                            }
-                            if ("IsParameter".equals(entryComp.getKey())) {
-                                if ("True".equals(entryComp.getValue())) {
-                                    variable.setIsParam(1);
-                                } else {
-                                    variable.setIsParam(0);
-                                }
-                            }
+                    List<Map<String, Object>> compList = compMap.get("component");
+                    for(int i = 0;i<compList.size(); i++){
+                        if(compList.get(i).size() == 13){
+                           analysis(compList.get(i),model,compName,variableId);
+                        }
+                        if(compList.get(i).size() == 2){
+                           analysisComponent((HashMap<String, Object>) compList.get(i),model,compName,variableId);
+                        }
+                    }
+//                    for (int i = 0; i < compList.size(); i++) {
+//                        Variable variable = new Variable();
+//                        variable.setModelId(model.getId());
+//                        //判断这个组件是否需要插入到数据库
+//                        int isVar = 0;
+//                        for (Map.Entry<String, String> entryComp : compList.get(i).entrySet()) {
+//                            if ("IsVariable".equals(entryComp.getKey())) {
+//                                if ("False".equals(entryComp.getValue())) {
+//                                    isVar =1;
+//                                    continue;
+//                                }
+//                            }
+//                            if ("Name".equals(entryComp.getKey())) {
+//                                variable.setName(entryComp.getValue());
+//                            }
+//                            if ("Type".equals(entryComp.getKey())) {
+//                                if ("True".equals(compList.get(i).get("IsArray"))) {
+//                                    variable.setType(VariableType.getValueByKey(entryComp.getValue()+"[]"));
+//                                }else {
+//                                    variable.setType(VariableType.getValueByKey(entryComp.getValue()));
+//                                }
+//                            }
+//                            if ("Value".equals(entryComp.getKey())) {
+//                                variable.setDefaultValue(entryComp.getValue());
+//                            }
+//                            if ("Unit".equals(entryComp.getKey())) {
+//                                variable.setUnits(entryComp.getValue());
+//                            }
+//                            if ("Min".equals(entryComp.getKey())) {
+//                                variable.setLowerBound(entryComp.getValue());
+//                            }
+//                            if ("Max".equals(entryComp.getKey())) {
+//                                variable.setUpperBound(entryComp.getValue());
+//                            }
+//                            if ("IsParameter".equals(entryComp.getKey())) {
+//                                if ("True".equals(entryComp.getValue())) {
+//                                    variable.setIsParam(1);
+//                                } else {
+//                                    variable.setIsParam(0);
+//                                }
+//                            }
 /*                            if ("IsArray".equals(entryComp.getKey())) {
                                 if ("True".equals(entryComp.getValue())) {
                                     variable.setIsInput(1);
@@ -359,12 +376,12 @@ public class ModelController {
                                     variable.setIsInput(0);
                                 }
                             }*/
-                        }
-                        if ( 0 == isVar){
-                            variable.setCreateTime(new Date());
-                            variableService.add(variable);
-                        }
-                    }
+//                        }
+//                        if ( 0 == isVar){
+//                            variable.setCreateTime(new Date());
+//                            variableService.add(variable);
+//                        }
+//                    }
                 }else if ("Map".equals(type)){
                     Map<String,String> compotentMap = (Map<String, String>) (Map<String, String>) compMap.get("component");
                     Variable variable = new Variable();
@@ -396,12 +413,66 @@ public class ModelController {
                     else {
                         variable.setIsInput(0);
                     }
-                    variable.setCreateTime(new Date());
+                    variable.setCreateTime(nowDate);
                     variableService.add(variable);
                  }
                 }
             }
         }
+        //刚插入的Component
+        List<Component> componentList = componentService.queryListNullComp();
+        //获取组件model的id
+        long modelId = 0;
+        modelId = componentList.get(0).getCurrentModelId();
+        //获取组件当前model对象
+        Model currModel = modelService.queryModelById(modelId);
+        //获取所有的model
+        List<Model> allModel = modelService.findAllModel();
+        //模型实例化组件的模型名称
+        String modelCompName = currModel.getName().split("\\.")[0];
+        for (int i = 0; i< componentList.size(); i++){
+            for (Model modelComp : allModel) {
+                if(modelComp.getName().equals(modelCompName+"."+componentList.get(i).getType())){
+                    componentList.get(i).setModelId(modelComp.getId());
+                }
+                else{
+                    componentList.get(i).setModelId(-1);
+                }
+            }
+            for(int j = 0; j< componentList.size(); j++){
+                //用来判断第二层组件父类
+                //定义需要比较的parentName
+                String parentName = "";
+                String parentNameArr[] = componentList.get(i).getParentName().split("\\;");
+                for(int m= 0;m< parentNameArr.length -1; m++){
+                    parentName += parentNameArr[m]+";";
+                }
+                if(parentName != null && parentName != ""){
+                    if(parentNameArr.length == 2){
+                        if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getName())){
+                            componentList.get(i).setParentId(componentList.get(j).getId());
+                        }
+                    }
+                    if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName())){
+                        componentList.get(i).setParentId(componentList.get(j).getId());
+                    }
+                }
+            }
+            boolean componentResult = componentService.update(componentList.get(i));
+        }
+//        for (Map.Entry<String,Long> varName : variableName.entrySet()) {
+//             String variableArr[] = varName.getKey().split("\\;");
+//            //用来比较的变量父类名
+//            String varCompare = "";
+//             for(int i= 0;i< variableArr.length -1; i++){
+//                 varCompare += variableArr[i];
+//             }
+//            for (Map.Entry<String,Long> comp: compName.entrySet()) {
+//                if(comp.getKey().equals(varCompare)){
+//                    varName.setValue(comp.getValue());
+//                }
+//            }
+//        }
     }
 
 //    //获取模型树状图
@@ -624,6 +695,7 @@ public class ModelController {
             User user = userService.queryUserById(model.getUserId());
             List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
             modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
+            modelWeb.setIndex(Long.parseLong(modelId));
             modelWeb.setName(model.getName());
             modelWeb.setType(model.getType());
             modelWeb.setClasses(model.getClasses());
@@ -734,5 +806,121 @@ public class ModelController {
         }
 
     }
+
+    /*
+    * 用来解析xml的参数存储
+    * */
+    public  void analysis(Map<String,Object> xmlData,Model model,Map<String,Long> compName,Map<String,Long> variableId){
+        //存储变量的parentName 和组件id（包含变量的组件）
+        Map<String,Long> variableName = new HashMap<>();
+        if(xmlData.get("IsVariable").equals("True")){
+            Variable variable = new Variable();
+            variable.setModelId(model.getId());
+            //判断这个组件是否需要插入到数据库
+            doSet(xmlData,variable);
+//          int variableAdd = variableService.add(variable);
+           variableName.put(variable.getParentName(), (long) -1);
+            for (Map.Entry<String,Long> varName : variableName.entrySet()) {
+                String variableArr[] = varName.getKey().split("\\;");
+                //用来比较的变量父类名
+                String varCompare = "";
+                for(int i= 0;i< variableArr.length -1; i++){
+                    varCompare += variableArr[i]+";";
+                }
+                for (Map.Entry<String,Long> comp: compName.entrySet()) {
+                    if(comp.getKey().equals(varCompare.substring(0,varCompare.length()-1))){
+                        varName.setValue(comp.getValue());
+                        variable.setComponnetId(comp.getValue());
+                     //   int variableUp = variableService.update(variable);
+                        int variableAdd = variableService.add(variable);
+                    }
+                }
+            }
+
+        }
+        if(xmlData.get("IsVariable").equals("False")){
+               Component component = new Component();
+               component.setCurrentModelId(model.getId());
+               component.setCreateTime(nowDate);
+               doComponentSet(xmlData,component);
+               boolean componentResult = componentService.add(component);
+               long index_last_id = componentService.selectId();
+               compName.put(component.getParentName(),index_last_id);
+        }
+
+    }
+
+    /**
+     * 获取到参数插入到对象中
+     */
+    public static void doSet(Map<String,Object> xmlData,Variable variable){
+        if (xmlData.get("Name") != null ) {
+            variable.setName((String) xmlData.get("Name"));
+        }
+        if (xmlData.get("Type") != null) {
+            if ("True".equals(xmlData.get("IsArray"))) {
+                variable.setType(VariableType.getValueByKey(xmlData.get("Type")+"[]"));
+            }else {
+                variable.setType(VariableType.getValueByKey((String) xmlData.get("Type")));
+            }
+        }
+        if (xmlData.get("Value") != null) {
+            variable.setDefaultValue((String) xmlData.get("Value"));
+        }
+        if (xmlData.get("Unit") != null) {
+            variable.setUnits((String) xmlData.get("Unit"));
+        }
+        if (xmlData.get("Min") != null) {
+            variable.setLowerBound((String) xmlData.get("Min"));
+        }
+        if (xmlData.get("Max") != null) {
+            variable.setUpperBound((String) xmlData.get("Max"));
+        }
+        if (xmlData.get("IsParameter") != null) {
+            if ("True".equals(xmlData.get("IsParameter"))) {
+                variable.setIsParam(1);
+            } else {
+                variable.setIsParam(0);
+            }
+        }
+        if (xmlData.get("parentName") != null) {
+            variable.setParentName((String) xmlData.get("parentName"));
+        }
+        variable.setCreateTime(new Date());
+    }
+
+    //解析组件
+    public void analysisComponent(HashMap<String, Object> map, Model model,Map<String,Long> compName,Map<String,Long> variableId){
+        //组件内容
+        List<HashMap<String,Object>>  componentList = new ArrayList<>();
+        //获取组件内容插入到数据库
+        componentList = (List<HashMap<String, Object>>) map.get("componentVar");
+        if(componentList != null){
+            HashMap<String, Object> componentMap = componentList.get(0);
+            analysis(componentMap,model,compName,variableId);
+        }
+        else{
+            return;
+        }
+        //子组件内容
+//        Map<String,Object> componentChild = new HashMap<>();
+//        componentChild = (HashMap<String, Object>) map.get("component");
+        analysisComponent((HashMap<String, Object>) map.get("component"),model,compName,variableId);
+    }
+
+    public void doComponentSet(Map<String,Object> xmlData,Component component){
+        if (xmlData.get("Name") != null ) {
+            component.setName((String) xmlData.get("Name"));
+        }
+        if (xmlData.get("Type") != null) {
+            component.setType((String) xmlData.get("Type"));
+        }
+        if (xmlData.get("Modification") != null) {
+            component.setModification((String) xmlData.get("Modification"));
+        }
+        if (xmlData.get("parentName") != null) {
+            component.setParentName((String) xmlData.get("parentName"));
+        }
+        }
 
 }

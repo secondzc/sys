@@ -6,8 +6,6 @@ import com.tongyuan.model.domain.result.Response;
 import com.tongyuan.model.domain.result.ResponseData;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -41,6 +39,7 @@ public class BaseController {
         }
         return id;
     }
+
     protected String getUserName(){
         String userName = "";
         User user = getUser();

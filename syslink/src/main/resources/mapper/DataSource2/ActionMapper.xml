@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.gogs.dao.ActionMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.gogs.domain.Action">
+        <id column="id" property="ID" jdbcType="BIGINT"  />
+        <result column="user_id" property="UserID" jdbcType="BIGINT"  />
+        <result column="op_type" property="OpType" jdbcType="INTEGER"  />
+        <result column="act_user_id" property="ActUserID" jdbcType="BIGINT"  />
+        <result column="act_user_name" property="ActUserName" jdbcType="VARCHAR"  />
+        <result column="repo_id" property="RepoID" jdbcType="BIGINT"  />
+        <result column="repo_user_name" property="RepoUserName" jdbcType="VARCHAR"  />
+        <result column="repo_name" property="RepoName" jdbcType="VARCHAR"  />
+        <result column="ref_name" property="RefName" jdbcType="VARCHAR"  />
+        <result column="is_private" property="IsPrivate" jdbcType="TINYINT"  />
+        <result column="content" property="Content" jdbcType="VARCHAR"  />
+        <result column="created_unix" property="CreatedUnix" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="baseColumnList" >
+        id,user_id,op_type,act_user_id,act_user_name,repo_id,repo_user_name,repo_name,ref_name,
+        is_private,content,created_unix
+    </sql>
+    <insert id="add" parameterType="com.tongyuan.gogs.domain.Action">
+        INSERT  INTO action (user_id,op_type,act_user_id,act_user_name,repo_id,repo_user_name,repo_name,ref_name,
+        is_private,content,created_unix) VALUES (#{UserID},#{OpType},#{ActUserID},#{ActUserName},#{RepoID},#{RepoUserName},#{RepoName}
+        ,#{RefName},#{IsPrivate},#{Content},#{CreatedUnix})
+    </insert>
+</mapper>

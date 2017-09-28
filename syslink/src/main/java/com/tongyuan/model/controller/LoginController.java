@@ -1,10 +1,8 @@
 package com.tongyuan.model.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.domain.User;
 import com.tongyuan.model.service.UserService;
-import com.tongyuan.tools.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,15 +100,5 @@ public class LoginController {
             map.put("errormsg","登陆失败，请输入正确的用户！");
         }
         return map;
-    }
-    @RequestMapping(value="api/test",method=RequestMethod.POST)
-    @ResponseBody
-    public void test(HttpServletRequest request,HttpServletResponse response){
-        String name = request.getParameter("name");
-        String age = request.getParameter("age");
-        JSONObject jo = new JSONObject();
-        jo.put("name",name+"nnnnn");
-        jo.put("age",age+"aaaaa");
-        ServletUtil.createSuccessResponse(200, jo, response);
     }
 }

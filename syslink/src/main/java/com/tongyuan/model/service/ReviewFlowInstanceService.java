@@ -19,6 +19,4 @@ public interface ReviewFlowInstanceService {
     int setStatus(Map<String, Object> map); //返回修改的数目，返回1修改成功，返回0修改失败。map的key为status和instanceId
     List<ReviewFlowInstance> queryByNameAndStatus(Map<String, Object> map);
     int updateTime(Map<String, Object> map);
-
-    Long startInstance(Long modelId);
 }

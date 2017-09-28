@@ -15,4 +15,6 @@ public interface VariableMapper {
     int update(Variable variable);
     int deleteByIds(String[] ids);
     List<Variable>  queryListByModelId(Long modelId);
+    public long selectId();
+    public List<Variable> findAllVariable();
 }

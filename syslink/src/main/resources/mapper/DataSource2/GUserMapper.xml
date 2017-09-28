@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.gogs.dao.GUserMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.gogs.domain.GUser">
+        <id column="id" property="ID" jdbcType="BIGINT"  />
+        <result column="lower_name" property="LowerName" jdbcType="VARCHAR"/>
+        <result column="name" property="Name" jdbcType="VARCHAR"/>
+        <result column="full_name" property="FullName" jdbcType="VARCHAR"/>
+        <result column="email" property="Email" jdbcType="VARCHAR"/>
+        <result column="passwd" property="Passwd" jdbcType="VARCHAR"/>
+        <result column="login_type" property="LoginType" jdbcType="INTEGER"/>
+        <result column="login_source" property="LoginSource" jdbcType="BIGINT"/>
+        <result column="login_name" property="LoginName" jdbcType="VARCHAR"/>
+        <result column="type" property="Type" jdbcType="INTEGER"/>
+        <result column="location" property="Location" jdbcType="VARCHAR"/>
+        <result column="website" property="Website" jdbcType="VARCHAR"/>
+        <result column="rands" property="Rands" jdbcType="VARCHAR"/>
+        <result column="salt" property="Salt" jdbcType="VARCHAR"/>
+        <result column="created_unix" property="CreatedUnix" jdbcType="BIGINT"/>
+        <result column="updated_unix" property="UpdatedUnix" jdbcType="BIGINT"/>
+        <result column="last_repo_visibility" property="LastRepoVisibility" jdbcType="TINYINT"/>
+        <result column="max_repo_creation" property="MaxRepoCreation" jdbcType="TINYINT"/>
+        <result column="is_active" property="IsActive" jdbcType="TINYINT"/>
+        <result column="is_admin" property="IsAdmin" jdbcType="TINYINT"/>
+        <result column="allow_git_hook" property="AllowGitHook" jdbcType="TINYINT"/>
+        <result column="allow_import_local" property="AllowImportLocal" jdbcType="TINYINT"/>
+        <result column="prohibit_login" property="ProhibitLogin" jdbcType="TINYINT"/>
+        <result column="avatar" property="Avatar" jdbcType="VARCHAR"/>
+        <result column="avatar_email" property="AvatarEmail" jdbcType="VARCHAR"/>
+        <result column="use_custom_avatar" property="UseCustomAvatar" jdbcType="TINYINT"/>
+        <result column="num_followers" property="NumFollowers" jdbcType="INTEGER"/>
+        <result column="num_following" property="NumFollowing" jdbcType="INTEGER"/>
+        <result column="num_stars" property="NumStars" jdbcType="INTEGER"/>
+        <result column="num_repos" property="NumRepos" jdbcType="INTEGER"/>
+        <result column="description" property="Description" jdbcType="VARCHAR"/>
+        <result column="num_teams" property="NumTeams" jdbcType="INTEGER"/>
+        <result column="num_members" property="NumMembers" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,lower_name,name,full_name,email,passwd,login_type,login_source,login_name,type,location,website,
+        rands,salt,created_unix,updated_unix,last_repo_visibility,max_repo_creation,is_active,is_admin,allow_git_hook,
+        allow_import_local,prohibit_login,avatar,avatar_email,use_custom_avatar,num_followers,num_following,num_stars,
+        num_repos,description,num_teams,num_members
+    </sql>
+    <insert id="add"></insert>
+    <update id="update"  parameterType="com.tongyuan.gogs.domain.GUser">
+        UPDATE  user set lower_name = #{LowerName},name = #{Name},full_name = #{FullName},email = #{Email},passwd = #{Passwd},login_type = #{LoginType},login_source = #{LoginSource}
+        ,type = #{Type},location = #{Location},website = #{Website},rands = #{Rands},salt = #{Salt},created_unix = #{CreatedUnix}
+        ,updated_unix = #{UpdatedUnix},last_repo_visibility = #{LastRepoVisibility},max_repo_creation = #{MaxRepoCreation},is_active = #{IsActive},
+        is_admin = #{IsAdmin},allow_git_hook = #{AllowGitHook} ,allow_import_local = #{AllowImportLocal},prohibit_login = #{ProhibitLogin},avatar = #{Avatar},
+        avatar_email = #{AvatarEmail},use_custom_avatar = #{UseCustomAvatar},num_followers = #{NumFollowers},num_following = #{NumFollowing},
+        num_stars = #{NumStars},num_repos = #{NumRepos},description = #{Description},num_teams = #{NumTeams},num_members = #{NumMembers} WHERE id = #{ID}
+    </update>
+    <select id="querListByName" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.GUser">
+        SELECT  <include refid="baseColumnList" ></include>
+        FROM user
+        where name = #{Name}
+    </select>
+</mapper>

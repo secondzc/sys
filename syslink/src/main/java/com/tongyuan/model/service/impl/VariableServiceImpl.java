@@ -36,4 +36,14 @@ public class VariableServiceImpl implements VariableService {
     public List<Variable> queryListByModelId(Long modelId) {
         return this.variableMapper.queryListByModelId(modelId);
     }
+
+    @Override
+    public long selectId() {
+        return this.variableMapper.selectId();
+    }
+
+    @Override
+    public List<Variable> findAllVariable() {
+        return this.variableMapper.findAllVariable();
+    }
 }

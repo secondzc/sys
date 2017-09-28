@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tongyuan.model.dao.VariableMapper">
     <resultMap id="baseResultMap" type="com.tongyuan.model.domain.Variable">
-        <id column="id" property="id" jdbcType="BIGINT"  />
+        <id column="id" property="id" jdbcType="BIGINT" />
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
@@ -13,19 +13,20 @@
         <result column="is_param" property="IsParam" jdbcType="INTEGER"/>
         <result column="is_input" property="IsInput" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="DATE"></result>
+        <result column="componnet_id" property="componnetId" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="baseColumnList" >
-        id,model_id,name,type,default_value,units,lower_bound,upper_bound,is_param,is_input,create_time
+        id,model_id,name,type,default_value,units,lower_bound,upper_bound,is_param,is_input,create_time,componnet_id
     </sql>
     <insert id="add" parameterType="com.tongyuan.model.domain.Variable">
-        INSERT INTO variable (model_id, name,type,default_value,units,lower_bound,upper_bound,is_param,is_input,create_time) VALUES
-        (#{modelId}, #{name}, #{type},#{defaultValue}, #{units}, #{lowerBound},#{upperBound}, #{IsParam}, #{IsInput},#{createTime})
+        INSERT INTO variable (model_id, name,type,default_value,units,lower_bound,upper_bound,is_param,is_input,create_time,componnet_id) VALUES
+        (#{modelId}, #{name}, #{type},#{defaultValue}, #{units}, #{lowerBound},#{upperBound}, #{IsParam}, #{IsInput},#{createTime},#{componnetId})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Variable">
         UPDATE variable SET
         model_id = #{modelId},name = #{name},type = #{type},default_value = #{defaultValue},units = #{units},lower_bound = #{lowerBound}
-        ,upper_bound = #{upperBound},is_param = #{IsParam},is_input = #{IsInput}
+        ,upper_bound = #{upperBound},is_param = #{IsParam},is_input = #{IsInput},componnet_id = #{componnetId}
         WHERE id = #{id}
     </update>
     <delete id="deleteByIds" parameterType="java.lang.String">
@@ -43,5 +44,14 @@
         WHERE  model_id = #{modelId}
         order by create_time desc)m
         where 1=1 GROUP BY NAME
+    </select>
+    <select id="selectId" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID()
+    </select>
+    <select id="findAllVariable" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Variable">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        from  variable
+        where 1=1
     </select>
 </mapper>

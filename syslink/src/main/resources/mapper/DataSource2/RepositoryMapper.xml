@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongyuan.gogs.dao.RepositoryMapper">
+  <resultMap id="baseResultMap" type="com.tongyuan.gogs.domain.Repository">
+    <id column="id" property="ID" jdbcType="BIGINT"  />
+    <result column="owner_id" property="OwnerID" jdbcType="BIGINT"/>
+    <result column="lower_name" property="LowerName" jdbcType="VARCHAR"/>
+    <result column="name" property="Name" jdbcType="VARCHAR"/>
+    <result column="description" property="Description" jdbcType="VARCHAR"/>
+    <result column="website" property="Website" jdbcType="VARCHAR"/>
+    <result column="default_branch" property="DefaultBranch" jdbcType="VARCHAR"/>
+    <result column="size" property="Size" jdbcType="BIGINT"/>
+    <result column="num_watches" property="NumWatches" jdbcType="INTEGER"/>
+    <result column="num_stars" property="NumStars" jdbcType="INTEGER"/>
+    <result column="num_forks" property="NumForks" jdbcType="INTEGER"/>
+    <result column="num_issues" property="NumIssues" jdbcType="INTEGER"/>
+    <result column="num_closed_issues" property="NumClosedIssues" jdbcType="INTEGER"/>
+    <result column="num_pulls" property="NumPulls" jdbcType="INTEGER"/>
+    <result column="num_closed_pulls" property="NumClosedPulls" jdbcType="INTEGER"/>
+    <result column="num_milestones" property="NumMilestones" jdbcType="INTEGER"/>
+    <result column="num_closed_milestones" property="NumClosedMilestones" jdbcType="INTEGER"/>
+    <result column="is_private" property="IsPrivate" jdbcType="TINYINT"/>
+    <result column="is_bare" property="IsBare" jdbcType="TINYINT"/>
+    <result column="is_mirror" property="IsMirror" jdbcType="TINYINT"/>
+    <result column="enable_wiki" property="EnableWiki" jdbcType="TINYINT"/>
+    <result column="allow_public_wiki" property="AllowPublicWiki" jdbcType="TINYINT"/>
+    <result column="enable_external_wiki" property="EnableExternalWiki" jdbcType="TINYINT"/>
+    <result column="external_wiki_url" property="ExternalWikiURL" jdbcType="VARCHAR"/>
+    <result column="enable_issues" property="EnableIssues" jdbcType="TINYINT"/>
+    <result column="allow_public_issues" property="AllowPublicIssues" jdbcType="TINYINT"/>
+    <result column="enable_external_tracker" property="EnableExternalTracker" jdbcType="TINYINT"/>
+    <result column="external_tracker_url" property="ExternalTrackerURL" jdbcType="VARCHAR"/>
+    <result column="external_tracker_format" property="ExternalTrackerFormat" jdbcType="VARCHAR"/>
+    <result column="external_tracker_style" property="ExternalTrackerStyle" jdbcType="VARCHAR"/>
+    <result column="enable_pulls" property="EnablePulls" jdbcType="TINYINT"/>
+    <result column="is_fork" property="IsFork" jdbcType="TINYINT"/>
+    <result column="fork_id" property="ForkID" jdbcType="BIGINT"/>
+    <result column="created_unix" property="CreatedUnix" jdbcType="BIGINT"/>
+    <result column="updated_unix" property="UpdatedUnix" jdbcType="BIGINT"/>
+  </resultMap>
+
+  <sql id="baseColumnList" >
+    id, owner_id, lower_name,name,description,website,default_branch,size,num_watches,num_stars,num_forks,
+    num_issues,num_closed_issues,num_pulls,num_closed_pulls,num_milestones,num_closed_milestones,is_private,
+    is_bare,is_mirror,enable_wiki,allow_public_wiki,enable_external_wiki,external_wiki_url,enable_issues,
+    allow_public_issues,enable_external_tracker,external_tracker_url,external_tracker_format,external_tracker_style,
+    enable_pulls,is_fork,fork_id,created_unix,updated_unix
+  </sql>
+  <insert id="add" parameterType="com.tongyuan.gogs.domain.Repository">
+    INSERT INTO repository (owner_id, lower_name,name,description,website,default_branch,size,num_watches,num_stars,num_forks,
+    num_issues,num_closed_issues,num_pulls,num_closed_pulls,num_milestones,num_closed_milestones,is_private,
+    is_bare,is_mirror,enable_wiki,allow_public_wiki,enable_external_wiki,external_wiki_url,enable_issues,
+    allow_public_issues,enable_external_tracker,external_tracker_url,external_tracker_format,external_tracker_style,
+    enable_pulls,is_fork,fork_id,created_unix,updated_unix) VALUES
+    (#{OwnerID},#{LowerName},#{Name},#{Description},#{Website},#{DefaultBranch},#{Size},#{NumWatches},#{NumStars},#{NumForks},#{NumIssues},
+    #{NumClosedIssues},#{NumPulls},#{NumClosedPulls},#{NumMilestones},#{NumClosedMilestones},#{IsPrivate},#{IsBare},#{IsMirror},#{EnableWiki}
+    ,#{AllowPublicWiki},#{EnableExternalWiki},#{ExternalWikiURL},#{EnableIssues},#{AllowPublicIssues},#{EnableExternalTracker},#{ExternalTrackerURL},
+    #{ExternalTrackerFormat},#{ExternalTrackerStyle},#{EnablePulls},#{IsFork},#{ForkID} ,#{CreatedUnix},#{UpdatedUnix})
+  </insert>
+  <select id="queryByName" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
+    SELECT  <include refid="baseColumnList" ></include>
+    FROM repository
+    where name = #{Name}
+  </select>
+
+
+</mapper>

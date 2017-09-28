@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.gogs.dao.WatchMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.gogs.domain.Watch">
+        <id column="id" property="ID" jdbcType="BIGINT"  />
+        <result column="user_id" property="UserID" jdbcType="BIGINT"  />
+        <result column="repo_id" property="RepoID" jdbcType="BIGINT"  />
+    </resultMap>
+    <sql id="baseColumnList" >
+        id,user_id,repo_id
+    </sql>
+    <insert id="add"  parameterType="com.tongyuan.gogs.domain.Watch">
+    INSERT  INTO watch (user_id,repo_id) VALUES (#{UserID},#{RepoID})
+    </insert>
+</mapper>

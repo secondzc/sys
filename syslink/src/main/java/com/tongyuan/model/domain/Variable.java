@@ -35,10 +35,10 @@ public class Variable {
     //变量单位
     private String units;
     @Column(name = "lowerBound")
-    //变量上界
+    //变量下界
     private String lowerBound;
     @Column(name = "upperBound")
-    //变量下界
+    //变量上界
     private String upperBound;
     @Column(name = "IsParam", nullable = false)
     //针对Modelica模型，是参数还是变量，参数为1，变量为0
@@ -49,13 +49,11 @@ public class Variable {
     @Column
     //创建时间
     private Date createTime;
-
-    @Column
     //父类名称
     private String parentName;
     @Column
     //父类id
-    private long parentId;
+    private long componnetId;
     @Column(name = "IsVariable")
     //针对其他模型，是否为输入变量，是为1，不是为0
     private int IsVariable;
@@ -164,11 +162,11 @@ public class Variable {
         this.parentName = parentName;
     }
 
-    public long getParentId() {
-        return parentId;
+    public long getComponnetId() {
+        return componnetId;
     }
 
-    public void setParentId(long parentId) {
-        this.parentId = parentId;
+    public void setComponnetId(long componnetId) {
+        this.componnetId = componnetId;
     }
 }

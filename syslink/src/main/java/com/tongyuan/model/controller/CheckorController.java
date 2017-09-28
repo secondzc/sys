@@ -3,7 +3,6 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.exception.SqlNumberException;
-import com.tongyuan.model.domain.CheckorPage;
 import com.tongyuan.model.domain.ReviewFlowInstance;
 import com.tongyuan.model.domain.ReviewModel;
 import com.tongyuan.model.domain.ReviewNodeInstance;
@@ -25,7 +24,7 @@ import java.util.*;
  * Created by Y470 on 2017/7/7.
  */
 @Controller
-@RequestMapping("/api/checkor")
+@RequestMapping("/checkor")
 public class CheckorController extends BaseController{
     @Autowired
     private StatusChangeService statusChangeService;
@@ -73,11 +72,11 @@ public class CheckorController extends BaseController{
         map.put("page",page);
         map.put("rows",rows);
         //测试用
-        Long userId = 4L;
+        Long userId = 1L;
         map.put("userId",userId);
 
-        List<CheckorPage> reviewNodeInstances = checkorService.queryByReviewer(map);
-        PageInfo<CheckorPage> pageInfo = new PageInfo<CheckorPage>(reviewNodeInstances);
+        List<ReviewNodeInstance> reviewNodeInstances = checkorService.queryByReviewer(map);
+        PageInfo<ReviewNodeInstance> pageInfo = new PageInfo<ReviewNodeInstance>(reviewNodeInstances);
         JSONObject jo = new JSONObject();
         jo.put("rows", reviewNodeInstances);
         jo.put("total", pageInfo.getPages());

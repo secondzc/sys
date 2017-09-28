@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.ComponentMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.Component">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="model_id" property="modelId" jdbcType="BIGINT"/>
+        <result column="current_model_id" property="currentModelId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="Type" jdbcType="VARCHAR"/>
+        <result column="modification" property="Modification" jdbcType="VARCHAR"/>
+        <result column="parent_name" property="parentName" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"></result>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,model_id,current_model_id,name,type,modification,parent_name,parent_id,create_time
+    </sql>
+    <insert id="add" parameterType="com.tongyuan.model.domain.Component">
+         INSERT INTO component (model_id,current_model_id,name, type,modification,parent_name,parent_id,create_time) VALUES
+        (#{modelId},#{currentModelId}, #{name}, #{Type},#{Modification}, #{parentName}, #{parentId}, #{createTime})
+    </insert>
+    <update id="update" parameterType="com.tongyuan.model.domain.Component">
+        UPDATE component SET
+            model_id = #{modelId},current_model_id = #{currentModelId},name = #{name},type = #{Type},modification = #{Modification},parent_name = #{parentName},parent_id = #{parentId}
+            ,create_time = #{createTime}
+            WHERE id = #{id}
+    </update>
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        DELETE FROM component WHERE id in
+        <foreach item="idItem" collection="array" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+    </delete>
+    <select id="selectId" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID()
+    </select>
+    <select id="queryListNullComp" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Component">
+        SELECT  <include refid="baseColumnList" ></include>
+        FROM component
+        where parent_name != '' and model_id = 0  GROUP BY parent_name
+        UNION
+        SELECT  <include refid="baseColumnList" ></include>
+        FROM component
+        where parent_name = '' and model_id = 0  GROUP BY `name`
+    </select>
+
+    <select id="findAllComp" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Component">
+        SELECT <include refid="baseColumnList" ></include>
+            from
+            (SELECT  <include refid="baseColumnList" ></include>
+            FROM component
+            where parent_name != ''   ORDER BY create_time DESC) m
+            WHERE 1=1 GROUP BY m.parent_name
+            UNION
+            SELECT <include refid="baseColumnList" ></include>
+            from
+            (SELECT  <include refid="baseColumnList" ></include>
+            FROM component
+            where parent_name = ''   ORDER BY create_time DESC)n
+            where 1=1 GROUP BY n.`name`
+    </select>
+</mapper>

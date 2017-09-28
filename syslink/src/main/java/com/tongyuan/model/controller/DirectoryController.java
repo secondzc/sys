@@ -415,7 +415,7 @@ public class DirectoryController {
                     }
                 }
             }
-            this.doCmd(name,fileXmlPath,fileName);
+    //        this.doCmd(name,fileXmlPath,fileName);
             result = true;
         } catch (IOException e) {
             // TODO Auto-generated catch block
