@@ -1,7 +1,6 @@
 package com.tongyuan.model.domainmodel;
 
 
-import com.tongyuan.model.enums.PermissionItemDisplayStyle;
 
 /**
  * 权限值信息
@@ -17,8 +16,7 @@ public class PermissionValueModel {
     // 显示名称
     private String displayName;
 
-    // 显示样式
-    private PermissionItemDisplayStyle displayStyle;
+
 
     // 权限值
     private String value;
@@ -44,13 +42,7 @@ public class PermissionValueModel {
 		this.displayName = displayName;
 	}
 
-	public PermissionItemDisplayStyle getDisplayStyle() {
-		return displayStyle;
-	}
 
-	public void setDisplayStyle(PermissionItemDisplayStyle displayStyle) {
-		this.displayStyle = displayStyle;
-	}
 
 	public String getValue() {
 		return value;

@@ -15,6 +15,9 @@ import java.util.Map;
  * Created by Administrator on 2017-7-11.
  */
 public interface UserService {
+
+
+    public User getUserByName(String userName);
     public boolean add(User user);
     public boolean update(User user);
 

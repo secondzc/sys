@@ -15,7 +15,7 @@ public interface UserMapper {
     public boolean update(User user);
     public boolean deleteByIds(String[] ids);
     public Map<String,Object> queryUserById(Long id);
-    public User querUserByName(Map<String, Object> params);
+    public User querUserByName(String userName);
 
 
     public boolean delete(Long id);
