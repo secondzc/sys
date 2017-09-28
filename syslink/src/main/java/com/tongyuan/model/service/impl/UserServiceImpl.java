@@ -294,4 +294,10 @@ public class UserServiceImpl implements UserService {
         return email.size()>0;
     }
 
+
+    @Override
+    public User getUserByName(String userName)
+    {
+        return this.userMapper.querUserByName(userName);
+    }
 }

@@ -4,32 +4,96 @@
     <resultMap id="baseResultMap" type="com.tongyuan.model.domain.User">
         <id column="id" property="id" jdbcType="BIGINT"  />
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
         <result column="pass_word" property="passWord" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="BIGINT"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="deletable" property="deletable" jdbcType="TINYINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="gender" property="gender" jdbcType="TINYINT"/>
     </resultMap>
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="pass_word" property="passWord" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="BIGINT"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="deletable" property="deletable" jdbcType="TINYINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="gender" property="gender" jdbcType="TINYINT" />
+    </resultMap>
+
     <sql id="baseColumnList" >
-        id, user_name, pass_word
+        id, user_name, real_name,pass_word,salt,create_date,update_date,create_user,update_user,department_id,email,mobile,
+        deletable,deleted,status,gender,depts
     </sql>
-    <insert id="add"></insert>
-    <update id="update"></update>
-    <delete id="deleteByIds"></delete>
-    <select id="queryUserById" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.User">
+    <sql id="nameColumnList" >
+        real_name
+    </sql>
+
+    <insert id="add" parameterType="com.tongyuan.model.domain.User"    useGeneratedKeys="true" keyProperty="id">
+
+
+          INSERT INTO user(user_name, pass_word,salt,create_date,create_user,status,mobile,email,department_id,
+        gender,deletable,deleted,real_name)  VALUES(#{userName},#{passWord},#{salt},#{createDate},#{createUser},
+        #{status},#{mobile},#{email},#{departmentId},#{gender},#{deletable},#{deleted},#{realName})
+    </insert>
+    <update id="update"  parameterType="com.tongyuan.model.domain.User">
+        UPDATE USER SET user_name=#{userName},real_name=#{realName},update_date=#{updateDate},update_user=#{updateUser},
+        gender=#{gender},department_id=#{departmentId},mobile=#{mobile},email=#{email}
+        WHERE id=#{id}
+    </update>
+
+
+    <delete id="delete" parameterType="long">
+        delete from USER where id=#{id}
+    </delete>
+
+    <select id="queryUserById" resultType="map">
         SELECT
-        <include refid="baseColumnList"></include>
+        <include refid="baseColumnList" />
         FROM USER
-        where id = #{id}
+        WHERE id = #{param1}
     </select>
+    <select id="findAllUsers" resultMap="mapResultMap" resultType="map" parameterType="java.util.HashMap">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM USER
+        WHERE
+        deleted = 0
+        <if test="realName != null and realName !=''">
+            AND real_name like CONCAT(CONCAT('%',#{realName,jdbcType=VARCHAR}),'%')
+        </if>
+         ORDER BY id
+    </select>
+    <select id="findAllName" resultMap="mapResultMap" resultType="map">
+        SELECT
+        <include refid="nameColumnList" />
+        FROM USER
+        WHERE
+        deleted = 0
+        ORDER BY id
+    </select>
+
+
     <select id="querUserByName" resultMap="baseResultMap"  resultType="com.tongyuan.model.domain.User">
         SELECT
         <include refid="baseColumnList"></include>
         FROM USER
         where user_name = #{userName}
     </select>
-
-    <select id="getUserByName" resultMap="baseResultMap" parameterType="java.lang.String">
-        SELECT
-        <include refid="baseColumnList"/>
-        FROM USER
-        WHERE user_name = #{userName}
-    </select>
-
 </mapper>
