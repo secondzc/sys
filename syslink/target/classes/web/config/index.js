@@ -1,6 +1,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
+//resolve将后一个参数解析为绝对路径，__dirname表示获得绝对路径
 var assetsRoot = path.resolve(__dirname, '../../static')// <-----1.add
 module.exports = {
     build: {
@@ -29,7 +30,7 @@ module.exports = {
         assetsSubDirectory: 'assets',// <-----6.change
         assetsPublicPath: '/',
         proxyTable: {// <-----7.change
-            '/api/**': 'http://gogs.modelica-china.com:8080'//代理前台/api开头的请求，代理到8080端口，spring boot的访问端口
+            '/api/**': 'http://localhost:8080'//代理前台/api开头的请求，代理到8080端口，spring boot的访问端口
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"
         // with this option, according to the CSS-Loader README
