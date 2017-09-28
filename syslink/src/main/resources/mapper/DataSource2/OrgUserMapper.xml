@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.daoExtra.OrgUserMapper">
+
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <id column="uid" property="uid" jdbcType="BIGINT"  />
+        <id column="org_id" property="orgId" jdbcType="BIGINT"  />
+        <id column="is_public" property="isPublic" jdbcType="TINYINT"  />
+        <id column="is_owner" property="isOwner" jdbcType="TINYINT"  />
+        <id column="num_teams" property="numTeams" jdbcType="INTEGER"  />
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,uid,org_id,is_public,is_owner,num_teams
+    </sql>
+    <insert id="add"  parameterType="map"   >
+        INSERT INTO org_user (id,uid,org_id,is_public,is_owner,num_teams) VALUES
+        (#{id}, #{uid},#{orgId},#{isPublic},#{isOwner},#{numTeams})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE org_user
+        <set>
+            <if test="uid != null">uid=#{uid},</if>
+            <if test="orgId != null">org_id=#{orgId},</if>
+            <if test="isPublic != null">is_public=#{isPublic},</if>
+            <if test="isOwner != null">is_owner=#{isOwner},</if>
+            <if test="numTeams != null">num_teams=#{numTeams},</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from org_user where org_id=#{id}
+    </delete>
+
+
+
+
+    <select id="query" resultMap="mapResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM org_user
+        WHERE
+        <if test="orgId !=null and orgId!=''">
+             org_id = #{orgId}
+        </if>
+
+    </select>
+
+
+</mapper>

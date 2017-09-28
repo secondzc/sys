@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.daoExtra.TeamMapper">
+
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <id column="org_id" property="orgId" jdbcType="BIGINT"  />
+        <id column="lower_name" property="lowerName" jdbcType="VARCHAR"  />
+        <id column="name" property="name" jdbcType="VARCHAR"  />
+        <id column="description" property="description" jdbcType="VARCHAR"  />
+        <id column="authorize" property="authorize" jdbcType="INTEGER"  />
+        <id column="num_repos" property="numRepos" jdbcType="INTEGER"  />
+        <id column="num_members" property="numMembers" jdbcType="INTEGER"  />
+
+
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,org_id,lower_name,name,description,authorize,num_repos,num_members
+    </sql>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="map"   >
+        INSERT INTO team (id,org_id,lower_name,name,description,authorize,num_repos,num_members) VALUES
+        (#{id}, #{orgId},#{lowerName},#{name},#{description},#{authorize},#{numRepos},#{numMembers})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE team
+        <set>
+            <if test="orgId != null">org_id=#{orgId},</if>
+            <if test="lowerName != null">lower_name=#{lowerName},</if>
+            <if test="name != null">name=#{name},</if>
+            <if test="description != null">description=#{description},</if>
+            <if test="authorize != null">authorize=#{authorize},</if>
+            <if test="numRepos != null">num_repos=#{numRepos},</if>
+            <if test="numMembers != null">num_members=#{numMembers},</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from team where org_id=#{id}
+    </delete>
+
+
+
+
+    <select id="query" resultMap="mapResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM team
+        WHERE
+        <if test="orgId !=null and orgId!=''">
+            org_id = #{orgId}
+        </if>
+    </select>
+
+
+</mapper>

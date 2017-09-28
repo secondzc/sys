@@ -17,6 +17,17 @@ import setCheckors from './views/review/setCheckors.vue'
 import mySubmit from './views/review/mySubmit.vue'
 import mySubmitDetail from './views/review/mySubmitDetail.vue'
 import checkor from './views/review/checkor.vue'
+import Myorg from './views/nav4/Myorg.vue'
+import OrgEdit from './views/nav4/OrgEdit.vue'
+import GUser from './views/nav4/GUser.vue'
+import TreeGrid from './views/nav4/TreeGrid.vue'
+import test from './views/nav4/model.vue'
+import tree from './views/nav4/tree.vue'
+import log from   './views/nav4/log.vue'
+import permission from './views/nav4/permission.vue'
+import role from './views/nav4/role.vue'
+import test2 from './views/nav4/test2.vue'
+import team from './views/nav4/team.vue'
 
 let routes = [
     {
@@ -111,17 +122,33 @@ let routes = [
     {
         path: '/',
         component: Home,
+        name: '',
+        iconCls: 'el-icon-delete',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/Myorg', component: Myorg, name: '我的组织'},
+            { path: '/Myorg/:name', component: team, name: '团队管理',hidden:true}
+        ]
+    },
+     {
+        path: '/',
+        component: Home,
         name: '系统管理',
         iconCls: 'el-icon-setting',//图标样式class
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: '/table', component: Table, name: '项目管理' },
-            { path: '/form', component: Form, name: '组织管理' },
-            { path: '/user', component: user, name: '用户管理' },
-            { path: '/user', component: user, name: '角色管理' },
-            { path: '/user', component: user, name: '权限管理' },
+            { path: '/test2', component: test2, name: '项目管理'
+   //         ,children:[{    path:'/team',component: team, name:'团队管理'    }]
+        },
+            { path: '/tree', component: tree, name: '组织管理' },
+            { path: '/TreeGrid', component: TreeGrid, name: '用户管理' },
+             { path: '/GUser', component: GUser, name: 'Gos用户管理' },
+            { path: '/role', component: role, name: '角色管理' },
+            { path: '/permission', component: permission, name: '权限管理' },
             { path: '/user', component: user, name: '应用监控' },
-            { path: '/user', component: user, name: '日志管理' },
+            { path: '/log', component: log, name: '日志管理' },
+            { path:'/team',component: team, name:'团队管理'  ,hidden:true  }
+
         ]
     },
     {
