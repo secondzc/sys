@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.daoExtra.TeamUserMapper">
+
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <id column="org_id" property="orgId" jdbcType="BIGINT"  />
+        <id column="team_id" property="teamId" jdbcType="BIGINT"  />
+        <id column="uid" property="uid" jdbcType="BIGINT"  />
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,org_id,team_id,uid
+    </sql>
+    <insert id="add"  parameterType="map"   >
+        INSERT INTO team_user (id,org_id,team_id,uid) VALUES
+        (#{id}, #{orgId},#{teamId},#{uid})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE team_user
+        <set>
+            <if test="orgId != null">org_id=#{orgId},</if>
+            <if test="teamId != null">team_id=#{teamId},</if>
+            <if test="uid != null">uid=#{uid},</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from team_user where org_id=#{id}
+    </delete>
+
+
+
+
+    <select id="query" resultMap="mapResultMap" resultType="map" parameterType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM team_user
+        WHERE 1 = 1;
+    </select>
+
+
+</mapper>

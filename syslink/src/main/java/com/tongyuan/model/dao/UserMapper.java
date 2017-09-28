@@ -3,6 +3,7 @@ package com.tongyuan.model.dao;
 import com.tongyuan.model.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,10 +11,16 @@ import java.util.Map;
  */
 @Mapper
 public interface UserMapper {
-    int add(User user);
-    int update(User user);
-    int deleteByIds(String[] ids);
-    User queryUserById(Long id);
-    User querUserByName(Map<String, Object> params);
-    User getUserByName(String userName);
+    public boolean add(User user);
+    public boolean update(User user);
+    public boolean deleteByIds(String[] ids);
+    public Map<String,Object> queryUserById(Long id);
+    public User querUserByName(Map<String, Object> params);
+
+
+    public boolean delete(Long id);
+
+     public  List<Map<String,Object>> findAllUsers(Map<String,Object> map);
+
+     public  List<Map<String ,Object>>findAllName();
 }

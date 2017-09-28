@@ -1,4 +1,4 @@
-package com.tongyuan;
+﻿package com.tongyuan;
 
 import com.tongyuan.client.CxfClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,9 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class
+})
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration

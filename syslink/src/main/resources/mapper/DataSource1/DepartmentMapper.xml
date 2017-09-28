@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.DepartmentMapper">
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="BIGINT"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="pid" property="pid" jdbcType="BIGINT"/>
+        <result column="create_date" property="createDate" jdbcType="DATE"/>
+        <result column="update_date" property="updateDate" jdbcType="DATE"/>
+        <result column="update_person" property="updatePerson" jdbcType="BIGINT"/>
+        <result column="sort" property="sort" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+       id, name, description,pid,pids,create_date,update_date,create_person,update_person,sort
+    </sql>
+    <insert id="add"  parameterType="map">
+        INSERT INTO department (name, description,pid,pids,create_date,update_date,create_person,update_person,sort) VALUES
+        (#{name}, #{description}, #{pid},#{pids},#{createDate}, #{updateDate}, #{createPerson},#{updatePerson}, #{sort})
+    </insert>
+
+
+    <select id="queryDepartmentById" resultMap="mapResultMap"  resultType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM department
+        WHERE id = #{param1}
+    </select>
+    <select id="queryDepartmentByPid"  resultMap="mapResultMap"  resultType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM department
+        WHERE pid = #{param1}
+    </select>
+    <select id="queryPDepartment"  resultMap="mapResultMap"  resultType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM department
+        WHERE id = #{param1}
+    </select>
+    <delete id="delete" parameterType="long">
+        delete from department where id=#{id}
+    </delete>
+
+
+
+
+
+    <select id="queryDeptList1" resultMap="mapResultMap" resultType="com.tongyuan.model.domain.Department">
+        select
+        <include refid="baseColumnList" />
+        from department
+        <where>
+            1 = 1
+
+                AND pid =#{param1}
+
+
+        </where>
+    </select>
+    <select id="queryDeptList" resultMap="mapResultMap" resultType="com.tongyuan.model.domain.Department">
+        select
+        <include refid="baseColumnList" />
+        from department
+        <where>
+            1 = 1
+            AND  pid = 0
+            <if test="id!= null and id !=''">
+                AND pid =#{id}
+            </if>
+        </where>
+    </select>
+
+</mapper>

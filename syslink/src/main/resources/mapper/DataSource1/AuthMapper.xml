@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.AuthMapper">
+
+    <resultMap id="mapResultMap" type="map">
+        <id column="auth_id" property="authId" jdbcType="BIGINT"  />
+        <id column="parent_id" property="parentId" jdbcType="BIGINT"  />
+        <result column="auth_name" property="authName" jdbcType="VARCHAR"/>
+        <result column="auth_code" property="authCode" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+
+    </resultMap>
+    <sql id="baseColumnList" >
+        auth_id,auth_name,auth_code,create_date,description,url,parent_id
+    </sql>
+    <insert id="add"  parameterType="map">
+        INSERT INTO auth (auth_name,auth_code,create_date,description,url,parent_id) VALUES
+        (#{authName}, #{authCode}, #{createDate},#{description},#{url},#{parentId})
+    </insert>
+    <update id="update"  parameterType="map">
+        UPDATE auth SET auth_name=#{authName},description=#{description},auth_code=#{authCode},create_date=#{createDate},url=#{url}
+        WHERE auth_id=#{authId}
+    </update>
+    <select id="query" resultMap="mapResultMap" resultType="map" >
+        SELECT
+        <include refid="baseColumnList" />
+        FROM auth
+        WHERE parent_id IS NULL
+    </select>
+    <select id="getChildren" resultMap="mapResultMap" resultType="map" >
+        SELECT
+        <include refid="baseColumnList" />
+        FROM auth
+        WHERE parent_id =#{authId}
+    </select>
+    <delete id="delete" parameterType="long">
+        delete from auth where auth_id=#{id}
+    </delete>
+
+
+</mapper>
