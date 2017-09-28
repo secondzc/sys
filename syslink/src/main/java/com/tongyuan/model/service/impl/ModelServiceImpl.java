@@ -62,6 +62,18 @@ public class ModelServiceImpl implements ModelService{
         return this.modelMapper.vagueSearchByName(params);
     }
 
+    @Override
+    public Model queryModelById(Long id) {
+        return this.modelMapper.queryModelById(id);
+    }
+
+    @Override
+    public List<Model> queryModelByParId(Long id) {
+        return this.modelMapper.queryModelByParId(id);
+    }
+
+
+
 
 /*    @Override
     public void insertModelData(String modelDir, String modelName, String modelPath, String description) {

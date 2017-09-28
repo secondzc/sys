@@ -2,6 +2,7 @@ package com.tongyuan.config;
 
 
 import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.webservice.CommonService;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
@@ -21,6 +22,8 @@ public class CxfConfig {
 
 	@Autowired
 	DirectoryService directoryService;
+	@Autowired
+	private FileModelService fileModelService;
 
 	/** JAX-WS **/
 	@Bean

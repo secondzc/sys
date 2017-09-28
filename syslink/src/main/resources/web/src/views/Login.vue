@@ -1,7 +1,10 @@
 <template>
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
     <h3 class="title">系统登录</h3>
-    <el-form-item prop="userName">
+      <template>
+        <img src="/assets/arrow.jpg" >
+      </template>
+      <el-form-item prop="userName">
       <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="password">
@@ -20,6 +23,7 @@
   //import NProgress from 'nprogress'
   export default {
     data() {
+        var test='';
         var validateUsername = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入用户名'));
@@ -52,6 +56,21 @@
       };
     },
     methods: {
+      /*test() {
+        this.$http.post('/api/test',{})
+        .then(function (response) {
+           console.log(response.data.name);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+      },*/
+      /*test(){
+        this.func.ajaxPost('/api/test',{name:'zhang',age:'13'},res=>{
+          console.log(res.data.name);
+          console.log(res.data.age);
+        });
+      },*/
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },
@@ -67,6 +86,7 @@
                       userName: _this.ruleForm2.userName,
                       password: _this.ruleForm2.password,
                       rememberMe: _this.ruleForm2.rememberMe,
+                      test: _this.ruleForm2.rememberMe,
                   },
 
               },)

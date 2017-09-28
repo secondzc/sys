@@ -111,7 +111,7 @@
             AND name = #{name,jdbcType=VARCHAR}
         </if>
         <if test="parent_id != null and parent_id !=''">
-            AND parent_id = #{parentId,jdbcType=BIGINT}
+            AND parent_id = #{parent_id,jdbcType=BIGINT}
         </if>
     </select>
 </mapper>

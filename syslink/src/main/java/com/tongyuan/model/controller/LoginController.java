@@ -37,7 +37,7 @@ public class LoginController {
         String userName=request.getParameter("userName");
         String password=request.getParameter("password");
         if(!userName.equals("") && password!=""){
-            User user =new User(userName,password);
+            GUser user =new GUser(userName,password);
             request.getSession().setAttribute("user",user);
             map.put("result","1");
         }else{

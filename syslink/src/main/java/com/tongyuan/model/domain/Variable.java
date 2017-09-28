@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * 变量表
@@ -24,34 +25,48 @@ public class Variable {
     @Column(name = "name", length = 128)
     //类型名
     private String name;
-
     @Column(name = "type")
     //变量类型
     private String type;
-
     @Column(name = "defaultValue", length = 255)
     //默认值
     private String defaultValue;
-
     @Column(name = "units", length = 255)
     //变量单位
     private String units;
-
     @Column(name = "lowerBound")
     //变量上界
     private String lowerBound;
-
     @Column(name = "upperBound")
     //变量下界
     private String upperBound;
-
     @Column(name = "IsParam", nullable = false)
     //针对Modelica模型，是参数还是变量，参数为1，变量为0
     private int IsParam;
-
     @Column(name = "IsInput")
     //针对其他模型，是否为输入变量，是为1，不是为0
     private int IsInput;
+    @Column
+    //创建时间
+    private Date createTime;
+
+    @Column
+    //父类名称
+    private String parentName;
+    @Column
+    //父类id
+    private long parentId;
+    @Column(name = "IsVariable")
+    //针对其他模型，是否为输入变量，是为1，不是为0
+    private int IsVariable;
+
+    public int getIsVariable() {
+        return IsVariable;
+    }
+
+    public void setIsVariable(int isVariable) {
+        IsVariable = isVariable;
+    }
 
     public long getId() {
         return id;
@@ -109,6 +124,14 @@ public class Variable {
         this.lowerBound = lowerBound;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public String getUpperBound() {
         return upperBound;
     }
@@ -131,5 +154,21 @@ public class Variable {
 
     public void setIsInput(int isInput) {
         IsInput = isInput;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
     }
 }

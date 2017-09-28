@@ -54,7 +54,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
   //      username = "root";
    //     password = "root";
         if(!("".equals(username))&& username!=null && !("".equals(password))&& password!=null){
-/*            User user = userService.getUserByName(username);
+/*            GUser user = userService.getUserByName(username);
             String EncryptedPassword =PBKDF2SHA256.getEncryptedPassword(password, user.getSalt());
             if(user != null && EncryptedPassword.equals(user.getPasswd())){*/
             params.put("userName",username);

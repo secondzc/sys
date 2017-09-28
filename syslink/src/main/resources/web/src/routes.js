@@ -12,8 +12,24 @@ import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import Repository from './views/repository/index.vue'
 import Model from './views/model/index.vue'
+import template from './views/review/template.vue'
+import setCheckors from './views/review/setCheckors.vue'
+import mySubmit from './views/review/mySubmit.vue'
+import mySubmitDetail from './views/review/mySubmitDetail.vue'
+import checkor from './views/review/checkor.vue'
 
 let routes = [
+    {
+        path: '/',
+        component: Home,
+        name: '系统管理',
+        iconCls: 'el-icon-setting',//图标样式class
+        children: [
+            // { path: '/main', component: Main, name: '项目', hidden: true },
+            { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
+            { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
+        ]
+    },
     {
         path: '/login',
         component: Login,
@@ -35,6 +51,21 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/repository/index', component: Repository, name: '我的项目' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '我的项目',
+        iconCls: 'el-icon-star-on',//图标样式class
+        children: [
+            // { path: '/main', component: Main, name: '项目', hidden: true },
+            { path: '/table', component: Table, name: '项目' },
+            { path: '/form', component: Form, name: '模型' },
+            { path: '/user', component: user, name: '仿真' },
+            {path:'/template',component:template,name:'我的模板'},
+            {path:'/checkor',component:checkor,name:'我的待办'},
+            {path:'/mySubmit',component:mySubmit,name:'我的提交'},
         ]
     },
     {
@@ -65,18 +96,6 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/page6', component: Page6, name: '我的分享' }
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: '我的收藏',
-        iconCls: 'el-icon-star-on',//图标样式class
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: '/table', component: Table, name: '项目' },
-            { path: '/form', component: Form, name: '模型' },
-            { path: '/user', component: user, name: '仿真' },
         ]
     },
     {

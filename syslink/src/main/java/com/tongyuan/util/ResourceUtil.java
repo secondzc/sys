@@ -2,6 +2,7 @@ package com.tongyuan.util;
 
 import com.tongyuan.model.controller.DirectoryController;
 import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.tools.StringUtil;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -30,6 +31,8 @@ public class ResourceUtil {
     private DirectoryController directoryController;
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private FileModelService filemodelService;
     @Autowired
     private ResourceUtil resourceUtil;;
 
@@ -89,6 +92,10 @@ public class ResourceUtil {
     public boolean writeFile(String filePath, long beginPos, long length,
                              byte[] data) throws IOException {
         boolean result = false;
+        File file = new File(filePath);
+        if(file.exists()){
+            resourceUtil.deleteFile(filePath);
+        }
         RandomAccessFile ra = new RandomAccessFile(filePath, "rw");
         try {
             ra.seek(beginPos);
@@ -203,6 +210,23 @@ public class ResourceUtil {
         return userName + "/" + renametaskName + "/";
     }
 
+    /**
+     * xyx
+     * 解压文件
+     * @param filePath
+     * @param outPutPath
+     * @return
+     */
+    public void UnZip(String filePath,String outPutPath){
+        try {
+            unzip(filePath,outPutPath);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 
     /**
@@ -313,7 +337,27 @@ public class ResourceUtil {
                 return element.getText();
             }
         } else if (elements.size() == 1) {
+            List<Object> list = new ArrayList<Object>();
+            Map<String ,String > templateMap = new HashMap<>();
+            if(elements.get(0).attributeCount() >0){
+                for (int i = 0; i < elements.get(0).attributeCount(); i++) {
+                    templateMap.put(elements.get(0).attribute(i).getName(), elements.get(0).attribute(i).getValue());
+                }
+                //                      if(elements2.get(j).getParent().attributeCount() >0){
+                // templateMap.put("parentName",elements2.get(j).getParent().attribute(0).getValue()+";"+elements2.get(j).attribute(0).getValue());
+
+                //                  }
+                String parentName = "";
+                if(elements.get(0).attribute(0) != null){
+                    parentName = elements.get(0).attribute(0).getValue();
+                }
+                parentName = getParentName(elements.get(0),parentName);
+                templateMap.put("parentName",parentName);
+            }
+            list.add(templateMap);
+            map.put("componentVar", list);
             map.put(elements.get(0).getName(), xml2map(elements.get(0)));
+
         } else if (elements.size() > 1) {
             // 多个子节点的话就得考虑list的情况了，比如多个子节点有节点名称相同的
             // 构造一个map用来去重
@@ -328,8 +372,27 @@ public class ResourceUtil {
                 // 如果同名的数目大于1则表示要构建list
                 if (elements2.size() > 1) {
                     List<Object> list = new ArrayList<Object>();
-                    for (Element ele : elements2) {
-                        list.add(xml2map(ele));
+//                    for (Element ele : elements2) {
+                    for(int j=0 ; j< elements2.size();j++){
+                        //多层次的Component参数展示
+                        //存储组件参数信息的map
+                        Map<String ,String > templateMap = new HashMap<>();
+                        if(elements2.get(j).attributeCount() >0){
+                            for (int i = 0; i < elements2.get(j).attributeCount(); i++) {
+                                templateMap.put(elements2.get(j).attribute(i).getName(), elements2.get(j).attribute(i).getValue());
+                            }
+      //                      if(elements2.get(j).getParent().attributeCount() >0){
+                               // templateMap.put("parentName",elements2.get(j).getParent().attribute(0).getValue()+";"+elements2.get(j).attribute(0).getValue());
+
+          //                  }
+                            String parentName = "";
+                            parentName = getParentName(elements2.get(j),parentName);
+                            templateMap.put("parentName",parentName);
+                        }
+                        list.add(templateMap);
+//                        list.add(xml2map(ele));
+                        list.add(xml2map(elements2.get(j)));
+
                     }
                     map.put(string, list);
                 } else {
@@ -340,6 +403,43 @@ public class ResourceUtil {
         }
 
         return map;
+    }
+
+    /**
+     *
+     * 删除单个文件
+     *
+     * @param fileName 被删除的文件各1�7
+     * @return 如果删除成功，则返回true，否则返回false
+     */
+    public static boolean deleteFile(String fileName) {
+        File file = new File(fileName);
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                System.out.print("删除单个文件" + fileName + "成功!");
+                return true;
+            } else {
+                System.out.print("删除单个文件" + fileName + "失败!");
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+
+    //求element的父类名称
+    public static String getParentName(Element element,String parentName){
+        if(element.getParent().attributeCount() >0 ){
+//            if(parentName == ""){
+//                parentName = element.getParent().attribute(0).getValue()+";" + element.attribute(0).getValue();
+//                getParentName(element.getParent(),parentName);
+//            }else{
+                parentName = element.getParent().attribute(0).getValue()+";" + parentName;
+               parentName = getParentName(element.getParent(),parentName);
+//            }
+        }
+        return parentName;
     }
 }
 

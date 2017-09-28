@@ -17,6 +17,8 @@ public interface ModelService {
     public List<Model> findAllModel();
     public List<Model> findRootModel();
     public List<Model> vagueSearchByName(Map<String, Object> params);
+    public Model queryModelById(Long id);
+    List<Model> queryModelByParId(Long id);
     //model解析文件目录，插入数据库
   //  public void insertModelData(String modelDir,String modelName,String modelPath,String description);
 }

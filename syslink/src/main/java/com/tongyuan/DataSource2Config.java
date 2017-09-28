@@ -18,11 +18,11 @@ import javax.sql.DataSource;
  * Created by summer on 2016/11/25.
  */
 @Configuration
-@MapperScan(basePackages = "resources.mapper.DataSource1", sqlSessionTemplateRef  = "test2SqlSessionTemplate")
+@MapperScan(basePackages = "com.tongyuan.gogs.dao", sqlSessionTemplateRef  = "test2SqlSessionTemplate")
 public class DataSource2Config {
 
     @Bean(name = "test2DataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.test2")
+    @ConfigurationProperties(prefix = "spring.datasource.secondary")
     public DataSource testDataSource() {
         return DataSourceBuilder.create().build();
     }
