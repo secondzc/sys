@@ -1,9 +1,7 @@
 package com.tongyuan.model.service;
 
 import com.tongyuan.model.domain.ReviewFlowTemplate;
-import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -18,4 +16,5 @@ public interface ReviewFlowTemplateService {
     int delete(String[] templateIds);
     int changeAlreadyConfig(Long templateId);
     int updateTime(Map<String, Object> map);
+    ReviewFlowTemplate getTemplateByDefault();
 }

@@ -2,7 +2,6 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.tongyuan.model.domain.ReviewFlowTemplate;
 import com.tongyuan.model.domain.ReviewNode;
 import com.tongyuan.model.domain.User;
 import com.tongyuan.model.service.NodeHistoryService;
@@ -12,7 +11,6 @@ import com.tongyuan.model.service.UserService;
 import com.tongyuan.tools.CurdUtil;
 import com.tongyuan.tools.DateUtil;
 import com.tongyuan.tools.ServletUtil;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +29,8 @@ import java.util.Map;
  * Created by Y470 on 2017/6/30.
  */
 @Controller
-@RequestMapping("/reviewNode")
-public class ReviewNodeController extends BaseController{
+@RequestMapping("/api/reviewNode")
+public class ReviewNodeController extends BaseController {
     @Autowired
     private NodeService nodeService;
     @Autowired
@@ -41,6 +39,41 @@ public class ReviewNodeController extends BaseController{
     private ReviewFlowTemplateService reviewFlowTemplateService;
     @Autowired
     private NodeHistoryService nodeHistoryService;
+
+    /**
+     * 用batchAdd方法替换掉addReviewNode方法
+     * @param request
+     * @param response
+     */
+    @PostMapping("/batchAdd")
+    public void batchAdd(HttpServletRequest request, HttpServletResponse response){
+        String reviewNodeNamesStr = request.getParameter("reviewNodeName");
+        String descriptionStr = request.getParameter("description");
+        String userNameStr = request.getParameter("userName");
+        Long templateId = Long.valueOf(request.getParameter("templateId"));
+        String[] reviewNodeNames = reviewNodeNamesStr.split(",");
+        String[] description = descriptionStr.split(",");
+        String[] userName = userNameStr.split(",");
+        int length = reviewNodeNames.length;
+        for(int i=0;i<length;i++){
+            //循环添加
+            ReviewNode reviewNode = new ReviewNode();
+            reviewNode.setNodeName(reviewNodeNames[i]);
+            reviewNode.setDescription(description[i]);
+            User user = userService.getUserByName(userName[i]);
+            Long userId = user.getId();
+            reviewNode.setUserId(userId);
+            reviewNode.setTemplateId(templateId);
+            reviewNode.setSequence((i+1)+"");
+            nodeService.add(reviewNode);
+
+            //修改template的最后修改时间
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("templateId",templateId);
+            map1.put("lastUpdateTime", DateUtil.getCurrentTime());
+            reviewFlowTemplateService.updateTime(map1);
+        }
+    }
 
     @PostMapping("/addReviewNode")
     public void addReviewNode(HttpServletRequest request, HttpServletResponse response){
@@ -123,5 +156,10 @@ public class ReviewNodeController extends BaseController{
         }
         //3.
         nodeService.reset(templateId);
+    }
+
+    @PostMapping("addReviewNodes")
+    public void addReviewNodes(HttpServletRequest request, HttpServletResponse response) {
+
     }
 }

@@ -2,19 +2,13 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.tongyuan.model.domain.ReviewFlowInstance;
 import com.tongyuan.model.domain.ReviewFlowTemplate;
-import com.tongyuan.model.domain.enums.ExceptionMsg;
-import com.tongyuan.model.domain.result.Response;
-import com.tongyuan.model.domain.result.ResponseData;
 import com.tongyuan.model.service.ReviewFlowTemplateService;
 import com.tongyuan.tools.CurdUtil;
 import com.tongyuan.tools.DateUtil;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,8 +23,8 @@ import java.util.Map;
  * Created by Y470 on 2017/6/26.
  */
 @Controller
-@RequestMapping("/reviewFlowTemplate")
-public class ReviewFlowTemplateController extends BaseController{
+@RequestMapping("/api/reviewFlowTemplate")
+public class ReviewFlowTemplateController extends BaseController {
     @Autowired
     private ReviewFlowTemplateService reviewFlowTemplateService;
 
@@ -38,6 +32,7 @@ public class ReviewFlowTemplateController extends BaseController{
     public String reviewFlowTemplate(){
         return "review-flow-template";
     }
+
     /**
      * 新增审签模板
      * @param request
@@ -58,6 +53,7 @@ public class ReviewFlowTemplateController extends BaseController{
         reviewFlowTemplate.setDefaultTemplate(defaultTemplate);
         reviewFlowTemplate.setCreateTime(timestamp);
         reviewFlowTemplate.setLastUpdateTime(timestamp);
+        reviewFlowTemplate.setAlreadyConfig(false);
 
         int index = reviewFlowTemplateService.add(reviewFlowTemplate);
         Map<String, Object> map = new HashMap<String, Object>();
@@ -85,9 +81,10 @@ public class ReviewFlowTemplateController extends BaseController{
         List<ReviewFlowTemplate> reviewFlowTemplates = reviewFlowTemplateService.queryByName(map);
         PageInfo<ReviewFlowTemplate> pageInfo = new PageInfo<ReviewFlowTemplate>(reviewFlowTemplates);
         JSONObject jo = new JSONObject();
-        jo.put("rows", reviewFlowTemplates);
-        jo.put("total", pageInfo.getPages());
-        jo.put("records", pageInfo.getTotal());
+        //records 结果 pages总页数  total总个数
+        jo.put("records", reviewFlowTemplates);
+        jo.put("pages", pageInfo.getPages());
+        jo.put("total", pageInfo.getTotal());
         ServletUtil.createSuccessResponse(200, jo, response);
 
     }

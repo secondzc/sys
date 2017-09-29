@@ -2,7 +2,6 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.tongyuan.model.domain.ReviewFlowTemplate;
 import com.tongyuan.model.domain.ReviewModel;
 import com.tongyuan.model.service.ReviewModelService;
 import com.tongyuan.tools.ServletUtil;
@@ -22,7 +21,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/reviewModel")
-public class ReviewModelController extends BaseController{
+public class ReviewModelController extends BaseController {
     @Autowired
     private ReviewModelService reviewModelService;
 

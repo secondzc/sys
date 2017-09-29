@@ -48,4 +48,9 @@ public class ReviewFlowTemplateImpl implements ReviewFlowTemplateService {
     public int updateTime(Map<String,Object> map){
         return reviewFlowTemplateMapper.updateTime(map);
     }
+
+    @Override
+    public ReviewFlowTemplate getTemplateByDefault(){
+        return reviewFlowTemplateMapper.getTemplateByDefault();
+    }
 }

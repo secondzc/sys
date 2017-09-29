@@ -1,11 +1,13 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.NodeInstanceMapper;
+import com.tongyuan.model.domain.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.model.service.NodeInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,5 +34,10 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
     @Override
     public int updateTime(Map<String,Object> map) {
         return nodeInstanceMapper.updateTime(map);
+    }
+
+    @Override
+    public List<DetailPage> details(Long instanceId){
+        return nodeInstanceMapper.details(instanceId);
     }
 }
