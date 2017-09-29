@@ -1,8 +1,7 @@
 package com.tongyuan.model.domainmodel;
 
 import com.tongyuan.model.domain.Loginstate;
-import com.tongyuan.model.domain.User;
-import com.tongyuan.model.gogsmodel.GUser;
+import com.tongyuan.gogs.domain.GUser1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class LoginedUserModel  {
     // 用户信息
  //   private User profile;
 
-	private GUser profile;
+	private GUser1 profile;
 
     // 用户角色
     private List<RoleModel> roles=new ArrayList<RoleModel>();
@@ -62,11 +61,11 @@ public class LoginedUserModel  {
 	 */
 
 
-	public GUser getProfile() {
+	public GUser1 getProfile() {
 		return profile;
 	}
 
-	public void setProfile(GUser profile) {
+	public void setProfile(GUser1 profile) {
 		this.profile = profile;
 	}
 

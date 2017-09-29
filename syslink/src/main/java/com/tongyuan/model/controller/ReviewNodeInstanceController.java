@@ -31,9 +31,9 @@ public class ReviewNodeInstanceController {
     @ResponseBody
     public JSONObject details(@RequestParam("instanceId")Long instanceId){
         //Map<String,Object> map = new HashMap<>();
-        List<DetailPage> reviewNodeInstanceList = nodeInstanceService.details(instanceId);
+   //     List<DetailPage> reviewNodeInstanceList = nodeInstanceService.details(instanceId);
         JSONObject jo = new JSONObject();
-        jo.put("records",reviewNodeInstanceList);
+  //      jo.put("records",reviewNodeInstanceList);
         return jo;
     }
 }

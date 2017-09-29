@@ -50,7 +50,7 @@
     </el-tab-pane>
 
     <el-tab-pane label="组织团队" name="second">
-
+<!--
   <template >
     <el-card class="box-card" v-for="item in team">
     <div slot="header" class="clearfix">
@@ -62,7 +62,7 @@
     </div>
     </el-card>
   </template>
-
+-->
     </el-tab-pane>
   
   </el-tabs>

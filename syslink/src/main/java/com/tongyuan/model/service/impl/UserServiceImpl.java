@@ -3,14 +3,13 @@ package com.tongyuan.model.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.tongyuan.model.dao.*;
-import com.tongyuan.model.daoExtra.GUserMapper;
+import com.tongyuan.gogs.dao.GUserMapper1;
 
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domainmodel.*;
-import com.tongyuan.model.gogsmodel.GUser;
+import com.tongyuan.gogs.domain.GUser1;
 import com.tongyuan.model.service.UserService;
 import com.tongyuan.util.DateUtil;
-import com.tongyuan.util.EncodePasswd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private UserPermissionMapper userPermissionMapper;
 
     @Autowired
-    private GUserMapper gUserMapper;
+    private GUserMapper1 gUserMapper;
 
 
 
@@ -153,7 +152,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginedUserModel CreateLoginedUser(GUser guser)
+    public LoginedUserModel CreateLoginedUser(GUser1 guser)
     {
         // 个人角色
         //   List<RoleModel> roles = roleService.getAllBySystemIdAndUserId(systemId,
