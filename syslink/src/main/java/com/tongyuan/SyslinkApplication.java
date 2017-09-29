@@ -5,16 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
-@SpringBootApplication(exclude = {
-        DataSourceAutoConfiguration.class
-})
+import javax.servlet.MultipartConfigElement;
+
+@SpringBootApplication
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -38,6 +38,20 @@ public class SyslinkApplication extends SpringBootServletInitializer {
 		SpringApplication.run(SyslinkApplication.class, args);
 		cxfClient.cl1();
 	}
+
+    /**
+     * 文件上传配置
+     * @return
+     */
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        //文件最大
+        factory.setMaxFileSize("102400KB"); //KB,MB
+        /// 设置总上传数据总大小
+        factory.setMaxRequestSize("1024000KB");
+        return factory.createMultipartConfig();
+    }
 
     //增加一个SpringMVC的DispatcherServlet，接收前台/api开头的请求
 /*    @Bean
