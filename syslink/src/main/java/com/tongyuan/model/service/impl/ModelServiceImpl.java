@@ -21,7 +21,7 @@ public class ModelServiceImpl implements ModelService{
 
 
     @Override
-    public int add(Model model) {
+    public Long add(Model model) {
         return this.modelMapper.add(model);
     }
 

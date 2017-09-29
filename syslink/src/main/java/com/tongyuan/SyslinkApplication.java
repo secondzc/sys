@@ -57,7 +57,7 @@ public class SyslinkApplication extends SpringBootServletInitializer {
      * 文件上传配置
      * @return
      */
-    @Bean
+    /*@Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //文件最大
@@ -65,7 +65,7 @@ public class SyslinkApplication extends SpringBootServletInitializer {
         /// 设置总上传数据总大小
         factory.setMaxRequestSize("1024000KB");
         return factory.createMultipartConfig();
-    }
+    }*/
 
     //增加一个SpringMVC的DispatcherServlet，接收前台/api开头的请求
 /*    @Bean

@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by Administrator on 2017-6-19.
  */
 public interface ModelService {
-    int add(Model model);
+    Long add(Model model);
     int update(Model model);
     int deleteByIds(String[] ids);
     public List<Model> queryModelList(Map<String, Object> params);

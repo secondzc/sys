@@ -132,9 +132,11 @@ public class CommonServiceImp implements CommonService {
 			model.setScope(false);
 			model.setUserId(1);
 			model.setDeleted(false);
+			Long id = -1L;
 			if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
-				modelService.add(model);
+				id = modelService.add(model);
 			}
+
 			//查找最外层空的model
 			Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
 			for (int i = 0; i < subFiles.length; i++) {

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 @Mapper
 public interface ModelMapper {
-    int add(Model model);
+    Long add(Model model);
     int update(Model model);
     int deleteByIds(String[] ids);
     public List<Model> queryModelList(Map<String, Object> params);
