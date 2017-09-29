@@ -25,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
-import static com.sun.tools.doclint.Entity.para;
+
 
 /**
  * Created by yh on 2017/8/31.
@@ -48,7 +48,7 @@ public class UserController extends BaseController{
         JSONObject jo = new JSONObject();
         List<Map<String,Object>>userList = new ArrayList<>();
 //        List<UserModel>list = userService.getAllUsers();
-        Map<String,Object> a  = userService.queryUserById((long)1);
+//        Map<String,Object> a  = userService.queryUserById((long)1);
         List<Map<String,Object>> users = new ArrayList<>();
         JSONObject jsonObject = JSON.parseObject(para);
         Page<Map<String,Object>> page = new Page<>();

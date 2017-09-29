@@ -6,12 +6,11 @@ import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.gogsmodel.GUser;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.UserService;
-<<<<<<< HEAD
-=======
+
 import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.IpUtil;
->>>>>>> e664b522a06118c9c4afab9a1e51300a0bdf3581
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
