@@ -3,7 +3,7 @@ package com.tongyuan.model.controller;
 
 import com.tongyuan.model.domain.User;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-import com.tongyuan.model.gogsmodel.GUser;
+import com.tongyuan.gogs.domain.GUser1;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.UserService;
 
@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.security.Guard;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
@@ -80,7 +79,7 @@ public class LoginController extends BaseController{
         if(list.size()>0)
         {
           Map<String,Object> gUserMap = list.iterator().next();
-          GUser gUser = new GUser(gUserMap);
+          GUser1 gUser = new GUser1(gUserMap);
           String passwdCheck = EncodePasswd.getEncryptedPassword(password,gUser.getSalt(),10000,50);
           if(passwdCheck.equalsIgnoreCase(gUser.getPasswd()))
           {

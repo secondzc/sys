@@ -2,12 +2,10 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.tongyuan.model.service.OrgService;
+import com.tongyuan.gogs.service.OrgService;
 import com.tongyuan.model.wrapper.GUserWarpper;
-import com.tongyuan.util.EncodePasswd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

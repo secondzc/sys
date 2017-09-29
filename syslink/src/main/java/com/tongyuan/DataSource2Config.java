@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * Created by summer on 2016/11/25.
  */
 @Configuration
-@MapperScan(basePackages = "com.tongyuan.model.daoExtra", sqlSessionTemplateRef  = "test2SqlSessionTemplate")
+@MapperScan(basePackages = "com.tongyuan.gogs.dao", sqlSessionTemplateRef  = "test2SqlSessionTemplate")
 public class DataSource2Config {
 
     @Bean(name = "test2DataSource")

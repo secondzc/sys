@@ -3,10 +3,8 @@ package com.tongyuan.model.service;
 import com.github.pagehelper.Page;
 import com.tongyuan.model.domain.User;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-import com.tongyuan.model.domainmodel.UserModel;
-import com.tongyuan.model.gogsmodel.GUser;
+import com.tongyuan.gogs.domain.GUser1;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +32,7 @@ public interface UserService {
 
     public LoginedUserModel CreateLoginedUser(User user);
 
-    public LoginedUserModel CreateLoginedUser(GUser guser);
+    public LoginedUserModel CreateLoginedUser(GUser1 guser);
 
     public void updateLoginstate(long userId, String loginIp, Date loginDate);
 
