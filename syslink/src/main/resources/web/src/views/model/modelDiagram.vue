@@ -1,12 +1,12 @@
 <template>
     <div class="modelContent">
       <div class="left">
-          <!--模型分类树-->
-          <kz-tree :data="tree" @node-click="hanldeNodeClick"></kz-tree>
+          <!--模型基本信息-->
+          <!--组件树-->
       </div>
       <div class="right">
-          <!--模型列表-->
-          <model-list ></model-list>
+          <!--组件图-->
+          <!--变量树-->
       </div>
     </div>
 </template>
@@ -18,10 +18,8 @@ import {mapActions} from 'vuex'
 
 
 export default {
-  name: 'ModelContent',
+  name: 'modelDiagram',
   components: {
-    kzTree,
-    modelList,
   },
   data () {
     return {

@@ -2,6 +2,23 @@
   <div class="kz-tree__wrapper">
     <div class="kz-tree__top">
       <el-button size="small" icon="plus" type="primary" @click="treeAdd({ id: 0 })">分类</el-button>
+      <el-upload style="float: left;padding-left: 136px"
+              class="upload-demo"
+              ref="vueFileUploader"
+              :action = "uploadUrl()"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :file-list="fileList"
+              :before-upload="beforeUploadFile"
+              :auto-upload="true"
+      >
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <!--<p>{{directoryContent}}</p>-->
+        <!--{{bmsg}}-->
+        <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
+        <!--<div slot="tip" class="el-upload__tip">只能上传zip文件，且不超过500M</div>-->
+      </el-upload>
     </div>
     <el-tree
       ref="kzTree"
@@ -31,11 +48,20 @@
 
 <script>
   import { getDirectoryList } from '../../api/api';
+  import modelList from './model.vue' ;
+  import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
+  import ModelContent from "./index";
+
+//  上传文件
+  import { mapState,mapGetters} from 'vuex'
+  var fileNub = 0;
+  //  上传文件
 
   export default {
     name: 'kz-tree',
     props: {
       data: {
+
         type: Object,
         required: true,
         default () {
@@ -62,6 +88,11 @@
       // 声明保存当前操作分类node对象
       this.__currentNode = null
       return {
+          //  上传文件
+          fileList: [
+          ],
+          name : JSON.parse(sessionStorage.getItem('user')).name,
+          //  上传文件
         treeData: [],
         /* 弹框 */
         dialog: {
@@ -80,14 +111,37 @@
               trigger: 'blur'
             }
           }
-        }
+        },
       }
     },
+      computed: {
+          ...mapState({
+              b:state =>state.b,
+              a:state =>state.a
+          }),
+          ...mapGetters(['bmsg','amsg']),
+      },
     methods: {
       /* 加载子分类 */
       loadTreeNode (treeItem, resolve) {
          const url = this.data.url.R ;
-         this. fetch(url, { parent_id: treeItem.id })
+         if(treeItem.id != null && treeItem.id != "" && treeItem.id != 0 && treeItem.data.id != null){
+             var para = { parent_id: treeItem.data.id };
+            this.$emit("node-click",para);
+         }
+//         else if(this.amsg >=0 && this.amsg != null && this.amsg != ''){
+//             var para = { parent_id: this.amsg };
+//             this.$emit("node-click",para);
+//         }
+         else if(treeItem.data.id == null){
+             var para = {parent_id: 0};
+             this.$emit("node-click",para);
+         }
+         else{
+             var para = {parent_id: treeItem.id};
+             this.$emit("node-click",para);
+         }
+         this. fetch(url, para)
              .then(data => {
                resolve(data)
              });
@@ -136,8 +190,10 @@
         // });
       },
       /* 点击响应时间 */
-      handleNodeClick (...args) {
-        this.$emit('node-click', ...args)
+      handleNodeClick (args) {
+//        this.$emit('node-click', args.id);
+          this.$store.dispatch('sendA',args.id);
+          this.$store.dispatch('sendB',args.id);
       },
       /* 构建分类title及工具 */
       nodeRender (h, { _self, node, data }) {
@@ -317,8 +373,92 @@
                 }
               }
             })
-      }
-    }
+      },
+
+      //上传文件
+        uploadUrl :function(){
+            return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg
+            //  return "https://jsonplaceholder.typicode.com/posts/"
+        },
+        submitUpload() {
+            //     this.$refs.vueFileUploader.submit;
+            //     this.$refs.vueFileUploader.autoUpload = true;
+            this.$refs.vueFileUploader.submit();
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePreview(file) {
+            console.log(file);
+        },
+        beforeUploadFile(file){
+            var modelUrl = '/api/repository/add?name=' + this.$data.name +'&fileName=' +file.name.split("\.")[0]
+            this.$http.post(modelUrl)
+                .then(function (response) {
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+
+            let fileMAx = 1024 * 1024 *500;
+            if(fileMAx < file.size){
+                this.$message({
+                    message: '文件过大，只能上传500M以内！',
+                    type: 'warning',
+                    duration: 2000
+                });
+                abort(file);
+            }
+            if(!(file.name).endsWith(".zip")){
+                this.$message({
+                    message: '请上传压缩文件！',
+                    type: 'warning',
+                    duration: 2000
+                });
+                abort(file);
+            }
+            fileNub +=1;
+            if(fileNub >1){
+                this.$message({
+                    message: '请上传一个文件！',
+                    type: 'warning',
+                    duration: 2000
+                });
+                fileNub =0;
+                abort(file);
+            }
+            if(this.bmsg < 0) {
+                this.$message({
+                    message: '请选择一个模型目录！',
+                    type: 'warning',
+                    duration: 2000
+                });
+                abort(file);
+            }
+        },
+        uploadSuccess(response,file,fileList){
+            this.$message({
+                message: '上传成功！',
+                type: 'success',
+                duration: 1000
+            });
+            this.$refs.vueFileUploader.clearFiles();
+        }
+
+
+
+    },
+      components:{
+          modelList,
+          WaterfallSlot,
+          ModelContent
+      },
+
+
+
+
+
+
   }
 </script>
 

@@ -1,44 +1,37 @@
 <template>
     <div class="modelContent">
       <div class="left">
-          <!--模型分类树-->
-          <kz-tree :data="tree" @node-click="hanldeNodeClick"></kz-tree>
+          <div><p>模型树：</p></div>
+          <modeltree></modeltree>
       </div>
+
       <div class="right">
-          <!--模型列表-->
-          <model-list ></model-list>
+          <!--组件图-->
+          <div><p>组件图：</p></div>
+          <component></component>
+
+
       </div>
+
     </div>
 </template>
 
 <script>
-import kzTree from './directory.vue';
-import modelList from './model.vue' ;
 import {mapActions} from 'vuex'
-
+import modelbasecont from './modelBaseContent.vue'
+import modeltree from './modelTree.vue'
+import component from './Component.vue'
+import variabletree from './Variabletree.vue'
 
 export default {
-  name: 'ModelContent',
+  name: 'packageDiagramModel',
   components: {
-    kzTree,
-    modelList,
+      modeltree,
+      component
   },
   data () {
     return {
-      tree: {
-        url: {
-//          C: '/directory/add',
-//          U: '/directory/update',
-//          R: '/directory/list',
-//          D: '/directory/delete'
-            C: '/api/directory/add',
-            U: '/api/directory/update',
-            R: 'api/directory/list',
-            D: '/api/directory/delete'
-        }
-      },
       data :{
-          treeItem : "",
       },
     }
   },
@@ -66,7 +59,12 @@ export default {
 
 .left {
   min-width: 300px;
+    max-width: 750px;
   float: left;
+}
+.right{
+    min-width: 300px;
+    float: right;
 }
 
 

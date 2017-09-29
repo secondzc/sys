@@ -11,17 +11,17 @@
 				</div>
 			</el-col>
 			<el-col :span="8">
-				<a class="item" href="http://localhost/#/" id="home-page">首页</a>
-				<a class="item"  href="http://localhost:3000/">控制面板</a>
-				<a class="item" href="http://localhost:3000/issues">工单管理</a>
-				<a class="item" href="http://localhost:3000/pulls">合并请求</a>
-				<a class="item" href="http://localhost:3000/explore/repos">探索</a>
-<!-- 				<el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-					 <el-menu-item index="1">处理中心</el-menu-item>
-					 <el-menu-item index="2">处理中心</el-menu-item>
-					 <el-menu-item index="3">处理中心</el-menu-item>
+				<a class="item" href="http://gogs.modelica-china.com/#/" id="home-page">首页</a>
+				<a class="item"  href="http://gogs.modelica-china.com:3000/">控制面板</a>
+				<a class="item" href="http://gogs.modelica-china.com:3000/issues">工单管理</a>
+				<a class="item" href="http://gogs.modelica-china.com:3000/pulls">合并请求</a>
+				<a class="item" href="http://gogs.modelica-china.com:3000/explore/repos">探索</a>
+				<!-- 				<el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                                     <el-menu-item index="1">处理中心</el-menu-item>
+                                     <el-menu-item index="2">处理中心</el-menu-item>
+                                     <el-menu-item index="3">处理中心</el-menu-item>
 
-				</el-menu> -->
+                                </el-menu> -->
 			</el-col>
 			<el-col :span="4" class="userinfo">
 				<el-dropdown trigger="hover">
@@ -38,7 +38,7 @@
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
 				<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  @open="handleopen" @close="handleclose" @select="handleselect"
-					 unique-opened router v-show="!collapsed" :collapse="false">
+						 unique-opened router v-show="!collapsed" :collapse="false">
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title">
@@ -58,109 +58,109 @@
 					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
 						<template v-if="!item.leaf">
 							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls"></i></div>
-							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
+							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
 								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
 							</ul>
 						</template>
 						<template v-else>
-							<li class="el-submenu">
-								<div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)"><i :class="item.iconCls"></i></div>
-							</li>
-						</template>
+					<li class="el-submenu">
+						<div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)"><i :class="item.iconCls"></i></div>
 					</li>
-				</ul>
-			</aside>
-			<section class="content-container">
-				<div class="grid-content bg-purple-light">
-					<el-col :span="24" class="breadcrumb-container">
-						<el-breadcrumb separator="/" class="breadcrumb-inner">
-							<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-								{{ item.name }}
-							</el-breadcrumb-item>
-						</el-breadcrumb>
-					</el-col>
-					<el-col :span="24" class="content-wrapper">
-						<transition name="fade" mode="out-in">
-							<router-view></router-view>
-						</transition>
-					</el-col>
-				</div>
-			</section>
+</template>
+</li>
+</ul>
+</aside>
+<section class="content-container">
+	<div class="grid-content bg-purple-light">
+		<el-col :span="24" class="breadcrumb-container">
+			<el-breadcrumb separator="/" class="breadcrumb-inner">
+				<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+					{{ item.name }}
+				</el-breadcrumb-item>
+			</el-breadcrumb>
 		</el-col>
-	</el-row>
+		<el-col :span="24" class="content-wrapper">
+			<transition name="fade" mode="out-in">
+				<router-view></router-view>
+			</transition>
+		</el-col>
+	</div>
+</section>
+</el-col>
+</el-row>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				sysName:'SYSLINK',
-				collapsed:false,
-				sysUserName: '',
-				sysUserAvatar: '',
-				form: {
-					name: '',
-					region: '',
-					date1: '',
-					date2: '',
-					delivery: false,
-					type: [],
-					resource: '',
-					desc: ''
-				}
-			}
-		},
-		methods: {
-			onSubmit() {
-				console.log('submit!');
-			},
-			handleopen() {
-			},
-			handleclose() {
-				//console.log('handleclose');
-			},
-			handleselect: function (a, b) {
-			},
-			//退出登录
-			logout: function () {
-				var _this = this;
-				this.$confirm('确认退出吗?', '提示', {
-					//type: 'warning'
-				}).then(() => {
-					sessionStorage.removeItem('user');
-					_this.$router.push('/login');
-				}).catch(() => {
+    export default {
+        data() {
+            return {
+                sysName:'SYSLINK',
+                collapsed:false,
+                sysUserName: '',
+                sysUserAvatar: '',
+                form: {
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                }
+            }
+        },
+        methods: {
+            onSubmit() {
+                console.log('submit!');
+            },
+            handleopen() {
+            },
+            handleclose() {
+                //console.log('handleclose');
+            },
+            handleselect: function (a, b) {
+            },
+            //退出登录
+            logout: function () {
+                var _this = this;
+                this.$confirm('确认退出吗?', '提示', {
+                    //type: 'warning'
+                }).then(() => {
+                    sessionStorage.removeItem('user');
+                    _this.$router.push('/login');
+                }).catch(() => {
 
-				});
+                });
 
 
-			},
-			//跳转gogs
+            },
+            //跳转gogs
             gogs :function(){
                 var _this = this;
                 _this.$router.push('/main');
-			},
-			//折叠导航栏
-			collapse:function(){
-				this.collapsed=!this.collapsed;
-				if (this.collapsed) {
+            },
+            //折叠导航栏
+            collapse:function(){
+                this.collapsed=!this.collapsed;
+                if (this.collapsed) {
 
-				}
-			},
-			showMenu(i,status){
-				this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
-			}
-		},
-		mounted() {
-			var user = sessionStorage.getItem('user');
-			if (user) {
-				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
-			}
+                }
+            },
+            showMenu(i,status){
+                this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
+            }
+        },
+        mounted() {
+            var user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                this.sysUserName = user.name || '';
+                this.sysUserAvatar = user.avatar || '';
+            }
 
-		}
-	}
+        }
+    }
 
 </script>
 
@@ -235,12 +235,12 @@
 				font-size: 18px;
 				line-height: 38px;
 				position: relative;
-   				display: inline-block;
-    			margin-right: 48px;
-    			text-decoration:none;
+				display: inline-block;
+				margin-right: 48px;
+				text-decoration:none;
 			}
 			.item:not(:hover) {
-   				 color: #9d9d9d
+				color: #9d9d9d
 			}
 		}
 		.main {

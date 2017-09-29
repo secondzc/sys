@@ -9,27 +9,17 @@ import user from './views/nav1/user.vue'
 import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
+import FileContent from './views/nav3/index.vue'
 import echarts from './views/charts/echarts.vue'
 import Repository from './views/repository/index.vue'
 import Model from './views/model/index.vue'
-import template from './views/review/template.vue'
-import setCheckors from './views/review/setCheckors.vue'
-import mySubmit from './views/review/mySubmit.vue'
-import mySubmitDetail from './views/review/mySubmitDetail.vue'
-import checkor from './views/review/checkor.vue'
+import modelVariable from './views/model/modelVariable.vue' ;
+import packageDiagram from './views/model/packageDiagram.vue'
+import packageDiagramModel from './views/model/packageDiagramModel.vue'
+import packageDiagramVariable from './views/model/packageDiagramVariable.vue'
+import modelComponent from  './views/model/ModelComponent.vue'
 
 let routes = [
-    {
-        path: '/',
-        component: Home,
-        name: '系统管理',
-        iconCls: 'el-icon-setting',//图标样式class
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
-            { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
-        ]
-    },
     {
         path: '/login',
         component: Login,
@@ -56,26 +46,16 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '我的项目',
-        iconCls: 'el-icon-star-on',//图标样式class
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: '/table', component: Table, name: '项目' },
-            { path: '/form', component: Form, name: '模型' },
-            { path: '/user', component: user, name: '仿真' },
-            {path:'/template',component:template,name:'我的模板'},
-            {path:'/checkor',component:checkor,name:'我的待办'},
-            {path:'/mySubmit',component:mySubmit,name:'我的提交'},
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
         name: '',
         iconCls: 'el-icon-document',
         leaf: true,//只有一个节点
         children: [
-            { path: '/model/index', component: Model, name: '我的模型' }
+            { path: '/model/index', component: Model, name: '我的模型' },
+            // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
+            { path: '/model/packageDiagram', component: packageDiagram, name: '包视图'},
+            { path: '/model/packageDiagramModel', component: packageDiagramModel, name: '包视图组件信息' },
+            { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息' },
+            { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
         ]
     },
     {
@@ -85,7 +65,8 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '我的仿真' }
+            // { path: '/page6', component: Page6, name: '我的仿真' }
+            { path: '/nav3/index', component: FileContent, name: '我的仿真' }
         ]
     },
     {
@@ -95,7 +76,19 @@ let routes = [
         iconCls: 'el-icon-share',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '我的分享' }
+            { path: '/page4', component: Page4, name: '我的分享' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '我的收藏',
+        iconCls: 'el-icon-star-on',//图标样式class
+        children: [
+            // { path: '/main', component: Main, name: '项目', hidden: true },
+            { path: '/table', component: Table, name: '项目' },
+            { path: '/form', component: Form, name: '模型' },
+            { path: '/user', component: user, name: '仿真' },
         ]
     },
     {

@@ -125,16 +125,7 @@
 				editLoading: false,
 				editFormRules: {
 					name: [
-						  "required", 
-						  {
-						  	test: function(val){
-						  		if(val.length<2){
-						  			return false;
-						  		}
-						  		return true;
-						  	},
-							message: '请输入姓名大于两位'
-						  },
+						{ required: true, message: '请输入姓名', trigger: 'blur' }
 					]
 				},
 				//编辑界面数据
@@ -279,7 +270,7 @@
 			},
 			//批量删除
 			batchRemove: function () {
-				//var ids = this.sels.map(item => item.id).toString();
+				var ids = this.sels.map(item => item.id).toString();
 				this.$confirm('确认删除选中记录吗？', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -301,7 +292,7 @@
 			}
 		},
 		mounted() {
-			//this.getUsers();
+			this.getUsers();
 		}
 	}
 
