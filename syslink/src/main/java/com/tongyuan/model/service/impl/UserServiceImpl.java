@@ -84,12 +84,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Map<String, Object> queryUserById(Long id) {
+    public User queryUserById(Long id) {
         return this.userMapper.queryUserById(id);
     }
 
     @Override
-    public User querUserByName(Map<String, Object> params) {
+    public User querUserByName(Map<String,Object> params) {
         return this.userMapper.querUserByName(params);
     }
 
@@ -295,9 +295,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public User getUserByName(String userName)
-    {
-        return this.userMapper.querUserByName(userName);
-    }
+     @Override
+     public User getUserByName(String userName)
+     {
+          return  this.userMapper.getUserByName(userName);
+     }
 }

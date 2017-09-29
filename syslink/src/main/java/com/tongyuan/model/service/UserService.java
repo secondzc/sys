@@ -17,13 +17,13 @@ import java.util.Map;
 public interface UserService {
 
 
-    public User getUserByName(String userName);
+
     public boolean add(User user);
     public boolean update(User user);
 
     public boolean delete(long id);
-    public  Map<String,Object> queryUserById(Long id);
-    public User querUserByName(Map<String, Object> params);
+    public  User queryUserById(Long id);
+    public User querUserByName(Map<String,Object>params);
 
 //    public List<Map<String,Object>>findAllUsers();
 
@@ -57,6 +57,9 @@ public interface UserService {
 
     public boolean emailExist(Map<String,Object>map);
 
+
+
+    public User getUserByName(String userName);
 
 
 

@@ -63,7 +63,7 @@
         delete from USER where id=#{id}
     </delete>
 
-    <select id="queryUserById" resultType="map">
+    <select id="queryUserById" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.User">
         SELECT
         <include refid="baseColumnList" />
         FROM USER
@@ -90,10 +90,19 @@
     </select>
 
 
-    <select id="querUserByName" resultMap="baseResultMap"  resultType="com.tongyuan.model.domain.User">
+
+    <select id="querUserByName" resultMap="baseResultMap"  resultType="com.tongyuan.model.domain.User" parameterType="map">
         SELECT
         <include refid="baseColumnList"></include>
         FROM USER
         where user_name = #{userName}
     </select>
+
+    <select id="getUserByName" resultMap="baseResultMap"  resultType="com.tongyuan.model.domain.User" parameterType="String">
+        SELECT
+        <include refid="baseColumnList"></include>
+        FROM USER
+        where user_name = #{userName}
+    </select>
+
 </mapper>
