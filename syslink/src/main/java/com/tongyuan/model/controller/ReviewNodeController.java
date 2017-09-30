@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,19 +116,13 @@ public class ReviewNodeController extends BaseController {
     @PostMapping (value="/queryReviewNode",produces="application/json;charset=UTF-8")
     public void queryByTemplateId(HttpServletRequest request, HttpServletResponse response){
         Long templateId = Long.valueOf(request.getParameter("templateId"));
-        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("page", page);
-        map.put("rows", rows);
         map.put("templateId",templateId);
 
         List<ReviewNode> reviewNodes = nodeService.queryByTemplateId(map);
-        PageInfo<ReviewNode> pageInfo = new PageInfo<ReviewNode>(reviewNodes);
         JSONObject jo = new JSONObject();
-        jo.put("rows", reviewNodes);
-        jo.put("total", pageInfo.getPages());
-        jo.put("records", pageInfo.getTotal());
+        jo.put("flag",true);
+        jo.put("nodes",reviewNodes);
         ServletUtil.createSuccessResponse(200, jo, response);
     }
 
@@ -161,8 +156,4 @@ public class ReviewNodeController extends BaseController {
         nodeService.reset(templateId);
     }
 
-    @PostMapping("addReviewNodes")
-    public void addReviewNodes(HttpServletRequest request, HttpServletResponse response) {
-
-    }
 }
