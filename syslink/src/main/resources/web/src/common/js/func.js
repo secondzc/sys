@@ -15,6 +15,13 @@ export default {
 		      .catch(err =>{
 		      	console.log(err);
 		      });
-	}
+	},
+	isNull (str) {
+		var strr = str.replace(/^\s+|\s+$/gm,'');
+		if(strr==null||strr==""||strr==undefined){
+			return true;
+		}
+		return false;
+	},
 	
 }

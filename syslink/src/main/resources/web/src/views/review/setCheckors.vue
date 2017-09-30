@@ -7,7 +7,7 @@
 					<el-button type="primary" @click="handleAdd">新增</el-button>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="submitAll">完成</el-button>
+					<el-button type="primary" @click="submitAll" :loading='submitAllLoading'>完成</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="cancelAll">取消配置</el-button>
@@ -119,6 +119,7 @@
 			  value2: [],
 			  data2: [],
 			  userName: '',
+			  submitAllLoading: false,
 			}
 		},
 		created(){
@@ -142,13 +143,16 @@
 			},
 			submitAll(){
 				this.$confirm('确认提交吗？','提示',{}).then(()=>{
+					this.submitAllLoading = true;
 					let url = '/api/reviewNode/batchAdd';
 					let nodeName = [];
 					let des = [];
 					let usern = [];
 					for(var i=0;i<this.items.length;i++){
-						nodeName.push(this.items[i].reviewNodeName);
-						des.push(this.items[i].description);
+						nodeName.push(this.func.isNull(this.items[i].reviewNodeName)
+							?'defaultName':this.items[i].reviewNodeName);
+						des.push(this.func.isNull(this.items[i].description)
+							?'defaultDescription':this.items[i].description);
 						usern.push(this.items[i].userName);
 					}
 					this.func.ajaxPost(url,{reviewNodeName: nodeName.join(','),
@@ -156,6 +160,7 @@
 						userName: usern.join(','),
 						templateId:this.templateId},res =>{
 						if(res.data.flag == true){
+							this.submitAllLoading = false;
 							this.$message({
 							message: '提交成功！',
 							type: 'success',

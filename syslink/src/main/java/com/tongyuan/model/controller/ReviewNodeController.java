@@ -73,6 +73,9 @@ public class ReviewNodeController extends BaseController {
             map1.put("lastUpdateTime", DateUtil.getCurrentTime());
             reviewFlowTemplateService.updateTime(map1);
         }
+        Map<String,Object> map = new HashMap<>();
+        map.put("flag",true);
+        ServletUtil.createSuccessResponse(200,map,response);
     }
 
     @PostMapping("/addReviewNode")

@@ -33,7 +33,7 @@
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
 					<el-button size="small" @click="handleEdit(scope.$index,scope.row)">配置</el-button>
-					<el-button type="danger" size="small" @click="batchRemove(scope.row)">删除</el-button>
+					<el-button type="danger" size="small" @click="remove(scope.$index,scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -143,14 +143,12 @@
 			//批量删除
 			batchRemove: function() {
 				let ids = this.sels.map(item =>item.templateId).join(",").toString();
-			    console.log(ids);
 				this.$confirm('确认删除选中记录吗？','提示',{
 					type:'warning'
 				}).then(()=>{
 					this.listLoading = true;
 					let params = {templateIds: ids};
 					let url = '/api/reviewFlowTemplate/deleteByTemplateId';
-					this.listLoading = false;
 					this.func.ajaxPost(url,params,res =>{
 						if(res.data.flag == true){
 							this.$message({
@@ -188,6 +186,23 @@
 						}
 					})
 				})
+			},
+			remove: function(index,row){
+				this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{
+					this.listLoading = true;
+					let params = {templateIds: row.templateId};
+					let url = '/api/reviewFlowTemplate/deleteByTemplateId';
+					this.func.ajaxPost(url,params,res =>{
+						if(res.data.flag == true){
+							this.$message({
+							message: '删除成功',
+							type: 'success'
+						    });
+						    this.listLoading = false;
+						    this.getTemplates();
+						}
+					})
+				});
 			},
 		},
 		mounted() {

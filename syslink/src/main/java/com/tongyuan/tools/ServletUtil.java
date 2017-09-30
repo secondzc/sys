@@ -260,7 +260,7 @@ public class ServletUtil {
 					jsonString = JSONObject.toJSONString(result,filter,serializerFeature);
 				}else{
 //					jsonString = JSONObject.toJSONString(result, serializerFeature);
-					jsonString = JSONObject.toJSONStringWithDateFormat(result,"yyyy-MM-dd HH:ss:mm",serializerFeature);
+					jsonString = JSONObject.toJSONStringWithDateFormat(result,"yyyy-MM-dd HH:mm:ss",serializerFeature);
 				}
 				printWriter.write(jsonString); 
 			}
