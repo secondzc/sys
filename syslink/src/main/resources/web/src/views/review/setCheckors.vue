@@ -16,7 +16,7 @@
 		</el-col>
 
         <!--列表-->
-		<el-table :data="items" highlight-current-row  @selection-change="selsChange" style="width: 80%;">
+		<el-table :data="items" highlight-current-row  @selection-change="selsChange" style="width: 80%;" :loading='nodesLoading'>
 			<el-table-column type="selection" width="50">
 			</el-table-column>
 			<el-table-column type="index" label="节点次序" width="100">
@@ -120,6 +120,7 @@
 			  data2: [],
 			  userName: '',
 			  submitAllLoading: false,
+			  nodesLoading: false,
 			}
 		},
 		created(){
@@ -228,11 +229,22 @@
 			remove(row){
 				let sequence = this.items.indexOf(row);
 				this.items.splice(sequence,1);
+			},
+			getNodes(){
+				this.nodesLoading=true;
+				let url='api/reviewNode/queryReviewNode';
+				this.func.ajaxPost(url,{templateId: this.templateId},res=>{
+					if(res.data.flag==true){
+						this.items = res.data.nodes;
+						this.nodesLoading = false;
+					}
+				})
 			}
 		},
 		mounted() {
 			this.getUserNames();
 			this.getData2();
+			this.getNodes();
 		}
 	}
 </script>

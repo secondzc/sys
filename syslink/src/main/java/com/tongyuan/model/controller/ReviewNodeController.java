@@ -2,6 +2,7 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.model.domain.NodePage;
 import com.tongyuan.model.domain.ReviewNode;
 import com.tongyuan.model.domain.User;
 import com.tongyuan.model.service.NodeHistoryService;
@@ -21,10 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Y470 on 2017/6/30.
@@ -48,10 +46,13 @@ public class ReviewNodeController extends BaseController {
      */
     @PostMapping("/batchAdd")
     public void batchAdd(HttpServletRequest request, HttpServletResponse response){
+        //先删掉以前的配置
+        Long templateId = Long.valueOf(request.getParameter("templateId"));
+        nodeService.reset(templateId);
+
         String reviewNodeNamesStr = request.getParameter("reviewNodeName");
         String descriptionStr = request.getParameter("description");
         String userNameStr = request.getParameter("userName");
-        Long templateId = Long.valueOf(request.getParameter("templateId"));
         String[] reviewNodeNames = reviewNodeNamesStr.split(",");
         String[] description = descriptionStr.split(",");
         String[] userName = userNameStr.split(",");
@@ -120,9 +121,19 @@ public class ReviewNodeController extends BaseController {
         map.put("templateId",templateId);
 
         List<ReviewNode> reviewNodes = nodeService.queryByTemplateId(map);
+        List<NodePage> nodePages = new LinkedList<>();
+        for(ReviewNode node:reviewNodes){
+            NodePage nodePage = new NodePage();
+            nodePage.setNodeId(node.getNodeId());
+            nodePage.setDescription(node.getDescription());
+            nodePage.setReviewNodeName(node.getNodeName());
+            String userName = userService.queryUserById(node.getUserId()).getUserName();
+            nodePage.setUserName(userName);
+            nodePages.add(nodePage);
+        }
         JSONObject jo = new JSONObject();
         jo.put("flag",true);
-        jo.put("nodes",reviewNodes);
+        jo.put("nodes",nodePages);
         ServletUtil.createSuccessResponse(200, jo, response);
     }
 

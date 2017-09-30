@@ -1,6 +1,8 @@
 package com.tongyuan.model.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.tongyuan.model.dao.NodeInstanceAndNodeMapper;
+import com.tongyuan.model.domain.CheckorPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.model.service.CheckorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,9 @@ class CheckorServiceImpl implements CheckorService {
     }
 
     @Override
-    public List<ReviewNodeInstance> queryByReviewer(Map<String,Object> map) {
-        return nodeInstanceAndNodeMapper.queryByReviewer(map);
+    public List<CheckorPage> queryByReviewer(Map<String,Object> params) {
+        PageHelper.startPage(Integer.parseInt(params.get("page").toString()), Integer.parseInt(params.get("rows").toString()));
+        return nodeInstanceAndNodeMapper.queryByReviewer(params);
     }
 }
 

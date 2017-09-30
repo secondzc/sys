@@ -1,16 +1,14 @@
 <template>
 	<section>
 		<!--列表-->
-		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 55%">
-			<el-table-column type="selection" width="55">
-			</el-table-column>
+		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
 			<el-table-column type="index" width="60" >
 			</el-table-column>
-			<el-table-column prop="model.name" label="模型名" width="120" >
+			<el-table-column prop="model.name" label="模型名" width="100" >
 			</el-table-column>
 			<el-table-column prop="template.templateName" label="模板名" width="100" >
 			</el-table-column>
-			<el-table-column prop="instanceName" label="审签实例名" width="100" >
+			<el-table-column prop="instanceName" label="审签实例名" width="150" >
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
@@ -19,6 +17,14 @@
 				</template>
 			</el-table-column>
 		</el-table>
+
+		<!--工具条-->
+        <el-col :span="24" class="toolbar">
+            <el-pagination layout="total,sizes,prev, pager, next" @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"  :total="total" :page-sizes ="pageSizes" :page-size="pageSize" style="float:right;">
+            </el-pagination>
+        </el-col>
+
 	</section>
 </template>
 
@@ -26,11 +32,17 @@
 	export default{
 		data(){
 			return {
+				total: 0,
+                pageSize: 10,
+                pageSizes: [10,20,30],
+                page: 1,
+                pages: 0,
+                total: 0,
+
 				detail:[],
 				listLoading:false,
-				page: 1,
-				rows: 10,
 				sels: [],
+
 			}
 		},
 		methods: {
@@ -39,13 +51,23 @@
 				let url = "api/checkor/queryByReviewer";
 				let params = {
 					page:this.page,
-					rows: this.rows,
+					rows: this.pageSize,
 				}
 				this.func.ajaxPost(url,params,res=>{
-					this.detail = res.data.rows;
+					this.pages = res.data.pages;
+                    this.total = res.data.total;
+					this.detail = res.data.records;
 					this.listLoading = false;
 				})
 			},
+			handleCurrentChange(val){
+                this.page = val;
+                this.getInstance();
+            },
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.getInstance();
+            },
 			selsChange(sels){
 				this.sels = sels;
 			},
@@ -56,6 +78,7 @@
 						this.$message({
 							message:'操作成功！'
 						})
+						this.getDetail();
 					}
 				})
 			},
@@ -66,6 +89,7 @@
 						this.$message({
 							message:'操作成功！'
 						})
+						this.getDetail();
 					}
 				})
 			},

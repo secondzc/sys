@@ -1,5 +1,6 @@
 package com.tongyuan.model.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.model.domain.ReviewFlowInstance;
@@ -82,9 +83,9 @@ public class ReviewFlowInstanceController extends BaseController {
         List<ReviewFlowInstance> reviewFlowInstances = reviewFlowInstanceService.queryByNameAndStatus(map);
         PageInfo<ReviewFlowInstance> pageInfo = new PageInfo<ReviewFlowInstance>(reviewFlowInstances);
         JSONObject jo = new JSONObject();
-        jo.put("rows", reviewFlowInstances);
-        jo.put("total", pageInfo.getPages());
-        jo.put("records", pageInfo.getTotal());
+        jo.put("records", reviewFlowInstances);
+        jo.put("pages", pageInfo.getPages());
+        jo.put("total", pageInfo.getTotal());
         ServletUtil.createSuccessResponse(200, jo, response);
     }
 
@@ -99,9 +100,9 @@ public class ReviewFlowInstanceController extends BaseController {
         String instanceIds = request.getParameter("instanceIds");
         int index = reviewFlowInstanceService.deleteByInstanceIds(instanceIds.split(","));
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map = CurdUtil.curd(index);
-        ServletUtil.createSuccessResponse(200, map, response);
+        JSONObject jo = new JSONObject();
+        jo.put("flag",true);
+        ServletUtil.createSuccessResponse(200, jo, response);
     }
 
     /**

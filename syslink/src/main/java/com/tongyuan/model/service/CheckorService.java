@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.model.domain.CheckorPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 
 import java.util.List;
@@ -11,6 +12,6 @@ import java.util.Map;
 public interface CheckorService {
     List<ReviewNodeInstance> queryAfterAgree(Map<String, Object> map);
     //审核者同意后，map中有nodeInstance.instanceId和node.sequence
-    List<ReviewNodeInstance> queryByReviewer(Map<String, Object> map);
+    List<CheckorPage> queryByReviewer(Map<String, Object> map);
     //呈现给审核者的页面，map中有node.userId
 }

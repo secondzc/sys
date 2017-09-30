@@ -7,9 +7,6 @@
 					<el-input v-model="filters.name" placeholder="模板名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-input v-model="filters.status" placeholder="状态"></el-input>
-				</el-form-item>
-				<el-form-item>
 					<el-button type="primary" v-on:click="getInstance">查询</el-button>
 				</el-form-item>
 			</el-form>
@@ -32,10 +29,19 @@
 			<el-table-column label="操作" width="200">
 				<template scope="scope">
 					<el-button size="small" @click="detail(scope.$index,scope.row)">查看详情</el-button>
-					<el-button type="danger" size="small" @click="remove(scope.$index,scope.row)">删除</el-button>
+					<el-button type="danger" size="small" @click="remove(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+
+        <!--工具条-->
+        <el-col :span="24" class="toolbar">
+            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+            <el-pagination layout="total,sizes,prev, pager, next" @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"  :total="total" :page-sizes ="pageSizes" :page-size="pageSize" style="float:right;">
+            </el-pagination>
+        </el-col>
+
 	</section>
 </template>
 
@@ -43,11 +49,17 @@
     export default{
     	data(){
     		return {
+                total: 0,
+                pageSize: 10,
+                pageSizes: [10,20,30],
+                page: 1,
+                pages: 0,
+                total: 0,
+
     			instances: [],
     			listLoading: false,
     			filters: {
     				name: '',
-    				status: '',
     			},
     			sels: [],
     			page: 1,
@@ -59,16 +71,25 @@
     			this.listLoading = true;
     			let params = {
     				flowInstanceName: this.filters.name,
-    				flowInstanceStatus: this.filters.status,
     				page: this.page,
-    				rows: this.rows,
+    				rows: this.pageSize,
     			}
     			let url="/api/reviewFlowInstance/queryByNameAndStatus";
     			this.func.ajaxPost(url,params,res=>{
-    				this.instances = res.data.rows;
+                    this.pages = res.data.pages;
+                    this.total = res.data.total;
+    				this.instances = res.data.records;
     				this.listLoading = false;
     			})
     		},
+            handleCurrentChange(val){
+                this.page = val;
+                this.getInstance();
+            },
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.getInstance();
+            },
     		format: function(row,column){
     			let msg = "";
     			if(row.status == 1){
@@ -89,7 +110,45 @@
     		},
     		selsChange(sels){
     			this.sels = sels;
-    		}
+    		},
+            //批量删除
+            batchRemove: function() {
+                let ids = this.sels.map(item =>item.instanceId).join(",").toString();
+                this.$confirm('确认删除选中记录吗？','提示',{
+                    type:'warning'
+                }).then(()=>{
+                    this.listLoading = true;
+                    let params = {instanceIds: ids};
+                    let url = 'api/reviewFlowInstance/deleteByInstanceId';
+                    this.func.ajaxPost(url,params,res =>{
+                        if(res.data.flag == true){
+                            this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                            });
+                            this.listLoading = false;
+                            this.getInstance();
+                        }
+                    })
+                })
+            },
+            remove: function(row){
+                this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{
+                    this.listLoading = true;
+                    let params = {instanceIds: row.instanceId};
+                    let url = 'api/reviewFlowInstance/deleteByInstanceId';
+                    this.func.ajaxPost(url,params,res =>{
+                        if(res.data.flag == true){
+                            this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                            });
+                            this.listLoading = false;
+                            this.getInstance();
+                        }
+                    })
+                });
+            },
     	},
     	mounted() {
     		this.getInstance();
