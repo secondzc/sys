@@ -15,7 +15,7 @@
 	    	</li>
 	    	<li v-for="(item,index) in this.detailPages" v-if="item.status == 1">
 	    	    <img src="../../assets/arrow.jpg" style="margin:0 auto;display:block;"><br><br>
-	    	    <el-button type="primary"  style="background-color:#8492A6;margin:0 auto;display:block;">{{item.user.userName}}（还没到）</el-button><br><br>
+	    	    <el-button type="primary"  style="background-color:#8492A6;margin:0 auto;display:block;">{{item.user.userName}}（未到）</el-button><br><br>
 	    	</li>
         </ul>
     </section>

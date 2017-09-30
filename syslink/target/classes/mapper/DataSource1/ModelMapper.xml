@@ -28,7 +28,7 @@
         info_text_path,is_deleted,user_id,create_time,last_update_time,scope
     </sql>
 
-    <insert id="add" parameterType="com.tongyuan.model.domain.Model">
+    <insert id="add" parameterType="com.tongyuan.model.domain.Model" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO model (parent_id, name,classes,type,directory_id,file_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
         info_text_path,is_deleted,user_id,create_time,last_update_time,scope) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId},#{fileId}, #{discription},#{Import}, #{Extends},#{modelFilePath}, #{iconSvgPath},
         #{diagramSvgPath}, #{infoTextPath}, #{isDeleted},#{userId}, #{createTime}, #{lastUpdateTime},#{scope})

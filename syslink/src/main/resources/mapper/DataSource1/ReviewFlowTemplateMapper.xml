@@ -57,4 +57,11 @@
         SET last_update_time=#{lastUpdateTime} WHERE template_id=#{templateId}
     </update>
 
+    <select id="getTemplateByDefault" resultMap="baseResultMap">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM review_flow_template
+        WHERE default_template = TRUE
+    </select>
+
 </mapper>

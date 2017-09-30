@@ -3,10 +3,12 @@ package com.tongyuan.webservice;
 import com.tongyuan.model.controller.ModelController;
 import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.domain.ReviewFlowInstance;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.model.service.ModelService;
+import com.tongyuan.model.service.ReviewFlowInstanceService;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,8 @@ public class CommonServiceImp implements CommonService {
 	private DirectoryService directoryService;
 	@Autowired
 	private FileModelService fileModelService;
+	@Autowired
+	private ReviewFlowInstanceService reviewFlowInstanceService;
 
 	@Override
 	public String sayHello(String name) {
@@ -136,7 +140,7 @@ public class CommonServiceImp implements CommonService {
 			if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
 				id = modelService.add(model);
 			}
-
+			reviewFlowInstanceService.startInstance(id);
 			//查找最外层空的model
 			Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
 			for (int i = 0; i < subFiles.length; i++) {

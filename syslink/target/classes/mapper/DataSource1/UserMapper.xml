@@ -39,7 +39,7 @@
 
     <sql id="baseColumnList" >
         id, user_name, real_name,pass_word,salt,create_date,update_date,create_user,update_user,department_id,email,mobile,
-        deletable,deleted,status,gender,depts
+        deletable,deleted,status,gender
     </sql>
     <sql id="nameColumnList" >
         real_name

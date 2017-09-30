@@ -40,7 +40,7 @@ public class DateUtil {
 		if (pattern == null || pattern.equals("") || pattern.equals("null")) {
 			pattern = "yyyy-MM-dd HH:mm:ss";
 		}
-		return new java.text.SimpleDateFormat(pattern).format(date);
+		return new SimpleDateFormat(pattern).format(date);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class DateUtil {
 		}
 		Date d = null;
 		try {
-			d = new java.text.SimpleDateFormat(pattern).parse(date);
+			d = new SimpleDateFormat(pattern).parse(date);
 		} catch (ParseException pe) {
 		}
 		return d;

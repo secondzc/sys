@@ -24,7 +24,7 @@ import java.util.*;
  * Created by Y470 on 2017/7/7.
  */
 @Controller
-@RequestMapping("/checkor")
+@RequestMapping("/api/checkor")
 public class CheckorController extends BaseController{
     @Autowired
     private StatusChangeService statusChangeService;

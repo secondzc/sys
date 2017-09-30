@@ -1,8 +1,6 @@
 package com.tongyuan.model.domainmodel;
 
 import com.tongyuan.model.domain.User;
-import com.tongyuan.util.DateUtil;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.Date;
 
