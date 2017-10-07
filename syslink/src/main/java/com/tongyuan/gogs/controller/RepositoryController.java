@@ -9,7 +9,6 @@ import com.tongyuan.gogs.service.ActionService;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.gogs.service.WatchService;
-import com.tongyuan.model.service.UserService;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +38,7 @@ public class RepositoryController {
     private WatchService watchService;
     @Autowired
     private GUserService guserService;
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private ResourceUtil resourceUtil;
 

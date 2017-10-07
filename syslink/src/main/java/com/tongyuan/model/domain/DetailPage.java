@@ -1,5 +1,7 @@
 package com.tongyuan.model.domain;
 
+import com.tongyuan.gogs.domain.GUser;
+
 import java.sql.Timestamp;
 
 /**
@@ -11,13 +13,13 @@ public class DetailPage {
     private Timestamp createTime;
     private  Timestamp lastUpdateTime;
     private ReviewNode node;
-    private User user;
+    private GUser user;
 
-    public User getUser() {
+    public GUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(GUser user) {
         this.user = user;
     }
 

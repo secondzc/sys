@@ -1,12 +1,10 @@
 package com.tongyuan.model.controller;
 
-import com.tongyuan.model.domain.User;
+import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domain.enums.ExceptionMsg;
 import com.tongyuan.model.domain.result.Response;
 import com.tongyuan.model.domain.result.ResponseData;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-import com.tongyuan.model.domainmodel.PermissionValueModel;
-import com.tongyuan.model.domainmodel.RoleModel;
 import com.tongyuan.tools.CommonConstant;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -15,8 +13,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Y470 on 2017/6/27.
@@ -33,25 +29,25 @@ public class BaseController {
         return getRequest().getSession();
     }
 
-    protected User getUser(){
-        return (User) getSession().getAttribute("user");
+    protected GUser getUser(){
+        return (GUser) getSession().getAttribute("user");
     }
 
 
     protected Long getUserId(){
         Long id = 0L;
-        User user = getUser();
+        GUser user = getUser();
         if(user!=null){
-            id = user.getId();
+            id = user.getID();
         }
         return id;
     }
 
     protected String getUserName(){
         String userName = "";
-        User user = getUser();
+        GUser user = getUser();
         if(user!=null){
-            userName = user.getUserName();
+            userName = user.getName();
         }
         return userName;
     }
@@ -127,7 +123,7 @@ public class BaseController {
     protected long getCurrentUserId(HttpServletRequest request)
     {
         if (getSessionUser(request)!=null&&getSessionUser(request).getProfile()!=null) {
-            return getSessionUser(request).getProfile().getId();
+            return getSessionUser(request).getProfile().getID();
         }
         else {
             return 0;

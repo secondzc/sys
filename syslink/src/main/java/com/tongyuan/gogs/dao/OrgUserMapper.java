@@ -12,13 +12,29 @@ import java.util.Map;
 @Mapper
 public interface OrgUserMapper {
 
-    public boolean add(Map<String,Object>map);
+    public boolean add(Map<String, Object> map);
 
-    public boolean update(Map<String,Object>map);
+    public boolean update(Map<String, Object> map);
 
+    public boolean updateByUid(Map<String, Object> map);
+
+    /**
+     * 删除组织时使用
+     * @param id
+     * @return
+     */
     public boolean delete(long id);
 
-    public List<Map<String,Object>> query(@Param("orgId") long orgId);
+    /**
+     * 从组织中删除用户时使用
+     */
+    public boolean deleteOrgUser(Map<String, Object> map);
+
+    public List<Map<String,Object>> queryByOrgId(@Param("orgId") long orgId);
+
+    public List<Map<String,Object>> queryByUid(@Param("uid") long uid);
+
+
 
 
 }

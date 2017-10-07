@@ -1,30 +1,26 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.gogs.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.Page;
-import com.tongyuan.model.domain.Operationlog;
-import com.tongyuan.model.domain.User;
-import com.tongyuan.model.domainmodel.UserModel;
+import com.tongyuan.gogs.service.GUserService;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
-import com.tongyuan.model.service.UserService;
 import com.tongyuan.model.wrapper.GUserWarpper;
 import com.tongyuan.model.wrapper.UserRoleWarpper;
-import com.tongyuan.model.wrapper.UserWarpper;
-import com.tongyuan.tools.DateUtil;
 import com.tongyuan.util.EncodePasswd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
-
 
 
 /**
@@ -32,176 +28,18 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/user")
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @Autowired
-    private UserService userService;
+    private GUserService userService;
     @Autowired
     private OperationlogService operationlogService;
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject getAllUsers(HttpServletRequest request, HttpServletResponse response,@RequestBody String para)
-    {
-        JSONObject jo = new JSONObject();
-        List<Map<String,Object>>userList = new ArrayList<>();
-//        List<UserModel>list = userService.getAllUsers();
-//        Map<String,Object> a  = userService.queryUserById((long)1);
-        List<Map<String,Object>> users = new ArrayList<>();
-        JSONObject jsonObject = JSON.parseObject(para);
-        Page<Map<String,Object>> page = new Page<>();
-        Map<String,Object> map = new HashMap<String ,Object>();
-        map.put("realName",jsonObject.getString("realName"));
-        map.put("content",jsonObject.getString("content"));
-        map.put("pageIndex",jsonObject.getIntValue("pageIndex"));
-        map.put("pageSize",jsonObject.getIntValue("pageSize"));
 
 
-
-        try
-        {
-          users = userService.findAllName();
-            userList.addAll(users);
-//            List<Map<String,Object>>list = new UserWarpper(users).warp();
-            page=userService.findAllUsers(map);
-
-
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","获取列表失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","获取列表成功");
-        jo.put("user",  new UserWarpper(page).warp());
-        jo.put("userName",userList);
-        jo.put("total",page.getTotal());
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-    /**
-     * 添加用户
-     * @param user
-     * @param request
-     * @return
-     */
-
-    @RequestMapping(value = "/add",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject addUser(@RequestBody User user,HttpServletRequest request)
-    {
-         JSONObject jo = new JSONObject();
-         user.setCreateUser(getCurrentRealName(request));
-         user.setCreateDate(DateUtil.getCurrentTime());
-         user.setDeleted((short) 0);
-         user.setDeletable((short)1);
-         user.setStatus((short)0);
-      //   String []deptArray = user.getDeptArray();
-      //   user.setDepartmentId(Integer.parseInt(deptArray[deptArray.length-1]));
-
-
-
-         try
-        {
-         userService.add(user);
-
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","添加用户失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","添加用户成功");
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-    @RequestMapping(value = "/edit",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject editUser(HttpServletRequest request,@RequestBody User user)
-    {
-        JSONObject jo = new JSONObject();
-        user.setUpdateUser(getCurrentRealName(request));
-        user.setUpdateDate(DateUtil.getCurrentTime());
-        try
-        {
-            userService.update(user);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","编辑用户失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","编辑用户成功");
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-
-    @RequestMapping(value = "/delete",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject deleteUser(HttpServletRequest request,@RequestBody String para)
-    {
-        JSONObject jo = new JSONObject();
-        JSONObject jsonObject = JSON.parseObject(para);
-        long id = jsonObject.getIntValue("id");
-
-        try
-        {
-            userService.delete(id);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","删除用户失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","删除用户成功");
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-    @RequestMapping(value = "/deleteUsers",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject deleteUsers(HttpServletRequest request,@RequestBody String para)
-    {
-        JSONObject jo = new JSONObject();
-        JSONObject jsonObject = JSON.parseObject(para);
-        JSONArray ids = jsonObject.getJSONArray("ids");
-
-        try
-        {
-            for(int i=0;i<ids.size();i++)
-            {
-                userService.delete(ids.getIntValue(i));
-            }
-         //   userService.delete(id);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","删除用户失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","删除用户成功");
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-
+   
 
     @RequestMapping(value = "/assignRole",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody

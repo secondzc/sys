@@ -3,18 +3,21 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.gogs.controller.InputStreamRunnable;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
-import com.tongyuan.model.domain.User;
 import com.tongyuan.model.enums.ModelClasses;
-import com.tongyuan.model.service.*;
+import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.FileModelService;
+import com.tongyuan.model.service.LearnService;
+import com.tongyuan.model.service.ModelService;
 import com.tongyuan.pageModel.DirectoryModel;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.FileX;
 import com.tongyuan.util.ResourceUtil;
-import com.tongyuan.webservice.CommonServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +51,13 @@ public class DirectoryController {
     @Autowired
     private FileX fileX;
     @Autowired
-    private CommonServiceImp CommonServiceImp;
+    private com.tongyuan.webservice.CommonServiceImp CommonServiceImp;
     @Autowired
     private ModelService modelService;
     @Autowired
     private ModelController modelController;
     @Autowired
-    private UserService userService;
+    private GUserService userService;
 
 
     private Date nowDate = new Date();
@@ -357,7 +360,7 @@ public class DirectoryController {
             }
             File xmlFilePath = new File(xmlPath);
             String[] subFiles = xmlFilePath.list();
-            User user = userService.getUserByName(name);
+            GUser user = userService.querListByName(name);
             Model model = new Model();
             model.setName(subFiles[0].split("\\.")[0]);
             model.setFileId(directory.getId());
@@ -365,7 +368,7 @@ public class DirectoryController {
             model.setClasses(ModelClasses.Package.getKey());
             model.setModelFilePath(filePath);
             model.setScope(false);
-            model.setUserId(user.getId());
+            model.setUserId(user.getID());
            // model.setUserId(1);
             model.setDeleted(false);
             if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
@@ -595,7 +598,7 @@ public class DirectoryController {
   * name 是上传者
   * fileXmlPath 是文件所在位置
   * filName 为文件名称
-  * */
+* */
     public void doCmd(String name, String fileXmlPath,String fileName){
         JSONObject jo = new JSONObject();
         Map<String,Object> params = new HashMap<>();
