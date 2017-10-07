@@ -1,16 +1,13 @@
 package com.tongyuan.model.controller;
 
 
-import com.tongyuan.model.domain.User;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-import com.tongyuan.gogs.domain.GUser1;
 import com.tongyuan.model.service.OperationlogService;
-import com.tongyuan.model.service.UserService;
-
 import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.IpUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /** 登录
  * Created by tengj on 2017/4/10.
  */
 @Controller
-public class LoginController extends BaseController{
+public class LoginController extends BaseController {
     @Autowired
-    private UserService userService;
+    private GUserService userService;
     @Autowired
     OperationlogService operationlogService;
 
@@ -66,6 +60,8 @@ public class LoginController extends BaseController{
     @RequestMapping(value = "api/loginUser", method = RequestMethod.GET )
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        GUser gUser = userService.queryById(1);
         String username = request.getParameter("userName");
         String password = request.getParameter("password");
         String rememberMe = request.getParameter("rememberMe");
@@ -73,15 +69,13 @@ public class LoginController extends BaseController{
         Map<String,Object> params = new HashMap<String,Object>();
      //   params.put("userName",username);
         params.put("name",username);
-        User user = userService.querUserByName(params);
 
-        List<Map<String,Object>> list =  userService.queryUser(params);
-        if(list.size()>0)
+
+        GUser user = userService.querListByName(username);
+        if(user!=null)
         {
-          Map<String,Object> gUserMap = list.iterator().next();
-          GUser1 gUser = new GUser1(gUserMap);
-          String passwdCheck = EncodePasswd.getEncryptedPassword(password,gUser.getSalt(),10000,50);
-          if(passwdCheck.equalsIgnoreCase(gUser.getPasswd()))
+              String passwdCheck = EncodePasswd.getEncryptedPassword(password,user.getSalt(),10000,50);
+          if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
           {
 
               if(rememberMe != null && "1".equals(rememberMe)){
@@ -104,14 +98,14 @@ public class LoginController extends BaseController{
               }
               HttpSession session = request.getSession();
             //  session.setAttribute("user", user);
-              session.setAttribute("user", gUser);
+              session.setAttribute("user", user);
               session.setAttribute("base_path", request.getContextPath());
               String lginIp = IpUtil.getIpAddr(request);
-              Date loginDate =DateUtil.getTimestamp();
-              userService.updateLoginstate(gUser.getId(),lginIp,loginDate);
+              Date loginDate = DateUtil.getTimestamp();
+              userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
 
-              LoginedUserModel loginedUser =userService.CreateLoginedUser(gUser);
+              LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
               setSessionUser(request,loginedUser);
 
               operationlogService.addLog("登录","登录系统",request);

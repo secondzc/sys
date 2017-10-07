@@ -21,8 +21,8 @@
             <result property="description" column="review_node_description"/>
             <result property="sequence" column="review_node_sequence"/>
         </association>
-        <association property="user" javaType="com.tongyuan.model.domain.User">
-            <id property="id" column="user_id"/>
+        <association property="user" javaType="com.tongyuan.gogs.domain.GUser">
+            <id property="id" column="id"/>
             <result property="userName" column="user_user_name"/>
         </association>
     </resultMap>

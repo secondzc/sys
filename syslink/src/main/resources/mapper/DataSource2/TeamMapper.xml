@@ -43,6 +43,9 @@
 
 
 
+
+
+
     <select id="query" resultMap="mapResultMap" resultType="map" parameterType="long">
         SELECT
         <include refid="baseColumnList" />
@@ -52,6 +55,36 @@
             org_id = #{orgId}
         </if>
     </select>
+
+
+    <select id="queryByOrgId" resultMap="mapResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM team
+        WHERE
+
+            org_id = #{orgId}
+
+    </select>
+    <select id="queryByTeamId" resultMap="mapResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM team
+        WHERE
+
+            id = #{id}
+
+    </select>
+    <select id="queryByTeamName" resultMap="mapResultMap" resultType="map" parameterType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM team
+        WHERE
+
+        name = #{teamName} and org_id=#{orgId}
+
+    </select>
+
 
 
 </mapper>

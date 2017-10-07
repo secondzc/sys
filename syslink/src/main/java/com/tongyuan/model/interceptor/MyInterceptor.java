@@ -1,8 +1,9 @@
 package com.tongyuan.model.interceptor;
 
 
-import com.tongyuan.model.domain.User;
-import com.tongyuan.model.service.UserService;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,8 +21,9 @@ import java.util.Map;
 @Controller
 public class MyInterceptor extends HandlerInterceptorAdapter {
 
+
     @Autowired
-    private UserService userService;
+    private GUserService gUserService;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -58,10 +60,11 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
             String EncryptedPassword =PBKDF2SHA256.getEncryptedPassword(password, user.getSalt());
             if(user != null && EncryptedPassword.equals(user.getPasswd())){*/
             params.put("userName",username);
-            User user = userService.querUserByName(params);
+         //   User user = userService.querUserByName(params);
+            GUser user = gUserService.querListByName(username);
             //           String EncryptedPassword =PBKDF2SHA256.getEncryptedPassword(password, user.getSalt());
             //           if(user != null && EncryptedPassword.equals(user.getPasswd())){
-            if(user != null && password.equals(user.getPassWord()) || ("root".equals(username) && "root".equals(password))){
+            if(user != null && password.equals(user.getPasswd()) || ("root".equals(username) && "root".equals(password))){
                 request.getSession().setAttribute("user", user);
                 request.getSession().setAttribute("base_path", request.getContextPath());
                 Cookie c = new Cookie("gogs_awesome",username);
