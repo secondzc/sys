@@ -135,4 +135,29 @@ public class ReviewFlowTemplateController extends BaseController {
         map = CurdUtil.curd(index);
         ServletUtil.createSuccessResponse(200, map, response);
     }
+
+    @PostMapping("/setDefault")
+    @ResponseBody
+    public JSONObject setDefault(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        JSONObject jo = new JSONObject();
+        Long templateId = Long.valueOf(request.getParameter("templateId"));
+        String assure = request.getParameter("assure");
+
+        Long existDefault = -1L;
+        existDefault = reviewFlowTemplateService.checkDefault();
+        //若之前不存在默认模板，或之前的默认模板id就是当前模板，或已经得到客户端确认，则正常设置，
+        //否则要对客户端发送提醒 （并且如果要修改之前的默认，则之前的默认要置为false）
+        if(existDefault==null || existDefault.equals(templateId) ||"yes".equals(assure)){
+            reviewFlowTemplateService.setDefaultTrue(templateId);
+            if(existDefault!=null && !existDefault.equals(templateId)){
+                reviewFlowTemplateService.setDefaultFalse(existDefault);
+            }
+            jo.put("code",200);
+            jo.put("reminder",false);
+        }else{
+            jo.put("code",200);
+            jo.put("reminder",true);
+        }
+        return jo;
+    }
 }

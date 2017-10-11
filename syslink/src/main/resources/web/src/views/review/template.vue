@@ -28,10 +28,13 @@
 			</el-table-column>
 			<el-table-column prop="createTime" label="创建时间" width="120" >
 			</el-table-column>
-			<el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="180" >
+			<el-table-column prop="defaultTemplate" label="是否为默认模板" width="120" :formatter="formatDefault">
 			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="120" >
+			</el-table-column>
+			<el-table-column label="操作" width="300">
 				<template scope="scope">
+				    <el-button size="small" @click="setDefault(scope.$index,scope.row)">设为默认</el-button>
 					<el-button size="small" @click="handleEdit(scope.$index,scope.row)">配置</el-button>
 					<el-button type="danger" size="small" @click="remove(scope.$index,scope.row)">删除</el-button>
 				</template>
@@ -106,6 +109,9 @@
 		methods: {
 			format: function(row,column){
 				return row.alreadyConfig == false ? '否' : '是';
+			},
+			formatDefault: function(row,column){
+				return row.defaultTemplate == false ? '否' : '是';
 			},
 			getTemplates() {
 				let param = {
@@ -220,6 +226,37 @@
 						}
 					})
 				});
+			},
+			setDefault: function(index,row){
+				let param = {templateId: row.templateId};
+				let url = '/api/reviewFlowTemplate/setDefault';
+				param.assure = "no";
+				this.func.ajaxPost(url,param,res =>{
+					if(res.data.code ===200){
+						if(!res.data.reminder){
+							this.$message({
+							message: '设置成功',
+							type: 'success'
+						    });
+						    this.listLoading = false;
+						    this.getTemplates();
+						}else{
+							this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
+								param.assure = "yes";
+								this.func.ajaxPost(url,param,res =>{
+									if(res.data.code ===200){
+										this.$message({
+											message: '设置成功',
+											type: 'success'
+										});
+										this.listLoading = false;
+										this.getTemplates();
+									}
+								})
+							})
+						}
+					}
+				})
 			},
 		},
 		mounted() {

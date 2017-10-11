@@ -58,7 +58,7 @@ public class ReviewFlowTemplateImpl implements ReviewFlowTemplateService {
         if(defaultNumb!=null && defaultNumb.length>1){
             throw new SqlNumberException("默认模板数目不应该大于1");
         }else{
-            if(defaultNumb==null){
+            if(defaultNumb==null||defaultNumb.length==0){
                 return null;
             }else{
                 return defaultNumb[0];
