@@ -1,7 +1,7 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.NodeInstanceMapper;
-import com.tongyuan.model.domain.DetailPage;
+import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.model.service.NodeInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;

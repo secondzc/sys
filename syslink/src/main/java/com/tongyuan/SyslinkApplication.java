@@ -68,7 +68,7 @@ public class SyslinkApplication extends SpringBootServletInitializer {
     }*/
 
     //增加一个SpringMVC的DispatcherServlet，接收前台/api开头的请求
-/*    @Bean
+    /*@Bean
     public ServletRegistrationBean apiV1ServletBean(WebApplicationContext wac) {
         DispatcherServlet servlet = new DispatcherServlet(wac);
         ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/api");

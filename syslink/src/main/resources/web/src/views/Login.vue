@@ -35,8 +35,8 @@
       return {
         logining: false,
         ruleForm2: {
-          userName: 'xyx',
-          password: '123456'
+          userName: 'zhangchuyuan',
+          password: '111111'
         },
         rules2: {
           userName: [

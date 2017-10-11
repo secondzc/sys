@@ -170,7 +170,6 @@
 				this.getTemplates();
 			},
 			addSubmit: function(){
-				this.$confirm('确认提交吗？','提示',{}).then(()=>{
 					this.addLoading = true;
 					let param = Object.assign({},this.addTemplate);
 					let url = '/api/reviewFlowTemplate/addReviewFlowTemplate';
@@ -185,7 +184,6 @@
 						    this.getTemplates();
 						}
 					})
-				})
 			},
 			remove: function(index,row){
 				this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{

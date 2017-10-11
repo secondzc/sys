@@ -1,6 +1,6 @@
 package com.tongyuan.model.dao;
 
-import com.tongyuan.model.domain.CheckorPage;
+import com.tongyuan.pageModel.CheckorPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import org.apache.ibatis.annotations.Mapper;
 

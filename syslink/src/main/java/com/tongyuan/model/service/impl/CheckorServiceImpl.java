@@ -2,7 +2,7 @@ package com.tongyuan.model.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.tongyuan.model.dao.NodeInstanceAndNodeMapper;
-import com.tongyuan.model.domain.CheckorPage;
+import com.tongyuan.pageModel.CheckorPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.model.service.CheckorService;
 import org.springframework.beans.factory.annotation.Autowired;

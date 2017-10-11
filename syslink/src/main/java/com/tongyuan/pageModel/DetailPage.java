@@ -1,4 +1,7 @@
-package com.tongyuan.model.domain;
+package com.tongyuan.pageModel;
+
+import com.tongyuan.model.domain.ReviewNode;
+import com.tongyuan.model.domain.User;
 
 import java.sql.Timestamp;
 
