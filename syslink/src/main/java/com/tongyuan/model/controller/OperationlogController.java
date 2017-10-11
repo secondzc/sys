@@ -1,22 +1,15 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
-import com.tongyuan.model.domain.LearnResouce;
 import com.tongyuan.model.domain.Operationlog;
-import com.tongyuan.model.domain.User;
 import com.tongyuan.model.service.OperationlogService;
-import com.tongyuan.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.title;
 
 /**
  * Created by yh on 2017/9/1.

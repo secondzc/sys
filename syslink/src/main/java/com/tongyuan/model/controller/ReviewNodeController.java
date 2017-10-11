@@ -1,14 +1,13 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domain.NodePage;
 import com.tongyuan.model.domain.ReviewNode;
-import com.tongyuan.model.domain.User;
 import com.tongyuan.model.service.NodeHistoryService;
 import com.tongyuan.model.service.NodeService;
 import com.tongyuan.model.service.ReviewFlowTemplateService;
-import com.tongyuan.model.service.UserService;
 import com.tongyuan.tools.CurdUtil;
 import com.tongyuan.tools.DateUtil;
 import com.tongyuan.tools.ServletUtil;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +31,7 @@ public class ReviewNodeController extends BaseController {
     @Autowired
     private NodeService nodeService;
     @Autowired
-    private UserService userService;
+    private GUserService userService;
     @Autowired
     private ReviewFlowTemplateService reviewFlowTemplateService;
     @Autowired
@@ -62,8 +60,8 @@ public class ReviewNodeController extends BaseController {
             ReviewNode reviewNode = new ReviewNode();
             reviewNode.setNodeName(reviewNodeNames[i]);
             reviewNode.setDescription(description[i]);
-            User user = userService.getUserByName(userName[i]);
-            Long userId = user.getId();
+            GUser user = userService.querListByName(userName[i]);
+            Long userId = user.getID();
             reviewNode.setUserId(userId);
             reviewNode.setTemplateId(templateId);
             reviewNode.setSequence((i+1)+"");
@@ -85,8 +83,8 @@ public class ReviewNodeController extends BaseController {
         String reviewNodeName = request.getParameter("reviewNodeName");
         String description = request.getParameter("description");
         String userName = request.getParameter("userName");
-        User user = userService.getUserByName(userName);
-        Long userId = user.getId();
+        GUser user = userService.querListByName(userName);
+        Long userId = user.getID();
         Long templateId = Long.valueOf(request.getParameter("templateId"));
         String sequence = request.getParameter("sequence");
 
@@ -127,7 +125,7 @@ public class ReviewNodeController extends BaseController {
             nodePage.setNodeId(node.getNodeId());
             nodePage.setDescription(node.getDescription());
             nodePage.setReviewNodeName(node.getNodeName());
-            String userName = userService.queryUserById(node.getUserId()).getUserName();
+            String userName = userService.queryById(node.getUserId()).getName();
             nodePage.setUserName(userName);
             nodePages.add(nodePage);
         }

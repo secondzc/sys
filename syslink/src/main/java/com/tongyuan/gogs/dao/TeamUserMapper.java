@@ -11,11 +11,15 @@ import java.util.Map;
 @Mapper
 public interface TeamUserMapper {
 
-    public boolean add(Map<String,Object> map);
+    public boolean add(Map<String, Object> map);
 
-    public boolean update(Map<String,Object>map);
+    public boolean update(Map<String, Object> map);
 
     public boolean delete(long id);
 
-    public List<Map<String,Object>> query(Map<String,Object>map);
+    public boolean deleteTeamUser(Map<String, Object> map);
+
+    public List<Map<String,Object>> query(Map<String, Object> map);
+
+    public List<Map<String,Object>> queryByTeamId(long teamId);
 }

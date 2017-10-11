@@ -1,9 +1,12 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.gogs.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.gogs.service.OrgService;
+import com.tongyuan.gogs.service.TeamService;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.wrapper.GUserWarpper;
+import com.tongyuan.model.wrapper.TeamWarpper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,10 +29,12 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/api/org")
-public class OrgController extends  BaseController{
+public class OrgController extends BaseController {
 
     @Autowired
     private OrgService orgService;
+    @Autowired
+    private TeamService teamService;
 
     @RequestMapping(value = "/add",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
@@ -148,11 +153,11 @@ public class OrgController extends  BaseController{
     @ResponseBody
     public JSONObject myOrg(@RequestBody String para, HttpServletRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jo=new JSONObject();
-        Map<String,Object> map = new HashMap<>();
-        map.put("uid",getCurrentUserId(request));
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("uid",getCurrentUserId(request));
         List<Map<String,Object>> orgs = new ArrayList<>();
         try{
-            orgs = orgService.query(map);
+            orgs = orgService.getMyOrg(getCurrentUserId(request));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -208,7 +213,7 @@ public class OrgController extends  BaseController{
         map.put("name",name);
         List<Map<String,Object>> team = new ArrayList<>();
         try{
-            team = orgService.getTeam(map);
+            team = teamService.getTeam(map);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -220,8 +225,72 @@ public class OrgController extends  BaseController{
         jo.put("status",1);
         jo.put("code",0);
         jo.put("msg","ok");
-        jo.put("team",team);
+        jo.put("team",new TeamWarpper(team).warp());
         return (JSONObject) JSONObject.toJSON(jo);
 
     }
+    @RequestMapping(value = "/addOrgUser",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject addOrgUser(@RequestBody String para, HttpServletRequest request) {
+        JSONObject jo=new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        List<Map<String,Object>> orgUser = new ArrayList<>();
+        try{
+            orgService.addOrgUser(jsonObject);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","操作失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","操作成功");
+        return (JSONObject) JSONObject.toJSON(jo);
+
+    }
+
+
+    @RequestMapping(value = "/updateOrgUser",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject updateOrgUser(@RequestBody String para, HttpServletRequest request) {
+        JSONObject jo=new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        List<Map<String,Object>> orgUser = new ArrayList<>();
+        try{
+           orgService.updateOrgUser(jsonObject);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","操作失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","操作成功");
+        return (JSONObject) JSONObject.toJSON(jo);
+
+    }
+
+    @RequestMapping(value = "/deleteOrgUser",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject deleteOrgUser(@RequestBody String para, HttpServletRequest request) {
+        JSONObject jo=new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        List<Map<String,Object>> orgUser = new ArrayList<>();
+        try{
+            orgService.deleteOrgUser(jsonObject);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","操作失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","操作成功");
+        return (JSONObject) JSONObject.toJSON(jo);
+
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.tongyuan.model.interceptor;
 
 
-import com.tongyuan.model.service.UserService;
+import com.tongyuan.gogs.service.GUserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,7 +22,7 @@ public class SecurityFilter implements Filter {
 /*	@Autowired
 	private UserRepository userRepository;*/
     @Autowired
-    private UserService userService;
+    private GUserService userService;
 
 /*	@Override
 	public void init(FilterConfig arg0) throws ServletException {
