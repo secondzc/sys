@@ -73,12 +73,16 @@ public class ReviewNodeController extends BaseController {
             map1.put("lastUpdateTime", DateUtil.getCurrentTime());
             reviewFlowTemplateService.updateTime(map1);
         }
+
+        //将所对应模板设置为已经配置
+        reviewFlowTemplateService.setAlreadyConfig(templateId);
+
         Map<String,Object> map = new HashMap<>();
         map.put("flag",true);
         ServletUtil.createSuccessResponse(200,map,response);
     }
 
-    @PostMapping("/addReviewNode")
+    /*@PostMapping("/addReviewNode")
     public void addReviewNode(HttpServletRequest request, HttpServletResponse response){
         String reviewNodeName = request.getParameter("reviewNodeName");
         String description = request.getParameter("description");
@@ -110,7 +114,7 @@ public class ReviewNodeController extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         map = CurdUtil.curd(index);
         ServletUtil.createSuccessResponse(200, map, response);
-    }
+    }*/
 
     @PostMapping (value="/queryReviewNode",produces="application/json;charset=UTF-8")
     public void queryByTemplateId(HttpServletRequest request, HttpServletResponse response){

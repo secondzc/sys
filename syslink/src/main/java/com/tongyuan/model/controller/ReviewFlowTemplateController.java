@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,17 +36,38 @@ public class ReviewFlowTemplateController extends BaseController {
 
     /**
      * 新增审签模板
+     *
+     * 1.此模板不是默认，则直接添加
+     * 2.此模板是默认，且之前没有默认的，则直接添加
+     * 以上两种情况前端都不会弹出对话框
+     * 3.此模板是默认，且之前有默认，且客户没有确认，则前端弹出对话框让客户确定
+     * 4. 若客户确定，则添加并在前端显示成功信息
+     *
      * @param request
      * @param response
      */
     @PostMapping("/addReviewFlowTemplate")
-    public void add(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    @ResponseBody
+    public JSONObject add(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        JSONObject jo = new JSONObject();
+
         String templateName = request.getParameter("templateName");
         String description = request.getParameter("description");
+        String assure = request.getParameter("assure");
         Long userId = getUserId();
         Boolean defaultTemplate = Boolean.valueOf(request.getParameter("defaultTemplate"));
         Timestamp timestamp = DateUtil.getCurrentTime();
-
+        //存在的默认模板的id，若之前不存在则为null
+        Long existDefault = -1L;
+        if(defaultTemplate && "no".equals(assure)){
+            existDefault = reviewFlowTemplateService.checkDefault();
+            if(existDefault!=null){
+                jo.put("changeDefault",true);
+                jo.put("msg","ok");
+                jo.put("code",200);
+                return jo;
+            }
+        }
         ReviewFlowTemplate reviewFlowTemplate = new ReviewFlowTemplate();
         reviewFlowTemplate.setTemplateName(templateName);
         reviewFlowTemplate.setDescription(description);
@@ -55,10 +77,21 @@ public class ReviewFlowTemplateController extends BaseController {
         reviewFlowTemplate.setLastUpdateTime(timestamp);
         reviewFlowTemplate.setAlreadyConfig(false);
 
+        //若为第4种情况，即assure=yes，还需要将之前的默认模板改为false,其templateId为existDefault
+        if("yes".equals(assure)){
+            existDefault = reviewFlowTemplateService.checkDefault();
+            if(existDefault!=null){
+                reviewFlowTemplateService.setDefaultFalse(existDefault);
+            }
+        }
+
         int index = reviewFlowTemplateService.add(reviewFlowTemplate);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map = CurdUtil.curd(index);
-        ServletUtil.createSuccessResponse(200, map, response);
+        if(index>0){
+            jo.put("msg","ok");
+            jo.put("code",200);
+            jo.put("changeDefault",false);
+        }
+        return (JSONObject) JSONObject.toJSON(jo);
     }
 
     /**

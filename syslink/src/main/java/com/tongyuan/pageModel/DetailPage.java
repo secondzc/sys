@@ -1,7 +1,6 @@
 package com.tongyuan.pageModel;
 
 import com.tongyuan.model.domain.ReviewNode;
-import com.tongyuan.model.domain.User;
 
 import com.tongyuan.gogs.domain.GUser;
 

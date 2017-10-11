@@ -170,20 +170,39 @@
 				this.getTemplates();
 			},
 			addSubmit: function(){
-					this.addLoading = true;
-					let param = Object.assign({},this.addTemplate);
-					let url = '/api/reviewFlowTemplate/addReviewFlowTemplate';
-					this.func.ajaxPost(url,param,res =>{
-						if(res.data.flag == true){
+				this.addLoading = true;
+				let param = Object.assign({},this.addTemplate);
+				param.assure = "no";
+				let url = '/api/reviewFlowTemplate/addReviewFlowTemplate';
+				this.func.ajaxPost(url,param,res =>{
+					if(res.data.code ==200){
+						if(!res.data.changeDefault){
 							this.addLoading = false;
 							this.addFormVisible = false;
 							this.$message({
-							message: '提交成功！',
-							type: 'success',
-						    })
-						    this.getTemplates();
+								message: '提交成功！',
+								type: 'success',
+							})
+							this.getTemplates();
+						}else{
+							this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
+								param.assure = "yes";
+								this.func.ajaxPost(url,param,res =>{
+									if(res.data.code === 200 && !res.data.changeDefault){
+										this.addLoading = false;
+										this.addFormVisible = false;
+										this.$message({
+											message: '提交成功！',
+											type: 'success',
+										})
+										this.getTemplates();
+									}
+								})
+							})
 						}
-					})
+
+					}
+				})
 			},
 			remove: function(index,row){
 				this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{

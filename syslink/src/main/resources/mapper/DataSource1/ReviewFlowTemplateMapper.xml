@@ -23,7 +23,7 @@
         (#{alreadyConfig},#{createTime},#{defaultTemplate},#{description},#{lastUpdateTime},#{templateName},#{userId})
     </insert>
 
-    <update id="changeAlreadyConfig" parameterType="java.lang.Long">
+    <update id="setAlreadyConfig" parameterType="java.lang.Long">
         UPDATE review_flow_template
         SET already_config = true WHERE template_id = #{templateId}
     </update>
@@ -63,5 +63,23 @@
         FROM review_flow_template
         WHERE default_template = TRUE
     </select>
+
+    <select id="checkDefault" resultType="java.lang.Long">
+        SELECT template_id
+        FROM review_flow_template
+        WHERE default_template = TRUE
+    </select>
+
+    <update id="setDefaultTrue" parameterType="java.lang.Long">
+        UPDATE review_flow_template
+        SET default_template = TRUE
+        WHERE template_id = #{templateId}
+    </update>
+
+    <update id="setDefaultFalse" parameterType="java.lang.Long">
+        UPDATE review_flow_template
+        SET default_template = FALSE
+        WHERE template_id = #{templateId}
+    </update>
 
 </mapper>
