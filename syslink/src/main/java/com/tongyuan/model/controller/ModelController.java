@@ -1,8 +1,6 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tongyuan.gogs.domain.GUser;
-import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
@@ -41,7 +39,7 @@ public class ModelController {
     @Autowired
     private DirectoryService directoryService;
     @Autowired
-    private GUserService userService;
+    private UserService userService;
     @Autowired
     private FileModelService fileModelService;
     @Autowired
@@ -50,91 +48,6 @@ public class ModelController {
     private VariableService variableService;
     @Autowired
     private ComponentService componentService;
-
-//    @RequestMapping(value = "/test",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public void test(HttpServletRequest request , HttpServletResponse response){
-//        JSONObject result=new JSONObject();
-//    //    String name = request.getParameter("name");
-//        //获取到userName,password
-//        // 查询到userId的方法 findByNameAndpassword
-//        //xmlMap 把xml转化成map的格式
-//        Map<String, Object> xmlMap = new HashMap<String, Object>();
-//        //存放解析的所有xmlMap
-//        Map<String,Map> xmlAnalysisMap = new HashMap<>();
-//        //存放解析svg，info文件所在位置的Map
-//        Map<String,String> svgPath = new HashMap<>();
-//        String name = "syslink";
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("name",name);
-//        //查找到项目所在的位置
-//        List<FileModel> directoryList = fileModelService.queryListByName(params);
-//        //选取最近push的一个directory对象
-//        FileModel directory = new FileModel();
-//        if(!directoryList.isEmpty()){
-//            directory = directoryList.get(0);
-//        }else {
-//            return ;
-//        }
-//        //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
-//        //文件所在位置
-//        String filePath = directory.getAbsoluteAddress();
-//        //获取到xml所在的文件位置
-//        String xmlPath = "";
-//        xmlPath= resourceUtil.getXmlPath(filePath,xmlPath);
-//        //对xml进行解析,遍历xml文件下所有文件
-//        if(StringUtil.isNull(xmlPath)){
-//            result.put("message","没有找到xml文件！");
-//            result.put("flag",false);
-//            ServletUtil.createSuccessResponse(200, result, response);
-//            return ;
-//        }
-//        File xmlFilePath = new File(xmlPath);
-//        String[] subFiles = xmlFilePath.list();
-//        Model model = new Model();
-//        model.setName(subFiles[0].split("\\.")[0]);
-//        model.setDirectoryId(directory.getId());
-//        model.setClasses(ModelClasses.Package.getKey());
-//        model.setModelFilePath(filePath);
-//        model.setScope(false);
-//        model.setUserId(1);
-//        model.setDeleted(false);
-//        if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
-//            modelService.add(model);
-//        }
-//        //查找最外层空的model
-//        Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
-//        for (int i = 0; i < subFiles.length; i++) {
-//            //查看文件的格式
-//            String [] fileNames = subFiles[i].split("\\.");
-//            //文件的类型
-//            String filePreType = fileNames[fileNames.length-2];
-//            String fileType = fileNames[fileNames.length-1];
-//            if(("xml").equals(fileType)){
-//                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
-//                xmlAnalysisMap.put(subFiles[i],xmlMap);
-//                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-//            }else if("svg".equals(fileType)){
-//                  if("icon".equals(filePreType)){
-//                      svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-//                  }else if("diagram".equals(filePreType)){
-//                      svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-//                  }
-//            }else if("html".equals(fileType)){
-//                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-//            }
-//        }
-//        //遍历xmlMap进行数据的插入
-//        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-//            //解析xmlmap 把数据存放到数据库
-//            insertData(entry,svgPath,nullModel,directory);
-//        }
-//        result.put("message","xml解析成功!");
-//        result.put("flag",true);
-//        ServletUtil.createSuccessResponse(200, result, response);
-//        return ;
-//    }
-
 
     public void insertData(Map.Entry<String,Map> entry, Map svgPath, Model nullModel, FileModel directory, Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -217,7 +130,7 @@ public class ModelController {
                 //当imports 一个组件的时候，或者没有的时候
                 if("String".equals(type)){
                     if(!StringUtil.isNull((String) entry.getValue())){
-                        model.setImport((String) ((String) entry.getValue()).split(" ")[1]);
+                        model.setImport((String) entry.getValue());
                     }
                 }
                 else if("Map".equals(type)){
@@ -226,7 +139,7 @@ public class ModelController {
                     //当import的数量等于1的时候
                     if("String".equals(type)){
                         if(!StringUtil.isNull(secondValue.toString())){
-                            model.setImport((String) (secondValue.toString().split(" ")[1]));
+                            model.setImport(secondValue.toString());
                         }
                     }
                     else if("List".equals(type)){
@@ -234,7 +147,10 @@ public class ModelController {
                         List<String> valueList = (List)secondValue;
                         String importValue="";
                         for(int i= 0;i<valueList.size();i++){
-                            importValue += valueList.get(i).split(" ")[1];
+                            type = decideType(valueList.get(i),type);
+                            if("String".equals(type)){
+                                importValue += valueList.get(i)+",";
+                            }
                         }
                         model.setImport(importValue);
                     }
@@ -247,7 +163,7 @@ public class ModelController {
                 //当imports 一个组件的时候，或者没有的时候
                 if("String".equals(type)){
                     if(!StringUtil.isNull((String) entry.getValue())){
-                        model.setImport((String) ((String) entry.getValue()).split(" ")[1]);
+                        model.setExtends((String) entry.getValue());
                     }
                 }
                 else if("Map".equals(type)){
@@ -256,7 +172,7 @@ public class ModelController {
                     //当import的数量等于1的时候
                     if("String".equals(type)){
                         if(!StringUtil.isNull(secondValue.toString())){
-                            model.setImport((String) (secondValue.toString().split(" ")[1]));
+                            model.setExtends(secondValue.toString());
                         }
                     }
                     else if("List".equals(type)){
@@ -264,7 +180,10 @@ public class ModelController {
                         List<String> valueList = (List)secondValue;
                         String extendsValue="";
                         for(int i= 0;i<valueList.size();i++){
-                            extendsValue += valueList.get(i);
+                            type = decideType(valueList.get(i),type);
+                            if("String".equals(type)){
+                                extendsValue += valueList.get(i)+",";
+                            }
                         }
                         model.setExtends(extendsValue);
                     }
@@ -323,106 +242,24 @@ public class ModelController {
                 if("List".equals(type)){
                     List<Map<String, Object>> compList = compMap.get("component");
                     for(int i = 0;i<compList.size(); i++){
-                        if(compList.get(i).size() == 13){
-                           analysis(compList.get(i),model,compName,variableId);
+                        type = decideType(compList.get(i),type);
+                        if("Map".equals(type) && compList.get(i).get("parentName") != null){
+                            analysis(compList.get(i),model,compName,variableId);
                         }
-                        if(compList.get(i).size() == 2){
-                           analysisComponent((HashMap<String, Object>) compList.get(i),model,compName,variableId);
+                        if("Map".equals(type) && compList.get(i).get("component") != null){
+                            type = decideType(compList.get(i).get("component"),type);
+                            analysisComponent((HashMap<String, Object>) compList.get(i),model,compName,variableId);
                         }
                     }
-//                    for (int i = 0; i < compList.size(); i++) {
-//                        Variable variable = new Variable();
-//                        variable.setModelId(model.getId());
-//                        //判断这个组件是否需要插入到数据库
-//                        int isVar = 0;
-//                        for (Map.Entry<String, String> entryComp : compList.get(i).entrySet()) {
-//                            if ("IsVariable".equals(entryComp.getKey())) {
-//                                if ("False".equals(entryComp.getValue())) {
-//                                    isVar =1;
-//                                    continue;
-//                                }
-//                            }
-//                            if ("Name".equals(entryComp.getKey())) {
-//                                variable.setName(entryComp.getValue());
-//                            }
-//                            if ("Type".equals(entryComp.getKey())) {
-//                                if ("True".equals(compList.get(i).get("IsArray"))) {
-//                                    variable.setType(VariableType.getValueByKey(entryComp.getValue()+"[]"));
-//                                }else {
-//                                    variable.setType(VariableType.getValueByKey(entryComp.getValue()));
-//                                }
-//                            }
-//                            if ("Value".equals(entryComp.getKey())) {
-//                                variable.setDefaultValue(entryComp.getValue());
-//                            }
-//                            if ("Unit".equals(entryComp.getKey())) {
-//                                variable.setUnits(entryComp.getValue());
-//                            }
-//                            if ("Min".equals(entryComp.getKey())) {
-//                                variable.setLowerBound(entryComp.getValue());
-//                            }
-//                            if ("Max".equals(entryComp.getKey())) {
-//                                variable.setUpperBound(entryComp.getValue());
-//                            }
-//                            if ("IsParameter".equals(entryComp.getKey())) {
-//                                if ("True".equals(entryComp.getValue())) {
-//                                    variable.setIsParam(1);
-//                                } else {
-//                                    variable.setIsParam(0);
-//                                }
-//                            }
-/*                            if ("IsArray".equals(entryComp.getKey())) {
-                                if ("True".equals(entryComp.getValue())) {
-                                    variable.setIsInput(1);
-                                } else {
-                                    variable.setIsInput(0);
-                                }
-                            }*/
-//                        }
-//                        if ( 0 == isVar){
-//                            variable.setCreateTime(new Date());
-//                            variableService.add(variable);
-//                        }
-//                    }
-                }else if ("Map".equals(type)){
-                    Map<String,String> compotentMap = (Map<String, String>) (Map<String, String>) compMap.get("component");
-                    Variable variable = new Variable();
-                    variable.setModelId(model.getId());
-//                    if(compotentMap.get("IsVariable").equals("False")){
-//                         return;
-//                    }
-                    if(compotentMap.get("IsVariable").equals("True")){
-                        variable.setIsVariable(1);
-                    }
-                    else {
-                        variable.setIsVariable(0);
-                    }
-                    variable.setName(compotentMap.get("Name"));
-                    variable.setType(VariableType.getValueByKey(compotentMap.get("Type")));
-                    variable.setDefaultValue(compotentMap.get("Value"));
-                    variable.setUnits(compotentMap.get("Unit"));
-                    variable.setLowerBound(compotentMap.get("Min"));
-                    variable.setUpperBound(compotentMap.get("Max"));
-                    if(compotentMap.get("IsParameter").equals("True")){
-                        variable.setIsParam(1);
-                    }
-                    else {
-                        variable.setIsParam(0);
-                    }
-                    if(compotentMap.get("IsArray").equals("True")){
-                        variable.setIsInput(1);
-                    }
-                    else {
-                        variable.setIsInput(0);
-                    }
-                    variable.setCreateTime(nowDate);
-                    variableService.add(variable);
                  }
                 }
             }
         }
         //刚插入的Component
         List<Component> componentList = componentService.queryListNullComp();
+        if(componentList.size() == 0){
+            return ;
+        }
         //获取组件model的id
         long modelId = 0;
         modelId = componentList.get(0).getCurrentModelId();
@@ -446,103 +283,26 @@ public class ModelController {
                 //定义需要比较的parentName
                 String parentName = "";
                 String parentNameArr[] = componentList.get(i).getParentName().split("\\;");
-                for(int m= 0;m< parentNameArr.length -1; m++){
+                for(int m= 0;m< parentNameArr.length; m++){
                     parentName += parentNameArr[m]+";";
                 }
-                if(parentName != null && parentName != ""){
-                    if(parentNameArr.length == 2){
-                        if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getName())){
+                if(parentName != null && parentName != "") {
+                    if (parentNameArr.length == 1) {
+                        if (parentName.substring(0, parentName.length() - 1).equals(componentList.get(j).getName())) {
                             componentList.get(i).setParentId(componentList.get(j).getId());
                         }
                     }
-                    if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName())){
+                }
+             //   if(parentName != null && parentName != ""){
+                if(parentNameArr.length >= 2){
+                    if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName()+componentList.get(j).getName())){
                         componentList.get(i).setParentId(componentList.get(j).getId());
                     }
                 }
             }
             boolean componentResult = componentService.update(componentList.get(i));
         }
-//        for (Map.Entry<String,Long> varName : variableName.entrySet()) {
-//             String variableArr[] = varName.getKey().split("\\;");
-//            //用来比较的变量父类名
-//            String varCompare = "";
-//             for(int i= 0;i< variableArr.length -1; i++){
-//                 varCompare += variableArr[i];
-//             }
-//            for (Map.Entry<String,Long> comp: compName.entrySet()) {
-//                if(comp.getKey().equals(varCompare)){
-//                    varName.setValue(comp.getValue());
-//                }
-//            }
-//        }
     }
-
-//    //获取模型树状图
-//    @RequestMapping(value = "/getModelTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public Map<String,List<EasyuiTreeNode>> getModelTree(HttpServletRequest request , HttpServletResponse response){
-//        String name = request.getParameter("name");
-//        //获取到userName,password
-//        // 查询到userId的方法 findByNameAndpassword
-//        long userId = 1;
-//        Map<String ,List<EasyuiTreeNode>> modelTree = new HashMap<>();
-//        List<Model> allModelList = modelService.findAllModel();
-//        List<Model> rootModelList = modelService.findRootModel();
-//        //公有库模型的树
-//        List<EasyuiTreeNode> publicModelTree = new ArrayList<EasyuiTreeNode>();
-//        //个人库模型树
-//        List<EasyuiTreeNode> privateModelTree = new ArrayList<EasyuiTreeNode>();
-//        for (Model model: rootModelList) {
-//            if(!model.getScope()){
-//                if(model.getUserId() == userId){
-//                    privateModelTree.add(tree(model,allModelList,true));
-//                }
-//            }
-//            publicModelTree.add(tree(model,allModelList,true));
-//        }
-//        modelTree.put("publicModelTree",publicModelTree);
-//        modelTree.put("privateModelTree",privateModelTree);
-//        return modelTree;
-//    }
-
-
-//    /**
-//     * 递归
-//     * @param model
-//     * @param recursive
-//     * @return
-//     */
-//    private EasyuiTreeNode tree(Model model,List<Model> allModelList, boolean recursive) {
-//        EasyuiTreeNode node = new EasyuiTreeNode();
-//        Map<String, Object> attributes = new HashMap<String, Object>();
-//        //    attributes.put("taskId", directory.getTask().getTaskId());
-//        if(model != null){
-//            node.setId(model.getModelFilePath());
-//            node.setText(model.getName());
-//        }
-//        //    node.setAttributes(attributes);
-//        if (model != null
-//                && allModelList.size() > 0) {
-//            if (recursive) {
-//                List<Model> modelList = new ArrayList<Model>();
-//                for (Model  fileDir: allModelList) {
-//                    if(fileDir.getParentId() == model.getId()){
-//                        modelList.add(fileDir);
-//                    }
-//                }
-//                //Collections.sort(directoryList, new FilelibraryComparator());
-//                List<EasyuiTreeNode> children = new ArrayList<EasyuiTreeNode>();
-//                for (Model m : modelList) {
-//                    node.setState("closed");
-//                    EasyuiTreeNode t = tree(m,allModelList, true);
-//                    children.add(t);
-//
-//                }
-//                node.setChildren(children);
-//            }
-//        }
-//        return node;
-//    }
 
     //获取模型列表
     @RequestMapping(value = "/getModelList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -583,27 +343,6 @@ public class ModelController {
   //      return modelListMap;
     }
 
-//    //模糊查询model列表
-//    @RequestMapping(value = "/vagueSearchModelList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public void vagueSearchModelList(HttpServletRequest request , HttpServletResponse response){
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        JSONObject jo=new JSONObject();
-//        String name = request.getParameter("name");
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        params.put("name",name);
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        List<Model> modelList = modelService.vagueSearchByName(params);
-//        PageInfo<Model> pageInfo =new PageInfo<Model>(modelList);
-//        jo.put("message","查询成功!");
-//        jo.put("flag",true);
-//        jo.put("rows", modelList);
-//        jo.put("total", pageInfo.getPages());//总页数
-//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-//        ServletUtil.createSuccessResponse(200, jo, response);
-//    }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
@@ -685,7 +424,7 @@ public class ModelController {
     @RequestMapping(value = "/modelVariable",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject modelVariable(@RequestParam(value = "modelId",required = false)String modelId,
-                           HttpServletRequest request , HttpServletResponse response){
+                                    HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //获取model对象
         Model model =  new Model();
@@ -694,7 +433,7 @@ public class ModelController {
         try {
             model = modelService.queryModelById(Long.parseLong(modelId));
             variableList = variableService.queryListByModelId(Long.parseLong(modelId));
-            GUser user = userService.queryById(model.getUserId());
+            User user = userService.queryUserById(model.getUserId());
             List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
             modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
             modelWeb.setIndex(Long.parseLong(modelId));
@@ -703,7 +442,7 @@ public class ModelController {
             modelWeb.setClasses(model.getClasses());
             modelWeb.setImport(model.getImport());
             modelWeb.setExtends(model.getExtends());
-            modelWeb.setUserName(user.getName());
+            modelWeb.setUserName(user.getUserName());
             modelWeb.setDiscription(model.getDiscription());
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
                 modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
@@ -732,7 +471,7 @@ public class ModelController {
     @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
-                           HttpServletRequest request , HttpServletResponse response){
+                                HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //查询到所有的model
         List<Model> allModel = modelService.findAllModel();
@@ -826,17 +565,22 @@ public class ModelController {
                 String variableArr[] = varName.getKey().split("\\;");
                 //用来比较的变量父类名
                 String varCompare = "";
-                for(int i= 0;i< variableArr.length -1; i++){
+                for(int i= 0;i< variableArr.length ; i++){
                     varCompare += variableArr[i]+";";
                 }
-                for (Map.Entry<String,Long> comp: compName.entrySet()) {
-                    if(comp.getKey().equals(varCompare.substring(0,varCompare.length()-1))){
-                        varName.setValue(comp.getValue());
-                        variable.setComponnetId(comp.getValue());
-                     //   int variableUp = variableService.update(variable);
-                        int variableAdd = variableService.add(variable);
+                if(varCompare == "" || varCompare == null || varCompare.equals(";")){
+                    int variableAdd = variableService.add(variable);
+                }else{
+                    for (Map.Entry<String,Long> comp: compName.entrySet()) {
+                        if(comp.getKey().equals(varCompare.substring(0,varCompare.length()-1))){
+                            varName.setValue(comp.getValue());
+                            variable.setComponnetId(comp.getValue());
+                            //   int variableUp = variableService.update(variable);
+                            int variableAdd = variableService.add(variable);
+                        }
                     }
                 }
+
             }
 
         }
@@ -845,9 +589,12 @@ public class ModelController {
                component.setCurrentModelId(model.getId());
                component.setCreateTime(nowDate);
                doComponentSet(xmlData,component);
-               boolean componentResult = componentService.add(component);
-               long index_last_id = componentService.selectId();
-               compName.put(component.getParentName(),index_last_id);
+               int componentResult = componentService.add(component);
+               long index_last_id = component.getId();
+               if(component.getParentName().equals("")){
+                   compName.put(component.getName(),index_last_id);
+               }
+               compName.put(component.getParentName()+component.getName(),index_last_id);
         }
 
     }
@@ -863,11 +610,15 @@ public class ModelController {
             if ("True".equals(xmlData.get("IsArray"))) {
                 variable.setType(VariableType.getValueByKey(xmlData.get("Type")+"[]"));
             }else {
-                variable.setType(VariableType.getValueByKey((String) xmlData.get("Type")));
+                variable.setType((String) xmlData.get("Type"));
             }
         }
         if (xmlData.get("Value") != null) {
-            variable.setDefaultValue((String) xmlData.get("Value"));
+            if(xmlData.get("Value").toString().length() > 250){
+                variable.setDefaultValue("默认值过长！");
+            }else{
+                variable.setDefaultValue((String) xmlData.get("Value"));
+            }
         }
         if (xmlData.get("Unit") != null) {
             variable.setUnits((String) xmlData.get("Unit"));
@@ -895,19 +646,37 @@ public class ModelController {
     public void analysisComponent(HashMap<String, Object> map, Model model, Map<String,Long> compName, Map<String,Long> variableId){
         //组件内容
         List<HashMap<String,Object>>  componentList = new ArrayList<>();
-        //获取组件内容插入到数据库
-        componentList = (List<HashMap<String, Object>>) map.get("componentVar");
-        if(componentList != null){
-            HashMap<String, Object> componentMap = componentList.get(0);
-            analysis(componentMap,model,compName,variableId);
+        String type = "";
+        if(map.get("component") != null) {
+            type = decideType(map.get("component"), type);
+            if("Map".equals(type)){
+                analysisComponentVar(map, model, compName, variableId);
+//               Map<String,Object> stringObjectMap = (Map<String, Object>) map.get("componentVar");
+//               if(stringObjectMap.get("parentName") != null){
+//                   analysis(stringObjectMap, model, compName, variableId);
+//               }
+            }
+            if ("List".equals(type)) {
+                componentList = (List<HashMap<String, Object>>) map.get("component");
+                if (componentList != null) {
+                    for (HashMap<String, Object> mapVar : componentList) {
+                        type = decideType(mapVar, type);
+                        if ("Map".equals(type) && mapVar.get("parentName") != null) {
+                            analysis(mapVar, model, compName, variableId);
+                        }
+                        if ("Map".equals(type) && mapVar.get("component") != null) {
+                            //       type = decideType(mapVar.get("component"),type);
+                            if (mapVar.get("componentVar") != null) {
+                                analysisComponentVar(mapVar, model, compName, variableId);
+                            } else {
+                                analysisComponent(mapVar, model, compName, variableId);
+                            }
+
+                        }
+                    }
+                }
+            }
         }
-        else{
-            return;
-        }
-        //子组件内容
-//        Map<String,Object> componentChild = new HashMap<>();
-//        componentChild = (HashMap<String, Object>) map.get("component");
-        analysisComponent((HashMap<String, Object>) map.get("component"),model,compName,variableId);
     }
 
     public void doComponentSet(Map<String,Object> xmlData,Component component){
@@ -918,11 +687,50 @@ public class ModelController {
             component.setType((String) xmlData.get("Type"));
         }
         if (xmlData.get("Modification") != null) {
-            component.setModification((String) xmlData.get("Modification"));
+            if(xmlData.get("Modification").toString().length() > 200){
+                component.setModification("重定义过长！");
+            }else{
+                component.setModification((String) xmlData.get("Modification"));
+            }
+
         }
         if (xmlData.get("parentName") != null) {
             component.setParentName((String) xmlData.get("parentName"));
         }
         }
+
+        //组件存在conpent和componentVar同时存在
+    public void  analysisComponentVar(HashMap<String, Object> map, Model model, Map<String,Long> compName, Map<String,Long> variableId){
+                //组件内容
+        List<HashMap<String,Object>>  componentList = new ArrayList<>();
+        //获取组件内容插入到数据库
+        componentList = (List<HashMap<String, Object>>) map.get("componentVar");
+        if(componentList != null){
+            HashMap<String, Object> componentMap = componentList.get(0);
+            //修改变量的parentName
+            if(componentMap.get("parentName") != null){
+                reviseVariable(componentMap);
+            }
+            analysis(componentMap,model,compName,variableId);
+        }
+        else{
+            return;
+        }
+        //子组件内容
+        analysisComponentVar((HashMap<String, Object>) map.get("component"),model,compName,variableId);
+    }
+
+     public void reviseVariable(HashMap<String, Object> componentMap){
+        String parentName = "";
+        String realParentName = "";
+        parentName = (String) componentMap.get("parentName");
+        String variableArr[] = parentName.split("\\;");
+        //得出正真的parentName(实际上在得到parentName时无法规避特殊性)
+         for(int i= 0; i<variableArr.length-1; i++){
+             realParentName += variableArr[i]+";";
+         }
+         //修改componentMap
+         componentMap.put("parentName",realParentName.substring(0,realParentName.length()-1));
+     }
 
 }

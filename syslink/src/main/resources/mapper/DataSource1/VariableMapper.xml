@@ -54,4 +54,11 @@
         from  variable
         where 1=1
     </select>
+    <select id="findVarByModelId" resultMap="baseResultMap"  resultType="com.tongyuan.model.domain.Variable">
+        SELECT <include refid="baseColumnList" ></include>
+            FROM
+            (SELECT <include refid="baseColumnList" ></include>
+            from variable where componnet_id = 0 and model_id = #{modelId} ORDER BY create_time DESC)m
+            where 1=1 GROUP BY name
+    </select>
 </mapper>

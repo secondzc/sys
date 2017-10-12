@@ -14,4 +14,5 @@ public interface VariableService {
     List<Variable> queryListByModelId(Long modelId);
     public long selectId();
     public List<Variable> findAllVariable();
+    public List<Variable> findVarByModelId(Long modelId);
 }

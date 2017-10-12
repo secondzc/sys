@@ -13,12 +13,18 @@ public class AAA {
     public static void MM(){
         List<Map<String, String>> compList = new ArrayList<>();
          for(int i = 0;i<compList.size(); i++){
-                if(compList.get(i).size() == 13){
-//                    analysis(compList.get(i),model);
+             String type = "";
+             type = decideType(compList.get(i),type);
+                if("Map".equals(type) && compList.get(i).get("parentName") != null){
+   //                 analysis(compList.get(i),model,compName,variableId);
                 }
-                if(compList.get(i).size() == 2){
+                if("Map".equals(type) && compList.get(i).get("component") != null){
+                    type = decideType(compList.get(i).get("component"),type);
+                    if("Map".equals(type)){
+            //            analysisComponent(compList.get(i).get("component"),model,compName,variableId);
+                    }
+                }
 
-                }
          }
     }
 
@@ -79,19 +85,64 @@ public class AAA {
     public static void analysisComponent(HashMap<String,Object> map,Model model){
         //组件内容
         List<HashMap<String,String>>  componentList = new ArrayList<>();
-        //获取组件内容插入到数据库
-        componentList = (List<HashMap<String, String>>) map.get("componentVar");
-        if(componentList != null){
-            Map<String,String> componentMap = componentList.get(0);
-            analysis(componentMap,model);
+        String type = "";
+        if(map.get("component") != null){
+            type = decideType(map.get("component"),type);
+            if("List".equals(type)){
+                componentList = (List<HashMap<String, String>>) map.get("component");
+                if(componentList != null){
+                    for (HashMap<String,String> mapVar:componentList) {
+                        if("Map".equals(type) && mapVar.get("parentName") != null){
+          //                  analysis(mapVar,model,compName,variableId);
+                        }
+                        if("Map".equals(type) && mapVar.get("component") != null){
+                            type = decideType(mapVar.get("component"),type);
+        //                 analysisComponent((HashMap<String, Object>) mapVar.get("component"),model,compName,variableId);
+                        }
+                    }
+                  }
+            }
+            if("Map".equals(type)){
+                HashMap<String,Object> mapChild = new HashMap<>();
+                mapChild = (HashMap<String, Object>) map.get("component");
+                analysisComponent(mapChild,model);
+                if (mapChild.get("componentVar") != null){
+                    analysis((Map<String, String>) mapChild.get("componentVar"),model);
+                }
+            }
         }
-        else{
-            return;
+
+//        //组件内容
+//        List<HashMap<String,String>>  componentList = new ArrayList<>();
+//        //获取组件内容插入到数据库
+//        componentList = (List<HashMap<String, String>>) map.get("componentVar");
+//        if(componentList != null){
+//            Map<String,String> componentMap = componentList.get(0);
+//            analysis(componentMap,model);
+//        }
+//        else{
+//            return;
+//        }
+//        //子组件内容
+////        Map<String,Object> componentChild = new HashMap<>();
+////        componentChild = (HashMap<String, Object>) map.get("component");
+//        analysisComponent((HashMap<String, Object>) map.get("component"),model);
+    }
+
+    public static String decideType(Object value,String type){
+        boolean string = value instanceof  String ;
+        boolean list = value instanceof  List;
+        boolean map = value instanceof  Map;
+        if(string){
+            type = "String";
         }
-        //子组件内容
-//        Map<String,Object> componentChild = new HashMap<>();
-//        componentChild = (HashMap<String, Object>) map.get("component");
-        analysisComponent((HashMap<String, Object>) map.get("component"),model);
+        else if(list){
+            type = "List";
+        }
+        else if(map){
+            type = "Map";
+        }
+        return type;
     }
 
 }

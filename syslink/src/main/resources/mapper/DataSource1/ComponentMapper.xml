@@ -16,7 +16,7 @@
     <sql id="baseColumnList" >
         id,model_id,current_model_id,name,type,modification,parent_name,parent_id,create_time
     </sql>
-    <insert id="add" parameterType="com.tongyuan.model.domain.Component">
+    <insert id="add" parameterType="com.tongyuan.model.domain.Component" useGeneratedKeys="true" keyProperty="id">
          INSERT INTO component (model_id,current_model_id,name, type,modification,parent_name,parent_id,create_time) VALUES
         (#{modelId},#{currentModelId}, #{name}, #{Type},#{Modification}, #{parentName}, #{parentId}, #{createTime})
     </insert>
@@ -36,28 +36,30 @@
         SELECT LAST_INSERT_ID()
     </select>
     <select id="queryListNullComp" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Component">
-        SELECT  <include refid="baseColumnList" ></include>
-        FROM component
-        where parent_name != '' and model_id = 0  GROUP BY parent_name
+        SELECT <include refid="baseColumnList" ></include>
+        from  component  AS A
+        where (name in (SELECT `name`
+        from  component  AS B WHERE A.id != B.id and model_id = 0))
         UNION
         SELECT  <include refid="baseColumnList" ></include>
         FROM component
-        where parent_name = '' and model_id = 0  GROUP BY `name`
+        where  model_id = 0  GROUP BY `name`
     </select>
 
     <select id="findAllComp" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Component">
         SELECT <include refid="baseColumnList" ></include>
-            from
-            (SELECT  <include refid="baseColumnList" ></include>
-            FROM component
-            where parent_name != ''   ORDER BY create_time DESC) m
-            WHERE 1=1 GROUP BY m.parent_name
-            UNION
-            SELECT <include refid="baseColumnList" ></include>
-            from
-            (SELECT  <include refid="baseColumnList" ></include>
-            FROM component
-            where parent_name = ''   ORDER BY create_time DESC)n
-            where 1=1 GROUP BY n.`name`
+        from
+        (SELECT <include refid="baseColumnList" ></include>
+        from  component  AS A
+        where (name in (SELECT `name`
+        from  component  AS B WHERE A.id != B.id and A.parent_name != B.parent_name and A.create_time >= B.create_time)) ORDER BY create_time DESC)m
+        where 1=1
+        UNION
+        SELECT <include refid="baseColumnList" ></include>
+        from
+        (SELECT  <include refid="baseColumnList" ></include>
+        FROM component
+        where 1=1   ORDER BY create_time DESC)n
+        where 1=1 GROUP BY n.`name`
     </select>
 </mapper>
