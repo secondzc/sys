@@ -1,6 +1,8 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
@@ -39,7 +41,7 @@ public class ModelController {
     @Autowired
     private DirectoryService directoryService;
     @Autowired
-    private UserService userService;
+    private GUserService userService;
     @Autowired
     private FileModelService fileModelService;
     @Autowired
@@ -433,7 +435,7 @@ public class ModelController {
         try {
             model = modelService.queryModelById(Long.parseLong(modelId));
             variableList = variableService.queryListByModelId(Long.parseLong(modelId));
-            User user = userService.queryUserById(model.getUserId());
+            GUser user = userService.queryById(model.getUserId());
             List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
             modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
             modelWeb.setIndex(Long.parseLong(modelId));
@@ -442,7 +444,7 @@ public class ModelController {
             modelWeb.setClasses(model.getClasses());
             modelWeb.setImport(model.getImport());
             modelWeb.setExtends(model.getExtends());
-            modelWeb.setUserName(user.getUserName());
+            modelWeb.setUserName(user.getName());
             modelWeb.setDiscription(model.getDiscription());
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
                 modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));

@@ -8,7 +8,7 @@ import java.util.List;
  * Created by xieyx on 2017-6-21.
  */
 public interface ComponentService {
-    public boolean add(Component component);
+    public int add(Component component);
     public boolean update(Component component);
     public boolean deleteByIds(String[] ids);
     public long selectId();
