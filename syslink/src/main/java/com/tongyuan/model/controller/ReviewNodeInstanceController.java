@@ -1,7 +1,7 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tongyuan.model.domain.DetailPage;
+import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.service.NodeInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

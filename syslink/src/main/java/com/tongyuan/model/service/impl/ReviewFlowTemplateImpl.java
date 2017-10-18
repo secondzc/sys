@@ -1,6 +1,7 @@
 package com.tongyuan.model.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.dao.ReviewFlowTemplateMapper;
 import com.tongyuan.model.domain.ReviewFlowTemplate;
 import com.tongyuan.model.service.ReviewFlowTemplateService;
@@ -40,10 +41,7 @@ public class ReviewFlowTemplateImpl implements ReviewFlowTemplateService {
         return reviewFlowTemplateMapper.delete(templateIds);
     };
 
-    @Override
-    public int changeAlreadyConfig(Long instanceId){
-        return reviewFlowTemplateMapper.changeAlreadyConfig(instanceId);
-    }
+
     @Override
     public int updateTime(Map<String,Object> map){
         return reviewFlowTemplateMapper.updateTime(map);
@@ -52,5 +50,34 @@ public class ReviewFlowTemplateImpl implements ReviewFlowTemplateService {
     @Override
     public ReviewFlowTemplate getTemplateByDefault(){
         return reviewFlowTemplateMapper.getTemplateByDefault();
+    }
+
+    @Override
+    public Long checkDefault() throws Exception{
+        Long[] defaultNumb = reviewFlowTemplateMapper.checkDefault();
+        if(defaultNumb!=null && defaultNumb.length>1){
+            throw new SqlNumberException("默认模板数目不应该大于1");
+        }else{
+            if(defaultNumb==null||defaultNumb.length==0){
+                return null;
+            }else{
+                return defaultNumb[0];
+            }
+        }
+    }
+
+    @Override
+    public int setDefaultTrue(Long templateId) {
+        return reviewFlowTemplateMapper.setDefaultTrue(templateId);
+    }
+
+    @Override
+    public int setDefaultFalse(Long templateId) {
+        return reviewFlowTemplateMapper.setDefaultFalse(templateId);
+    }
+
+    @Override
+    public int setAlreadyConfig(Long templateId) {
+        return reviewFlowTemplateMapper.setAlreadyConfig(templateId);
     }
 }

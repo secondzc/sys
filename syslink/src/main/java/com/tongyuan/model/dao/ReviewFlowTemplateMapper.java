@@ -15,7 +15,11 @@ public interface ReviewFlowTemplateMapper {
     List<ReviewFlowTemplate> queryByName(Map<String, Object> map);
     ReviewFlowTemplate queryById(Long templateId);
     int delete(String[] templateIds);
-    int changeAlreadyConfig(Long templateId);
+    int setAlreadyConfig(Long templateId);
     int updateTime(Map<String, Object> map);
     ReviewFlowTemplate getTemplateByDefault();
+
+    Long[] checkDefault();
+    int setDefaultTrue(Long templateId);
+    int setDefaultFalse(Long templateId);
 }

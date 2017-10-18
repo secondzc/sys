@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Mapper
 public interface ComponentMapper {
-    boolean add(Component component);
+    public int add(Component component);
     boolean update(Component component);
     boolean deleteByIds(String[] ids);
     public long selectId();

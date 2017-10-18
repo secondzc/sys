@@ -34,6 +34,7 @@ public class BaseController {
     }
 
 
+
     protected Long getUserId(){
         Long id = 0L;
         GUser user = getUser();

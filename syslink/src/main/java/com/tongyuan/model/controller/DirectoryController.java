@@ -599,7 +599,7 @@ public class DirectoryController {
   * fileXmlPath 是文件所在位置
   * filName 为文件名称
 * */
-    public void doCmd(String name, String fileXmlPath,String fileName){
+    /*public void doCmd(String name, String fileXmlPath,String fileName){
         JSONObject jo = new JSONObject();
         Map<String,Object> params = new HashMap<>();
         params.put("name",name);
@@ -618,7 +618,7 @@ public class DirectoryController {
                 "& \"C:/Program Files (x86)/Git/bin/git.exe\" add . & \"C:/Program Files (x86)/Git/bin/git.exe\" commit -m \"model\" " +
                 " & \"C:/Program Files (x86)/Git/bin/git.exe\" config --global credential.helper store & \"C:/Program Files (x86)/Git/bin/git.exe\" push origin master"};
         excuteCmd_multiThread(cmd,"GBK");
-    }
+    }*/
 
 
 

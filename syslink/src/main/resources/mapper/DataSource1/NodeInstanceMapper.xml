@@ -10,7 +10,7 @@
         <result column="status" property="status" jdbcType="TINYINT"/>
     </resultMap>
 
-    <resultMap id="pageResultMap" type="com.tongyuan.model.domain.DetailPage">
+    <resultMap id="pageResultMap" type="com.tongyuan.pageModel.DetailPage">
         <id property="id" column="review_node_instance_id"/>
         <result property="status" column="review_node_instance_status"/>
         <result property="createTime" column="review_node_instance_create_time"/>

@@ -38,7 +38,7 @@ public class VariableController {
     @RequestMapping(value = "/variableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject variableTree(@RequestParam(value = "modelId",required = false)Long modelId,
-                                HttpServletRequest request , HttpServletResponse response){
+                                   HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //在这个模型下的所有model（modelList）
         List<VariableTreeObj> modelTreeList = new ArrayList<>();
@@ -60,7 +60,17 @@ public class VariableController {
                     List<VariableTreeObj> compTreeList = new ArrayList<>();
                     varibaleTreeObj.setChildren(compTreeList);
                     getCompFromModel(varibaleTreeObj.getId(),allComp,varibaleTreeObj.getChildren(),allVariable);
+                    //当变量没有父类组件的时直接添加进去
+                    //查询这个model下所有的顶层变量
+                    List<Variable> topVariableList = variableService.findVarByModelId(varibaleTreeObj.getId());
+                    for (Variable variable: topVariableList) {
+                        VariableTreeObj variableTreeObj = new VariableTreeObj();
+                        doSetVarTree(variableTreeObj,variable);
+                        varibaleTreeObj.getChildren().add(variableTreeObj);
+                    }
                 }
+
+
             }
 
         }catch(Exception e) {
@@ -80,7 +90,7 @@ public class VariableController {
     /*
     *获取这个package下的所有model
      */
-     public void getSearchModel(Long modelId,List<Model> allModel,List<VariableTreeObj> modelTreeList,List<VariableTreeObj> modelList){
+     public void getSearchModel(Long modelId, List<Model> allModel, List<VariableTreeObj> modelTreeList, List<VariableTreeObj> modelList){
 
          for(int i=0; i<allModel.size(); i++){
              if(allModel.get(i).getParentId() == modelId) {
@@ -107,7 +117,7 @@ public class VariableController {
     /*
     * 获取这个模型下的所有组件生成树状图
     * */
-    public void getCompFromModel(Long currModelId,List<Component> allComp,List<VariableTreeObj> compTreeList,List<Variable> allVariable){
+    public void getCompFromModel(Long currModelId, List<Component> allComp, List<VariableTreeObj> compTreeList, List<Variable> allVariable){
         //获取对应model 的所有组件
         List<Component> searchComp = new ArrayList<>();
             for(int i= 0;i<allComp.size();i++){
@@ -140,7 +150,7 @@ public class VariableController {
     /*
     * 添加组件的子组件
     * */
-    public void addChildComp(Long compId,List<Component> allComp,List<VariableTreeObj> compChildList,List<Variable> allVariable){
+    public void addChildComp(Long compId, List<Component> allComp, List<VariableTreeObj> compChildList, List<Variable> allVariable){
         for (Component component: allComp) {
             if(component.getParentId() == compId){
                 //组件子组件
@@ -157,27 +167,7 @@ public class VariableController {
                 if(variable.getComponnetId() == compId){
                     //添加变量节点
                     VariableTreeObj varChild = new VariableTreeObj();
-                    varChild.setId(variable.getId());
-                    varChild.setName(variable.getName());
-                    varChild.setType(variable.getType());
-                    varChild.setDefaultValue(variable.getDefaultValue());
-                    varChild.setUnits(variable.getUnits());
-                    varChild.setLowerBound(variable.getLowerBound());
-                    varChild.setUpperBound(variable.getUpperBound());
-                    if( String.valueOf(variable.getIsParam()) != null && String.valueOf(variable.getIsParam()) != "" ){
-                        if(variable.getIsParam() == 0){
-                            varChild.setIsParam("否");
-                        }else{
-                            varChild.setIsParam("是");
-                        }
-                    }
-                    if( String.valueOf(variable.getIsInput()) != null && String.valueOf(variable.getIsInput()) != "" ){
-                        if(variable.getIsInput() == 0){
-                            varChild.setIsInput("否");
-                        }else{
-                            varChild.setIsInput("是");
-                        }
-                    }
+                    doSetVarTree(varChild,variable);
                     compChildList.add(varChild);
                 }
             }
@@ -194,5 +184,30 @@ public class VariableController {
         }
 
     }
+
+    public void doSetVarTree(VariableTreeObj varChild, Variable variable){
+        varChild.setId(variable.getId());
+        varChild.setName(variable.getName());
+        varChild.setType(variable.getType());
+        varChild.setDefaultValue(variable.getDefaultValue());
+        varChild.setUnits(variable.getUnits());
+        varChild.setLowerBound(variable.getLowerBound());
+        varChild.setUpperBound(variable.getUpperBound());
+        if( String.valueOf(variable.getIsParam()) != null && String.valueOf(variable.getIsParam()) != "" ){
+            if(variable.getIsParam() == 0){
+                varChild.setIsParam("否");
+            }else{
+                varChild.setIsParam("是");
+            }
+        }
+        if( String.valueOf(variable.getIsInput()) != null && String.valueOf(variable.getIsInput()) != "" ){
+            if(variable.getIsInput() == 0){
+                varChild.setIsInput("否");
+            }else{
+                varChild.setIsInput("是");
+            }
+        }
+    }
+
 
 }

@@ -1,6 +1,6 @@
 package com.tongyuan.model.service;
 
-import com.tongyuan.model.domain.DetailPage;
+import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 
 import java.util.List;

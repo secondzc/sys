@@ -20,7 +20,7 @@ public class ComponentServiceImpl implements ComponentService {
 
 
     @Override
-    public boolean add(Component component) {
+    public int add(Component component) {
         return this.componentMapper.add(component);
     }
 
