@@ -31,8 +31,12 @@
     </delete>
 
 
-    <delete id="deleteTeamUser" parameterType="map">
+    <delete id="deleteTeamUserByTeamId" parameterType="map">
         delete from team_user where team_id=#{teamId} and uid = #{uid}
+    </delete>
+
+    <delete id="deleteTeamUserByOrgId" parameterType="map">
+        delete from team_user where org_id=#{orgId} and uid = #{uid}
     </delete>
 
 
@@ -46,11 +50,18 @@
     </select>
 
 
-    <select id="queryByTeamId" resultMap="mapResultMap" resultType="map" parameterType="map">
+    <select id="queryByTeamId" resultMap="mapResultMap" resultType="map" parameterType="long">
         SELECT
         <include refid="baseColumnList" />
         FROM team_user
         WHERE team_id = #{teamId}
+    </select>
+
+    <select id="queryByTeamIdAndUid" resultMap="mapResultMap" resultType="map" parameterType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM team_user
+        WHERE team_id = #{teamId} and uid = #{uid}
     </select>
 
 

@@ -12,6 +12,16 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
 
     </resultMap>
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.Auth">
+        <id column="auth_id" property="authId" jdbcType="BIGINT"  />
+        <id column="parent_id" property="parentId" jdbcType="BIGINT"  />
+        <result column="auth_name" property="authName" jdbcType="VARCHAR"/>
+        <result column="auth_code" property="authCode" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+
+    </resultMap>
     <sql id="baseColumnList" >
         auth_id,auth_name,auth_code,create_date,description,url,parent_id
     </sql>
@@ -29,14 +39,23 @@
         FROM auth
         WHERE parent_id IS NULL
     </select>
+    <select id="queryById" resultMap="baseResultMap"  parameterType="INTEGER" >
+        SELECT
+        <include refid="baseColumnList" />
+        FROM auth
+        WHERE auth_id = #{authId}
+    </select>
     <select id="getChildren" resultMap="mapResultMap" resultType="map" >
         SELECT
         <include refid="baseColumnList" />
         FROM auth
         WHERE parent_id =#{authId}
     </select>
-    <delete id="delete" parameterType="long">
+    <delete id="deleteById" parameterType="INTEGER">
         delete from auth where auth_id=#{id}
+    </delete>
+    <delete id="deleteByPid" parameterType="INTEGER">
+        delete from auth where parend_id=#{parentId}
     </delete>
 
 

@@ -26,12 +26,8 @@ public class Role {
 	//描述
 	@Column
 	private String description;
-	//权限Json数据
-	@Column
-	private String permissions;
-	//排序
-	@Column
-	private Integer sort;
+
+
 	//创建日期
 	@Column
 	private Date createDate;
@@ -68,21 +64,6 @@ public class Role {
 		this.description = description;
 	}
 
-	public String getPermissions() {
-		return permissions;
-	}
-
-	public void setPermissions(String permissions) {
-		this.permissions = permissions;
-	}
-
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
 
 	public Date getCreateDate() {
 		return createDate;

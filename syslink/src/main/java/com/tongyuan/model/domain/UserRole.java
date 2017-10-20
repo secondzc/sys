@@ -1,50 +1,45 @@
 package com.tongyuan.model.domain;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by 82509 on 2017/9/10.
  */
 @Entity
 public class UserRole {
+
     @Id
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private long userId ;
+    private long id;
 
     @Column
-    private String roles;
+    private long uid;
 
     @Column
-    private Date createDate;
+    private Integer roleId;
 
-    public UserRole(String roles, Date createDate) {
-        this.roles = roles;
-        this.createDate = createDate;
+    public long getId() {
+        return id;
     }
 
-    public long getUserId() {
-        return userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public long getUid() {
+        return uid;
     }
 
-    public String getRoles() {
-        return roles;
+    public void setUid(long uid) {
+        this.uid = uid;
     }
 
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

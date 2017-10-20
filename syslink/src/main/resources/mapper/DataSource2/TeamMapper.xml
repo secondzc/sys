@@ -72,7 +72,7 @@
         FROM team
         WHERE
 
-            id = #{id}
+            id = #{teamId}
 
     </select>
     <select id="queryByTeamName" resultMap="mapResultMap" resultType="map" parameterType="map">

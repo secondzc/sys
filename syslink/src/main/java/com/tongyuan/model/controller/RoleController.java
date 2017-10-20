@@ -1,6 +1,7 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.RoleWarpper;
@@ -60,7 +61,7 @@ public class RoleController {
     {
         JSONObject jo = new JSONObject();
 //        permissionItem.setCreateDate(DateUtil.getCurrentTime());
-        map.put("createDate",DateUtil.getCurrentTime());
+        map.put("createDate", DateUtil.getCurrentTime());
         try
         {
             roleService.add(map);
@@ -105,15 +106,32 @@ public class RoleController {
 
     @RequestMapping(value = "/assign",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject assign(@RequestBody Map<String,Object> map, HttpServletRequest request)
+    public JSONObject assign(@RequestBody String para, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-        map.put("permissions",map.get("permissionId").toString());
+       // JSONObject jsonObject = JSON.parseObject(para);
+        JSONObject jsonObject = JSONObject.parseObject(para);
+
+      //  JSONArray jsonArray = JSONArray.parseArray(para);
+        JSONArray jsonArray = jsonObject.getJSONArray("authIds");
+        Integer []authIds = new Integer[jsonArray.size()];
+
+        for(int i=0;i<jsonArray.size();i++)
+        {
+            authIds[i]=jsonArray.getJSONObject(i).getIntValue("authId");
+        }
+
+     //   map.put("permissions",map.get("permissionId").toString());
 //        permissionItem.setCreateDate(DateUtil.getCurrentTime());
+
+  //      String a = map.get("permissionId").toString();
+   //     a=a.substring(1,a.length()-1);
+          Integer roleId = jsonObject.getIntValue("roleId");
+   //     Integer []authIds =   Convert.toIntArray(",",a);
 
         try
         {
-            roleService.updatePermission(map);
+            roleService.updatePermission(roleId,authIds);
         }
         catch (Exception e)
         {

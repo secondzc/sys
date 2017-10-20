@@ -9,10 +9,9 @@
 
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
-        <result column="permissions" property="permissions" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="baseColumnList" >
-        id,name,create_date,description,permissions
+        id,name,create_date,description
     </sql>
     <insert id="add"  parameterType="map">
         INSERT INTO role (name, create_date,description) VALUES
@@ -22,10 +21,7 @@
         UPDATE role SET name=#{name},description=#{description}
         WHERE id=#{id}
     </update>
-    <update id="updatePermission"  parameterType="map">
-        UPDATE role SET permissions=#{permissions}
-        WHERE id=#{roleId}
-    </update>
+
     <select id="query" resultMap="mapResultMap" resultType="map" >
         SELECT
         <include refid="baseColumnList" />

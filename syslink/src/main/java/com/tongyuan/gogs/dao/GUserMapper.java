@@ -42,4 +42,10 @@ public interface GUserMapper {
     Map<String,Object> queryUserById(long id);
 
     Map<String,Object> queryUserByName(String name);
+
+    Map<String,Object> queryOrgByName(String name);
+
+    List<Map<String,Object>>test2(Map<String, Object> map);
+
+    List<GUser>test1(Map<String, Object> map);
 }

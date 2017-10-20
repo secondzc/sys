@@ -17,9 +17,17 @@ public interface TeamUserMapper {
 
     public boolean delete(long id);
 
-    public boolean deleteTeamUser(Map<String, Object> map);
+    public boolean deleteTeamUserByTeamId(Map<String, Object> map);
+
+
+
+    public boolean deleteTeamUserByOrgId(Map<String, Object> map);
 
     public List<Map<String,Object>> query(Map<String, Object> map);
 
+
+
     public List<Map<String,Object>> queryByTeamId(long teamId);
+
+    public Map<String,Object> queryByTeamIdAndUid(Map<String, Object> map);
 }

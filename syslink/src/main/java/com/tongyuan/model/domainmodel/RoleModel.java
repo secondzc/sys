@@ -51,8 +51,6 @@ public class RoleModel {
 
     	 this.name = role.getName();
     	 this.description = role.getDescription();
-    	 this.permissionJsonData = role.getPermissions();
-    	 this.sort = role.getSort();
     	 this.createDate = role.getCreateDate().toString();
     }
     
@@ -68,8 +66,6 @@ public class RoleModel {
 
     	role.setName(this.name);
     	role.setDescription(this.description);
-    	role.setPermissions(this.permissionJsonData);
-    	role.setSort(this.sort);
     	role.setCreateDate(DateUtil.toTimestamp(this.createDate, null));
     	return role;
     }
@@ -99,13 +95,6 @@ public class RoleModel {
 		this.description = description;
 	}
 
-	public String getPermissionJsonData() {
-		return permissionJsonData;
-	}
-
-	public void setPermissionJsonData(String permissionJsonData) {
-		this.permissionJsonData = permissionJsonData;
-	}
 
 	public String getCreateDate() {
 		return createDate;

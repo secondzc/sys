@@ -1,12 +1,11 @@
 package com.tongyuan.model.domainmodel;
 
+
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.domain.OrgUser;
 import com.tongyuan.model.domain.Loginstate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 已登录用户信息
@@ -16,16 +15,19 @@ import java.util.Map;
  */
 public class LoginedUserModel {
 
-    // 用户信息
- //   private User profile;
 
 	private GUser profile;
 
     // 用户角色
-    private List<RoleModel> roles=new ArrayList<RoleModel>();
+    private List<Long> roles=new ArrayList<>();
 
-    // 用户权限
-    private Map<String, PermissionValueModel> permissions = new HashMap<String, PermissionValueModel>();
+    //用户权限
+    private Set<String> auths  = new HashSet<>();
+
+    private List<Map<String,Object>> user_team = new ArrayList<>();
+
+    private List<OrgUser> user_org = new ArrayList<OrgUser>();
+
 
     // 登录情况
     private Loginstate loginState;
@@ -41,25 +43,6 @@ public class LoginedUserModel {
     	
     }
 
-    /**
-     * 获取用户信息
-     * 
-     * @return
-
-	public User getProfile() {
-		return profile;
-	}
-	 */
-	/**
-	 * 设置用户信息
-	 * 
-	 * @param profile
-
-	public void setProfile(User profile) {
-		this.profile = profile;
-	}
-	 */
-
 
 	public GUser getProfile() {
 		return profile;
@@ -69,76 +52,51 @@ public class LoginedUserModel {
 		this.profile = profile;
 	}
 
-	/**
-	 * 获取用户用于角色
-	 * 
-	 * @return
-	 */
-	public List<RoleModel> getRoles() {
+	public List<Long> getRoles() {
 		return roles;
 	}
 
-	/**
-	 * 设置用户的角色
-	 * 
-	 * @param roles
-	 */
-	public void setRoles(List<RoleModel> roles) {
+	public void setRoles(List<Long> roles) {
 		this.roles = roles;
 	}
 
-	/**
-	 * 获取权限
-	 * 
-	 * @return
-	 */
-	public Map<String, PermissionValueModel> getPermissions() {
-		return permissions;
+	public Set<String> getAuths() {
+		return auths;
 	}
 
-	/**
-	 * 设置用户权限
-	 * 
-	 * @param permissions
-	 */
-	public void setPermissions(Map<String, PermissionValueModel> permissions) {
-		this.permissions = permissions;
+	public void setAuths(Set<String> auths) {
+		this.auths = auths;
 	}
 
-	/**
-	 * 获取登录状态
-	 * 
-	 * @return
-	 */
+	public List<Map<String, Object>> getUser_team() {
+		return user_team;
+	}
+
+	public void setUser_team(List<Map<String, Object>> user_team) {
+		this.user_team = user_team;
+	}
+
+	public List<OrgUser> getUser_org() {
+		return user_org;
+	}
+
+	public void setUser_org(List<OrgUser> user_org) {
+		this.user_org = user_org;
+	}
+
 	public Loginstate getLoginState() {
 		return loginState;
 	}
 
-	/**
-	 * 设置登录状态
-	 * 
-	 * @param loginState
-	 */
 	public void setLoginState(Loginstate loginState) {
 		this.loginState = loginState;
 	}
 
-	/**
-	 * 获取令牌
-	 * 
-	 * @return
-	 */
 	public String getToken() {
 		return token;
 	}
 
-	/**
-	 * 设置令牌
-	 * 
-	 * @param token
-	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
 }

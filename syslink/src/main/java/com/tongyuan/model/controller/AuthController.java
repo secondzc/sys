@@ -60,7 +60,7 @@ public class AuthController {
     public JSONObject addGroup(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-        map.put("createDate",DateUtil.getCurrentTime());
+        map.put("createDate", DateUtil.getCurrentTime());
      //   permissionGroup.setCreateDate(DateUtil.getCurrentTime());
         try
         {
@@ -108,7 +108,7 @@ public class AuthController {
     {
         JSONObject jo = new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
-        long id = jsonObject.getIntValue("id");
+        Integer id = jsonObject.getIntValue("id");
 
         try
         {

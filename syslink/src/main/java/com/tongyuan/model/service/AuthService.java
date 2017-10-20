@@ -9,9 +9,9 @@ import java.util.Map;
 public interface AuthService {
 
 
-    public boolean add(Map<String,Object> map);
-    public boolean update(Map<String,Object> map);
-    public boolean delete(long id);
+    public boolean add(Map<String, Object> map);
+    public boolean update(Map<String, Object> map);
+    public boolean delete(Integer id);
     public List<Map<String,Object>> query();
-    public List<Map<String,Object>> getChildren(Map<String,Object>map);
+    public List<Map<String,Object>> getChildren(Map<String, Object> map);
 }

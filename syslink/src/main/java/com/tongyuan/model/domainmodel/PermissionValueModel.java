@@ -16,8 +16,6 @@ public class PermissionValueModel {
     // 显示名称
     private String displayName;
 
-
-
     // 权限值
     private String value;
       

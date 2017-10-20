@@ -8,11 +8,17 @@ import java.util.Map;
  */
 public interface TeamService {
 
+    public boolean add(Map<String, Object> map);
+
+    public boolean update(Map<String, Object> map);
+
     public boolean addTeamUser(Map<String, Object> map);
 
 
 
     public boolean deleteTeamUser(Map<String, Object> map);
+
+    public boolean addTeamMember(Map<String, Object> map);
 
 
 
@@ -21,5 +27,12 @@ public interface TeamService {
     public Map<String,Object> queryByTeamName(Map<String, Object> map);
 
 
-    public List<Map<String,Object>> getTeam(Map<String, Object> map);
+    public List<Map<String,Object>> queryTeamByOrgId(long orgId);
+
+    public Long getIdByName(Map<String, Object> map);
+
+    public Map<String,Object> queryByTeamIdAndUid(Map<String, Object> map);
+
+    public boolean nameExist(Map<String, Object> map);
+
 }

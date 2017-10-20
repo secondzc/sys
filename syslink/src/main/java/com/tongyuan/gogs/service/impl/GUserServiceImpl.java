@@ -1,12 +1,16 @@
 package com.tongyuan.gogs.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.tongyuan.gogs.dao.GUserMapper;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
+import com.tongyuan.model.dao.AuthMapper;
 import com.tongyuan.model.dao.LoginstateMapper;
-import com.tongyuan.model.dao.UserPermissionMapper;
 import com.tongyuan.model.dao.UserRoleMapper;
+import com.tongyuan.model.domain.Auth;
 import com.tongyuan.model.domain.Loginstate;
+import com.tongyuan.model.domain.UserRole;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-9-18.
@@ -33,7 +34,11 @@ public class GUserServiceImpl implements GUserService {
     @Autowired
     UserRoleMapper userRoleMapper;
     @Autowired
-    UserPermissionMapper userPermissionMapper;
+    UserAuthMapper userAuthMapper;
+    @Autowired
+    AuthMapper authMapper;
+    @Autowired
+    RoleAuthMapper roleAuthMapper;
 
 
 
@@ -71,10 +76,33 @@ public class GUserServiceImpl implements GUserService {
         // 登录情况
         //      LoginStateModel loginState = new LoginStateModel(loginStateDao.get(
         //              Loginstate.class, new LoginstateId(user.getId(), systemId)));
+
+        List<UserAuth> userAuths  = userAuthMapper.queryByUid(user.getID());
+        Set<String> auths = new HashSet<>();
+        for(UserAuth userAuth : userAuths)
+        {
+            Auth auth = authMapper.queryById(userAuth.getAuthId());
+            auths.add(auth.getAuthCode());
+        }
+        List<UserRole> userRoles = userRoleMapper.query(user.getID());
+        List<RoleAuth> roleAuths = new ArrayList<>();
+        for(UserRole userRole:userRoles)
+        {
+            roleAuths.addAll(roleAuthMapper.queryByRoleId(userRole.getRoleId()));
+        }
+        for(RoleAuth roleAuth :roleAuths)
+        {
+            Auth auth = authMapper.queryById(roleAuth.getAuthId());
+            auths.add(auth.getAuthCode());
+        }
+
+
+
         Loginstate loginstate = loginstateMapper.queryLoginstateById(user.getID());
 
         LoginedUserModel loginedUserModel = new LoginedUserModel();
         loginedUserModel.setProfile(user);
+        loginedUserModel.setAuths(auths);
         //      loginedUserModel.setRoles(roles);
         //      loginedUserModel.setPermissions(permissions);
         loginedUserModel.setLoginState(loginstate);
@@ -174,9 +202,11 @@ public class GUserServiceImpl implements GUserService {
     }
 
     @Override
-    public List<Map<String,Object>> queryUser(Map<String,Object>map)
+    public Page<Map<String,Object>> queryUser(Map<String,Object>map)
     {
-        return this.gUserMapper.queryUser(map);
+        Page<Map<String,Object>>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+      List<Map<String,Object>> a= gUserMapper.queryUser(map);
+        return page;
     }
 
     @Override
@@ -200,5 +230,54 @@ public class GUserServiceImpl implements GUserService {
         List<Map<String,Object>> email =  gUserMapper.queryUser(mapEmail);
         return email.size()>0;
     }
+
+
+    @Override
+    public List<Map<String,Object>> queyrSimpleUser(Map<String,Object>map)
+    {
+        return this.gUserMapper.querySimpleUser(map);
+    }
+
+   @Override
+   public Map<String,Object> queryUserByName(String name)
+   {
+       return this.gUserMapper.queryUserByName(name);
+   }
+
+   @Override
+   public Map<String,Object> queryOrgByName(String name)
+    {
+        return this.gUserMapper.queryOrgByName(name);
+    }
+    @Override
+    public Map<String,Object> queryOrgById(long orgId)
+    {
+        return this.gUserMapper.queryOrgById(orgId);
+    }
+
+
+    @Override
+    public boolean updateAuth(Integer uid, Integer[] authIds)
+    {
+        boolean a = userAuthMapper.deleteByUid(uid);
+        boolean b = true;
+        for(int i=0;i<authIds.length;i++)
+        {
+            UserAuth userAuth = new UserAuth();
+            userAuth.setUid(uid);
+            userAuth.setAuthId(authIds[i]);
+            b = b&userAuthMapper.add(userAuth);
+        }
+        return a&b;
+    }
+
+    @Override
+    public Page<GUser> test1(Map<String,Object>map)
+    {
+        Page<GUser>user = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+        gUserMapper.test1(map);
+        return user;
+    }
+
 
 }

@@ -2,6 +2,8 @@ package com.tongyuan.gogs.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.OrgService;
 import com.tongyuan.gogs.service.TeamService;
 import com.tongyuan.model.controller.BaseController;
@@ -33,6 +35,8 @@ public class OrgController extends BaseController {
 
     @Autowired
     private OrgService orgService;
+    @Autowired
+    private GUserService userService;
     @Autowired
     private TeamService teamService;
 
@@ -126,10 +130,10 @@ public class OrgController extends BaseController {
 
     @RequestMapping(value = "/query",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject query(@RequestBody String para, HttpServletRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public JSONObject query(@RequestBody Map<String,Object> map, HttpServletRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jo=new JSONObject();
-        Map<String,Object> map = new HashMap<>();
         List<Map<String,Object>> orgs = new ArrayList<>();
+
         try{
             orgs = orgService.query(map);
         }
@@ -155,9 +159,11 @@ public class OrgController extends BaseController {
         JSONObject jo=new JSONObject();
 //        Map<String,Object> map = new HashMap<>();
 //        map.put("uid",getCurrentUserId(request));
+        JSONObject jsonObject = JSON.parseObject(para);
+        Long uid = jsonObject.getLongValue("uid");
         List<Map<String,Object>> orgs = new ArrayList<>();
         try{
-            orgs = orgService.getMyOrg(getCurrentUserId(request));
+            orgs = orgService.getMyOrg(uid);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -208,12 +214,13 @@ public class OrgController extends BaseController {
     public JSONObject team(@RequestBody String para, HttpServletRequest request)  {
         JSONObject jo=new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
-        String name = jsonObject.getString("name");
-        Map<String,Object> map = new HashMap<>();
-        map.put("name",name);
+        String orgName = jsonObject.getString("orgName");
+    //    Map<String,Object> map = new HashMap<>();
+    //    map.put("orgName",name);
+        long orgId = orgService.getOrgIdByName(orgName);
         List<Map<String,Object>> team = new ArrayList<>();
         try{
-            team = teamService.getTeam(map);
+            team = teamService.queryTeamByOrgId(orgId);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -234,19 +241,33 @@ public class OrgController extends BaseController {
     public JSONObject addOrgUser(@RequestBody String para, HttpServletRequest request) {
         JSONObject jo=new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
-        List<Map<String,Object>> orgUser = new ArrayList<>();
-        try{
-            orgService.addOrgUser(jsonObject);
+        Long orgId = orgService.getOrgIdByName(jsonObject.getString("orgName"));
+        jsonObject.put("orgId",orgId);
+        GUser user = userService.querListByName(jsonObject.getString("name"));
+        jsonObject.put("uid",user.getID());
+        Map<String,Object>orgUser = orgService.queryByUAndO(jsonObject);
+        if(orgUser==null)
+        {
+            try{
+                orgService.addOrgUser(jsonObject);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                jo.put("flag",false);
+                jo.put("msg","操作失败");
+                return jo;
+            }
+            jo.put("flag",true);
+            jo.put("msg","操作成功");
+            return (JSONObject) JSONObject.toJSON(jo);
         }
-        catch (Exception e){
-            e.printStackTrace();
+        else
+        {
             jo.put("flag",false);
-            jo.put("msg","操作失败");
+            jo.put("msg","该用户已存在，请不要重复添加");
             return jo;
         }
-        jo.put("flag",true);
-        jo.put("msg","操作成功");
-        return (JSONObject) JSONObject.toJSON(jo);
+
 
     }
 
@@ -277,19 +298,41 @@ public class OrgController extends BaseController {
     public JSONObject deleteOrgUser(@RequestBody String para, HttpServletRequest request) {
         JSONObject jo=new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
-        List<Map<String,Object>> orgUser = new ArrayList<>();
-        try{
-            orgService.deleteOrgUser(jsonObject);
+        Map<String,Object> orgUser = orgService.queryByUAndO(jsonObject);
+        List<Map<String,Object>>orgUsers = orgService.queryOrgUserByOrgId(jsonObject.getLongValue("orgId"));
+        int ownerCount = 0;
+        for(Map<String,Object>map:orgUsers)
+        {
+            if(map.get("isOwner").toString().equalsIgnoreCase("true"))
+            {
+                ownerCount++;
+            }
         }
-        catch (Exception e){
-            e.printStackTrace();
+        if(ownerCount<=1&&(orgUser.get("isOwner").toString().equalsIgnoreCase("true")))
+        {
             jo.put("flag",false);
-            jo.put("msg","操作失败");
+            jo.put("msg","被移除用户为最后一位管理员。请添加一位新的管理员再进行移除成员操作！");
             return jo;
         }
-        jo.put("flag",true);
-        jo.put("msg","操作成功");
-        return (JSONObject) JSONObject.toJSON(jo);
+        else
+        {
+            //List<Map<String,Object>> orgUser = new ArrayList<>();
+            try{
+                orgService.deleteOrgUser(jsonObject);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                jo.put("flag",false);
+                jo.put("msg","操作失败");
+                return jo;
+            }
+            jo.put("flag",true);
+            jo.put("msg","操作成功");
+            return (JSONObject) JSONObject.toJSON(jo);
+        }
+
+
+
 
     }
 

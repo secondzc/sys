@@ -3,12 +3,14 @@ package com.tongyuan.gogs.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
+import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.GUserWarpper;
-import com.tongyuan.model.wrapper.UserRoleWarpper;
+import com.tongyuan.util.Convert;
 import com.tongyuan.util.EncodePasswd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,10 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -39,23 +47,27 @@ public class UserController extends BaseController {
 
 
 
-   
+
 
     @RequestMapping(value = "/assignRole",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject assignRole(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-        Map<String,Object>roles = new HashMap<>();
-        roles.put("roles",map.get("assigned").toString());
-        roles.put("userId",Integer.parseInt(map.get("userId").toString()));
+        //  Map<String,Object>roles = new HashMap<>();
+        //   roles.put("roles",map.get("assigned").toString());
 
-  //      map.put("roles",map.get("permissionId").toString());
+//        roles.put("uid",Integer.parseInt(map.get("uid").toString()));
+        String a = map.get("assigned").toString();
+        a=a.substring(1,a.length()-1);
+
+        Integer []roles =   Convert.toIntArray(",",a);
+        //      map.put("roles",map.get("permissionId").toString());
 //        permissionItem.setCreateDate(DateUtil.getCurrentTime());
 
         try
         {
-            roleService.updateUserRole(roles);
+            roleService.updateUserRoles(Integer.parseInt(map.get("uid").toString()),roles);
         }
         catch (Exception e)
         {
@@ -74,11 +86,12 @@ public class UserController extends BaseController {
     public JSONObject queryUserRoles(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-        List<Map<String,Object>> list = new ArrayList<>();
+        List<Integer> userRoles = new ArrayList<>();
+        long uid = Long.parseLong(map.get("uid").toString());
         try
         {
-            List <Map<String,Object>>userRoles = roleService.queryUserRole(map);
-            list.addAll(userRoles);
+
+            userRoles = roleService.queryUserRoleByUid(uid);
         }
         catch (Exception e)
         {
@@ -89,11 +102,10 @@ public class UserController extends BaseController {
         }
         jo.put("flag",true);
         jo.put("msg","获取用户角色成功");
-        jo.put("userRoles",new UserRoleWarpper(list).warp());
+        //   jo.put("userRoles",new UserRoleWarpper(list).warp());
+        jo.put("userRoles",userRoles);
         return (JSONObject) JSONObject.toJSON(jo);
     }
-
-
 
 
     @RequestMapping(value = "/query",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -155,6 +167,7 @@ public class UserController extends BaseController {
         {
 
             userService.addGUser(map);
+
 
         }
         catch (Exception e)
@@ -285,5 +298,160 @@ public class UserController extends BaseController {
         jo.put("userId",uerId);
         return (JSONObject) JSONObject.toJSON(jo);
     }
+    @RequestMapping(value = "/querySimpleUser",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject querySimpleUser(@RequestBody String para, HttpServletRequest request)
+    {
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        List<Map<String,Object>> list = new ArrayList<>();
+        try
+        {
+            list = userService.queyrSimpleUser(jsonObject);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取用户列表失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","获取用户列表成功");
+        jo.put("simpleUser",list);
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
 
+
+    @RequestMapping(value = "/getUserInfo",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getUserInfo( HttpServletRequest request)
+    {
+        JSONObject jo = new JSONObject();
+        LoginedUserModel loginedUserModel = new LoginedUserModel();
+        GUser user = userService.queryById(getCurrentUserId(request));
+
+        try
+        {
+            loginedUserModel = userService.CreateLoginedUser(user);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取用户信息失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","获取用户信息成功");
+        jo.put("userInfo",loginedUserModel);
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+    @RequestMapping(value = "/getUserInfoFirst",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getUserInfoFirst(@RequestBody String uid, HttpServletRequest request,HttpServletResponse response)
+    {
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(uid);
+        Long id = jsonObject.getLongValue("uid");
+        LoginedUserModel loginedUserModel = new LoginedUserModel();
+        GUser user = userService.queryById(id);
+        Cookie[] cookies = request.getCookies();
+        for (int i =0;i<cookies.length;i++)
+        {
+            System.out.println(cookies[i].getName());
+            System.out.println(cookies[i].getValue());
+        }
+
+
+        Cookie c = new Cookie("gogs_awesome",user.getName());
+        c.setDomain(".modelica-china.com");
+        c.setMaxAge(60);
+        c.setPath("/");
+        response.addCookie(c);
+
+        try
+        {
+            loginedUserModel = userService.CreateLoginedUser(user);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取用户信息失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","获取用户信息成功");
+        jo.put("userInfo",loginedUserModel);
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+
+    @RequestMapping(value = "/assign",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject assign(@RequestBody String para, HttpServletRequest request)
+    {
+        JSONObject jo = new JSONObject();
+        // JSONObject jsonObject = JSON.parseObject(para);
+        JSONObject jsonObject = JSONObject.parseObject(para);
+
+        //  JSONArray jsonArray = JSONArray.parseArray(para);
+        JSONArray jsonArray = jsonObject.getJSONArray("authIds");
+        Integer []authIds = new Integer[jsonArray.size()];
+
+        for(int i=0;i<jsonArray.size();i++)
+        {
+            authIds[i]=jsonArray.getJSONObject(i).getIntValue("authId");
+        }
+
+        //   map.put("permissions",map.get("permissionId").toString());
+//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
+
+        //      String a = map.get("permissionId").toString();
+        //     a=a.substring(1,a.length()-1);
+        Integer uid = jsonObject.getIntValue("uid");
+        //     Integer []authIds =   Convert.toIntArray(",",a);
+
+        try
+        {
+            userService.updateAuth(uid,authIds);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","分配权限失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","分配权限成功");
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+
+    @RequestMapping(value = "/destory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject destory(HttpServletRequest request, HttpServletResponse response)
+    {
+
+        JSONObject jo = new JSONObject();
+        HttpSession session = request.getSession();
+        System.out.println(session.getId());
+
+        Cookie[] cookies = request.getCookies();
+        for (int i =0;i<cookies.length;i++)
+        {
+            System.out.println(cookies[i].getName());
+            System.out.println(cookies[i].getValue());
+            if (cookies[i].getName().equalsIgnoreCase("gogs_awesome"))
+            {
+                cookies[i].setMaxAge(0);
+            }
+        }
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
 }

@@ -1,6 +1,8 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.AuthMapper;
+import com.tongyuan.model.dao.RoleAuthMapper;
+import com.tongyuan.model.dao.UserAuthMapper;
 import com.tongyuan.model.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     AuthMapper authMapper;
+    @Autowired
+    UserAuthMapper userAuthMapper;
+    @Autowired
+    RoleAuthMapper roleAuthMapper;
 
     @Override
     public boolean add(Map<String,Object> map)
@@ -30,9 +36,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean delete(long id)
+    public boolean delete(Integer id)
     {
-        return this.authMapper.delete(id);
+        return this.authMapper.deleteById(id)&this.authMapper.deleteByPid(id)&this.userAuthMapper.deleteByAuthId(id)&roleAuthMapper.deleteByAuthId(id);
     }
 
     @Override
