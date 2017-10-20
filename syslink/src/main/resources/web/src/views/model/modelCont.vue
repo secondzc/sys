@@ -61,7 +61,7 @@
         </el-tab-pane>
             <el-tab-pane label="组件信息">
                 <div style="overflow: auto">
-                <package-diagram-model  ></package-diagram-model>
+                <package-diagram-model-child ></package-diagram-model-child>
                 </div>
             </el-tab-pane>
         </el-tabs>
@@ -70,10 +70,10 @@
 <script>
     import variabletree from './Variabletree.vue'
     import { mapState,mapGetters} from 'vuex'
-    import PackageDiagramModel from "./packageDiagramModel";
+    import PackageDiagramModelChild from "./packageDiagramModelChild.vue";
     export default {
         components: {
-            PackageDiagramModel,
+            PackageDiagramModelChild,
         },
         data() {
             return {

@@ -5,7 +5,7 @@
             :data="data"
             :props="defaultProps"
             node-key="id"
-            default-expand-all
+            show-checkbox
             :expand-on-click-node="false"
             :columns="columns"
             ref="tree1"
@@ -19,6 +19,7 @@
     import { mapState,mapGetters} from 'vuex'
     console.log(tree)
     export default {
+        name: 'modelComponent',
         computed: {
             ...mapState({
                 modelId: state => state.modelId,
@@ -38,8 +39,6 @@
                         .catch(function (error) {
                             console.log(error)
                         })
-
-
                 }
             }
         },
