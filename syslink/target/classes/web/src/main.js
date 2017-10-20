@@ -14,9 +14,7 @@ import Mock from './mock'
 import axios from 'axios'
 //Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
-import  func from './common/js/func'
 Vue.prototype.$http = axios;
-Vue.prototype.func = func;
 Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;
 //开启debug模式
