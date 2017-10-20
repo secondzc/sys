@@ -32,7 +32,7 @@
       <el-table-column type="selection" width="55">
       </el-table-column>
         <el-table-column type="expand">
-      <template scope="props">
+      <template slot-scope="props">
       
         <el-form label-position="left" inline class="demo-table-expand">
 
@@ -104,7 +104,7 @@
 
 
       <el-table-column label="操作" width="300">
-        <template scope="scope">
+        <template slot-scope="scope">
          <el-button  type="primary" size="small" @click="handleRole(scope.$index, scope.row)">分配角色</el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>

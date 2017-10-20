@@ -1,431 +1,299 @@
 <template>
-  <div class="kz-tree__wrapper">
-    <div class="kz-tree__top">
-      <el-button size="small" icon="plus" type="primary" @click="treeAdd({ id: 0 })">新建组织</el-button>
-    </div>
-    <el-tree
-      ref="kzTree"
-      :data ="treeData"
-      :props="data.defaultProps"
+  <section>
 
-      :expand-on-click-node="true" 
-      :show-checkbox="true"
-       node-key="id"
-  :default-expanded-keys="[1]"
-      lazy
-      :load="loadTreeNode"
-      @node-click="handleNodeClick"
-      :render-content="nodeRender"
-      class="kz-tree">
-    </el-tree>
   
-      <!--列表-->
-    <el-table :data="department"    ref="multipleTable" highlight-current-row stripe @selection-change="selsChange" 
-    @current-change="rowChange"      style="width: 100%;">
+    
+  <!--工具条-->
+    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+      <el-form :inline="true" :model="filters">
+        <el-form-item>
+          <el-input v-model="filters.name" placeholder="组织名称"  min-width="120" ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-on:click="getOrgs">查询</el-button>
+        </el-form-item>
+         <el-form-item>
+          <el-button type="primary" v-on:click="reset">重置</el-button>
+        </el-form-item>
+        <!--
+       <el-form-item>
+           <el-button @click="toggleSelection()">取消选择</el-button>
+        </el-form-item>
+        -->
+       
       
-   
-     <el-table-column type="expand" min-width="100"   >
-       <template scope="scope" >
+      </el-form>
+       
+    </el-col>
 
-    <el-table :data="scope.row.children">
-      <el-table-column type="expand" min-width="100" >
-      </el-table-column>
-      <el-table-column prop="name" label="名称" min-width="120" >
-      </el-table-column>
-    </el-table>
-
-   
-
-      </template>
-      </el-table-column>
-
- 
+    <!--列表-->
+    <el-table :data="orgs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;">
       <el-table-column type="selection" min-width="100">
       </el-table-column>
-      
-       <el-table-column prop="name" label="名称" min-width="120" >
+      <el-table-column type="index" min-width="120">
       </el-table-column>
+      <el-table-column prop="name" label="组织名称" min-width="120" >
+      </el-table-column>
+      <el-table-column prop="numTeams" label="团队数量" min-width="60" >
+       </el-table-column>
+      <el-table-column prop="numMembers" label="成员数量" min-width="60" >
+       </el-table-column>
+      </el-table-column>
+      <el-table-column prop="numRepos" label="仓库数量" min-width="60" >
+       </el-table-column>
+      <el-table-column prop="createdUnix" label="创建时间" min-width="150" >
+       </el-table-column>
 
-    
+
+         <el-table-column label="操作" width="300">
+        <template slot-scope="scope">
+        <el-button size="small" @click="handleManage(scope.$index, scope.row)">管理</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+
+          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
-  
-    <!--dialog-->
-    <el-dialog :title="dialog.title" v-model="dialog.visible" :close-on-click-modal="false">
-      <el-form :model="dialog.form" ref="dialogForm" :rules="dialog.rules" class="el-col-offset-4">
-        <el-form-item label="组织名称" prop="name" label-width="120" required>
-          <el-input v-model="dialog.form.name" auto-complete="off" class="el-col-12"></el-input>
+    <!--工具条-->
+    <el-col :span="24" class="toolbar">
+     
+      <el-pagination  
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pager.pageIndex"
+      :page-sizes="[30, 50, 100, 300]"
+      :page-size="pager.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pager.total">
+    </el-pagination>
+    </el-col>
 
+
+
+      <!--新增界面-->
+    <el-dialog title="创建新的组织" v-model="addFormVisible" :close-on-click-modal="false"   >
+      <el-form :model="addForm" label-width="80px"    ref="addForm"   :inline="true"  >
+        <el-form-item label="组织名称" prop="name"  :rules="[{required:true,message:'请输入组织名称',trigger:'blur'}]"  >
+          <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelSubmit">取 消</el-button>
-        <el-button type="primary" @click="submitForm" :loading="dialog.submiting">确 定</el-button>
+        <el-button @click.native="addFormVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
       </div>
     </el-dialog>
-  </div>
+
+
+    <!--编辑界面-->
+    <el-dialog title="基本设置" v-model="editFormVisible" :close-on-click-modal="false"  >
+        <el-form :model="editForm" label-width="100px" ref="editForm"    >
+        <el-form-item label="组织名称" prop="name"   >
+           <el-input v-model="editForm.name" auto-complete="off"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="组织全名" prop="fullName"   >
+            <el-input v-model="editForm.fullName" auto-complete="off"></el-input>
+        </el-form-item>
+          <el-form-item label="组织描述" prop="description"  >
+          <el-input v-model="editForm.description" auto-complete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="官方网站" prop="website"   >
+            <el-input v-model="editForm.website" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="所在地区" prop="location"   >
+            <el-input v-model="editForm.location" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label-width="150px" label="允许创建最大库数量" prop="maxRepoCreation">
+             <el-input-number v-model="editForm.maxRepoCreation"  :min="-1" ></el-input-number>
+             <label>  （设置为 -1 表示使用全局默认值）</label>
+        </el-form-item>
+       
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="editFormVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+      </div>
+    </el-dialog>
+
+
+  
+
+  
+  </section>
 </template>
 
 <script>
-  import { getDepartmentList } from '../../api/api';
-  //import { getDirectoryList } from '../../api/api';
-  
-  
+  import util from '../../common/js/util'
+
   export default {
-    name: 'kz-tree',
-    props: {
-      data: {
-        type: Object,
-        required: true,
-        default () {
-          return {
-            // 默认tree-node的字段名
-            defaultProps: {
-              children: 'children',
-              label: 'label',
-              isLeaf: 'isLeaf',
-            },
-            // 异步ajax地址
-            // CURD
-            url: {
-              C: 'api/department/add',
-              U: '2',
-              R1: 'api/department/tree',
-              R2: 'api/department/tree',
-              D: 'api/department/delete',
-            }
-          }
-        }
-      }
-    },
-    data () {
-      // 声明保存当前操作分类node对象
-      this.__currentNode = null
+    data() {
       return {
-        treeData: [],
-        department:[],
+         
+        filters: {
+          name: '',
        
-        selection:[],
-        /* 弹框 */
-        dialog: {
-          title: '新建组织',
-          visible: false,
-          submiting: false,
-          form: {
-            name: '',
-            id: '',
-            parent_id: 0
-          },
-          rules: {
-            name: {
-              required: true,
-              message: '请输入组织名称',
-              trigger: 'blur'
-            }
-          }
+        },
+        pager:{
+          total:1,
+          pageSize:30,
+          pageIndex:1,
+          currentPage:''
+
+        },
+        orgs:[],
+    //    total: 0,
+ //       page: 1,
+
+        addloading: false,
+        addFormVisible: false,
+
+
+        addForm:{
+          name:''
+        },
+        editLoading:false,
+        editFormVisible:false,
+        editForm:{
+          name:'',
+          fullName:'',
+          description:'',
+          website:'',
+          location:'',
+          maxRepoCreation:''
         }
       }
     },
     methods: {
-      abd(row){
-       console.log(row.index);
+    
+       handleEdit: function (index, row) {
+
+
+        this.editFormVisible = true;
+        this.editForm = Object.assign({}, row);
       },
-      rowChange(now,old)
-      {
-        console.log(old);
-        console.log(now);
-        this.selection=now;
-      },
-        selsChange(val) {
-        this.selection = val;
-        console.log(val);
-      },
-        getRoot() {
-             
-           this.$http.post('api/department/root')
-              .then((response)=> {
-                  this.department = response.data.data;
-                  this.department.abc = response.data.data.children;
-                  
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
+      handleManage:function(index,row){
+         this.$router.push({ name: '组织管理', params: { orgName:row.name}})
       },
        
-      /**
-       getChildren() {
-            let para = this.selection;
-            console.log(para);
-           this.$http({
-            url:'api/department/children',
+      handleCurrentChange(val) {
+        this.pager.pageIndex = val;
+        this.getOrgs();
+      },
+      handleSizeChange(val){
+        this.pager.pageSize = val;
+        this.getOrgs();
+      },
+      reset(){
+           this.filters=[];
+           this.getOrgs();
+      },
+      getOrgs()
+      {
+
+         let para = Object.assign({},this.filters,this.pager);
+        this.$http({
+            url:'/api/org/query',
             method:'POST',
-            data:para})
+            data:para
+
+           })
               .then((response)=> {
-                  this.children = response.data.data;
-                  
+                  this.orgs = response.data.orgs;
+               //    _this.pager.total=response.data.total;
+                 // _this.$router.push({path: '/druid2'});
+
           })
           .catch(function (error) {
               console.log(error);
           });
       },
-      **/
-
-
-  
-      /* 加载子分类 */
-      loadTreeNode (node, resolve) {
-      const url1 = this.data.url.R1 ;
-      const url2 = this.data.url.R2 ;
-      const a = this.data.label;
-      
-      if(node.level==0)
-      {
-         this. fetch(url1, { parent_id: node.level})
-             .then(data => {
-               resolve(data)
-             });
-      }
-      
-      else
-      {
-       
-       this. fetch(url2, { parent_id: node.data.id})
-             .then(data => {
-               resolve(data)
-             });
-      }
-      
-         
-
-      },
-           handleNodeClick(treeItem) {
-        console.log(treeItem);
-      },
-
-      /* 点击响应时间 */
-   //   handleNodeClick (...args) {
-   //     this.$emit('node-click', ...args)
-   //   },
-      /* 构建分类title及工具 */
-      nodeRender (h, { _self, node, data }) {
-        // @todo: 使用jsx插件更好理解
-        const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
-          h('span', data.name),
-          h('span',
-            {
-              'class': 'kz-tree-bar'
-            },
-            [
-              // 编辑
-              h('i', {
-                'class': 'el-icon-edit',
-                on: {
-                  click: function (event) {
-                    event.stopPropagation()
-                    typeof _self.treeEdit === 'function' && _self.treeEdit(data, event, node)
-                  }
-                }
-              }),
-              // 添加
-              h('i', {
-                'class': 'el-icon-plus',
-                on: {
-                  click: function (event) {
-                    event.stopPropagation()
-                    typeof _self.treeAdd === 'function' && _self.treeAdd(data, event, node)
-                  }
-                }
-              }),
-              // 删除
-              h('i', {
-                'class': 'el-icon-close',
-                props: {
-                  'v-popover': 'delTreeConfirm'
-                },
-                on: {
-                  click: function (event) {
-                    event.stopPropagation()
-                    typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)
-                  }
-                }
+ 
+         editSubmit: function () {
+        this.$refs.editForm.validate((valid) => {
+          if (valid) {
+           
+              this.editLoading = true;
+              //NProgress.start();
+              let para = Object.assign({}, this.editForm);
+           
+              this.$http({
+                url:'/api/org/update',
+                method:'post',
+                data:para
               })
-            ]
-          )
-        ]
-        return h(
-          'div',
-          {
-            'class': 'el-tree-node__label',
-            prop: {
-              children: '-'
-            }
-          },
-          childrenNodes
-        )
-      },
-      /* 添加 */
-      treeAdd (treeItem, event, node) {
-        this.__currentNode = node
-        Object.assign(this.dialog, {
-          title: '新建组织',
-          visible: true,
-          form: {
-            name: '',
-       //     id: '',
-            pid: treeItem.id
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+
+                if(res.data.flag)
+                {
+                  this.$message({
+                  message: '编辑成功',
+                  type: 'success'
+                });
+                }
+                else
+                {
+                   this.$message({
+                  message: '编辑失败',
+                  type: 'error'
+                });
+                }               
+                this.$refs['editForm'].resetFields();
+                this.editFormVisible = false;
+                this.getOrgs();
+              });
+           
           }
-        })
+        });
       },
-      /* 编辑 */
-      treeEdit (treeItem, event, node) {
-        this.__currentNode = node
-        Object.assign(this.dialog, {
-          title: '编辑分类',
-          visible: true,
-          form: {
-            name: treeItem.name,
-            id: treeItem.id,
-            parent_id: treeItem.parent_id
-          }
-        })
-      },
-      /* 删除 */
-      treeDelete (treeItem, event, node) {
-        const fetchDelOk = () => {
-          // ajax
-          const url = this.data.url.D
-          this.fetch(url, { id: treeItem.id }, 'post').then(data => {
-            // 使用实例对象的removeChild方法
-            // hack
-            // https://github.com/ElemeFE/element/blob/dev/packages/tree/src/model/node.js#L187
-            try {
-              node.parent.removeChild(node)
-            } catch (err) { console.error(err) }
-            // 提示结果
-            this.$notify({ message: '删除成功', type: 'success' })
-          })
-        }
-        // 询问提示
-        this.$confirm('是否删除此分类?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        handleDel: function (index, row) {
+        console.log(index);
+        this.$confirm('确认删除该组织吗?', '提示', {
           type: 'warning'
-        }).then(fetchDelOk).catch(e => e)
-      },
-      /* ajax封装 */
-        fetch (url, data, type = 'GET') {
-            const success = (data, resolve, reject) => {
-                if (data.status === 1) {
-                    resolve(data.data)
-                } else {
-               //     console.error(data.data.code+":"+ data.data.message)
-                    reject(data)
-                }
+        }).then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { id: row.id };
+          this.$http({
+            url:'/api/org/delete',
+            method:'post',
+            data:para
+          }).then((res) => {
+
+            this.listLoading = false;
+            //NProgress.done();
+            if(res.data.flag)
+            {
+               this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
             }
-            return new Promise((resolve, reject) => {
-                if (type.toLowerCase() === 'post') {
-                    if (data) {
-                        var dataUrl = Object.keys(data).map(item => item+"="+data[item])
-                        url = url + (url.indexOf('?') > -1 ? '' : '?') + dataUrl.join('&')
-                    }
-                    this.$http.post(url)
-                        .then(res => res)
-                        .then(data => success(data.data, resolve, reject))
-                } else {
-                    if (data) {
-                       var dataUrl = Object.keys(data).map(item => item+"="+data[item])
-                        url = url + (url.indexOf('?') > -1 ? '' : '?') + dataUrl.join('&')
-                }
+            else
+            {
+              this.$message({
+              message: '删除失败',
+              type: 'error'
+              });
+            }
+           
+            this.getOrgs();
+          });
+        }).catch(() => {
 
-                    this.$http.get(url)
-                        .then(res => res)
-                        .then(data => success(data.data, resolve, reject))
-                }
-            })
-        },
-      /* ######## */
-      /* 其他 */
-      cancelSubmit () {
-        this.dialog.visible = false
-        this.$refs.dialogForm.resetFields()
+        });
       },
-      submitForm () {
-        this.$refs.dialogForm.validate((valid) => {
-          if (valid) { // 验证通过
-            this.fetchAddTreeNode()
-          } else {
-            return false
-          }
-        })
-      },
-      fetchAddTreeNode () {
-        const url = this.dialog.form.id ? this.data.url.U : this.data.url.C
-        this.dialog.submiting = true
-        this.fetch(url, this.dialog.form, 'post')
-            .then(data => {
-              /* 隐藏dialog */
-              Object.assign(this.dialog, {
-                submiting: false,
-                visible: false
-              })
-              this.$refs.dialogForm.resetFields()
-              /* 提示结果 */
-              const message = this.dialog.form.id ? '编辑成功' : '添加成功'
-              this.$message({ message: message, type: 'success' })
-
-              if (this.dialog.form.id) { // 编辑
-                this.__currentNode && this.$set(this.__currentNode, 'data', data)
-              } else { // 新增
-                /* treeNode api */
-                if (this.__currentNode) { // 子分类添加子类
-                  this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === "0") { // 顶级添加子类
-                  this.$refs.kzTree.root.doCreateChildren([data])
-                }
-              }
-            })
-      }
+ 
     },
-     mounted() {
-      this.getRoot();
-      // this.getChildren();
+    mounted() {
+      this.getOrgs();
     }
   }
+
 </script>
 
-<style>
-  .kz-tree__wrapper {
-    min-width: 300px;
-    text-align: left;
-  }
-  .kz-tree__top {
-    padding: 10px;
-    text-align: right;
-    border-bottom: 1px solid #ddd;
-  }
-  .el-tree-node {
-    position: relative;
-  }
-  .el-tree-node__content:hover .kz-tree-bar {
-    display: block;
-  }
-  .kz-tree-bar {
-    display: none;
-    position: absolute;
-    top: 0;
-    right: 10px;
-    font-size: 12px;
-  }
+<style scoped>
 
-  .kz-tree-bar > i {
-    margin: 0 5px;
-    color: #999;
-  }
-  .kz-tree-bar > i:hover {
-    color: #20a0ff;
-  }
-  .el-tree {
-  border: none;
-  }
 </style>

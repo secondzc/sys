@@ -40,7 +40,7 @@
       <el-table-column prop="createDate" label="创建时间" min-width="120" >
       </el-table-column>
        <el-table-column label="操作" width="200">
-        <template scope="scope">
+        <template slot-scope="scope">
          <el-button  type="primary" size="small" @click="handelManage(scope.$index, scope.row)">管理</el-button>
         </template>
       </el-table-column>

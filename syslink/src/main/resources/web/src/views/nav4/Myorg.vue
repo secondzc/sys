@@ -33,7 +33,7 @@
 
 
          <el-table-column label="操作" width="300">
-        <template scope="scope">
+        <template slot-scope="scope">
         <el-button size="small" @click="handleManage(scope.$index, scope.row)">管理</el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 
@@ -167,7 +167,7 @@
         this.editForm = Object.assign({}, row);
       },
       handleManage:function(index,row){
-        this.$router.push({ name: '团队管理', params: { name:row.name}})
+        this.$router.push({ name: '组织管理', params: { orgName:row.name}})
       },
        
       handleCurrentChange(val) {
@@ -182,12 +182,12 @@
            this.filters=[];
            this.query();
       },
-      getOrgs()
+      getMyOrgs()
       {
 
-        let para = 1;
+        let para =  JSON.parse(localStorage.getItem('uid'))
         this.$http({
-            url:'/api/org/query',
+            url:'/api/org/myOrg',
             method:'POST',
             data:para
 
@@ -234,7 +234,7 @@
                 }
                 this.$refs['addForm'].resetFields();
                 this.addFormVisible = false;
-                this.getOrgs();
+                this.getMyOrgs();
               });
           
           }
@@ -273,7 +273,7 @@
                 }               
                 this.$refs['editForm'].resetFields();
                 this.editFormVisible = false;
-                this.getOrgs();
+                this.getMyOrgs();
               });
            
           }
@@ -310,7 +310,7 @@
               });
             }
            
-            this.getOrgs();
+            this.getMyOrgs();
           });
         }).catch(() => {
 
@@ -319,7 +319,7 @@
  
     },
     mounted() {
-      this.getOrgs();
+      this.getMyOrgs();
     }
   }
 

@@ -8,7 +8,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" >
         <el-form-item>
-          <el-button v-if="abc.a" type="primary" @click="handleAdd"  >新建组</el-button>
+          <el-button v-if="" type="primary" @click="handleAdd"  >新建组</el-button>
           <el-button  @click="handleEdit">编辑组</el-button>
           <el-button type="danger"  @click="handleDel">删除组</el-button>
         </el-form-item>
@@ -21,7 +21,7 @@
       <el-table-column type="selection" width="55">
       </el-table-column>
         <el-table-column type="expand">
-           <template scope="scope" >
+           <template slot-scope="scope" >
      
         <el-table :data="scope.row.children" >
       <el-table-column type="selection" width="55">
@@ -30,10 +30,12 @@
       </el-table-column>
       <el-table-column prop="authName" label="名称" min-width="120" sortable>
       </el-table-column>
+      <!--
        <el-table-column prop="parentId" label="父权限" min-width="120" sortable>
       </el-table-column>
        <el-table-column prop="url" label="请求地址" min-width="120" sortable>
       </el-table-column>
+      -->
         <el-table-column prop="authCode" label="代码" min-width="120" sortable>
       </el-table-column>
         <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  >
@@ -41,7 +43,7 @@
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
         <el-table-column label="操作" width="200">
-        <template scope="scope">
+        <template slot-scope="scope">
          
           <el-button size="small" @click="handleEditItem(scope.$index, scope.row)">编辑项</el-button>
           <el-button type="danger" size="small" @click="handleItemDel(scope.$index, scope.row)">删除项</el-button>
@@ -58,12 +60,16 @@
       </el-table-column>
       <el-table-column prop="authName" label="名称" min-width="120" sortable>
       </el-table-column>
+      
+      <el-table-column prop="authCode" label="代码" min-width="120" sortable>
+      </el-table-column>
+
       <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  >
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
       <el-table-column label="操作" width="200">
-        <template scope="scope">
+        <template slot-scope="scope">
          <el-button  type="primary" size="small" @click="handleAddItem(scope.$index, scope.row)">新建项</el-button>
         </template>
       </el-table-column>
@@ -77,10 +83,14 @@
         <el-form-item label="名称" prop="authName"  :rules="[{required:true,message:'请输入权限组名称',trigger:'blur'}]"  >
           <el-input v-model="editForm.authName" auto-complete="off"></el-input>
         </el-form-item>
-
-          <el-form-item label="请求地址" prop="url"  :rules="[{required:true,message:'请输入请求地址',trigger:'blur'}]"  >
+      <el-form-item label="代码" prop="authCode" :rules="[{required:true,message:'请输入权限组代码',trigger:'blur'}]"  >
+          <el-input v-model="editForm.authCode" ></el-input>
+        </el-form-item>
+        <!--
+        <el-form-item label="请求地址" prop="url"  :rules="[{required:true,message:'请输入请求地址',trigger:'blur'}]"  >
           <el-input v-model="editForm.url" auto-complete="off"></el-input>
         </el-form-item>
+        -->
          <el-form-item label="描述" prop="description"   >
           <el-input   type="textarea"   :autosize="{ minRows: 4, maxRows: 10}"  placeholder="请添加相关描述" v-model="editForm.description" auto-complete="off"></el-input>
         </el-form-item>
@@ -101,10 +111,11 @@
         <el-form-item label="代码" prop="authCode" :rules="[{required:true,message:'请输入权限项代码',trigger:'blur'}]"  >
           <el-input v-model="editItem.authCode" ></el-input>
         </el-form-item>
+        <!--
          <el-form-item label="请求地址" prop="url" :rules="[{required:true,message:'请输入请求地址',trigger:'blur'}]"  >
           <el-input v-model="editItem.url" ></el-input>
         </el-form-item>
-
+        -->
          <el-form-item label="描述" prop="description" >
           <el-input v-model="editItem.description" type="textarea"  :autosize="{ minRows: 4, maxRows: 10}"  placeholder="请添加相关描述"  auto-complete="off"></el-input>
         </el-form-item>
@@ -126,10 +137,11 @@
         <el-form-item label="代码" prop="authCode"  :rules="[{required:true,message:'请输入权限组名称',trigger:'blur'}]"  >
           <el-input v-model="addForm.authCode" auto-complete="off"></el-input>
         </el-form-item>
-      
+      <!--
         <el-form-item label="请求地址" prop="url"  :rules="[{required:true,message:'请输入请求地址',trigger:'blur'}]"  >
           <el-input v-model="addForm.url" auto-complete="off"></el-input>
         </el-form-item>
+      -->
          <el-form-item label="描述" prop="description" >
           <el-input v-model="addForm.description" type="textarea"  :autosize="{ minRows: 4, maxRows: 10}"  placeholder="请添加相关描述"  auto-complete="off"></el-input>
         </el-form-item>
@@ -148,9 +160,11 @@
         <el-form-item label="代码" prop="authCode" :rules="[{required:true,message:'请输入权限项代码',trigger:'blur'}]"  >
           <el-input v-model="addItem.authCode" ></el-input>
         </el-form-item>
+        <!--
          <el-form-item label="请求地址" prop="url" :rules="[{required:true,message:'请输入请求地址',trigger:'blur'}]"  >
           <el-input v-model="addItem.url" ></el-input>
         </el-form-item>
+        -->
          <el-form-item label="描述" prop="description" >
           <el-input v-model="addItem.description" type="textarea"  :autosize="{ minRows: 4, maxRows: 10}"  placeholder="请添加相关描述"  auto-complete="off"></el-input>
         </el-form-item>
@@ -166,7 +180,6 @@
 <script>
   import util from '../../common/js/util'
   //import NProgress from 'nprogress'
-
   export default {
     data() {
        
@@ -366,7 +379,7 @@
       editSubmit: function () {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+       
               this.editLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
@@ -398,7 +411,7 @@
                 this.editFormVisible = false;
                 this.getGroups();
               });
-            });
+            
           }
         });
       },
@@ -406,7 +419,7 @@
       addSubmit: function () {
         this.$refs.addForm.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            
               this.addLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.addForm);
@@ -436,14 +449,14 @@
                 this.addFormVisible = false;
                 this.getGroups();
               });
-            });
+           
           }
         });
       },
          addItemSubmit: function () {
         this.$refs.addItem.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+          
               this.addItemLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.addItem);
@@ -472,14 +485,14 @@
                 this.addItemVisible = false;
                 this.getGroups();
               });
-            });
+        
           }
         });
       },
       editItemSubmit: function () {
         this.$refs.editItem.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+      
               this.editItemLoading = true;
               //NProgress.start();
 
@@ -512,7 +525,7 @@
                 this.editItemVisible = false;
                 this.getGroups();
               });
-            });
+           
           }
         });
       },
@@ -523,6 +536,7 @@
     },
     mounted() {
       this.getGroups();
+   //   this.changeDate();
   
     }
   }
