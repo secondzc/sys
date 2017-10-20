@@ -1,10 +1,16 @@
 <template>
     <div class="modelContent">
       <div class="left">
+          <!--模型组件视图-->
+          <div >
+              <p>模型组件视图：</p>
+              <modelComponent></modelComponent>
+          </div>
+
           <!--变量树-->
           <div >
-              <p>变量树：</p>
-              <variabletree  ></variabletree>
+              <p>模型变量视图：</p>
+              <variabletree ></variabletree>
           </div>
       </div>
 
@@ -17,13 +23,15 @@ import modelbasecont from './modelBaseContent.vue'
 import modeltree from './modelTree.vue'
 import component from './Component.vue'
 import variabletree from './Variabletree.vue'
+import modelComponent from './ModelComponent.vue'
 
 export default {
   name: 'packageDiagramVariable',
   components: {
       modeltree,
       component,
-      variabletree
+      variabletree,
+      modelComponent,
   },
   data () {
     return {

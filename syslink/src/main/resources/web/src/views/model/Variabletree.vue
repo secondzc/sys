@@ -5,7 +5,7 @@
             :data="data"
             :props="defaultProps"
             node-key="id"
-            default-expand-all
+            highlight-current = "true"
             :expand-on-click-node="false"
             :columns="columns"
             ref="tree1"
@@ -46,7 +46,7 @@
         data () {
             return {
                 columns: [{
-                    minWidth: 100,
+                    minWidth: 300,
                     label: '名称',
                     name: 'name'
                 }, {

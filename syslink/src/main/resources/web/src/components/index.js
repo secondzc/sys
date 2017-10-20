@@ -4732,14 +4732,16 @@ function lifecycleMixin (Vue) {
     // based on the rendering backend used.
     if (!prevVnode) {
       // initial render
-      vm.$el = vm.__patch__(
+      //noinspection JSAnnotator
+        vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
         vm.$options._parentElm,
         vm.$options._refElm
       );
     } else {
       // updates
-      vm.$el = vm.__patch__(prevVnode, vnode);
+      //noinspection JSAnnotator
+        vm.$el = vm.__patch__(prevVnode, vnode);
     }
     activeInstance = prevActiveInstance;
     // update __vue__ reference
@@ -4751,7 +4753,8 @@ function lifecycleMixin (Vue) {
     }
     // if parent is an HOC, update its $el as well
     if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
-      vm.$parent.$el = vm.$el;
+      //noinspection JSAnnotator
+        vm.$parent.$el = vm.$el;
     }
     // updated hook is called by the scheduler to ensure that children are
     // updated in a parent's updated hook.
@@ -6308,14 +6311,16 @@ function renderMixin (Vue) {
       }
     }
 
-    vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject;
+    //noinspection JSAnnotator
+      vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject;
 
     if (staticRenderFns && !vm._staticTrees) {
       vm._staticTrees = [];
     }
     // set parent vnode. this allows render functions to have access
     // to the data on the placeholder node.
-    vm.$vnode = _parentVnode;
+    //noinspection JSAnnotator
+      vm.$vnode = _parentVnode;
     // render self
     var vnode;
     try {
@@ -6395,7 +6400,8 @@ function initMixin (Vue) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options);
     } else {
-      vm.$options = mergeOptions(
+      //noinspection JSAnnotator
+        vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm

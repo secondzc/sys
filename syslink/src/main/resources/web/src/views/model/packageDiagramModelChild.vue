@@ -11,11 +11,6 @@
       </div>
 
       <div class="right">
-          <!--组件图-->
-          <div><p>组件图：</p></div>
-          <component></component>
-
-
       </div>
 
     </div>
@@ -25,14 +20,12 @@
 import {mapActions} from 'vuex'
 import modelbasecont from './modelBaseContent.vue'
 import modeltree from './modelTree.vue'
-import component from './Component.vue'
 import variabletree from './Variabletree.vue'
 
 export default {
   name: 'packageDiagramModel',
   components: {
       modeltree,
-      component,
       variabletree
   },
   data () {

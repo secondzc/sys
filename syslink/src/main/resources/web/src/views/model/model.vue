@@ -4,6 +4,19 @@
         <!--<model-content  @node-click="getRepos"></model-content>-->
         <!--</div>-->
         <!--<div><p>{{treeItem}}</p></div>-->
+        <div>
+            <!--工具条-->
+            <!--<el-col :span="24" class="toolbar" >-->
+                <el-form :inline="true" :model="filters">
+                    <el-form-item>
+                        <el-input v-model="filters.name" placeholder="模型名称"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" v-on:click="getModel">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            <!--</el-col>-->
+        </div>
         <p>{{getRepos}}</p>
       <waterfall
         :align="align"
@@ -25,21 +38,23 @@
           move-class="item-move"
         >
         <!-- :style="item.style" -->
-          <div class="RepCard" id="modelId"  :index="item.index" >
+          <div class="RepCard" id="modelId"  :index="item.index" v-on:dblclick="modelVar(item.index)">
               <div class="center-aligned">
                 <!--<img v-bind:src="item.imageUrl" class="image">-->
                   <img src="./../../assets/test1.png" class="image">
               </div>
               <div class="content">
-                  <a href="">
-                    <h4 >{{item.name}}</h4>
+                  <a href="javascript:void(0)">
+                    <h4 >模型名称：{{item.name}}</h4>
                   </a>
+                  <h4>上传者：{{item.userName}}</h4>
+                  <h4>上传日期：{{item.createTime}}</h4>
                   <small>{{item.discription}}</small>
               </div>
               <div>
-                  <a href="javascript:void(0)" @click="modelVar" title="模型详细信息">详细信息</a>
-                  <a href="javascript:void(0)" @click="Model" title="模型组件信息">组件信息</a>
-                  <a href="javascript:void(0)" @click="Variable" title="模型组件参数信息">参数信息</a>
+                  <!--<a href="javascript:void(0)" @click="modelVar(item.index)" title="模型详细信息">详细信息</a>-->
+                  <!--<a href="javascript:void(0)" @click="Model(item.index)" title="模型组件信息">组件信息</a>-->
+                  <!--<a href="javascript:void(0)" @click="Variable" title="模型组件参数信息">参数信息</a>-->
               </div>
               <div  class="cardButton">
                   <!--<a class="user username" href="/circuitdigest">-->
@@ -78,6 +93,7 @@
         filters:{
             name : ""
         },
+          loading: false,
         align:'left',
         repositories:[],
         isBusy: false,
@@ -107,6 +123,42 @@
 
       },
     methods:{
+        //获取用户列表
+        getModel: function () {
+            let para = {
+                name: this.filters.name
+            };
+            var _this = this;
+            if(_this.amsg != null && _this.amsg != ""){
+                var url = '/api/model/list?parent_id='+ _this.amsg
+            }else{
+                _this.amsg = null;
+                var url = '/api/model/list?parent_id='+ _this.amsg
+            }
+            _this.$http.post(url)
+                .then(function (response) {
+                    let searchModel = response.data.repositories.filter(model =>{
+                        for(var i =0 ;i <response.data.repositories.length; i++){
+                            if(para.name && response.data.repositories[i].name.indexOf(para.name) == -1 ){
+                                return false
+                            }
+                            else{
+                                return true
+                            }
+                        }
+                    })
+                    _this.repositories = searchModel;
+                 //   _this.repositories = response.data.repositories;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+//            let searchModel = this.repositories.filter(model => {
+//                if (name && user.name.indexOf(name) == -1) return false;
+//                return true;
+//            });
+//            this.repositories = searchModel.searchModel;
+        },
 //      getRepos : function(arg){
 ////        let para ={name: this.filters.name};
 ////        getReposList(para).then((res)=>{
@@ -133,19 +185,21 @@
         this.isBusy = false
       },
         modelVar : function (modelId) {
-            this.$store.dispatch('sendModelId',this.repositories[0].index);
+            this.$store.dispatch('sendModelId',modelId);
+            this.$store.dispatch('sendTreeModelId',modelId);
             this.$router.push({path: '/model/packageDiagram'});
         },
-        Model : function (modelId) {
-            this.$store.dispatch('sendModelId',this.repositories[0].index);
-            this.$store.dispatch('sendTreeModelId',this.repositories[0].index);
-            this.$router.push({path: '/model/packageDiagramModel'});
-        },
-        Variable : function (modelId) {
-            this.$store.dispatch('sendModelId',this.repositories[0].index);
-            this.$router.push({path: '/model/packageDiagramVariable'});
-        }
+//        Model : function (modelId) {
+//            this.$store.dispatch('sendModelId',modelId);
+//            this.$store.dispatch('sendTreeModelId',modelId);
+//            this.$router.push({path: '/model/packageDiagramModel'});
+//        },
+//        Variable : function (modelId) {
+//            this.$store.dispatch('sendModelId',modelId);
+//            this.$router.push({path: '/model/packageDiagramVariable'});
+//        }
     },
+
 
 //    mounted(){
 //      this.getRepos();

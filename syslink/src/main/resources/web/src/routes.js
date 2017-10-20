@@ -11,43 +11,17 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import FileContent from './views/nav3/index.vue'
 import echarts from './views/charts/echarts.vue'
-import Repository from './views/repository/index.vue'
+import Repository from './views/repository/index2.vue'
 import Model from './views/model/index.vue'
 import modelVariable from './views/model/modelVariable.vue' ;
 import packageDiagram from './views/model/packageDiagram.vue'
 import packageDiagramModel from './views/model/packageDiagramModel.vue'
 import packageDiagramVariable from './views/model/packageDiagramVariable.vue'
 import modelComponent from  './views/model/ModelComponent.vue'
-import template from './views/review/template.vue'
-import setCheckors from './views/review/setCheckors.vue'
-import mySubmit from './views/review/mySubmit.vue'
-import mySubmitDetail from './views/review/mySubmitDetail.vue'
-import checkor from './views/review/checkor.vue'
+import modelCont from './views/model/modelCont.vue'
+import packageTransfModel from  './views/model/packageTransfModel.vue'
 
 let routes = [
-    {
-        path: '/',
-        component: Home,
-        name: '审签管理',
-        iconCls: 'el-icon-setting',//图标样式class
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
-            { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: '我的审签',
-        iconCls: 'el-icon-star-on',//图标样式class
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            {path:'/template',component:template,name:'我的模板'},
-            {path:'/checkor',component:checkor,name:'我的待办'},
-            {path:'/mySubmit',component:mySubmit,name:'我的提交'},
-        ]
-    },
     {
         path: '/login',
         component: Login,
@@ -68,7 +42,7 @@ let routes = [
         iconCls: 'el-icon-menu',
         leaf: true,//只有一个节点
         children: [
-            { path: '/repository/index', component: Repository, name: '我的项目' }
+            { path: '/repository/index2', component: Repository, name: '我的项目' }
         ]
     },
     {
@@ -79,11 +53,19 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/model/index', component: Model, name: '我的模型' },
+            { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
+            { path: '/model/modelCont', component: modelCont, name: '模型信息'},
             // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
             { path: '/model/packageDiagram', component: packageDiagram, name: '包视图'},
             { path: '/model/packageDiagramModel', component: packageDiagramModel, name: '包视图组件信息' },
-            { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息' },
-            { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+            { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
+                iconCls: 'el-icon-document',
+                leaf: true,//只有一个节点
+                children: [
+                    { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+                    ]
+            },
+            // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
         ]
     },
     {
