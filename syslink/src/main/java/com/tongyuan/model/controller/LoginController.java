@@ -74,7 +74,7 @@ public class LoginController extends BaseController {
         GUser user = userService.querListByName(username);
         if(user!=null)
         {
-              String passwdCheck = EncodePasswd.getEncryptedPassword(password,user.getSalt(),10000,50);
+            String passwdCheck = EncodePasswd.getEncryptedPassword(password,user.getSalt(),10000,50);
           if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
           {
 
@@ -97,7 +97,9 @@ public class LoginController extends BaseController {
                   }
               }
               HttpSession session = request.getSession();
+
             //  session.setAttribute("user", user);
+              session.setAttribute("uid",user.getID());
               session.setAttribute("user", user);
               session.setAttribute("base_path", request.getContextPath());
               String lginIp = IpUtil.getIpAddr(request);
@@ -117,8 +119,21 @@ public class LoginController extends BaseController {
               c.setMaxAge(60);
               c.setPath("/");
               response.addCookie(c);
+
+
+              Cookie[] cookies = request.getCookies();
+              for (int i =0;i<cookies.length;i++)
+              {
+                  System.out.println(cookies[i].getName());
+                  System.out.println(cookies[i].getValue());
+              }
+              System.out.println(session.getId());
+
+
+
               //             return "redirect:/model/getMyIndex";
               map.put("result","1");
+              map.put("userInfo",loginedUser);
               map.put("errormsg","登陆成功！");
           }else{
               request.setAttribute("loginFlag",1);

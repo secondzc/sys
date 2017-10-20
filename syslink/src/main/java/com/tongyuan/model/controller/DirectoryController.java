@@ -30,8 +30,6 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 
 /** 教程页面
@@ -598,8 +596,8 @@ public class DirectoryController {
   * name 是上传者
   * fileXmlPath 是文件所在位置
   * filName 为文件名称
-* */
-    /*public void doCmd(String name, String fileXmlPath,String fileName){
+
+    public void doCmd(String name, String fileXmlPath,String fileName){
         JSONObject jo = new JSONObject();
         Map<String,Object> params = new HashMap<>();
         params.put("name",name);
@@ -618,8 +616,8 @@ public class DirectoryController {
                 "& \"C:/Program Files (x86)/Git/bin/git.exe\" add . & \"C:/Program Files (x86)/Git/bin/git.exe\" commit -m \"model\" " +
                 " & \"C:/Program Files (x86)/Git/bin/git.exe\" config --global credential.helper store & \"C:/Program Files (x86)/Git/bin/git.exe\" push origin master"};
         excuteCmd_multiThread(cmd,"GBK");
-    }*/
-
+    }
+* */
 
 
 

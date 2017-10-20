@@ -169,8 +169,8 @@
         <include refid="baseColumnList" />
         FROM USER
         WHERE type = 1
-        <if test="name !=null and name!=''">
-            and name = #{name}
+        <if test="name != null and name != ''">
+            and name like CONCAT('%',#{name},'%')
         </if>
     </select>
     <select id="queryUser" resultMap="mapResultMap" resultType="map" parameterType="map">
@@ -178,12 +178,12 @@
         <include refid="baseColumnList" />
         FROM USER
         WHERE type = 0
-        <if test="name !=null and name!=''">
-            and name = #{name}
+        <if test="name != null and name != ''">
+            and (email like CONCAT('%',#{name},'%')
+            or full_name like CONCAT('%',#{name},'%')
+            or name like CONCAT('%',#{name},'%'))
         </if>
-        <if test="email !=null and email!=''">
-            and email = #{email}
-        </if>
+
     </select>
 
     <select id="querySimpleUser" resultMap="mapResultMap" resultType="map" parameterType="map">
@@ -202,6 +202,12 @@
         FROM USER
         WHERE id = #{id}
     </select>
+    <select id="queryOrgByName" resultMap="mapResultMap" resultType="map" parameterType="String">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM USER
+        WHERE name = #{name}
+    </select>
 
     <select id="queryUserById" resultMap="mapResultMap" resultType="map" parameterType="long">
         SELECT
@@ -216,5 +222,8 @@
         FROM USER
         WHERE name = #{name}
     </select>
+
+
+
 
 </mapper>

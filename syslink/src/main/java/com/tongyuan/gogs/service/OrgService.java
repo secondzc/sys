@@ -1,5 +1,7 @@
 package com.tongyuan.gogs.service;
 
+import com.github.pagehelper.Page;
+
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +9,7 @@ import java.util.Map;
  * Created by yh on 2017/9/25.
  */
 public interface OrgService {
-    public List<Map<String,Object>> query(Map<String, Object> map);
+    public Page<Map<String,Object>> query(Map<String, Object> map);
 
     public boolean addOrg(Map<String, Object> map);
 
@@ -18,12 +20,14 @@ public interface OrgService {
 
     public boolean nameExist(Map<String, Object> map);
 
+    public List<Map<String ,Object>> queryOrgUserByOrgId(long orgId);
+
     public List<Map<String,Object>> getOrgUser(Map<String, Object> map);
 
 
     public List<Map<String,Object>> getMyOrg(long uid);
 
-    public Long getOrgIdByName(Map<String, Object> map);
+    public Long getOrgIdByName(String name);
 
 
 
@@ -34,4 +38,6 @@ public interface OrgService {
     public boolean updateOrgUser(Map<String, Object> map);
 
     public boolean deleteOrgUser(Map<String, Object> map);
+
+    public Map<String,Object>queryByUAndO(Map<String, Object> map);
 }

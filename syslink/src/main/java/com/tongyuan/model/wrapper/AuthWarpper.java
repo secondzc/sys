@@ -22,7 +22,6 @@ public class AuthWarpper extends BaseControllerWarpper {
 
         }
 
-
         map.put("children",getPermissionItem(map));
     }
 }

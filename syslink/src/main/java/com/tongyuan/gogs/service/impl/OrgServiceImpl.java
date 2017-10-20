@@ -1,5 +1,7 @@
 package com.tongyuan.gogs.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.tongyuan.gogs.dao.GUserMapper;
 import com.tongyuan.gogs.dao.OrgUserMapper;
 import com.tongyuan.gogs.dao.TeamMapper;
@@ -27,9 +29,14 @@ public class OrgServiceImpl implements OrgService {
 
 
     @Override
-    public List<Map<String,Object>> query(Map<String,Object>map)
+    public Page<Map<String,Object>> query(Map<String,Object>map)
     {
-        return this.gUserMapper.queryOrg(map);
+
+        Page<Map<String,Object>>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+        gUserMapper.queryOrg(map);
+        return page;
+
+       // return this.gUserMapper.queryOrg(map);
     }
     @Override
     public boolean addOrg(Map<String,Object>map){
@@ -127,12 +134,16 @@ public class OrgServiceImpl implements OrgService {
 
     }
 
-
+    @Override
+    public List<Map<String ,Object>> queryOrgUserByOrgId (long orgId)
+    {
+        return this.orgUserMapper.queryByOrgId(orgId);
+    }
     @Override
     public List<Map<String,Object>> getOrgUser(Map<String,Object>map)
     {
 
-       List<Map<String,Object>> orgUser = orgUserMapper.queryByOrgId(getOrgIdByName(map));
+       List<Map<String,Object>> orgUser = orgUserMapper.queryByOrgId(getOrgIdByName(map.get("name").toString()));
 
        for(Map<String,Object>objectMap:orgUser)
        {
@@ -146,17 +157,10 @@ public class OrgServiceImpl implements OrgService {
 
 
     @Override
-    public Long getOrgIdByName(Map<String,Object>map)
+    public Long getOrgIdByName(String name)
     {
-        List<Map<String,Object>>list  =  gUserMapper.queryOrg(map);
-        if(list.size()>0)
-        {
-            return Long.parseLong(list.iterator().next().get("id").toString()) ;
-        }
-        else
-        {
-            return null;
-        }
+        Map<String,Object>org = gUserMapper.queryOrgByName(name);
+        return Long.parseLong(org.get("id").toString());
     }
 
 
@@ -190,9 +194,8 @@ public class OrgServiceImpl implements OrgService {
     @Override
     public boolean addOrgUser (Map<String,Object>map)
     {
-        Map<String,Object>map1 = new HashMap<>();
-        map1.put("name",map.get("orgName").toString());
-        long orgId = getOrgIdByName(map1);
+
+        long orgId = getOrgIdByName(map.get("orgName").toString());
         long uid  = Long.parseLong(gUserMapper.queryUserByName(map.get("name").toString()).get("id").toString());
         Map<String ,Object>org = gUserMapper.queryOrgById(orgId);
         Map<String,Object>orgUser = new HashMap<>();
@@ -200,6 +203,7 @@ public class OrgServiceImpl implements OrgService {
         orgUser.put("uid",uid);
         orgUser.put("isPublic",0);
         orgUser.put("isOwner",0);
+        orgUser.put("numTeams",0);
         org.put("numTeams",Long.parseLong(org.get("numTeams").toString()));
 
         org.put("numMembers",Long.parseLong(org.get("numMembers").toString())+1);
@@ -222,10 +226,32 @@ public class OrgServiceImpl implements OrgService {
         Map<String ,Object> org = gUserMapper.queryOrgById(Long.parseLong(map.get("orgId").toString()));
         if(Long.parseLong(org.get("numMembers").toString())>0)
         {
-            map.put("numMembers",Long.parseLong(org.get("numMembers").toString())-1);
+            org.put("numMembers",Long.parseLong(org.get("numMembers").toString())-1);
         }
-        gUserMapper.updateOrg(map);
-        return this.orgUserMapper.deleteOrgUser(map);
+        gUserMapper.updateOrg(org);
+        List<Map<String ,Object>>teams = teamMapper.queryByOrgId(Long.parseLong(org.get("id").toString()));
+        for(Map<String,Object>team:teams)
+        {
+            List<Map<String,Object>>teamUsers = teamUserMapper.queryByTeamId(Long.parseLong(team.get("id").toString()));
+            for(Map<String,Object>teamUser:teamUsers)
+            {
+                if(Long.parseLong(teamUser.get("uid").toString())==Long.parseLong(map.get("uid").toString()))
+                {
+                   team.put("numMembers",Integer.parseInt(team.get("numMembers").toString())-1);
+                   teamMapper.update(team);
+                }
+            }
+        }
+
+
+
+        return this.orgUserMapper.deleteOrgUser(map)&this.teamUserMapper.deleteTeamUserByOrgId(map);
+    }
+
+    @Override
+    public Map<String,Object>queryByUAndO(Map<String,Object>map)
+    {
+        return this.orgUserMapper.queryByUAndO(map);
     }
 
 }

@@ -2,30 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tongyuan.model.dao.UserRoleMapper">
 
-    <resultMap id="mapResultMap" type="map">
-        <id column="user_id" property="userId" jdbcType="BIGINT"  />
-        <result column="roles" property="roles" jdbcType="VARCHAR"/>
-        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.UserRole">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="role_id" property="roleId" jdbcType="INTEGER"/>
      </resultMap>
 
     <sql id="baseColumnList" >
-        user_id,create_date,roles
+        id,uid,role_id
     </sql>
-    <insert id="add"  parameterType="map"   >
-        INSERT INTO user_role (user_id, create_date) VALUES
-        (#{userId}, #{createDate})
+    <insert id="add"  parameterType="com.tongyuan.model.domain.UserRole"  >
+        INSERT INTO user_role (uid, role_id) VALUES
+        (#{uid}, #{roleId})
     </insert>
-    <update id="update"  parameterType="map">
-        UPDATE user_role SET roles=#{roles}
-        WHERE user_id=#{userId}
-    </update>
-     <select id="query" resultMap="mapResultMap" resultType="map"   parameterType="map" >
+
+     <select id="query" resultMap="baseResultMap"    parameterType="com.tongyuan.model.domain.UserRole" >
         SELECT
         <include refid="baseColumnList" />
         FROM user_role
-        WHERE  user_id=#{userId}
+        WHERE  uid=#{uid}
     </select>
     <delete id="delete" parameterType="long">
-        delete from user_role where user_id=#{userId}
+        delete from user_role where uid=#{uid}
     </delete>
 </mapper>

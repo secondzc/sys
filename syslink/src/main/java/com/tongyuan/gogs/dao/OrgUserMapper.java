@@ -34,6 +34,8 @@ public interface OrgUserMapper {
 
     public List<Map<String,Object>> queryByUid(@Param("uid") long uid);
 
+    Map<String,Object> queryByUAndO(Map<String, Object> map);
+
 
 
 

@@ -72,6 +72,15 @@
 
 
     </select>
+    <select id="queryByUAndO" resultMap="mapResultMap" resultType="map" parameterType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM org_user
+        WHERE
+
+        uid = #{uid} and org_id = #{orgId}
+
+    </select>
 
 
 </mapper>

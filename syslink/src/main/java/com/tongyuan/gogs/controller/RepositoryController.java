@@ -44,7 +44,7 @@ public class RepositoryController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject add(@RequestParam(value = "name", required = false) String name,
                           @RequestParam(value = "fileName", required = false) String fileName,
