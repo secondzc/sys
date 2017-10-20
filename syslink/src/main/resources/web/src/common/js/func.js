@@ -1,4 +1,5 @@
 import axios from "axios";
+import store from '../../vuex/store';
 export default {
 	ajaxGet (api, cb) {
 		axios.get(api)
@@ -23,5 +24,22 @@ export default {
 		}
 		return false;
 	},
+	authJudge  (authCode) {
+  //   let userInfo = JSON.parse( sessionStorage.getItem('userInfo'));
+     let userInfo = store.getters.userInfo; 
+     const auth = userInfo.auths;
+    if(auth.includes(authCode))
+    {
+  	  return true;
+    }
+    else
+    {
+  	  return false;
+    }
+    }
+    ,
+	 changeDate (){
+  	console.log('123');
+  }
 	
 }

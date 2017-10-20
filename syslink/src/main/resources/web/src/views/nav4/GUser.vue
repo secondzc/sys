@@ -2,9 +2,11 @@
   <section>
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+  
       <el-form :inline="true" :model="filters">
+      
         <el-form-item>
-          <el-input v-model="filters.realName" placeholder="姓名"></el-input>
+          <el-input v-model="filters.name" placeholder="用户名/全名/邮箱"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getUsers">查询</el-button>
@@ -12,27 +14,22 @@
         <el-form-item>
           <el-button type="primary" v-on:click="reset">重置</el-button>
         </el-form-item>
+        
         <el-form-item>
-          <el-button type="primary" @click="handleAdd"  >新增</el-button>
+          <el-button type="primary" @click="handleAdd"  v-show="func.authJudge('management_user_add')">新增</el-button>
         </el-form-item>
       </el-form>
-       <div class="sub-title">激活即列出输入建议</div>
-    <el-autocomplete
-      class="inline-input"
-      v-model="filters.realName"
-      :fetch-suggestions="querySearch"
-      @select="searchSelect"
-      :props="search"
-      placeholder="请输入内容"
-    ></el-autocomplete>
+     
     </el-col>
 
     <!--列表-->
     <el-table :data="users" highlight-current-row  @selection-change="selsChange"     style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
+          <!--
         <el-table-column type="expand">
-      <template scope="props">
+    
+      <template slot-scope="props">
       
         <el-form label-position="left" inline class="demo-table-expand">
 
@@ -69,7 +66,9 @@
         </el-form>
       
       </template>
+
     </el-table-column>
+          -->
       <el-table-column prop="id" label="ID" width="60">
       </el-table-column>
       <el-table-column prop="name" label="用户名" min-width="120" sortable>
@@ -78,13 +77,13 @@
      
        </el-table-column>
       <el-table-column prop="isActive"  label="已激活" min-width="120" sortable>
-       <template  scope="props">
+       <template  slot-scope="props">
          <i v-if=props.row.isActive class="el-icon-check"></i>
          <i v-else=props.row.isActive class="el-icon-close"></i>
       </template>
        </el-table-column>
        <el-table-column prop="isAdmin"  label="管理员" min-width="120" sortable>
-        <template  scope="props">
+        <template  slot-scope="props">
          <i v-if=props.row.isAdmin class="el-icon-check"></i>
          <i v-else=props.row.isAdmin class="el-icon-close"></i>
       </template>
@@ -95,9 +94,29 @@
 
 
       <el-table-column label="操作" width="300">
-        <template scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+        <template slot-scope="scope">
+
+        <el-dropdown>
+  <el-button type="primary">
+    选项<i class="el-icon-caret-bottom el-icon--right"></i>
+  </el-button>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-show="func.authJudge('management_user_edit')">  <el-button  type="text" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button></el-dropdown-item>
+    <el-dropdown-item v-show="func.authJudge('management_user_delete')">  <el-button type="text"  size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button></el-dropdown-item>
+    <el-dropdown-item v-show="func.authJudge('management_user_role')">  <el-button   type="text" size="small" @click="handleRole(scope.$index, scope.row)">分配角色</el-button></el-dropdown-item>
+    <el-dropdown-item v-show="func.authJudge('management_user_auth')">  <el-button   type="text" size="small" @click="handleAuth(scope.$index, scope.row)">分配权限</el-button></el-dropdown-item>
+    
+  </el-dropdown-menu>
+  </el-dropdown>
+
+
+
+
+
+
+
+        
+         
         </template>
       </el-table-column>
     </el-table>
@@ -203,6 +222,20 @@
 
     </el-dialog>
 
+     <!--分配权限界面-->
+    <el-dialog title="分配权限" v-model="permissionVisible"  :close-on-click-modal="false"    >
+   <el-form :model="permission" label-width="80px"  ref="permission"    >
+
+  <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps">
+  </el-tree>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="permissionVisible=false">取消</el-button>
+        <el-button type="primary" @click.native="permissionSubmit" :loading="permissionLoading">提交</el-button>
+      </div>
+    </el-dialog>
+
 
   </section>
 </template>
@@ -235,6 +268,22 @@
         }
       };
       return {
+        buttons:{
+          auth:'management_user_auth'
+        },
+
+        data2:[],
+       defaultProps: {
+        children: 'children',
+        label: 'authName'
+        },
+
+       auths:[],    
+        ids:{
+        authIds:[],
+        roleId:''
+        },
+        permission:{},
       
         props: {
           label: 'name',
@@ -242,6 +291,13 @@
           value:'id'
 
         },
+
+         ids:{
+          authIds:[],
+          uid:''
+        },
+        permissionVisible:false,
+        permissionLoading:false,
 
         search:{
           label:'realName',
@@ -255,7 +311,7 @@
         },
         ids:[],
         filters: {
-          realName: ''
+          name: ''
         },
         state1:'',
        userSearch:[],
@@ -310,7 +366,7 @@
 
         userRole:{
            assigned:[],
-           userId:''
+           uid:''
         }
         ,
         addFormRules: {
@@ -328,6 +384,18 @@
     },
     methods: {
 
+       judge(code)
+       {
+          this.func.authJudge(code);
+       },
+
+       getCheckedNodes() {
+        return this.$refs.tree.getCheckedNodes();
+      },
+      setCheckedNodes(nodes) {
+         this.$refs.tree.setCheckedNodes(nodes);
+      },
+
       getUserRoles(para){
 
         this.$http({
@@ -337,7 +405,7 @@
         }).then((res)=>{
           if(res.data.flag)
           {
-           this.userRole.assigned = res.data.userRoles[0].roles;
+           this.userRole.assigned = res.data.userRoles;
           }
         })
         .catch(error=>{
@@ -345,7 +413,7 @@
         })
       },
      // 获取角色穿梭框数据
-      getRoles() {
+     getRoles() {
          var _this = this;
           _this.$http.post('/api/role/list')
               .then(function (response) {
@@ -427,6 +495,17 @@
               console.log(error);
           });
       },
+      getGroups() {
+         var _this = this;
+          _this.$http.post('/api/auth/list')
+              .then(function (response) {
+                  _this.data2  = response.data.group;
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+      },
+
       //删除
       handleDel: function (index, row) {
         console.log(index);
@@ -470,15 +549,22 @@
       handleRole:function(index,row){
          this.userRole={
              assigned:[],
-             userId:''
+             uid:''
           }
          
       
-        this.userRole.userId=row.id;
+        this.userRole.uid=row.id;
         let para = Object.assign({},this.userRole);
         this.getUserRoles(para);
         console.log(this.userRole.assigned);
         this.roleVisble=true;
+       
+      },
+        handleAuth(index,row)
+      {
+         this.ids.uid=row.id;
+         this.permissionVisible=true;
+         this.setCheckedNodes(row.auths);
        
       },
       //显示新增界面
@@ -574,7 +660,7 @@
       },
       roleSubmit:function(){
            
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+           
               this.roleLoading = true;
               //NProgress.start();
           //    let userId = thsi.sels.id;
@@ -606,8 +692,52 @@
                 this.roleVisble = false;
                 this.getUsers();
               });
-            });
+           
           
+      },
+
+
+      permissionSubmit: function () {
+
+
+        this.$refs.permission.validate((valid) => {
+          if (valid) {
+        
+              this.permissionLoading = true;
+  
+              this.ids.authIds=this.getCheckedNodes();
+              let para = Object.assign({}, this.ids);
+   
+              this.$http({
+                url:'/api/user/assign',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.permissionLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  this.$message({
+                  message: '编辑成功',
+                  type: 'success'
+                });
+                }
+                else
+                {
+                   this.$message({
+                  message: '编辑失败',
+                  type: 'error'
+                });
+                } 
+                this.$refs['permission'].resetFields();
+                this.permissionVisible = false;
+                this.getGroups();
+                this.getUsers();
+              });
+           
+          }
+        });
       },
 
       selsChange: function (sels) {
@@ -653,6 +783,9 @@
     mounted() {
       this.getUsers();
       this.getRoles();
+      this.getGroups();
+      this.func.changeDate();
+
   //    this.permissonJudge();
     }
   }

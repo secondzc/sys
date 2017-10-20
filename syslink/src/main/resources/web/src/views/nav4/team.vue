@@ -1,74 +1,113 @@
 <template>
+
   <section>
     <!--工具条-->
 
 
-<label>{{this.$route.params.name}}</label>
+   <el-form label-width="80px"   :inline="true"  >
+    <el-form-item>
+   <el-card class="box-card"  >
+  <div slot="header" class="clearfix" >
+    <span style="line-height: 36px;">{{this.$route.params.teamName}}</span>
+    <el-button style="float: right;" type="danger" v-if="isMember" @click="deleteTeamUser">离开团队</el-button>
+    <el-button style="float: right;" type="primary" v-else  @click="addTeamUser">加入团队</el-button>
 
-  
+  </div>
 
+  <div class="text item">
+   {{this.team.description}}
+  </div>
+  <div class="text item">
+  <span style="line-height: 36px;">{{team.numMembers}}名成员-{{team.numRepos}}个仓库</span>
+  </div>
+   <div class="text item">
+  <span style="line-height: 36px;">{{team.authDes}}</span>
+  </div>
+   <div >
+   <el-button style="float: right;" type="primary"  @click.native="showTeamManage" >团队设置</el-button>
+  </div>
+  </el-card>
+  </el-form-item>
+
+
+  <el-form-item>
+  <el-card class="box-card1">
+  <div slot="header" class="clearfix" >
+    <span style="line-height: 36px;">团队成员</span>
+ 
+  </div>
+  <div  v-for="(item,index) in team.member" :key=item.id>
+
+    {{item.name}}
+     <el-button type="danger" size="small" @click="deleteTeamMember(item)" >移除成员</el-button>
+  </div>
+    <el-form   >
+           <el-autocomplete  class="inline-input"  v-model="inviteUser.name" :fetch-suggestions="querySearch" placeholder="搜索用户" 
+      :trigger-on-focus="false" :props="search"></el-autocomplete>
+      <el-button type="primary" @click="inviteSubmit"  >邀请他人加入</el-button>
+    </el-form>
+
+
+   </el-card>
+ </el-form-item>
+   </el-form>
    
- <el-tabs v-model="activeName2" type="card" >
-    <el-tab-pane label="组织成员" name="first">   
 
-    
+   <el-dialog :title="title" v-model="teamMange1" :close-on-click-modal="false"   >
+          <el-form :model="teamMange" label-width="80px"    ref="teamMange"    >
+          <el-form-item label="团队名称" prop="name"  :rules="[{required:true,message:'请输入团队名称',trigger:'blur'}]">
+          <el-input v-model="teamMange.name" auto-complete="off"></el-input>
+          <label>您可以使用该名称来通知该组全体成员</label>
+        </el-form-item>
+        <el-form-item label="团队描述" prop="description"    >
+          <el-input v-model="teamMange.description" auto-complete="off"></el-input>
+          <label>一句话描述这个团队是做什么的</label>
+        </el-form-item>
+    </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="teamMange1 = false">取消</el-button>
+        <el-button type="primary" @click.native="updateTeam" :loading="addLoading">提交</el-button>
+      </div>
+    </el-dialog>
 
 
-    <!--列表-->
-    <el-table :data="orgUser" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;">
-      <el-table-column type="selection" min-width="100">
-      </el-table-column>
-      <el-table-column type="index" min-width="120">
-      </el-table-column>
-      <el-table-column prop="name" label="用户名" min-width="60" >
-      </el-table-column>
-      <el-table-column prop="fullName" label="全名" min-width="120" >
-       </el-table-column>
-      <el-table-column prop="isPublic" label="成员可见性" min-width="120" >
-       <template scope="scope">
-        <label v-if="scope.row.isOwner">私有成员(设为公开)</label>
-          <label v-else>公开成员（设为私有）</label>
-        </template>
-       </el-table-column>
-      </el-table-column>
-      <el-table-column prop="isOwner" label="成员角色" min-width="60" >
-       <template scope="scope">
-          <label v-if="scope.row.isOwner">管理员</label>
-          <label v-else>普通成员</label>
-        </template>
-       </el-table-column>
-      
-         <el-table-column label="操作" width="300">
-        <template scope="scope">
-        <el-button type="danger" size="small"  v-if="isOwner" >移除成员</el-button>
-        <el-button type="danger" size="small"  v-if="member(scope.$index,scope.row)">离开组织</el-button>
-   
-        </template>
-      </el-table-column>
-    </el-table>
+     <el-dialog :title="title" v-model="teamMange2" :close-on-click-modal="false"   >
+          <el-form :model="teamMange" label-width="80px"    ref="teamMange"    >
+         
+         <el-form-item label="团队名称" prop="name"  :rules="[{required:true,message:'请输入团队名称',trigger:'blur'}]">
+          <el-input v-model="teamMange.name" auto-complete="off"></el-input>
+           <label>您可以使用该名称来通知该组全体成员</label>
+        </el-form-item>
+        <el-form-item label="团队描述" prop="description"    >
+          <el-input v-model="teamMange.description" auto-complete="off"></el-input>
+            <label>一句话描述这个团队是做什么的</label>
+        </el-form-item>
+        <div>
+        <label>请选择该团队所具有的权限等级：</label>
+        </div>
+        <el-radio-group v-model="teamMange.authorize">
+        <div>
+        <el-radio :label="1">读取权限</el-radio>
+        </div>
+        <div>
+        <el-radio :label="2">写入权限</el-radio>
+        </div>
+        <div>
+        <el-radio :label="3">管理权限</el-radio>
+        </div>
+       </el-radio-group>
   
-    </el-tab-pane>
 
-    <el-tab-pane label="组织团队" name="second">
-<!--
-  <template >
-    <el-card class="box-card" v-for="item in team">
-    <div slot="header" class="clearfix">
-    <span style="line-height: 36px;"></span>
-    <el-button style="float: right;" type="primary">操作按钮</el-button>
-    </div>
-    <div v-for="o in 4" :key="o" class="text item">
-    {{'列表内容 ' + o }}
-    </div>
-    </el-card>
-  </template>
--->
-    </el-tab-pane>
+     
+
+    </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="teamMange2 = false">取消</el-button>
+        <el-button type="primary" @click.native="updateTeam" :loading="addLoading">提交</el-button>
+      </div>
+    </el-dialog>
   
-  </el-tabs>
-
-
-
+ 
     
   </section>
 </template>
@@ -82,17 +121,47 @@
        
       return {
         department:[],
+        inviteUser:{
+          name:'',
+          orgName:'',
+          teamName:''
+        },
         activeName2:'first',
          orgUser:[],
-         team:[],
+         team:{},
          currentUserId:'',
          isOwner:false,
-         isMember:false
-       
+         isMember:false,
+         teamMange1:false,
+         teamMange2:false,
+         addLoading:false,
+         teamMange:{},
+         title:'',
+         simpleUsers:[],
+          search:{
+          label:'name',
+          value:'name'
+        },
+
       
       }
     },
     methods: {
+
+        querySearch(queryString, cb) {
+        var simpleUsers = this.simpleUsers;
+        var results = queryString ? simpleUsers.filter(this.createFilter(queryString)) : simpleUsers;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (simpleUser) => {
+          return (simpleUser.name.indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+
+     
+
         rowChange(now,old)
       {
         this.selection=now;
@@ -100,35 +169,31 @@
         selsChange(val) {
         this.selection = val;
       },
-
-      getOrgUser()
+      showTeamManage()
       {
-        let para =  {name:this.$route.params.name};
-    //    console.log(para);
-        this.$http({method:'POST',url:'/api/org/orgUser',data:para})
-           .then((response)=> {
-                  this.orgUser = response.data.orgUser;
-                   for(let a=0;a<this.orgUser.length;a++)
-                   {
-                    if(this.orgUser[a].isOwner)
-                    {
-                        if(this.orgUser[a].uid==this.currentUserId)
-                       {
-                         this.isOwner=true;
-                       }
-                    }
-                   }
-                   for(let a = 0;a<this.orgUser.length;a++)
-                   {
-                    if(!this.orgUser[a].isOwner)
-                    {
-                      if(this.orgUser[a].uid==this.currentUserId)
-                       {
-                         this.isMember=true;
-                       }
-                    }
-                   }
+          if(this.team.authorize==4)
+          {
+            this.teamMange1=true;
+             this.teamMange= Object.assign({}, this.team);
+          //   this.team;
+          }
+          else
+          {
+            this.teamMange2=true;
+             this.teamMange=Object.assign({}, this.team);
+           //  this.team;
+          }
+      },
 
+      
+       getSimplerUser()
+      {
+        let para =  {id:''};
+    //    console.log(para);
+        this.$http({method:'POST',url:'/api/user/querySimpleUser',data:para})
+           .then((response)=> {
+                  this.simpleUsers = response.data.simpleUser;
+                   console.log(this.simpleUsers);
           })
           .catch(function (error) {
               console.log(error);
@@ -137,11 +202,23 @@
       },
        getTeam()
       {
-        let para =  {name:this.$route.params.name};
+        let para =  {teamName:this.$route.params.teamName,orgName:this.$route.params.orgName};
     //    console.log(para);
-        this.$http({method:'POST',url:'/api/org/team',data:para})
+        this.$http({method:'POST',url:'/api/team/queryTeamByName',data:para})
            .then((response)=> {
                   this.team = response.data.team;
+                  let teamMember = new Set();
+                  let member = this.team.member;
+                   member.forEach(x => teamMember.add(x.id));
+                   console.log(teamMember);
+                   if(teamMember.has(this.currentUserId))
+                   {
+                    this.isMember=true;
+                   }
+                   else
+                   {
+                    this.isMember=false;
+                   }
                   console.log(this.team);
                  
           })
@@ -155,37 +232,21 @@
         this.$http.post('api/user/getUserId').
         then((response)=>{
                 this.currentUserId = response.data.userId;
+                console.log(this.currentUserId);
         })
         .catch(function(error){
           console.log(error);
         });
         
       },
-      judgeOwner()
-      {
-        /**
-        for(let a=0;a<this.orgUser.length;a++)
-        {
-           if(orgUser[a].isOwner)
-           {
-            if(orgUser[a].uid==this.currentUserId)
-            {
-              this.isOwner=true;
-            }
-           }
-        }
-        **/
-        console.log(this.currentUserId);
-    //    console.log(this.orgUser);
-        
-      },
+     
       member(index,row)
       {
        // console.log(this.currentUserId);
         // console.log(row.isOwner);
         // console.log(row.uid);
 
-         if((!row.isOwner)&&(row.uid==this.currentUserId))
+         if((row.uid==this.currentUserId))
          {
           return true;
          }
@@ -194,16 +255,215 @@
           return false;
          }
 
-      }
-
-     
-     
+      },
+      Owner(index,row)
+      {
+          if(this.isOwner)
+          {
+            if(row.uid==this.currentUserId)
+            {
+              return false;
+            }
+            else
+            {
+              return true;
+            }
+          }
+          else
+          {
+            false;
+          }
+      },
     
 
+     
+     inviteSubmit()
+     {
+       
+          
+              this.addLoading = true;
+              //NProgress.start();
+              this.inviteUser.orgName=this.$route.params.orgName;
+              this.inviteUser.teamName=this.$route.params.teamName;
+              let para = this.inviteUser;
+              this.$http({method:'post',
+                url:'api/team/addTeamMember',
+                data:para}).then((res)=>{
+                this.addLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                }
+                else
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                });
+
+                }
+               this.inviteUser={};
+                this.getTeam();
+              });
+          
+        
+      },
+      teamMember(item)
+      {
+        let user = item.member;
+        let userIds = new Set();
+     //   if(user.length>0)
+    //    {
+          user.forEach(x => userIds.add(x.id));
+            console.log(userIds);
+            console.log(this.currentUserId);
+            if(userIds.has(this.currentUserId))
+            {
+              return true;
+            }
+            else
+            {
+              return false;
+            }
+
+      },
+      showTeam(item)
+      {
+       if(this.isOwner)
+       {
+        return true;
+       }
+       else
+       {
+           let user = item.member;
+        let userIds = new Set();
+         user.forEach(x => userIds.add(x.id));
+          if(userIds.has(this.currentUserId))
+            {
+              return true;
+            }
+            else
+            {
+              return false;
+            }
+
+       }
+      },
+      deleteTeamMember(item)
+      {
+         let para = {teamId:this.team.id,orgName:this.$route.params.orgName,uid:item.id};
+          this.$http({method:'post',
+                url:'api/team/deleteTeamMember',
+                data:para}).then((res)=>{
+                this.addLoading = false;
+                //NProgress.done();
+               if(res.data.flag)
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                }
+                else
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                });
+
+                }
+             
+                this.getTeam();
+              });
+      },
+      deleteTeamUser()
+      {
+         let para = {teamId:this.team.id,orgName:this.$route.params.orgName};
+          this.$http({method:'post',
+                url:'api/team/deleteTeamUser',
+                data:para}).then((res)=>{
+                this.addLoading = false;
+                //NProgress.done();
+               if(res.data.flag)
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                }
+                else
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                });
+
+                }
+             
+                this.getTeam();
+              });
+      },
+       addTeamUser()
+      {
+         let para = {teamId:this.team.id,orgName:this.$route.params.orgName};
+          this.$http({method:'post',
+                url:'api/team/addTeamUser',
+                data:para}).then((res)=>{
+                this.addLoading = false;
+                //NProgress.done();
+               if(res.data.flag)
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                }
+                else
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                });
+
+                }
+             
+                this.getTeam();
+              });
+      },
+       updateTeam()
+      {
+
+
+
+          this.addLoading=true;
+         let para = {id:this.team.id,name:this.teamMange.name,description:this.teamMange.description,
+          authorize:this.teamMange.authorize,orgName:this.$route.params.orgName};
+          this.$http({method:'post',
+                url:'api/team/update',
+                data:para}).then((res)=>{
+                this.addLoading=false;
+                this.teamMange1=false;
+                this.teamMange2=false;
+                this.getTeam();
+              });
+      },
+
       
+     
+   
+
+     
+    
     },
     mounted() {
-     this.getOrgUser();
+    // this.currentUserId = sessionStorage.getItem('userId');
+    // console.log(userId);
+    
+     this.getSimplerUser();
      this.getUserId();
      this.getTeam();
   //   this.judgeOwner();
@@ -235,6 +495,9 @@
   }
 
   .box-card {
-    width: 480px;
+    width: 380px;
+  }
+   .box-card1 {
+    width: 600px;
   }
 </style>

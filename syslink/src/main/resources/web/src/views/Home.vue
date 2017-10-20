@@ -69,6 +69,9 @@
 </template>
 </li>
 </ul>
+
+
+<!-- <sidebar ></sidebar>-->
 </aside>
 <section class="content-container">
 	<div class="grid-content bg-purple-light">
@@ -91,7 +94,12 @@
 </template>
 
 <script>
+import Sidebar from './Sidebar'
     export default {
+    	 components: {
+          Sidebar,
+ 
+  },
         data() {
             return {
                 sysName:'SYSLINK',
@@ -127,8 +135,17 @@
                 this.$confirm('确认退出吗?', '提示', {
                     //type: 'warning'
                 }).then(() => {
-                    sessionStorage.removeItem('user');
-                    _this.$router.push('/login');
+               sessionStorage.removeItem('user');
+
+               /**
+               sessionStorage.removeItem('userInfo');
+               localStorage.clear();
+               _this.$store.dispatch('LogOut');
+               // _this.$http.post('api/user/destory');  
+               **/
+                _this.$router.push('/login');
+           //     location.reload();
+
                 }).catch(() => {
 
                 });
@@ -258,6 +275,7 @@
 				// bottom: 0px;
 				.el-menu{
 					height: 100%;
+					overflow: auto;
 				}
 				.collapsed{
 					width:60px;

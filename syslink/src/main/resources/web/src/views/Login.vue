@@ -80,6 +80,13 @@
                           name: _this.ruleForm2.userName
                       }
                       sessionStorage.setItem('user', JSON.stringify(user));
+                      //存储用户信息
+                      sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo));
+                      let auths = response.data.userInfo.auths;
+                      let uid ={uid:''}; 
+                      uid.uid = response.data.userInfo.profile.iD;
+                      //存储用户id
+                      localStorage.setItem('uid',JSON.stringify(uid));
                       _this.$router.push({path: '/repository/index'});
                  }else{
                      //如果返回500，就在页面上方弹出错误信息

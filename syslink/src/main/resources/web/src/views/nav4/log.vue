@@ -27,14 +27,12 @@
          <el-form-item>
           <el-button type="primary" v-on:click="reset">重置</el-button>
         </el-form-item>
-         <el-form-item>
-          <el-button type="primary" v-on:click="path">重置</el-button>
-        </el-form-item>
+        <!--
        <el-form-item>
            <el-button @click="toggleSelection()">取消选择</el-button>
         </el-form-item>
-
-
+        -->
+       
       
       </el-form>
     </el-col>
@@ -47,11 +45,9 @@
       </el-table-column>
       <el-table-column prop="userName" label="用户名" min-width="120" >
       </el-table-column>
-      <el-table-column prop="realName" label="姓名" min-width="120" >
+      <el-table-column prop="realName" label="全名" min-width="120" >
        </el-table-column>
       <el-table-column prop="userIp" label="用户IP" min-width="160" >
-       </el-table-column>
-      <el-table-column prop="title" label="标题" min-width="120" >
        </el-table-column>
       <el-table-column prop="content" label="内容" min-width="150" >
        </el-table-column>
