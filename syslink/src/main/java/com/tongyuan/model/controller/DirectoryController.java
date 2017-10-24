@@ -285,7 +285,7 @@ public class DirectoryController {
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    @CrossOrigin(origins = "http://gogs.modelica-china.com:80", maxAge = 3600)
+    @CrossOrigin(origins = "http://gogs.modelica-china.com:8080", maxAge = 3600)
     public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 HttpServletRequest request , HttpServletResponse response){
