@@ -1,4 +1,7 @@
 <template>
+    <section >
+
+    <div >
     <el-upload
             class="upload-demo"
             ref="vueFileUploader"
@@ -10,12 +13,14 @@
             :before-upload="beforeUploadFile"
             :auto-upload="true"
     >
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button slot="trigger" size="small" type="primary" >上传文件</el-button>
         <!--<p>{{directoryContent}}</p>-->
         <!--{{bmsg}}-->
         <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
         <!--<div slot="tip" class="el-upload__tip">只能上传zip文件，且不超过500M</div>-->
     </el-upload>
+    </div>
+    </section>
 </template>
 <script>
     import { mapState,mapGetters} from 'vuex'
@@ -35,13 +40,14 @@
             ...mapGetters(['bmsg']),
         },
         methods: {
+            //上传文件
             uploadUrl :function(){
-               return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg
-              //  return "https://jsonplaceholder.typicode.com/posts/"
+                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg
+                //  return "https://jsonplaceholder.typicode.com/posts/"
             },
             submitUpload() {
-         //     this.$refs.vueFileUploader.submit;
-           //     this.$refs.vueFileUploader.autoUpload = true;
+                //     this.$refs.vueFileUploader.submit;
+                //     this.$refs.vueFileUploader.autoUpload = true;
                 this.$refs.vueFileUploader.submit();
             },
             handleRemove(file, fileList) {
@@ -51,13 +57,20 @@
                 console.log(file);
             },
             beforeUploadFile(file){
+                var modelUrl = '/api/repository/add?name=' + this.$data.name +'&fileName=' +file.name.split("\.")[0]
+                this.$http.post(modelUrl)
+                    .then(function (response) {
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
 
                 let fileMAx = 1024 * 1024 *500;
                 if(fileMAx < file.size){
                     this.$message({
                         message: '文件过大，只能上传500M以内！',
                         type: 'warning',
-                        duration: 1000
+                        duration: 2000
                     });
                     abort(file);
                 }
@@ -65,7 +78,7 @@
                     this.$message({
                         message: '请上传压缩文件！',
                         type: 'warning',
-                        duration: 1000
+                        duration: 2000
                     });
                     abort(file);
                 }
@@ -74,7 +87,7 @@
                     this.$message({
                         message: '请上传一个文件！',
                         type: 'warning',
-                        duration: 1000
+                        duration: 2000
                     });
                     fileNub =0;
                     abort(file);
@@ -83,7 +96,7 @@
                     this.$message({
                         message: '请选择一个模型目录！',
                         type: 'warning',
-                        duration: 1000
+                        duration: 2000
                     });
                     abort(file);
                 }

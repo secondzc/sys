@@ -57,12 +57,7 @@
                   <!--<a href="javascript:void(0)" @click="Variable" title="模型组件参数信息">参数信息</a>-->
               </div>
               <div  class="cardButton">
-                  <!--<a class="user username" href="/circuitdigest">-->
                   <a class="user username" href="javascript:void(0)">
-                      <!--<div v-html="'<img class=\'avatar round\' src=\'file:\///C:\/qq.png\'>'" ></div>-->
-                      <!--<img  class='avatar round'   src='item.imageUrl' >-->
-                      <!--<a href="C:/package2.Test2.A.diagram.svg"></a>-->
-                      <!--<img class="avatar round" src="../../assets/test1.png">-->
                       <!--//TODO:用户名-->
                       {{item.type}}
                   </a>
@@ -120,7 +115,6 @@
                       console.log(error);
                   });
           }
-
       },
     methods:{
         //获取用户列表

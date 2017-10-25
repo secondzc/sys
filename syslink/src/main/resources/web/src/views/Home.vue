@@ -13,6 +13,7 @@
 			<el-col :span="8">
 				<a class="item" href="http://gogs.modelica-china.com/#/" id="home-page">首页</a>
 				<a class="item"  href="http://gogs.modelica-china.com:3000/">控制面板</a>
+				<a class="item" href="javascript:void(0)"   @click="toModel">模型</a>
 				<a class="item" href="http://gogs.modelica-china.com:3000/issues">工单管理</a>
 				<a class="item" href="http://gogs.modelica-china.com:3000/pulls">合并请求</a>
 				<a class="item" href="http://gogs.modelica-china.com:3000/explore/repos">探索</a>
@@ -34,25 +35,25 @@
 				</el-dropdown>
 			</el-col>
 		</el-col>
-		<el-col :span="24" class="main">
-			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
-				<!--导航菜单-->
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  @open="handleopen" @close="handleclose" @select="handleselect"
-						 unique-opened router v-show="!collapsed" :collapse="false">
-					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-						<el-submenu :index="index+''" v-if="!item.leaf">
-							<template slot="title">
-								<i :class="item.iconCls"></i>{{item.name}}
-							</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">
-								{{child.name}}
-							</el-menu-item>
-						</el-submenu>
-						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path">
-							<i :class="item.iconCls"></i>{{item.children[0].name}}
-						</el-menu-item>
-					</template>
-				</el-menu>
+		<!--<el-col :span="24" class="main">-->
+			<!--<aside :class="collapsed?'menu-collapsed':'menu-expanded'">-->
+				<!--&lt;!&ndash;导航菜单&ndash;&gt;-->
+				<!--<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  @open="handleopen" @close="handleclose" @select="handleselect"-->
+						 <!--unique-opened router v-show="!collapsed" :collapse="false">-->
+					<!--<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">-->
+						<!--<el-submenu :index="index+''" v-if="!item.leaf">-->
+							<!--<template slot="title">-->
+								<!--<i :class="item.iconCls"></i>{{item.name}}-->
+							<!--</template>-->
+							<!--<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">-->
+								<!--{{child.name}}-->
+							<!--</el-menu-item>-->
+						<!--</el-submenu>-->
+						<!--<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path">-->
+							<!--<i :class="item.iconCls"></i>{{item.children[0].name}}-->
+						<!--</el-menu-item>-->
+					<!--</template>-->
+				<!--</el-menu>-->
 				<!--导航菜单-折叠后-->
 				<ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
 					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
@@ -75,13 +76,13 @@
 </aside>
 <section class="content-container">
 	<div class="grid-content bg-purple-light">
-		<el-col :span="24" class="breadcrumb-container">
-			<el-breadcrumb separator="/" class="breadcrumb-inner">
-				<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-					{{ item.name }}
-				</el-breadcrumb-item>
-			</el-breadcrumb>
-		</el-col>
+		<!--<el-col :span="24" class="breadcrumb-container">-->
+			<!--<el-breadcrumb separator="/" class="breadcrumb-inner">-->
+				<!--<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">-->
+					<!--{{ item.name }}-->
+				<!--</el-breadcrumb-item>-->
+			<!--</el-breadcrumb>-->
+		<!--</el-col>-->
 		<el-col :span="24" class="content-wrapper">
 			<transition name="fade" mode="out-in">
 				<router-view></router-view>
@@ -156,6 +157,10 @@ import Sidebar from './Sidebar'
             gogs :function(){
                 var _this = this;
                 _this.$router.push('/main');
+            },
+            toModel :function () {
+                var _this = this;
+                _this.$router.push('/model/index');
             },
             //折叠导航栏
             collapse:function(){
@@ -235,10 +240,10 @@ import Sidebar from './Sidebar'
 				}
 			}
 			.logo-width{
-				width:230px;
+				width:320px;
 			}
 			.logo-collapse-width{
-				width:60px
+				width:80px
 			}
 			.tools{
 				padding: 0px 23px;
