@@ -9,15 +9,13 @@ import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.enums.ModelClasses;
-import com.tongyuan.model.service.DirectoryService;
-import com.tongyuan.model.service.FileModelService;
-import com.tongyuan.model.service.LearnService;
-import com.tongyuan.model.service.ModelService;
+import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.DirectoryModel;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.FileX;
 import com.tongyuan.util.ResourceUtil;
+import com.tongyuan.webservice.CommonServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,8 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 /** 教程页面
@@ -49,16 +49,16 @@ public class DirectoryController {
     @Autowired
     private FileX fileX;
     @Autowired
-    private com.tongyuan.webservice.CommonServiceImp CommonServiceImp;
+    private CommonServiceImp CommonServiceImp;
     @Autowired
     private ModelService modelService;
     @Autowired
     private ModelController modelController;
     @Autowired
-    private GUserService userService;
+    private GUserService gUserService;
 
 
-    private Date nowDate = new Date();
+
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -160,7 +160,7 @@ public class DirectoryController {
 
     //把项目在数据库中仿真，描述整个模型的层次结构
     public boolean createModel(File parentF, String filePath, String rootPath, String description){
-
+         Date nowDate = new Date();
         boolean result = false;
         try{
             //获取当前的路径
@@ -358,7 +358,7 @@ public class DirectoryController {
             }
             File xmlFilePath = new File(xmlPath);
             String[] subFiles = xmlFilePath.list();
-            GUser user = userService.querListByName(name);
+            GUser user =  gUserService.querListByName(name);
             Model model = new Model();
             model.setName(subFiles[0].split("\\.")[0]);
             model.setFileId(directory.getId());
@@ -367,6 +367,7 @@ public class DirectoryController {
             model.setModelFilePath(filePath);
             model.setScope(false);
             model.setUserId(user.getID());
+            model.setCreateTime(new Date());
            // model.setUserId(1);
             model.setDeleted(false);
             if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
@@ -402,20 +403,20 @@ public class DirectoryController {
 
             //更新模型的层次结构
             //获取package下面的所有model
-            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-            for (Model modelParent: modelList) {
-                for (Model modelChild: modelList) {
-                    int modelChildLen = modelChild.getName().split("\\.").length;
-                    //匹配model名称是否有父子关系
-                    int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
-                    if( modelChildLen> 1){
-                        if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
-                            modelParent.setParentId(modelChild.getId());
-                            modelService.update(modelParent);
-                        }
-                    }
-                }
-            }
+//            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
+//            for (Model modelParent: modelList) {
+//                for (Model modelChild: modelList) {
+//                    int modelChildLen = modelChild.getName().split("\\.").length;
+//                    //匹配model名称是否有父子关系
+//                    int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
+//                    if( modelChildLen> 1){
+//                        if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
+//                            modelParent.setParentId(modelChild.getId());
+//                            modelService.update(modelParent);
+//                        }
+//                    }
+//                }
+//            }
     //        this.doCmd(name,fileXmlPath,fileName);
             result = true;
         } catch (IOException e) {
@@ -596,14 +597,14 @@ public class DirectoryController {
   * name 是上传者
   * fileXmlPath 是文件所在位置
   * filName 为文件名称
-
+  * */
     public void doCmd(String name, String fileXmlPath,String fileName){
         JSONObject jo = new JSONObject();
-        Map<String,Object> params = new HashMap<>();
-        params.put("name",name);
-        User userWeb = userService.querUserByName(params);
-        String userName = userWeb.getUserName();
-        String password = userWeb.getPassWord();
+//        Map<String,Object> params = new HashMap<>();
+//        params.put("name",name);
+        GUser userWeb = gUserService.querListByName(name);
+        String userName = userWeb.getLowerName();
+        String password = userWeb.getPasswd();
         String addr = "";
         try {
             addr = InetAddress.getLocalHost().getHostAddress();//获得本机IP
@@ -617,7 +618,7 @@ public class DirectoryController {
                 " & \"C:/Program Files (x86)/Git/bin/git.exe\" config --global credential.helper store & \"C:/Program Files (x86)/Git/bin/git.exe\" push origin master"};
         excuteCmd_multiThread(cmd,"GBK");
     }
-* */
+
 
 
 
@@ -670,5 +671,41 @@ public class DirectoryController {
         }
     }
 
+    @RequestMapping(value = "/getTreeItem",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getTreeItem(@RequestParam(value = "parent_id",required = false)Long parent_id,
+                           HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        //点击树节点父类列表
+        List<Directory> treeItemList = new ArrayList<>();
+        try {
+            //所有的目录列表
+            List<Directory> allDirectory = directoryService.findAllDirectory();
+            //添加节点父类列表
+            addTreeItem(parent_id, treeItemList, allDirectory);
+            //所需的列表需要倒序
+            Collections.reverse(treeItemList);
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("treeItem",treeItemList);
+        return jo;
+    }
+
+    public void addTreeItem(Long parentId,List<Directory> treeItemList,List<Directory> allDirectory){
+        for (Directory directory: allDirectory) {
+            if(directory.getId() == parentId){
+                treeItemList.add(directory);
+                addTreeItem(directory.getParentId(),treeItemList,allDirectory);
+            }
+        }
+    }
 }
 

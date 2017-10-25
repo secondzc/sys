@@ -27,6 +27,24 @@ public class ModelWeb {
     private String userName;
     //directoryparentId
     private  Long directoryParentId;
+    private String createTime;
+    private Long uploadTime;
+
+    public Long getUploadTime() {
+        return uploadTime;
+    }
+
+    public void setUploadTime(Long uploadTime) {
+        this.uploadTime = uploadTime;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public Long getDirectoryParentId() {
         return directoryParentId;

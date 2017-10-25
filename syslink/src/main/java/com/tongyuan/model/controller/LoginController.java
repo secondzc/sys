@@ -104,7 +104,7 @@ public class LoginController extends BaseController {
               session.setAttribute("base_path", request.getContextPath());
               String lginIp = IpUtil.getIpAddr(request);
               Date loginDate = DateUtil.getTimestamp();
-              userService.updateLoginstate(user.getID(),lginIp,loginDate);
+        //      userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
 
               LoginedUserModel loginedUser =userService.CreateLoginedUser(user);

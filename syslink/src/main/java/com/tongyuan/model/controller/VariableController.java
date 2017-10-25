@@ -38,7 +38,7 @@ public class VariableController {
     @RequestMapping(value = "/variableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject variableTree(@RequestParam(value = "modelId",required = false)Long modelId,
-                                   HttpServletRequest request , HttpServletResponse response){
+                                HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //在这个模型下的所有model（modelList）
         List<VariableTreeObj> modelTreeList = new ArrayList<>();
@@ -90,7 +90,7 @@ public class VariableController {
     /*
     *获取这个package下的所有model
      */
-     public void getSearchModel(Long modelId, List<Model> allModel, List<VariableTreeObj> modelTreeList, List<VariableTreeObj> modelList){
+     public void getSearchModel(Long modelId,List<Model> allModel,List<VariableTreeObj> modelTreeList,List<VariableTreeObj> modelList){
 
          for(int i=0; i<allModel.size(); i++){
              if(allModel.get(i).getParentId() == modelId) {
@@ -117,7 +117,7 @@ public class VariableController {
     /*
     * 获取这个模型下的所有组件生成树状图
     * */
-    public void getCompFromModel(Long currModelId, List<Component> allComp, List<VariableTreeObj> compTreeList, List<Variable> allVariable){
+    public void getCompFromModel(Long currModelId,List<Component> allComp,List<VariableTreeObj> compTreeList,List<Variable> allVariable){
         //获取对应model 的所有组件
         List<Component> searchComp = new ArrayList<>();
             for(int i= 0;i<allComp.size();i++){
@@ -150,7 +150,7 @@ public class VariableController {
     /*
     * 添加组件的子组件
     * */
-    public void addChildComp(Long compId, List<Component> allComp, List<VariableTreeObj> compChildList, List<Variable> allVariable){
+    public void addChildComp(Long compId,List<Component> allComp,List<VariableTreeObj> compChildList,List<Variable> allVariable){
         for (Component component: allComp) {
             if(component.getParentId() == compId){
                 //组件子组件
@@ -185,7 +185,7 @@ public class VariableController {
 
     }
 
-    public void doSetVarTree(VariableTreeObj varChild, Variable variable){
+    public void doSetVarTree(VariableTreeObj varChild,Variable variable){
         varChild.setId(variable.getId());
         varChild.setName(variable.getName());
         varChild.setType(variable.getType());

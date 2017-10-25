@@ -11,6 +11,7 @@ import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.pageModel.TreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
+import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class ModelController {
     @Autowired
     private DirectoryService directoryService;
     @Autowired
-    private GUserService userService;
+    private GUserService gUserService;
     @Autowired
     private FileModelService fileModelService;
     @Autowired
@@ -51,7 +52,7 @@ public class ModelController {
     @Autowired
     private ComponentService componentService;
 
-    public void insertData(Map.Entry<String,Map> entry, Map svgPath, Model nullModel, FileModel directory, Long directoryId){
+    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
         //验证model
@@ -75,7 +76,7 @@ public class ModelController {
         insertVaiable(xmlMap);
     }
 
-    public void analysisXmlMap(Map<String,Object> xmlMap, Model model, Map<String,String> svgPath){
+    public void analysisXmlMap(Map<String,Object> xmlMap,Model model,Map<String,String> svgPath){
         for (Map.Entry<String ,Object> entry : xmlMap.entrySet()) {
             if("ModelName".equals(entry.getKey())){
                 String type = "";
@@ -398,12 +399,16 @@ public class ModelController {
             }
             for (int i = 0; i <= searchModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
+                GUser user = gUserService.queryById(searchModel.get(i).getUserId());
                 modelWeb.setIndex(searchModel.get(i).getId());
                 modelWeb.setName(searchModel.get(i).getName());
+                modelWeb.setUserName(user.getLowerName());
 //                modelWeb.setImageUrl("../../assets/test1.png");
                 if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+searchModel.get(i).getDiagramSvgPath().substring(7));
                 }
+                modelWeb.setUploadTime(searchModel.get(i).getCreateTime().getTime());
+                modelWeb.setCreateTime(DateUtil.format(searchModel.get(i).getCreateTime(),"yyyy-MM-dd"));
                 modelWeb.setDiscription(searchModel.get(i).getDiscription());
                 modelWeb.setType(searchModel.get(i).getType());
     //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
@@ -426,7 +431,7 @@ public class ModelController {
     @RequestMapping(value = "/modelVariable",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject modelVariable(@RequestParam(value = "modelId",required = false)String modelId,
-                                    HttpServletRequest request , HttpServletResponse response){
+                           HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //获取model对象
         Model model =  new Model();
@@ -435,7 +440,7 @@ public class ModelController {
         try {
             model = modelService.queryModelById(Long.parseLong(modelId));
             variableList = variableService.queryListByModelId(Long.parseLong(modelId));
-            GUser user = userService.queryById(model.getUserId());
+            GUser user = gUserService.queryById(model.getUserId());
             List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
             modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
             modelWeb.setIndex(Long.parseLong(modelId));
@@ -444,7 +449,7 @@ public class ModelController {
             modelWeb.setClasses(model.getClasses());
             modelWeb.setImport(model.getImport());
             modelWeb.setExtends(model.getExtends());
-            modelWeb.setUserName(user.getName());
+            modelWeb.setUserName(user.getLowerName());
             modelWeb.setDiscription(model.getDiscription());
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
                 modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
@@ -473,7 +478,7 @@ public class ModelController {
     @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
-                                HttpServletRequest request , HttpServletResponse response){
+                           HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //查询到所有的model
         List<Model> allModel = modelService.findAllModel();
@@ -523,7 +528,7 @@ public class ModelController {
 
 
     //获取点击树后所有的模型对象
-    public static void getModelTree(Long directoryId, List<Directory> allDirectory, List<Long> directoryIdList){
+    public static void getModelTree(Long directoryId,List<Directory> allDirectory,List<Long> directoryIdList){
         for(int i= 0; i< allDirectory.size() ; i++){
             if(allDirectory.get(i).getParentId() == directoryId){
                 directoryIdList.add(allDirectory.get(i).getId());
@@ -533,7 +538,7 @@ public class ModelController {
     }
 
     //获取model树所有子节点的id
-    public static void getModelChildTree(Long modelId, List<Model> allModel, List<TreeObj> treeChild ){
+    public static void getModelChildTree(Long modelId,List<Model> allModel,List<TreeObj> treeChild ){
         for(int i=0; i<allModel.size(); i++){
             if(allModel.get(i).getParentId() == modelId){
                  TreeObj treeObj = new TreeObj();
@@ -553,7 +558,7 @@ public class ModelController {
     /*
     * 用来解析xml的参数存储
     * */
-    public  void analysis(Map<String,Object> xmlData, Model model, Map<String,Long> compName, Map<String,Long> variableId){
+    public  void analysis(Map<String,Object> xmlData,Model model,Map<String,Long> compName,Map<String,Long> variableId){
         //存储变量的parentName 和组件id（包含变量的组件）
         Map<String,Long> variableName = new HashMap<>();
         if(xmlData.get("IsVariable").equals("True")){
@@ -645,7 +650,7 @@ public class ModelController {
     }
 
     //解析组件
-    public void analysisComponent(HashMap<String, Object> map, Model model, Map<String,Long> compName, Map<String,Long> variableId){
+    public void analysisComponent(HashMap<String, Object> map, Model model,Map<String,Long> compName,Map<String,Long> variableId){
         //组件内容
         List<HashMap<String,Object>>  componentList = new ArrayList<>();
         String type = "";
@@ -702,7 +707,7 @@ public class ModelController {
         }
 
         //组件存在conpent和componentVar同时存在
-    public void  analysisComponentVar(HashMap<String, Object> map, Model model, Map<String,Long> compName, Map<String,Long> variableId){
+    public void  analysisComponentVar(HashMap<String, Object> map, Model model,Map<String,Long> compName,Map<String,Long> variableId){
                 //组件内容
         List<HashMap<String,Object>>  componentList = new ArrayList<>();
         //获取组件内容插入到数据库
