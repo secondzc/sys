@@ -11,7 +11,9 @@ import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.GUserWarpper;
 import com.tongyuan.util.Convert;
+import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.EncodePasswd;
+import com.tongyuan.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -371,9 +370,24 @@ public class UserController extends BaseController {
         c.setPath("/");
         response.addCookie(c);
 
+
+        HttpSession session = request.getSession();
+
+        //  session.setAttribute("user", user);
+        session.setAttribute("uid",user.getID());
+        session.setAttribute("user", user);
+        session.setAttribute("base_path", request.getContextPath());
+        String lginIp = IpUtil.getIpAddr(request);
+        Date loginDate = DateUtil.getTimestamp();
+        userService.updateLoginstate(user.getID(),lginIp,loginDate);
+
+
+        operationlogService.addLog("登录","登录系统",request);
+
         try
         {
             loginedUserModel = userService.CreateLoginedUser(user);
+            setSessionUser(request,loginedUserModel);
         }
         catch (Exception e)
         {

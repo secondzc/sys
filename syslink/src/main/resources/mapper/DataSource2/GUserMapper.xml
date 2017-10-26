@@ -186,6 +186,22 @@
 
     </select>
 
+    <select id="nameJudge" resultMap="mapResultMap" resultType="map" parameterType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM USER
+        WHERE type = 0
+        and name = #{name}
+    </select>
+
+    <select id="emailJudge" resultMap="mapResultMap" resultType="map" parameterType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM USER
+        WHERE type = 0
+        and email = #{email}
+    </select>
+
     <select id="querySimpleUser" resultMap="mapResultMap" resultType="map" parameterType="map">
         SELECT
         <include refid="simpleColumnList" />

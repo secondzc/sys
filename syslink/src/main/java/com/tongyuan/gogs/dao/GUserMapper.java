@@ -33,7 +33,9 @@ public interface GUserMapper {
 
     List<Map<String,Object>> queryUser(Map<String, Object> map);
 
+    List<Map<String,Object>> nameJudge(Map<String, Object> map);
 
+    List<Map<String,Object>> emailJudge(Map<String, Object> map);
 
     List<Map<String,Object>> querySimpleUser(Map<String, Object> map);
 

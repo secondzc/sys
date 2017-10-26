@@ -35,6 +35,8 @@ public class GUserServiceImpl implements GUserService {
     AuthMapper authMapper;
     @Autowired
     RoleAuthMapper roleAuthMapper;
+    @Autowired
+    UserDepartMapper userDepartMapper;
 
 
 
@@ -174,7 +176,14 @@ public class GUserServiceImpl implements GUserService {
         map.put("numMembers",1);
         map.put("avatar","");
         map.put("avatarEmail","");
-        return this.gUserMapper.add(map);
+        boolean a = this.gUserMapper.add(map);
+        UserDepart userDepart = new UserDepart();
+        userDepart.setUid(Long.parseLong(map.get("id").toString()));
+        userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
+        boolean b = this.userDepartMapper.add(userDepart);
+        return  a&b;
+
+
     }
 
 
@@ -188,7 +197,12 @@ public class GUserServiceImpl implements GUserService {
         {
             map.put("lowerName",map.get("name").toString().toLowerCase());
         }
-        return this.gUserMapper.updateUser(map);
+        UserDepart userDepart = userDepartMapper.queryByUid(Long.parseLong(map.get("id").toString()));
+        userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
+        boolean a =userDepartMapper.update(userDepart);
+        boolean b =gUserMapper.updateUser(map);
+
+        return a&b;
     }
 
     @Override
@@ -212,7 +226,7 @@ public class GUserServiceImpl implements GUserService {
 
         mapName.put("name",map.get("name").toString());
 
-        List<Map<String,Object>> name  =  gUserMapper.queryUser(mapName);
+        List<Map<String,Object>> name  =  gUserMapper.nameJudge(mapName);
 
         return name.size()>0;
 
@@ -223,7 +237,7 @@ public class GUserServiceImpl implements GUserService {
     {
         Map<String,Object> mapEmail = new HashMap<>();
         mapEmail.put("email",map.get("email"));
-        List<Map<String,Object>> email =  gUserMapper.queryUser(mapEmail);
+        List<Map<String,Object>> email =  gUserMapper.emailJudge(mapEmail);
         return email.size()>0;
     }
 

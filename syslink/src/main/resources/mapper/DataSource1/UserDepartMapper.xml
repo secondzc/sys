@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.UserDepartMapper">
+
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.UserDepart">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="depart_id" property="departId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,uid,depart_id
+    </sql>
+    <insert id="add"  parameterType="com.tongyuan.model.domain.UserAuth"   >
+        INSERT INTO user_depart (uid, depart_id) VALUES
+        (#{uid}, #{departId})
+    </insert>
+
+
+    <update id="update"  parameterType="map">
+        UPDATE user_depart SET depart_id=#{departId}
+        WHERE uid=#{uid}
+    </update>
+    <select id="queryByUid" resultMap="baseResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM user_depart
+        WHERE uid = #{uid}
+    </select>
+    <select id="queryByDepartId" resultMap="baseResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM user_depart
+        WHERE depart_id = #{departId}
+    </select>
+    <delete id="deleteByUid" parameterType="long">
+        delete from user_deaprt where uid=#{uid}
+    </delete>
+    <delete id="deleteByDepartId" parameterType="long">
+        delete from user_depart where depart_id=#{departId}
+    </delete>
+
+
+</mapper>
