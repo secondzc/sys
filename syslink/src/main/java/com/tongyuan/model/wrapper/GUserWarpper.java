@@ -64,7 +64,7 @@ public class GUserWarpper extends BaseControllerWarpper {
         List<Auth>auths = new ArrayList<>();
         for(UserAuth userAuth:userAuths)
         {
-            Auth auth =    authMapper.queryById(userAuth.getAuthId());
+            Auth auth =  authMapper.queryById(userAuth.getAuthId());
             auths.add(auth);
         }
 

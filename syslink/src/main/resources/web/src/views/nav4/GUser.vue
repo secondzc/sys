@@ -1,9 +1,14 @@
 <template>
   <section>
-    <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+
+<!--工具条-->
+
+
+
+
+    <el-col :span="24" class="toolbar" style="padding-bottom:0px;">
   
-      <el-form :inline="true" :model="filters">
+      <el-form :inline="true" :model="filters" >
       
         <el-form-item>
           <el-input v-model="filters.name" placeholder="用户名/全名/邮箱"></el-input>
@@ -16,18 +21,46 @@
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" @click="handleAdd"  v-show="func.authJudge('management_user_add')">新增</el-button>
+          <el-button type="primary" @click="handleAdd"  >新增</el-button>
         </el-form-item>
       </el-form>
      
     </el-col>
+  <el-col :span="6">
+   
+
+
+   <zk-table
+      ref="table"
+      sum-text="sum"
+      index-text="#"
+      :data="departs"
+      :columns="columns"
+      :stripe="false"
+      :border="false"
+      :show-header="true"
+      :show-summary="false"
+      :show-row-hover="true"
+      :show-index="false"
+      :tree-type="true"
+      :is-fold="false"
+      :expand-type="false"
+      :selection-type="false"
+      @row-click="handleDepart"
+      >
+     </zk-table>
+
+
+  <div class="grid-content bg-purple"></div></el-col>
+  <el-col :span="18"><div class="grid-content bg-purple">
+
 
     <!--列表-->
-    <el-table :data="users" highlight-current-row  @selection-change="selsChange"     style="width: 100%;">
+    <el-table :data="users" highlight-current-row    @selection-change="selsChange" style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
-          <!--
-        <el-table-column type="expand">
+          
+      <el-table-column type="expand">
     
       <template slot-scope="props">
       
@@ -68,15 +101,17 @@
       </template>
 
     </el-table-column>
-          -->
-      <el-table-column prop="id" label="ID" width="60">
+      
+      <el-table-column prop="id" label="ID" width="60" sortable>
       </el-table-column>
       <el-table-column prop="name" label="用户名" min-width="120" sortable>
+      </el-table-column>
+       <el-table-column prop="departName" label="部门" min-width="120" sortable>
       </el-table-column>
       <el-table-column prop="email" label="邮箱" min-width="120" sortable>
      
        </el-table-column>
-      <el-table-column prop="isActive"  label="已激活" min-width="120" sortable>
+    <!--  <el-table-column prop="isActive"  label="已激活" min-width="120" sortable>
        <template  slot-scope="props">
          <i v-if=props.row.isActive class="el-icon-check"></i>
          <i v-else=props.row.isActive class="el-icon-close"></i>
@@ -87,6 +122,15 @@
          <i v-if=props.row.isAdmin class="el-icon-check"></i>
          <i v-else=props.row.isAdmin class="el-icon-close"></i>
       </template>
+
+      -->
+        <el-table-column prop="prohibitLogin"  label="允许登录" min-width="120" sortable>
+       <template  slot-scope="props">
+         <i v-if=!props.row.prohibitLogin class="el-icon-check"></i>
+         <i v-else class="el-icon-close"></i>
+      </template>
+
+
        </el-table-column>
       <el-table-column prop="numRepos" label="仓库数" min-width="160" sortable  >
        </el-table-column>
@@ -101,11 +145,10 @@
     选项<i class="el-icon-caret-bottom el-icon--right"></i>
   </el-button>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item v-show="func.authJudge('management_user_edit')">  <el-button  type="text" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button></el-dropdown-item>
-    <el-dropdown-item v-show="func.authJudge('management_user_delete')">  <el-button type="text"  size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button></el-dropdown-item>
-    <el-dropdown-item v-show="func.authJudge('management_user_role')">  <el-button   type="text" size="small" @click="handleRole(scope.$index, scope.row)">分配角色</el-button></el-dropdown-item>
-    <el-dropdown-item v-show="func.authJudge('management_user_auth')">  <el-button   type="text" size="small" @click="handleAuth(scope.$index, scope.row)">分配权限</el-button></el-dropdown-item>
-    
+    <el-dropdown-item >  <el-button  type="danger"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button></el-dropdown-item>
+    <el-dropdown-item >  <el-button  type="text" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button></el-dropdown-item>
+    <el-dropdown-item >  <el-button  type="text" size="small" @click="handleRole(scope.$index, scope.row)">分配角色</el-button></el-dropdown-item>
+    <el-dropdown-item >  <el-button  type="text" size="small" @click="handleAuth(scope.$index, scope.row)">分配权限</el-button></el-dropdown-item> 
   </el-dropdown-menu>
   </el-dropdown>
 
@@ -136,11 +179,21 @@
      <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
     </el-col>
 
+  </div></el-col>
+</el-row>
+
+    
+
     <!--编辑界面-->
     <el-dialog title="编辑用户信息" v-model="editFormVisible" :close-on-click-modal="false"  >
         <el-form :model="editForm" label-width="100px" :rules="addFormRules" ref="editForm"    >
         <el-form-item label="用户名" prop="name"   >
           {{editForm.name}}
+        </el-form-item>
+
+         <el-form-item label="部门" prop="departId"   >
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.departId"   change-on-select   :show-all-levels="false">
+        </el-cascader>
         </el-form-item>
         
         <el-form-item label="自定义名称" prop="fullName"   >
@@ -201,6 +254,10 @@
       <el-form-item label="邮箱" prop="email"    :rules="[ { required:true, type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }]"  >
         <el-input v-model="addForm.email" auto-complete="off" ></el-input>
         </el-form-item>
+       <el-form-item label="部门" prop="departId"   >
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.departId"   change-on-select   :show-all-levels="false">
+        </el-cascader>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -224,7 +281,7 @@
 
      <!--分配权限界面-->
     <el-dialog title="分配权限" v-model="permissionVisible"  :close-on-click-modal="false"    >
-   <el-form :model="permission" label-width="80px"  ref="permission"    >
+   <el-form :model="permission" label-width="100px"  ref="permission"    >
 
   <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps">
   </el-tree>
@@ -235,6 +292,14 @@
         <el-button type="primary" @click.native="permissionSubmit" :loading="permissionLoading">提交</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="模型访问控制" :close-on-click-modal="false"    >
+
+
+
+    </el-dialog>
+
+
 
 
   </section>
@@ -268,10 +333,19 @@
         }
       };
       return {
-        buttons:{
-          auth:'management_user_auth'
-        },
-
+        props:{value:'id',label:'name',children:'children'},
+        options:[],
+        columns: [
+          {
+            label: '部门名称',
+            prop: 'name',
+           minWidth: '300px',
+         
+           }
+         
+        ],
+        departs:[],
+       
         data2:[],
        defaultProps: {
         children: 'children',
@@ -356,6 +430,7 @@
           email: '',
           passwd:'',
           checkPass: '',
+          departId:''
          
 
         },
@@ -384,17 +459,16 @@
     },
     methods: {
 
-       judge(code)
-       {
-          this.func.authJudge(code);
-       },
+         handleChange(value) {
+        console.log(value);
+      },
 
-       getCheckedNodes() {
+      getCheckedNodes() {
         return this.$refs.tree.getCheckedNodes();
       },
-      setCheckedNodes(nodes) {
-         this.$refs.tree.setCheckedNodes(nodes);
-      },
+  //    setCheckedNodes(nodes) {
+  //       this.$refs.tree.setCheckedNodes(nodes);
+   //   },
 
       getUserRoles(para){
 
@@ -563,21 +637,14 @@
         handleAuth(index,row)
       {
          this.ids.uid=row.id;
+  //       this.setCheckedNodes(row.auths);
          this.permissionVisible=true;
-         this.setCheckedNodes(row.auths);
-       
       },
       //显示新增界面
       handleAdd: function () {
         this.addFormVisible = true;
         this.addForm = {
-          userName: '',
-          realName: '',
-          age: '',
-          birth: '',
-          addr: '',
-          pass:'',
-          checkPass: ''
+           
         };
       },
        handleEdit: function (index, row) {
@@ -588,10 +655,12 @@
       editSubmit: function () {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+         
               this.editLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
+              para.departId=para.departId[para.departId.length-1];
+
            
               this.$http({
                 url:'/api/user/updateGUser',
@@ -620,7 +689,7 @@
                 this.editFormVisible = false;
                 this.getUsers();
               });
-            });
+            
           }
         });
       },
@@ -630,7 +699,10 @@
           if (valid) {
               this.addLoading = true;
               //NProgress.start();
+              console.log(this.addForm);
               let para = Object.assign({}, this.addForm);      
+              para.departId=para.departId[para.departId.length-1];
+              console.log(para);
               this.$http({method:'post',
                 url:'api/user/addGuser',
                 data:para}).then((res)=>{
@@ -753,7 +825,7 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { ids: ids };
-          this.$http({url:'/api/user/deleteUsers',method:'post',data:para})
+          this.$http({url:'/api/user/deleteGUsers',method:'post',data:para})
           .then((res) => {
             this.listLoading = false;
             //NProgress.done();
@@ -777,14 +849,43 @@
         }).catch(() => {
 
         });
+      },
+       getDeparts()
+      {
+          
+          var _this = this;
+          _this.$http.post('api/depart/list')
+              .then(function (response) {
+
+                _this.departs = response.data.depart;
+                _this.options = response.data.depart;
+            
+
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+      },
+      handleDepart(row, rowIndex, $event)
+      {
+        console.log(row);
+      //  console.log(rowIndex);
+       console.log(rowIndex);
+        console.log(event);
+        console.log(event.target);
+    
+
+     //   this.getDeparts();
       }
+
 
     },
     mounted() {
       this.getUsers();
       this.getRoles();
       this.getGroups();
-      this.func.changeDate();
+      this.getDeparts();
+    //  this.func.changeDate();
 
   //    this.permissonJudge();
     }

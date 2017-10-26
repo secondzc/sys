@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.DirectoryAuthMapper">
+
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.DirectoryAuth">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,uid,directory_id
+    </sql>
+    <insert id="add"  parameterType="com.tongyuan.model.domain.UserAuth"   >
+        INSERT INTO directory_auth (uid, directory_id) VALUES
+        (#{uid}, #{directoryId})
+    </insert>
+    <select id="queryByUid" resultMap="baseResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory_auth
+        WHERE uid = #{uid}
+    </select>
+    <delete id="deleteByUid" parameterType="long">
+        delete from user_deaprt where uid=#{uid}
+    </delete>
+
+
+
+</mapper>

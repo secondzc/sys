@@ -38,7 +38,7 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="logs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;">
+    <el-table :data="logs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;"  @selection-change="selsChange" >
       <el-table-column type="selection" min-width="100">
       </el-table-column>
       <el-table-column type="index" min-width="120">
@@ -55,6 +55,7 @@
       </el-table-column>
     </el-table>
 
+
     <!--工具条-->
     <el-col :span="24" class="toolbar">
      
@@ -67,18 +68,20 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="pager.total">
     </el-pagination>
+    <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
     </el-col>
 
-  
 
-  
   </section>
 </template>
 
 <script>
   import util from '../../common/js/util'
 
+
+
   export default {
+
     data() {
       return {
           pickerOptions2: {
@@ -124,9 +127,77 @@
     //    total: 0,
  //       page: 1,
         listLoading: false,
+        sels:[]
       }
     },
     methods: {
+      ccc()
+      {
+         webix.ui({
+        container:"testA",
+        view:"treetable",
+        columns:[
+          { id:"id",  header:"", css:{"text-align":"right"},    width:50},
+          { id:"value", header:"Film title",  width:250,
+            template:"{common.treetable()} #value#" },
+          { id:"chapter", header:"Mode",  width:200}
+        ],
+        autoheight:true,
+        autowidth:true,
+
+        data: [
+          { "id":"1", "value":"The Shawshank Redemption", "open":true, "data":[
+            { "id":"1.1", "value":"Part 1", "chapter":"alpha"},
+            { "id":"1.2", "value":"Part 2", "chapter":"beta", "open":true, "data":[
+              { "id":"1.2.1", "value":"Part 1", "chapter":"beta-twin"},
+              { "id":"1.2.2", "value":"Part 1", "chapter":"beta-twin"}
+            ]},
+            { "id":"1.3", "value":"Part 3", "chapter":"gamma" }
+          ]},
+          { "id":"2", "value":"The Godfather", "data":[
+            { "id":"2.1", "value":"Part 1", "chapter":"alpha" },
+            { "id":"2.2", "value":"Part 2", "chapter":"beta" }
+          ]}
+        ]
+      }); 
+      },
+      bbb()
+      {
+         var zTreeObj;
+        var setting = {};
+          var zNodes = [
+      {name:"test1", open:true, children:[
+      {name:"test1_1"}, {name:"test1_2"}]},
+      {name:"test2", open:true, children:[
+      {name:"test2_1"}, {name:"test2_2"}]}
+   ];
+
+     zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+     
+
+      $( "#tabs" ).tabs();
+      $( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
+      .removeClass( "ui-corner-all ui-corner-top" )
+      .addClass( "ui-corner-bottom" );
+    // 移动导航到底部
+    $( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
+
+
+      },
+
+      aaa()
+      {
+    //    $( '#cbp-contentslider').cbpContentSlider( );
+       
+      },
+       selsChange: function (sels) {
+        this.sels = sels;
+      },
+
+      test()
+      {
+         $( "#date" ).datepicker();
+      },
        toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -198,11 +269,43 @@
           .catch(function (error) {
               console.log(error);
           });
+      },
+      abc()
+      {
+        console.log($("#test").val());
+      },
+       batchRemove: function () {
+        var ids = this.sels.map(item => item.id);
+
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { ids: ids };
+          this.$http({url:'/api/operationlog/deleteLogs',method:'post',data:para})
+          .then((res) => {
+            this.listLoading = false;
+            //NProgress.done();
+           
+           
+            this.getLogs();
+          });
+        }).catch(() => {
+
+        });
       }
+
  
     },
     mounted() {
       this.getLogs();
+      this.abc();
+      this.test();
+      this.aaa();
+      this.bbb();
+      this.ccc();
+
     }
   }
 

@@ -48,10 +48,13 @@ import OrgMange from './views/nav4/OrgMange.vue'
 import error401 from './views/401.vue'
 import error404 from './views/404.vue'
 
+import depart from './views/nav4/depart.vue'
+import Sidebar from './views/Sidebar.vue'
+import corporate from './views/corporate.vue'
 import Vue from 'vue'
 import Router from 'vue-router'
 
-/**
+
 Vue.use(Router)
 
 
@@ -59,25 +62,25 @@ Vue.use(Router)
 export let  commonRoutes = [
     {
         path: '',
-        component: Home,
+        component: corporate,
         name: '审签管理',
         iconCls: 'el-icon-setting',//图标样式class
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: 'setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
-            { path: 'mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
+            { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
+            { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
         ]
     },
     {
         path: '',
-        component: Home,
+        component: corporate,
         name: '我的审签',
         iconCls: 'el-icon-star-on',//图标样式class
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
-            {path:'template',component:template,name:'我的模板'},
-            {path:'checkor',component:checkor,name:'我的待办'},
-            {path:'mySubmit',component:mySubmit,name:'我的提交'},
+            {path:'/template',component:template,name:'我的模板'},
+            {path:'/checkor',component:checkor,name:'我的待办'},
+            {path:'/mySubmit',component:mySubmit,name:'我的提交'},
         ]
     },
     {
@@ -86,6 +89,7 @@ export let  commonRoutes = [
         name: '',
         hidden: true
     },
+
     {
         path: '/404',
         component: NotFound,
@@ -95,13 +99,13 @@ export let  commonRoutes = [
     //{ path: '/main', component: Main },
     {
         path: '',
-        component: Home,
+        component: corporate,
         name: '我的项目',
         iconCls: 'el-icon-menu',
         leaf: true,//只有一个节点
         noDropdown: true,
         children: [
-            { path: 'repository/index', component: Repository, name: '我的项目' }
+            { path: '/repository/index', component: Repository, name: '我的项目' }
         ]
     },
     {
@@ -109,20 +113,19 @@ export let  commonRoutes = [
         component: Home,
         name: '模型',
         iconCls: 'el-icon-document',
-     //   leaf: true,//只有一个节点
-        noDropdown: true,
+        leaf: true,//只有一个节点
         children: [
-            { path: 'model/index', component: Model, name: '我的模型' },
-            { path: 'model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
-            { path: 'model/modelCont', component: modelCont, name: '模型信息'},
+            { path: '/model/index', component: Model, name: '我的模型' },
+            { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
+            { path: '/model/modelCont', component: modelCont, name: '模型信息'},
             // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
-            { path: 'model/packageDiagram', component: packageDiagram, name: '包视图'},
-            { path: 'model/packageDiagramModel', component: packageDiagramModel, name: '包视图组件信息' },
-            { path: 'model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
+            { path: '/model/packageDiagram', component: packageDiagram, name: '包视图'},
+            { path: '/model/packageDiagramModel', component: packageDiagramModel, name: '包视图组件信息' },
+            { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
                 iconCls: 'el-icon-document',
                 leaf: true,//只有一个节点
                 children: [
-                    { path: 'model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+                    { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
                     ]
             },
             // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
@@ -130,62 +133,60 @@ export let  commonRoutes = [
     },
     {
         path: '',
-        component: Home,
+        component: corporate,
         name: '仿真',
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         noDropdown: true,
         children: [
             // { path: '/page6', component: Page6, name: '我的仿真' }
-            { path: 'nav3/index', component: FileContent, name: '我的仿真' }
+            { path: '/nav3/index', component: FileContent, name: '我的仿真' }
         ]
     },
     {
         path: '',
-        component: Home,
+        component: corporate,
         name: '分享',
         noDropdown: true,
         iconCls: 'el-icon-share',
         leaf: true,//只有一个节点
         children: [
-            { path: 'page4', component: Page4, name: '我的分享' }
+            { path: '/page4', component: Page4, name: '我的分享' }
         ]
     },
     {
         path: '收藏',
-        component: Home,
+        component: corporate,
         name: '我的收藏',
         noDropdown: true,
         iconCls: 'el-icon-star-on',//图标样式class
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
-            { path: 'table', component: Table, name: '项目' },
-            { path: 'form', component: Form, name: '模型' },
-            { path: 'user', component: user, name: '仿真' },
+            { path: '/table', component: Table, name: '项目' },
+            { path: '/form', component: Form, name: '模型' },
+            { path: '/user', component: user, name: '仿真' },
         ]
     },
     {
         path: '',
-        component: Home,
+        component: corporate,
         name: '回收站',
         iconCls: 'el-icon-delete',
         leaf: true,//只有一个节点
-        noDropdown: true,
         children: [
-            { path: 'page6', component: Page6, name: '回收站' }
+            { path: '/page6', component: Page6, name: '回收站' }
         ]
     },
       {
         path: '',
-        component: Home,
+        component: corporate,
         name: '组织',
         iconCls: 'el-icon-delete',
         leaf: true,//只有一个节点
-        noDropdown: true,
         children: [
-            { path: 'Myorg', component: Myorg, name: '我的组织'},
-            { path: 'Myorg/:orgName', component: OrgMange, name: '组织管理',hidden:true},
-            { path: 'Myorg/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
+            { path: '/Myorg', component: Myorg, name: '我的组织'},
+            { path: '/Myorg/:orgName', component: OrgMange, name: '组织管理',hidden:true},
+            { path: '/Myorg/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
         ]
     },
     { path: '/404', component: error404, hidden: true },
@@ -198,21 +199,22 @@ export let  commonRoutes = [
 export let limitRoutes=[
  {
         path: '',
-        component: Home,
+        component: corporate,
         name: '系统管理',
         iconCls: 'el-icon-setting',//图标样式class
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
          //   { path: 'test2', component: test2, name: '项目管理' },
-            { path: 'tree', component: tree, name: '组织管理' ,meta:{role:['management_org_list']}},
+            { path: '/tree', component: tree, name: '组织管理' ,meta:{role:['management_org_list']}},
+            { path: '/depart', component: depart, name: '组织管理' ,meta:{role:['management_org_list']}},
           //  { path: 'TreeGrid', component: TreeGrid, name: '用户管理' ,meta:{role:['management_user_list']}},
-            { path: 'GUser', component: GUser, name: '用户管理' ,meta:{role:['management_user_list']}},
-            { path: 'role', component: role, name: '角色管理' ,meta:{role:['management_role_list']}},
-            { path: 'permission', component: permission, name: '权限管理' ,meta:{role:['management_auth_list']} },
+            { path: '/GUser', component: GUser, name: '用户管理' ,meta:{role:['management_user_list']}},
+            { path: '/role', component: role, name: '角色管理' ,meta:{role:['management_role_list']}},
+            { path: '/permission', component: permission, name: '权限管理' ,meta:{role:['management_auth_list']} },
          //   { path: 'user', component: user, name: '应用监控' },
-            { path: 'log', component: log, name: '日志管理' ,meta:{role:['management_log_list']}},
-            { path: 'tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
-            { path: 'tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
+            { path: '/log', component: log, name: '日志管理' ,meta:{role:['management_log_list']}},
+            { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
+            { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
         ]
     },
     {
@@ -230,5 +232,5 @@ export let limitRoutes=[
   routes: commonRoutes
 })
 
-**/
+/****/
 //export default commonRoutes;

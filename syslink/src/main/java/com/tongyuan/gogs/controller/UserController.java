@@ -381,8 +381,10 @@ public class UserController extends BaseController {
         Date loginDate = DateUtil.getTimestamp();
         userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
-
+        System.out.println(session.getId());
         operationlogService.addLog("登录","登录系统",request);
+
+
 
         try
         {
