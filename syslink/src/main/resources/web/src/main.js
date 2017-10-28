@@ -8,15 +8,16 @@ import VueRouter from 'vue-router'
 
 
 
-import router  from './asyncRoutes'
-import ZkTable from 'Vue-table-with-tree-grid'
+//import router  from './asyncRoutes'
+
 
 
 import store from './vuex/store'
 import Vuex from 'vuex'
+import Vuetify from 'vuetify';
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
-//import routes from './routes'
+import routes from './routes'
 import Mock from './mock'
 import axios from 'axios'
 //Mock.bootstrap();
@@ -30,14 +31,14 @@ axios.defaults.withCredentials = true;
 Vue.config.debug = true;
 
 Vue.use(ElementUI)
-//Vue.use(VueRouter)
+Vue.use(VueRouter)
 Vue.use(Vuex)
-Vue.use(ZkTable)
+Vue.use(Vuetify);
 
 //NProgress.configure({ showSpinner: false });
 
 
-
+/**
 
 router.beforeEach((to, from, next) => {
 
@@ -117,10 +118,10 @@ router.beforeEach((to, from, next) => {
      
 })
 
-/****/
+**/
 
 
-/**
+
 const router = new VueRouter({
   routes
 })
@@ -137,7 +138,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-**/
+/****/
 
 //router.afterEach(transition => {
 //NProgress.done();

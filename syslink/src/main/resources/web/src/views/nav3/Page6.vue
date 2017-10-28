@@ -13,7 +13,7 @@
             :before-upload="beforeUploadFile"
             :auto-upload="true"
     >
-        <el-button slot="trigger" size="small" type="primary" >上传文件</el-button>
+        <el-button slot="trigger" size="small" type="primary" style="font-size: 18px;" >上传文件</el-button>
         <!--<p>{{directoryContent}}</p>-->
         <!--{{bmsg}}-->
         <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->

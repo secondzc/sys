@@ -3,36 +3,36 @@
       <div class="left">
           <!--模型分类树-->
           <div style="border: 2px solid #9E9E9E;margin-top: 20px;padding: 10px">
-          <kz-tree :data="tree" @node-click="hanldeNodeClick" style="min-height: 530px"></kz-tree>
+          <kz-tree :data="tree" @node-click="hanldeNodeClick" style="height: 544px;"></kz-tree>
           </div>
       </div>
       <div class="right" style="margin-left: 10px;margin-top: 20px">
           <div style="border: 2px solid #9E9E9E;min-height: 550px">
-              <div style="display: inline-block;float: left; margin-left: 30px;;margin-top: 20px;">
+              <div style="display: inline-block;float: left; margin-left: 30px;margin-top: 20px;">
                   <breadcrumb></breadcrumb>
               </div>
-              <div style="display: inline-block;margin-left: 500px;;margin-top: 20px; ">
+              <div style="display: inline-block;margin-left: 350px; ">
                   <!--<p>aaaa</p>-->
                   <div>
                       <!--工具条-->
                       <!--<el-col :span="24" class="toolbar" >-->
                       <el-form :inline="true" :model="filters">
-                          <el-form-item>
+                          <el-form-item style="margin-top: 10px;margin-bottom: 10px;">
                               <el-input v-model="filters.name" placeholder="模型名称"></el-input>
                           </el-form-item>
-                          <el-form-item>
+                          <el-form-item style="margin-top: 10px;margin-bottom: 10px;">
                               <el-button type="primary" v-on:click="getModel">查询</el-button>
                           </el-form-item>
                       </el-form>
                       <!--</el-col>-->
                   </div>
               </div>
-              <div style="display: inline-block;float: right;margin-top: 20px;margin-right: 20px;" >
+              <div style="display: inline-block;float: right;margin-right: 20px;margin-top: 10px" >
                   <upload-file ></upload-file>
               </div>
 
               <hr>
-              <div style="margin-top: 20px">
+              <div style="display: inline-block;">
                   <div style="display: inline-block;"><p>排序：</p></div>
                   <div id="appp" style="display: inline-block;">
 
@@ -46,93 +46,107 @@
                       </sortable-list>
               </div>
               </div>
-              <div style="height: 30px;">
-                  <i class="iconfont" id="listIcon" name="listIcon" @click="switchList" style="float: right;">&#xe60b;</i>
-                  <i class="iconfont" id="menuIcon" name="menuIcon" @click="switchMenu" style="float: right">&#xe60a;</i>
-                  <!--<i class="iconfont" id="information" name="information" @click="viewInfo" style="float: right;margin-right: 20px">&#xe6a4;</i>-->
+              <div style="height: 20px;display: inline-block;float: right;margin-right: 20px">
+                  <i class="iconfont" id="listIcon" name="listIcon" @click="switchList" style="float: right;border: outset;">&#xe60b;</i>
+                  <i class="iconfont" id="menuIcon" name="menuIcon" @click="switchMenu" style="float: right;border: inset;">&#xe60a;</i>
+                  <i class="iconfont" id="information" name="information" @click="viewInfo" style="float: right;margin-right: 20px;border: inset;">&#xe6a4;</i>
               </div>
               <hr>
-              <div style="margin-top:20px;margin-left: 10px;margin-right: 10px;">
+              <div style="margin-top:20px;margin-left: 10px;margin-right: 10px;display: flex;">
               <!--模型列表-->
 
-              <div>
+              <div style="width: -webkit-fill-available;height:377px;">
               <div id="modelList" style="display: block;">
               <!--<model-list ></model-list>-->
-                  <template>
-                      <section>
-                  <div>
                       <!--<div>-->
-                          <!--&lt;!&ndash;工具条&ndash;&gt;-->
-                          <!--&lt;!&ndash;<el-col :span="24" class="toolbar" >&ndash;&gt;-->
-                          <!--<el-form :inline="true" :model="filters">-->
-                              <!--<el-form-item>-->
-                                  <!--<el-input v-model="filters.name" placeholder="模型名称"></el-input>-->
-                              <!--</el-form-item>-->
-                              <!--<el-form-item>-->
-                                  <!--<el-button type="primary" v-on:click="getModel">查询</el-button>-->
-                              <!--</el-form-item>-->
-                          <!--</el-form>-->
-                          <!--&lt;!&ndash;</el-col>&ndash;&gt;-->
+                          <!--<v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>-->
                       <!--</div>-->
-                      <p>{{getRepos}}</p>
-                      <waterfall
-                              :align="align"
-                              :line-gap="300"
-                              :min-line-gap="100"
-                              :max-line-gap="300"
-                              :single-max-width="260"
-                              :watch="repositories"
-                              @reflowed="reflowed"
-                              ref="waterfall"
-                      >
-                          <!-- each component is wrapped by a waterfall slot -->
-                          <waterfall-slot
-                                  v-for="(item, index) in repositories"
-                                  :width="250"
-                                  :height="300"
-                                  :order="index"
-                                  :key="item.index"
-                                  move-class="item-move"
-                          >
-                              <!-- :style="item.style" -->
-                              <div class="RepCard" id="modelId"  :index="item.index" v-on:dblclick="modelVar(item.index)">
-                                  <div class="center-aligned">
-                                      <!--<img v-bind:src="item.imageUrl" class="image">-->
-                                      <img src="./../../assets/test1.png" class="image">
-                                  </div>
-                                  <div class="content">
-                                      <a href="javascript:void(0)">
-                                          <h4 >模型名称：{{item.name}}</h4>
-                                      </a>
-                                      <h4>上传者：{{item.userName}}</h4>
-                                      <h4>上传日期：{{item.createTime}}</h4>
-                                      <small>{{item.discription}}</small>
-                                  </div>
-                                  <div>
-                                      <!--<a href="javascript:void(0)" @click="modelVar(item.index)" title="模型详细信息">详细信息</a>-->
-                                      <!--<a href="javascript:void(0)" @click="Model(item.index)" title="模型组件信息">组件信息</a>-->
-                                      <!--<a href="javascript:void(0)" @click="Variable" title="模型组件参数信息">参数信息</a>-->
-                                  </div>
-                                  <div  class="cardButton">
-                                      <a class="user username" href="javascript:void(0)">
-                                          <!--//TODO:用户名-->
-                                          {{item.type}}
-                                      </a>
-                                      <div class="right-buttons">
+                              <template>
+                                  <section>
+                                         <div>
+                                              <p>{{getRepos}}</p>
+                                              <waterfall
+                                                      :align="align"
+                                                      :line-gap="300"
+                                                      :min-line-gap="100"
+                                                      :max-line-gap="300"
+                                                      :single-max-width="260"
+                                                      :watch="repositories"
+                                                      @reflowed="reflowed"
+                                                      ref="waterfall"
+                                              >
+                                                  <!-- each component is wrapped by a waterfall slot -->
+                                                  <waterfall-slot
+                                                          v-for="(item, index) in repositories"
+                                                          :width="250"
+                                                          :height="300"
+                                                          :order="index"
+                                                          :key="item.index"
+                                                          move-class="item-move"
+                                                  >
+                                                      <!-- :style="item.style" -->
+                                                      <div class="RepCard" id="modelId"  :index="item.index" v-on:dblclick="modelVar(item.index)" @click="modelVariable(item)">
+                                                          <div class="center-aligned">
+                                                              <!--<img v-bind:src="item.imageUrl" class="image">-->
+                                                              <img src="./../../assets/test1.png" class="image">
+                                                          </div>
+                                                          <div class="content">
+                                                              <a href="javascript:void(0)">
+                                                                  <h4 >模型名称：{{item.name}}</h4>
+                                                              </a>
+                                                              <h4>上传者：{{item.userName}}</h4>
+                                                              <h4>上传日期：{{item.createTime}}</h4>
+                                                              <small>{{item.discription}}</small>
+                                                          </div>
+                                                          <div>
+                                                          </div>
+                                                          <div  class="cardButton">
+                                                              <a class="user username" href="javascript:void(0)">
+                                                                  <!--//TODO:用户名-->
+                                                                  {{item.type}}
+                                                              </a>
+                                                              <div class="right-buttons">
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </waterfall-slot>
+                                              </waterfall>
                                       </div>
-                                  </div>
-                              </div>
-
-                          </waterfall-slot>
-                      </waterfall>
-                  </div>
-                      </section>
-                  </template>
+                                  </section>
+                              </template>
               </div>
+                  <!--<div>-->
+                      <!--<v-navigation-drawer right="true" persistent v-model="drawer" absolute="true" >-->
+                          <!--<div>aaaaa</div>-->
+                      <!--</v-navigation-drawer>-->
+                  <!--</div>-->
               <div id="packageList" style="display: none">
               <packageList></packageList>
               </div>
               </div>
+                  <div style="width: 300px;display: block;" id="variable" >
+                      <template>
+                          <section>
+                      <el-row>
+                          <el-col :span="24" v-for="(o, index) in variable" :key="o" :offset="index > 0 ? 2 : 0">
+                              <el-card :body-style="{ padding: '0px' }">
+                                  <img src="./../../assets/test1.png" class="image">
+                                  <div style="padding: 14px;">
+                                      <h4>模型库：{{o.name}}</h4>
+                                      <h4>上传者：{{o.userName}}</h4>
+                                      <h4>上传日期：{{o.createTime}}</h4>
+                                      <div class="bottom clearfix">
+                                          <!--<time class="time">{{ currentDate }}</time>-->
+                                          <el-button type="text" class="button">操作按钮</el-button>
+                                      </div>
+                                  </div>
+                              </el-card>
+                          </el-col>
+                      </el-row>
+                          </section>
+                      </template>
+                  </div>
+
               </div>
 
           </div>
@@ -167,6 +181,7 @@ import Waterfall from 'vue-waterfall/lib/waterfall'
 import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 import { mapState,mapGetters} from 'vuex'
 import sortableList from './sortable-list'
+import Vuetify from 'vuetify';
 
 
 export default {
@@ -179,10 +194,13 @@ export default {
       breadcrumb,
       Waterfall,
       WaterfallSlot,
-      sortableList
+      sortableList,
+      Vuetify
   },
   data () {
     return {
+        variable : [],
+        drawer: false,
         sorttitles:[{
             key:'name',
             name:'名称'
@@ -270,23 +288,20 @@ export default {
           if(_this.amsg != null && _this.amsg != ""){
               var url = '/api/model/list?parent_id='+ _this.amsg
           }else{
-              _this.amsg = null;
+              _this.amsg = 0;
               var url = '/api/model/list?parent_id='+ _this.amsg
           }
           _this.$http.post(url)
               .then(function (response) {
-                  let searchModel = response.data.repositories.filter(model =>{
-                      for(var i =0 ;i <response.data.repositories.length; i++){
-                          if(para.name && response.data.repositories[i].name.indexOf(para.name) == -1 ){
+                  var searchModel = response.data.repositories.filter(model =>{
+                      if(para.name && model.name.indexOf(para.name) == -1 ){
                               return false
                           }
                           else{
                               return true
                           }
-                      }
                   })
                   _this.repositories = searchModel;
-                  //   _this.repositories = response.data.repositories;
               })
               .catch(function (error) {
                   console.log(error);
@@ -300,16 +315,31 @@ export default {
           this.$store.dispatch('sendTreeModelId',modelId);
           this.$router.push({path: '/model/packageDiagram'});
       },
+      modelVariable : function (model){
+          var modelVariable = new Array;
+          modelVariable.push(model);
+          this.variable = modelVariable;
+          console.log(model);
+      },
       onSortFinsh(repositories){
           console.log('onSortFinsh');
           console.log(JSON.stringify(repositories));
           this.list=repositories
+      },
+      viewInfo(){
+          if($("#variable")[0].style.display == "block"){
+              $("#variable")[0].style.display = "none";
+          }
+          else if($("#variable")[0].style.display == "none"){
+              $("#variable")[0].style.display = "block";
+          }
       }
   }
 }
 </script>
-<style scoped>
-
+<style lang="stylus">
+    /*@import '../../../node_modules/vuetify/src/stylus/main.styl';*/
+    /*@import '../../styles/main.css';*/
 .left {
   max-width: 400px;
   float: left;
@@ -334,7 +364,7 @@ export default {
 
 .iconfont{
     font-family:"iconfont";
-    font-size:16px;
+    font-size:24px;
     font-style:normal;
 }
 @font-face {
@@ -473,5 +503,37 @@ export default {
     -o-transition: transform 1s;
 }
 /*排序*/
+
+/*卡片    */
+    .time {
+        font-size: 13px;
+        color: #999;
+    }
+
+    .bottom {
+        margin-top: 13px;
+        line-height: 12px;
+    }
+
+    .button {
+        padding: 0;
+        float: right;
+    }
+
+    .image {
+        width: 100%;
+        display: block;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+
+    .clearfix:after {
+        clear: both
+    }
+    /*卡片    */
 
 </style>

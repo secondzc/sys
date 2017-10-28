@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var webpack = require("webpack")
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -23,10 +24,35 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      'scss_vars': '@/styles/vars.scss'
+      'scss_vars': '@/styles/vars.scss',
+        'jquery': 'jquery'
     }
   },
+    // 增加一个plugins
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin('common.js'),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
+    ],
   module: {
+      loaders: [{
+          rules: [{
+              test: require.resolve('jquery'),
+              use: [{
+                  loader: 'expose-loader',
+                  options: 'jQuery'
+              },{
+                  loader: 'expose-loader',
+                  options: '$'
+              }]
+          }]
+
+          // test: require.resolve("some-module"),
+          // loader: "imports-loader?this=>window"
+      }],
     rules: [
       {
         test: /\.vue$/,

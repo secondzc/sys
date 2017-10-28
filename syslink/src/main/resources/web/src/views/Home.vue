@@ -6,19 +6,17 @@
 				{{collapsed?'':sysName}}
 			</el-col>
 			<el-col :span="2">
-				<!-- <div class="tools" @click.prevent="collapse"> -->
-					<div class="tools" >
+				<div class="tools" @click.prevent="collapse">
 					<i class="fa fa-align-justify"></i>
 				</div>
 			</el-col>
 			<el-col :span="8">
 				<a class="item" href="http://gogs.modelica-china.com/#/" id="home-page">首页</a>
+				<a class="item"  href="http://gogs.modelica-china.com:3000/">控制面板</a>
 				<a class="item" href="javascript:void(0)"   @click="toModel">模型</a>
-				<a class="item" href="javascript:void(0)"   @click="toCorporate">协同</a>
-				<a class="item"  href="http://gogs.modelica-china.com:3000/">仓库</a>
-				<!-- <a class="item" href="http://gogs.modelica-china.com:3000/issues">工单管理</a>
-				<a class="item" href="http://gogs.modelica-china.com:3000/pulls">合并请求</a>
-				<a class="item" href="http://gogs.modelica-china.com:3000/explore/repos">探索</a> -->
+				<!--<a class="item" href="http://gogs.modelica-china.com:3000/issues">工单管理</a>-->
+				<!--<a class="item" href="http://gogs.modelica-china.com:3000/pulls">合并请求</a>-->
+				<!--<a class="item" href="http://gogs.modelica-china.com:3000/explore/repos">探索</a>-->
 				<!-- 				<el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                                      <el-menu-item index="1">处理中心</el-menu-item>
                                      <el-menu-item index="2">处理中心</el-menu-item>
@@ -57,7 +55,7 @@
 					<!--</template>-->
 				<!--</el-menu>-->
 				<!--导航菜单-折叠后-->
-				<!-- <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
+				<ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
 					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
 						<template v-if="!item.leaf">
 							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls"></i></div>
@@ -71,10 +69,10 @@
 					</li>
 </template>
 </li>
-</ul> -->
+</ul>
 
 
- <!--<sidebar ></sidebar>-->
+<!-- <sidebar ></sidebar>-->
 </aside>
 <section class="content-container">
 	<div class="grid-content bg-purple-light">
@@ -140,12 +138,12 @@ import Sidebar from './Sidebar'
                 }).then(() => {
                sessionStorage.removeItem('user');
 
-             
+               /**
                sessionStorage.removeItem('userInfo');
                localStorage.clear();
                _this.$store.dispatch('LogOut');
                // _this.$http.post('api/user/destory');  
-               /**  **/
+               **/
                 _this.$router.push('/login');
            //     location.reload();
 
@@ -163,10 +161,6 @@ import Sidebar from './Sidebar'
             toModel :function () {
                 var _this = this;
                 _this.$router.push('/model/index');
-            },
-             toCorporate :function () {
-                var _this = this;
-              _this.$router.push({path: '/repository/index'});
             },
             //折叠导航栏
             collapse:function(){
@@ -264,7 +258,7 @@ import Sidebar from './Sidebar'
 				line-height: 38px;
 				position: relative;
 				display: inline-block;
-				margin-right: 48px;
+				margin-right: 38px;
 				text-decoration:none;
 			}
 			.item:not(:hover) {
