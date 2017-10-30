@@ -5,6 +5,7 @@
             :data="data"
             :props="defaultProps"
             node-key="id"
+            show-checkbox
             highlight-current = "true"
             :expand-on-click-node="false"
             :columns="columns"

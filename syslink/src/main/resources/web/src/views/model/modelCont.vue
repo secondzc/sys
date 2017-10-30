@@ -1,71 +1,83 @@
 <template>
-    <section>
-        <el-tabs type="border-card" style="overflow: auto;width: 1000px">
-        <el-tab-pane label="包基本信息">
-        <el-form :inline="true" ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;">
-            <!--<div-->
-            <!--&gt;{{modelId}}</div>-->
-            {{getModelVar}}
-            <el-form-item label="模型信息:" >
-                <el-input  disabled="disabled" v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="模型受限类型:" label-width="100px">
-                <el-input disabled="disabled" v-model="form.classes"></el-input>
-            </el-form-item>
-            <el-form-item label="模型类型:" >
-                <el-input  disabled="disabled" v-model="form.type"></el-input>
-            </el-form-item>
+    <div class="modelContent">
+        <div style="border: 2px solid #9E9E9E;height: 70px;width: 100%;">
+            <span style="font-size: 20px;position: relative;top: 20px;">模型：{{form.name}}</span>
+        </div>
+        <!--<div class="left">-->
+            <!--<div style="border: 2px solid #9E9E9E;margin-top: 20px;padding: 10px">-->
+                <!--<package-diagram-model-child style="height: 544px;" ></package-diagram-model-child>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="right"  style="margin-left: 10px;margin-top: 20px">-->
+            <!--<div style="border: 2px solid #9E9E9E;min-height: 550px">-->
+                <template>
+                        <section>
+                            <div id="tabs" class="tabs-bottom">
+                                <ul>
+                                    <li><a href="#tabs-1">基本信息</a></li>
+                                    <li><a href="#tabs-2">视图</a></li>
+                                    <li><a href="#tabs-3">图片</a></li>
+                                    <li><a href="#tabs-4">说明</a></li>
+                                    <li><a href="#tabs-5">组件</a></li>
+                                </ul>
+                                <div class="tabs-spacer"></div>
+                                <div id="tabs-1">
+                                    <div style="min-height: 452px;">
+                                            <el-form :inline="true" ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;">
+                                                <!--<div-->
+                                                <!--&gt;{{modelId}}</div>-->
+                                                {{getModelVar}}
+                                                <el-form-item label="模型信息:" >
+                                                    <el-input  disabled="disabled" v-model="form.name"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="模型受限类型:" label-width="100px">
+                                                    <el-input disabled="disabled" v-model="form.classes"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="模型类型:" >
+                                                    <el-input  disabled="disabled" v-model="form.type"></el-input>
+                                                </el-form-item>
 
-            <el-form-item  label-width="100px" label="导入包名:" >
-                <el-input  disabled="disabled" v-model="form.import"></el-input>
-            </el-form-item>
-            <el-form-item label="基类名:" >
-                <el-input disabled="disabled" v-model="form.extends"></el-input>
-            </el-form-item>
-            <el-form-item label="上传者:"  label-width="100px">
-                <el-input  disabled="disabled" v-model="form.userName"></el-input>
-            </el-form-item>
-            <el-form-item label="模型描述:" >
-                <el-input disabled="disabled" v-model="form.discription"></el-input>
-            </el-form-item>
-            <!--<el-form-item label="视图:" label-width="100px">-->
-                <!--&lt;!&ndash;<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
-                <!--<a  href="javascript:void(0)"   @click="svgUrl" >视图</a>-->
-                <!--&lt;!&ndash;form.diagramSvgPath&ndash;&gt;-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="图片:" >-->
-                <!--&lt;!&ndash;<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
-                <!--<a  href="javascript:void(0)"   @click="iconUrl" >图片</a>-->
-                <!--&lt;!&ndash;form.diagramSvgPath&ndash;&gt;-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="Info:" >-->
-                <!--&lt;!&ndash;<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
-                <!--<a  href="javascript:void(0)"   @click="infoUrl" >info信息</a>-->
-                <!--&lt;!&ndash;form.diagramSvgPath&ndash;&gt;-->
-            <!--</el-form-item>-->
-        </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="包视图">
-            <div >
-                <img :src=svgUrl class="image"/>
+                                                <el-form-item  label-width="100px" label="导入包名:" >
+                                                    <el-input  disabled="disabled" v-model="form.import"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="基类名:" >
+                                                    <el-input disabled="disabled" v-model="form.extends"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="上传者:"  label-width="100px">
+                                                    <el-input  disabled="disabled" v-model="form.userName"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="模型描述:" >
+                                                    <el-input disabled="disabled" v-model="form.discription"></el-input>
+                                                </el-form-item>
+                                            </el-form>
+                                    </div>
+                                </div>
+                                <div id="tabs-2">
+                                    <div style="min-height: 452px;">
+                                        <img :src=svgUrl class="image"/>
+                                    </div>
+                                </div>
+                                <div id="tabs-3">
+                                    <div style="min-height: 452px;">
+                                        <img :src=iconUrl class="image"/>
+                                    </div>
+                                </div>
+                                <div id="tabs-4">
+                                    <div style="min-height: 452px;">
+                                        <iframe :src=infoUrl  style="width: 100%;height: 464px;overflow: auto;" ></iframe>
+                                    </div>
+                                </div>
+                                <div id="tabs-5">
+                                    <div style="min-height: 452px;">
+                                        <package-diagram-model-child ></package-diagram-model-child>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                </template>
             </div>
-        </el-tab-pane>
-        <el-tab-pane label="包图片">
-            <div>
-                <img :src=iconUrl class="image"/>
-            </div>
-        </el-tab-pane>
-        <el-tab-pane label="包信息">
-            <iframe :src=infoUrl  style="width: 100%;height: 464px;overflow: auto;" ></iframe>
-            <!--<img :src=infoUrl class="image"/>-->
-        </el-tab-pane>
-            <el-tab-pane label="组件信息">
-                <div style="overflow: auto">
-                <package-diagram-model-child ></package-diagram-model-child>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
-    </section>
+        <!--</div>-->
+    <!--</div>-->
 </template>
 <script>
     import variabletree from './Variabletree.vue'
@@ -147,6 +159,16 @@
             handleCurrentChange(val) {
                 this.currentRow = val;
             },
+            Tabs(){
+                $( "#tabs" ).tabs();
+                // 修改 class
+                $( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
+                    .removeClass( "ui-corner-all ui-corner-top" )
+                    .addClass( "ui-corner-bottom" );
+
+                // 移动导航到底部
+                $( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
+            }
 //            svgUrl : function () {
 //                var svg = this.$refs.form.model.diagramSvgPath;
 //                window.open(svg,"_blank");
@@ -159,11 +181,23 @@
 //                var svg = this.$refs.form.model.infoTextPath;
 //                window.open(svg,"_blank");
 //            }
+        },mounted(){
+            this.Tabs();
         }
     }
 
 </script>
 <style scoped>
+
+    .left {
+        max-width: 320px;
+        float: left;
+    }
+    .right{
+        min-width: 300px;
+        float: right;
+    }
+
     .image{
         display: block;
         width: 100%;

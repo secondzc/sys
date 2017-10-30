@@ -3,14 +3,14 @@
         <!--<img src="http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/package2.Test2.A.diagram.svg" class="image">-->
     <!--</div>-->
     <section>
-        <el-form :inline="true" ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;">
+        <el-form :inline="true" ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:100%;min-height:400px;">
             <!--<div-->
             <!--&gt;{{modelId}}</div>-->
             {{getModelVar}}
-            <el-form-item >
+            <el-form-item  style="min-height: 440px">
                 <!--<el-input  disabled="disabled" v-model="form.name"></el-input>-->
-                <div class="center-aligned" style="margin-bottom: 170px">
-                <img :src=svgUrl class="image">
+                <div class="center-aligned" >
+                <img :src=svgUrl style="width: 100%;height: 400px;">
                     <router-link :to="{path:'/model/packageTransfModel',query: {modelId: form.index}}" class="username" target="_blank" title="模型详细信息" >详细信息</router-link>
                 <!--<a href="javascript:void(0)" @click="modelVar" title="模型详细信息">详细信息</a>-->
                 <!--<a href="javascript:void(0)" @click="Model" title="模型组件树">组件树</a>-->
@@ -105,9 +105,10 @@
 <style scoped>
     .image{
         display: block;
-        width: 70%;
+        width: 100%;
         /*需要对高度做限制*/
-        max-height: 160px;
+        /*max-height: 160px;*/
+        height: 100%;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         transition: all 1s ease 0s;

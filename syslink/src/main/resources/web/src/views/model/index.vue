@@ -11,7 +11,7 @@
               <div style="display: inline-block;float: left; margin-left: 30px;margin-top: 20px;">
                   <breadcrumb></breadcrumb>
               </div>
-              <div style="display: inline-block;margin-left: 350px; ">
+              <div style="display: inline-block;margin-left: 350px" id="searchMoudle">
                   <!--<p>aaaa</p>-->
                   <div>
                       <!--工具条-->
@@ -31,8 +31,8 @@
                   <upload-file ></upload-file>
               </div>
 
-              <hr>
-              <div style="display: inline-block;">
+              <hr style="width: 100%;">
+              <div style="display: inline-block;"  id="sortMoudle">
                   <div style="display: inline-block;"><p>排序：</p></div>
                   <div id="appp" style="display: inline-block;">
 
@@ -46,16 +46,16 @@
                       </sortable-list>
               </div>
               </div>
-              <div style="height: 20px;display: inline-block;float: right;margin-right: 20px">
+              <div style="height: 30px;display: inline-block;float: right;margin-right: 20px">
                   <i class="iconfont" id="listIcon" name="listIcon" @click="switchList" style="float: right;border: outset;">&#xe60b;</i>
                   <i class="iconfont" id="menuIcon" name="menuIcon" @click="switchMenu" style="float: right;border: inset;">&#xe60a;</i>
                   <i class="iconfont" id="information" name="information" @click="viewInfo" style="float: right;margin-right: 20px;border: inset;">&#xe6a4;</i>
               </div>
-              <hr>
+              <hr      style="width: 100%;">
               <div style="margin-top:20px;margin-left: 10px;margin-right: 10px;display: flex;">
               <!--模型列表-->
 
-              <div style="width: -webkit-fill-available;height:377px;">
+              <div style="width: 900px;height:377px;">
               <div id="modelList" style="display: block;">
               <!--<model-list ></model-list>-->
                       <!--<div>-->
@@ -121,7 +121,91 @@
                       <!--</v-navigation-drawer>-->
                   <!--</div>-->
               <div id="packageList" style="display: none">
-              <packageList></packageList>
+              <!--<packageList></packageList>-->
+                  <template>
+                      <section>
+                          <!--工具条-->
+                          <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+                              <el-form :inline="true" :model="filters">
+                                  <el-form-item>
+                                      <el-input v-model="filters.name" placeholder="模型名称"></el-input>
+                                  </el-form-item>
+                                  <el-form-item>
+                                      <el-button type="primary" v-on:click="getModel" >查询</el-button>
+                                  </el-form-item>
+                              </el-form>
+                          </el-col>
+
+                          <el-table
+                                  ref="singleTable"
+                                  :data="repositories"
+                                  border
+                                  @current-change="handleCurrentChange"
+                                  :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
+                                  style="width: 100%">
+                              <el-table-column
+                                      label="姓名"
+                                      prop="name"
+                                      width="180" sortable>
+                                  <template scope="scope">
+                                      <div style="display: inline-block">
+                                          <img src="./../../assets/test1.png" style="width: 60px;height: 60px;"/>
+                                      </div>
+                                      <div style="display: inline-block">
+                                          <el-popover trigger="hover" placement="top">
+                                              <p>姓名: {{ scope.row.name }}</p>
+                                              <p>住址: {{ scope.row.address }}</p>
+                                              <div slot="reference" class="name-wrapper">
+                                                  <el-tag>{{ scope.row.name }}</el-tag>
+                                              </div>
+                                          </el-popover>
+                                      </div>
+                                  </template>
+                              </el-table-column>
+                              <el-table-column
+                                      label="日期"
+                                      prop="createTime"
+                                      width="180" sortable>
+                                  <template scope="scope">
+                                      <el-icon name="time"></el-icon>
+                                      <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+                                  </template>
+                              </el-table-column>
+
+                              <!--<el-table-column-->
+                              <!--prop="tag"-->
+                              <!--label="标签"-->
+                              <!--width="100"-->
+                              <!--:filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"-->
+                              <!--:filter-method="filterTag"-->
+                              <!--filter-placement="bottom-end">-->
+                              <!--<template scope="scope">-->
+                              <!--<el-tag-->
+                              <!--:type="scope.row.tag === '家' ? 'primary' : 'success'"-->
+                              <!--close-transition>{{scope.row.tag}}</el-tag>-->
+                              <!--</template>-->
+                              <!--</el-table-column>-->
+
+                              <el-table-column label="操作">
+                                  <template scope="scope">
+                                      <el-button
+                                              size="small"
+                                              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                      <el-button
+                                              size="small"
+                                              type="danger"
+                                              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                                  </template>
+                              </el-table-column>
+                          </el-table>
+
+                          <!--工具条-->
+                          <el-col :span="24" class="toolbar">
+                              <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+                              </el-pagination>
+                          </el-col>
+                      </section>
+                  </template>
               </div>
               </div>
                   <div style="width: 300px;display: block;" id="variable" >
@@ -199,6 +283,8 @@ export default {
   },
   data () {
     return {
+        total: 0,
+        page: 1,
         variable : [],
         drawer: false,
         sorttitles:[{
@@ -272,10 +358,14 @@ export default {
         }
     },
       switchList(){
+          $("#searchMoudle")[0].style.display = "block";
+          $("#sortMoudle")[0].style.display = "block";
           document.getElementById("modelList").style.display="block";
           document.getElementById("packageList").style.display="none";
       },
       switchMenu(){
+          $("#searchMoudle")[0].style.display = "none";
+          $("#sortMoudle")[0].style.display = "none";
           document.getElementById("packageList").style.display="block";
           document.getElementById("modelList").style.display="none";
       },
@@ -329,10 +419,19 @@ export default {
       viewInfo(){
           if($("#variable")[0].style.display == "block"){
               $("#variable")[0].style.display = "none";
+              $("#variable")[0].style.width = "1px";
           }
           else if($("#variable")[0].style.display == "none"){
+              $("#variable")[0].style.width = "300px";
               $("#variable")[0].style.display = "block";
           }
+      },
+      handleCurrentChange(val) {
+          this.$refs.singleTable.setCurrentRow(val);
+          var modelVariable = new Array;
+          modelVariable.push(val);
+          this.variable = modelVariable;
+          console.log(val);
       }
   }
 }
