@@ -16,4 +16,6 @@ public interface NodeInstanceAndNodeMapper {
     //审核者同意后，map中有nodeInstance.instanceId和node.sequence
     List<CheckorPage> queryByReviewer(Map<String, Object> map);
     //呈现给审核者的页面，map中有node.userId
+
+    List<CheckorPage> queryAllByReviewer(Map<String,Object> map);
 }

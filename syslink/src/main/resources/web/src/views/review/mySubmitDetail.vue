@@ -19,6 +19,13 @@
 	    	</li>
         </ul>
     </section>
+
+    <!--步骤条的审签状态-->
+    <el-steps :space="200" :active="1" finish-status="success">
+    <el-step v-for="(item,index) in this.detailPages" v-if="items.status == 3||items.status == 4" title="审核完成"></el-step>
+    <el-step v-for="(item,index) in this.detailPages" v-if="items.status == 2" title="正在审核"></el-step>
+    <el-step title="未进行" "(item,index) in this.detailPages" v-if="items.status ==1"></el-step>
+    </el-steps>
     
 </template>
 

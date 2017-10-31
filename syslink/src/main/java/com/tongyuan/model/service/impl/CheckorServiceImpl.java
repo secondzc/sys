@@ -31,6 +31,11 @@ class CheckorServiceImpl implements CheckorService {
         PageHelper.startPage(Integer.parseInt(params.get("page").toString()), Integer.parseInt(params.get("rows").toString()));
         return nodeInstanceAndNodeMapper.queryByReviewer(params);
     }
+
+    @Override
+    public List<CheckorPage> queryAllByReviewer(Map<String, Object> map) {
+        return nodeInstanceAndNodeMapper.queryAllByReviewer(map);
+    }
 }
 
 

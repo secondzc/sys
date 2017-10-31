@@ -24,11 +24,40 @@
             <id property="templateId" column="review_flow_template_template_id"/>
             <result column="review_flow_template_template_name" property="templateName"/>
         </association>
+        <association property="nodeInstance" javaType="com.tongyuan.model.domain.ReviewNodeInstance">
+            <result property="status" column="review_node_instance_status"/>
+        </association>
     </resultMap>
 
 
     <!--审核者按照审签实例的实例名来查找  只能看到轮到自己审核的，且状态为激活的-->
     <select id="queryByReviewer" resultMap="pageResultMap" parameterType="java.util.Map">
+        SELECT
+        D.id AS review_node_instance_id,
+        D.status AS review_node_instance_status,
+        A.create_time AS review_flow_instance_create_time,
+        A.last_update_time AS review_flow_instance_last_update_time,
+        A.description AS review_flow_instance_description,
+        A.instance_name AS review_flow_instance_instance_name,
+        B.name AS model_name,
+        C.template_id AS review_flow_template_template_id,
+        C.template_name AS review_flow_template_template_name
+
+        FROM  review_flow_instance A
+        INNER JOIN model B ON  A.model_id = B.id
+        INNER JOIN review_flow_template C ON A.template_id = C.template_id
+        INNER JOIN review_node_instance D ON A.instance_id = D.instance_id
+        INNER JOIN review_node E ON D.node_id = E.node_id
+        WHERE
+        D.status = 2 AND E.user_id = #{userId}
+        <if test="instanceName!=null and instanceName!=''">
+            AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
+        </if>
+    </select>
+
+
+    <!--审核者按照审签实例的实例名来查找  只能看到轮到自己审核的，所有的状态都能看到-->
+    <select id="queryAllByReviewer" resultMap="pageResultMap" parameterType="java.util.Map">
         SELECT
         D.id AS review_node_instance_id,
         A.create_time AS review_flow_instance_create_time,
@@ -45,7 +74,7 @@
         INNER JOIN review_node_instance D ON A.instance_id = D.instance_id
         INNER JOIN review_node E ON D.node_id = E.node_id
         WHERE
-        D.status = 2 AND E.user_id = #{userId}
+        AND E.user_id = #{userId}
         <if test="instanceName!=null and instanceName!=''">
             AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
         </if>
