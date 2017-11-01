@@ -12,6 +12,7 @@ import com.tongyuan.pageModel.TreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.DateUtil;
+import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,8 @@ public class ModelController {
     private VariableService variableService;
     @Autowired
     private ComponentService componentService;
+    @Autowired
+    private ModelUtil modelUtil;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -355,6 +358,8 @@ public class ModelController {
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
         //过滤后的modelList
         List<Model> searchModel = new ArrayList<>();
+        //查询过滤后模型库内的一个组件
+        List<Model> oneOfModel = new ArrayList<>();
         //查询所有direactory
         List<Directory> allDirectory = directoryService.findAllDirectory();
         //存放directory的id
@@ -381,13 +386,14 @@ public class ModelController {
                 }
 
 
-//                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
-//                    for (Model model: allModelList) {
-//                        if(model.getDirectoryId() == rootDirectoryList.get(j).getId()){
-//                            searchModel.add(model);
-//                        }
-//                    }
-//                }
+                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
+                    for (Model model: allModelList) {
+                        if(model.getParentId() == rootDirectoryList.get(j).getId()){
+                            oneOfModel.add(model);
+                            break;
+                        }
+                    }
+                }
             }
       //      if(parent_id != null  && rootDirectoryList.size() >0){
             if(parent_id == 0){
@@ -396,21 +402,31 @@ public class ModelController {
                         searchModel.add(model);
                     }
                 }
+                for(int  j= 0; j<= searchModel.size() -1; j++){
+                    for (Model model: allModelList) {
+                        if(model.getParentId() == searchModel.get(j).getId()){
+                            oneOfModel.add(model);
+                            break;
+                        }
+                    }
+                }
+
             }
-            for (int i = 0; i <= searchModel.size() -1; i++) {
+            for (int i = 0; i <= oneOfModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
-                GUser user = gUserService.queryById(searchModel.get(i).getUserId());
-                modelWeb.setIndex(searchModel.get(i).getId());
-                modelWeb.setName(searchModel.get(i).getName());
+                GUser user = gUserService.queryById(oneOfModel.get(i).getUserId());
+                modelWeb.setIndex(oneOfModel.get(i).getId());
+                modelWeb.setName(modelUtil.splitName(oneOfModel.get(i).getName()));
+                modelWeb.setParentId(oneOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
 //                modelWeb.setImageUrl("../../assets/test1.png");
-                if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
-                    modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+searchModel.get(i).getDiagramSvgPath().substring(7));
+                if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
+                    modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
-                modelWeb.setUploadTime(searchModel.get(i).getCreateTime().getTime());
-                modelWeb.setCreateTime(DateUtil.format(searchModel.get(i).getCreateTime(),"yyyy-MM-dd"));
-                modelWeb.setDiscription(searchModel.get(i).getDiscription());
-                modelWeb.setType(searchModel.get(i).getType());
+                modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
+                modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+                modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
+                modelWeb.setType(oneOfModel.get(i).getType());
     //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
                 repositoryModelList.add(modelWeb );
             }

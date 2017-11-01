@@ -43,6 +43,8 @@ public class VariableController {
         //在这个模型下的所有model（modelList）
         List<VariableTreeObj> modelTreeList = new ArrayList<>();
         List<VariableTreeObj> modelList = new ArrayList<>();
+        //只有一个模型（不包含模型名称）
+        List<VariableTreeObj> variableTreeObjList = new ArrayList<>();
         try {
             //查询到所有的model
             List<Model> allModel = modelService.findAllModel();
@@ -60,6 +62,8 @@ public class VariableController {
                     List<VariableTreeObj> compTreeList = new ArrayList<>();
                     varibaleTreeObj.setChildren(compTreeList);
                     getCompFromModel(varibaleTreeObj.getId(),allComp,varibaleTreeObj.getChildren(),allVariable);
+                    //不包含模型名称
+                    getCompFromModel(varibaleTreeObj.getId(),allComp,variableTreeObjList,allVariable);
                     //当变量没有父类组件的时直接添加进去
                     //查询这个model下所有的顶层变量
                     List<Variable> topVariableList = variableService.findVarByModelId(varibaleTreeObj.getId());
@@ -69,8 +73,6 @@ public class VariableController {
                         varibaleTreeObj.getChildren().add(variableTreeObj);
                     }
                 }
-
-
             }
 
         }catch(Exception e) {
@@ -83,7 +85,8 @@ public class VariableController {
         jo.put("status",1);
         jo.put("code",0);
         jo.put("msg","ok");
-        jo.put("data",modelList);
+        jo.put("data",variableTreeObjList);
+        jo.put("rootData",modelList);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
@@ -96,14 +99,14 @@ public class VariableController {
              if(allModel.get(i).getParentId() == modelId) {
                  VariableTreeObj treeObj = new VariableTreeObj();
                  treeObj.setId(allModel.get(i).getId());
-                 treeObj.setName(allModel.get(i).getName());
+                 treeObj.setName(splitName(allModel.get(i).getName()));
                  modelTreeList.add(treeObj);
 //                 modelList.add(treeObj);
              }
              if(allModel.get(i).getId() == modelId && allModel.get(i).getParentId() != 0){
                  VariableTreeObj treeObj = new VariableTreeObj();
                  treeObj.setId(allModel.get(i).getId());
-                 treeObj.setName(allModel.get(i).getName());
+                 treeObj.setName(splitName(allModel.get(i).getName()));
                  modelList.add(treeObj);
              }
          }
@@ -209,5 +212,16 @@ public class VariableController {
         }
     }
 
+
+    //获取组件名称（点后面的名字）
+    public String splitName(String name){
+        String splitName[] = name.split("\\.");
+        if(splitName.length >1) {
+            return splitName[splitName.length-1];
+        }else{
+            return name;
+        }
+
+    }
 
 }
