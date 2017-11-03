@@ -3,9 +3,9 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.exception.SqlNumberException;
+import com.tongyuan.model.domain.Model;
 import com.tongyuan.pageModel.CheckorPage;
 import com.tongyuan.model.domain.ReviewFlowInstance;
-import com.tongyuan.model.domain.ReviewModel;
 import com.tongyuan.model.service.CheckorService;
 import com.tongyuan.model.service.ReviewFlowInstanceService;
 import com.tongyuan.model.service.ReviewModelService;
@@ -90,7 +90,7 @@ public class CheckorController extends BaseController{
         Long instanceId = Long.valueOf(request.getParameter("instanceId"));
         ReviewFlowInstance reviewFlowInstance=reviewFlowInstanceService.queryByInstanceId(instanceId);
         Long modelId = reviewFlowInstance.getModelId();
-        ReviewModel reviewModel = reviewModelService.queryByModelId(modelId);
+        Model reviewModel = reviewModelService.queryByModelId(modelId);
 
         JSONObject js = new JSONObject();
         js.put("reviewModel",reviewModel);
