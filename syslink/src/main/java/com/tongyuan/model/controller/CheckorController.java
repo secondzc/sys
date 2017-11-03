@@ -72,7 +72,7 @@ public class CheckorController extends BaseController{
         map.put("page",page);
         map.put("rows",rows);
         //测试用
-        Long userId = 4L;
+        Long userId = 2L;
         map.put("userId",userId);
 
         List<CheckorPage> chekorPages = checkorService.queryByReviewer(map);
@@ -100,14 +100,12 @@ public class CheckorController extends BaseController{
     //于上面queryByReviewer方法的区别是，这个方法是查看所有的记录，包括历史记录
     @PostMapping(value="/queryAllByReviewer")
     public void queryAllByReviewer(HttpServletRequest request, HttpServletResponse response){
-        //Long userId = getUserId();
+        Long userId = getUserId();
         String page = request.getParameter("page");
         String rows = request.getParameter("rows");
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("page",page);
         map.put("rows",rows);
-        //测试用
-        Long userId = 4L;
         map.put("userId",userId);
 
         List<CheckorPage> chekorPages = checkorService.queryAllByReviewer(map);

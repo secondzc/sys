@@ -23,7 +23,7 @@
         </association>
         <association property="user" javaType="com.tongyuan.gogs.domain.GUser">
             <id property="id" column="id"/>
-            <result property="userName" column="user_user_name"/>
+            <result property="name" column="user_user_name"/>
         </association>
     </resultMap>
 
@@ -68,7 +68,7 @@
         B.description AS review_node_description,
         B.sequence AS review_node_sequence,
         C.id AS user_id,
-        C.user_name AS user_user_name
+        C.name AS user_user_name
 
         FROM review_node_instance A
         INNER JOIN review_node B ON A.node_id = B.node_id

@@ -9,7 +9,7 @@
       <div class="right" style="margin-left: 10px;margin-top: 20px">
           <div style="border: 2px solid #9E9E9E;min-height: 550px">
               <div style="display: inline-block;float: left; margin-left: 30px;margin-top: 20px;">
-                  <breadcrumb></breadcrumb>
+                  <!--<breadcrumb></breadcrumb>-->
               </div>
               <div style="display: inline-block;margin-left: 350px" id="searchMoudle">
                   <!--<p>aaaa</p>-->
@@ -36,14 +36,14 @@
                   <div style="display: inline-block;"><p>排序：</p></div>
                   <div id="appp" style="display: inline-block;">
 
-                      <sortable-list
+                      <!-- <sortable-list
                               :titles="sorttitles"
                               :list="repositories"
                               :sorting-index='0'
                               sorting-type="desc"
                               @sort-finish="onSortFinsh"
                       >
-                      </sortable-list>
+                      </sortable-list> -->
               </div>
               </div>
               <div style="height: 30px;display: inline-block;float: right;margin-right: 20px">
@@ -256,7 +256,7 @@ import kzTree from './directory.vue';
 import modelList from './model.vue' ;
 import packageList from './packageList.vue'
 import uploadFile from  '../nav3/Page6.vue'
-import breadcrumb from '../nav3/breadcrumb.vue'
+//import breadcrumb from '../nav3/breadcrumb.vue'
 import {mapActions} from 'vuex'
 
 import { getReposList} from '../../api/api'
@@ -264,7 +264,7 @@ import { getReposList} from '../../api/api'
 import Waterfall from 'vue-waterfall/lib/waterfall'
 import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 import { mapState,mapGetters} from 'vuex'
-import sortableList from './sortable-list'
+//import sortableList from './sortable-list'
 import Vuetify from 'vuetify';
 
 
@@ -275,10 +275,10 @@ export default {
     modelList,
     packageList,
       uploadFile,
-      breadcrumb,
+      //breadcrumb,
       Waterfall,
       WaterfallSlot,
-      sortableList,
+      //sortableList,
       Vuetify
   },
   data () {

@@ -20,8 +20,39 @@ import packageDiagramVariable from './views/model/packageDiagramVariable.vue'
 import modelComponent from  './views/model/ModelComponent.vue'
 import modelCont from './views/model/modelCont.vue'
 import packageTransfModel from  './views/model/packageTransfModel.vue'
+import template from './views/review/template.vue'
+import setCheckors from './views/review/setCheckors.vue'
+import mySubmitDetail from './views/review/mySubmitDetail.vue'
+import checkor from './views/review/checkor.vue'
+import brief from './views/review1/brief.vue'
+import mySubmitAll from './views/review1/mySubmitAll.vue'
+import checkorAll from './views/review1/checkorAll.vue'
 
 let routes = [
+      {
+          path: '/',
+          component: Home,
+          name: '审签管理',
+          iconCls: 'el-icon-setting',//图标样式class
+          children: [
+              // { path: '/main', component: Main, name: '项目', hidden: true },
+              { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
+              { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
+          ]
+      },
+      {
+          path: '/',
+          component: Home,
+          name: '我的审签',
+          iconCls: 'el-icon-star-on',//图标样式class
+          children: [
+              // { path: '/main', component: Main, name: '项目', hidden: true },
+              {path:'/brief',component:brief,name:'我的流程'},
+              {path:'/checkorAll',component:checkorAll,name:'我的审核'},
+              {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交'},
+          ]
+      },
+
     {
         path: '/login',
         component: Login,

@@ -24,7 +24,8 @@
             <id property="templateId" column="review_flow_template_template_id"/>
             <result column="review_flow_template_template_name" property="templateName"/>
         </association>
-        <association property="nodeInstance" javaType="com.tongyuan.model.domain.ReviewNodeInstance">
+        <association property="reviewNodeInstance" javaType="com.tongyuan.model.domain.ReviewNodeInstance">
+            <!--<id property="id" column="review_node_instance_id"/>-->
             <result property="status" column="review_node_instance_status"/>
         </association>
     </resultMap>
@@ -56,10 +57,11 @@
     </select>
 
 
-    <!--审核者按照审签实例的实例名来查找  只能看到轮到自己审核的，所有的状态都能看到-->
+    <!--审核者按照审签实例的实例名来查找  只能看到轮到自己审核的，除了正在审签之外的状态的集合-->
     <select id="queryAllByReviewer" resultMap="pageResultMap" parameterType="java.util.Map">
         SELECT
         D.id AS review_node_instance_id,
+        D.status AS review_node_instance_status,
         A.create_time AS review_flow_instance_create_time,
         A.last_update_time AS review_flow_instance_last_update_time,
         A.description AS review_flow_instance_description,
@@ -74,7 +76,9 @@
         INNER JOIN review_node_instance D ON A.instance_id = D.instance_id
         INNER JOIN review_node E ON D.node_id = E.node_id
         WHERE
-        AND E.user_id = #{userId}
+        E.user_id = #{userId}
+        AND
+        (D.status=1 OR D.status=3 OR D.status=4)
         <if test="instanceName!=null and instanceName!=''">
             AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
         </if>
