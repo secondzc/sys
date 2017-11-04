@@ -16,6 +16,7 @@
         <result property="description" column="review_flow_instance_description"/>
         <result property="lastUpdateTime" column="review_flow_instance_last_update_time"/>
         <result property="instanceName" column="review_flow_instance_instance_name"/>
+        <result property="instanceId" column="review_flow_instance_instance_id"/>
         <association property="model" javaType="com.tongyuan.model.domain.Model">
             <id property="id" column="id"/>
             <result property="name" column="model_name"/>
@@ -40,6 +41,7 @@
         A.last_update_time AS review_flow_instance_last_update_time,
         A.description AS review_flow_instance_description,
         A.instance_name AS review_flow_instance_instance_name,
+        A.instance_id AS review_flow_instance_instance_id,
         B.name AS model_name,
         C.template_id AS review_flow_template_template_id,
         C.template_name AS review_flow_template_template_name
@@ -66,6 +68,7 @@
         A.last_update_time AS review_flow_instance_last_update_time,
         A.description AS review_flow_instance_description,
         A.instance_name AS review_flow_instance_instance_name,
+        A.instance_id AS review_flow_instance_instance_id,
         B.name AS model_name,
         C.template_id AS review_flow_template_template_id,
         C.template_name AS review_flow_template_template_name

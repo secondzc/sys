@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -86,7 +87,8 @@ public class CheckorController extends BaseController{
 
     //点击详细信息，可查看审签实例对应的模型信息
     @PostMapping(value="/showModelDetails")
-    public void showModelDetails(HttpServletRequest request, HttpServletResponse response){
+    @ResponseBody
+    public JSONObject showModelDetails(HttpServletRequest request, HttpServletResponse response){
         Long instanceId = Long.valueOf(request.getParameter("instanceId"));
         ReviewFlowInstance reviewFlowInstance=reviewFlowInstanceService.queryByInstanceId(instanceId);
         Long modelId = reviewFlowInstance.getModelId();
@@ -94,7 +96,8 @@ public class CheckorController extends BaseController{
 
         JSONObject js = new JSONObject();
         js.put("reviewModel",reviewModel);
-        ServletUtil.createSuccessResponse(200,js,response);
+        js.put("flag",true);
+        return js;
     }
 
     //于上面queryByReviewer方法的区别是，这个方法是查看所有的记录，包括历史记录

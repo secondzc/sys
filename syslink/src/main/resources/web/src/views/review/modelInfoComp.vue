@@ -1,16 +1,29 @@
 <template>
 	<section> 
-    <h3>模型信息：</h3> 
-    <!-- <el-table :data="reviewModel" border style="width:100%"> 
-            <el-table-column prop="name" label="模型名字" width="180"> 
-            </el-table-column> 
-            <el-table-column prop="type" label="模型类型" width="180"> 
-            </el-table-column> 
-            <el-table-column prop="description" label="模型描述" width="180"> 
-            </el-table-column> 
-            <el-table-column prop="createTime" label="创建时间" width="180"> 
-            </el-table-column> 
-      </el-table> --> 
+    <h5>模型信息：</h5> 
+    <div style="margin-left:20px;margin-top:10px" >
+    	<div>
+    		<div class="modelInfo">
+    			<div style="display:inline-block"><p>模型名字:</p></div>
+    		    <div style="display:inline-block">{{this.reviewModel.name}}</div>
+    		</div>
+    		<div class="modelInfo">
+    			<div style="display:inline-block"><p>模型类型:</p></div>
+    		    <div style="display:inline-block">{{this.reviewModel.type}}</div>
+    		</div>
+
+    	</div>
+    	<div>
+    		<div class="modelInfo">
+    			 <div style="display:inline-block"><p>模型描述:</p></div>
+    		     <div style="display:inline-block">{{this.reviewModel.discription}}</div>
+    		</div>
+    		<div class="modelInfo">
+    			  <div style="display:inline-block"><p>创建时间:</p></div>
+    		      <div style="display:inline-block">{{this.reviewModel.createTime}}</div>
+    		</div>
+    	</div>
+    </div>
   </section> 
 </template>
 
@@ -18,17 +31,45 @@
 	export default{
 		data(){
 			return {
-				reviewModel: {
+				reviewModel:{
 					name:'',
 					type:'',
-					description:'',
+					discription:'',
 					createTime:'',
-				}
+				},
+				listLoading: false,
 			}
+		},
+		// props: {
+		// 	instanceId:{
+		// 		type:String,
+		// 		required: false,
+		// 	}
+		// },
+		//props: ['instanceId'],
+		methods: {
+			getReviewModel(){
+				this.listLoading=true;
+				console.log("instanceId="+this.instanceId);
+				let url ="/api/checkor/showModelDetails";
+				this.func.ajaxPost(url,{instanceId:this.instanceId},res=>{
+					if(res.data.flag==true){
+						this.reviewModel = res.data.reviewModel;
+						this.listLoading = false;
+					}
+				})
+			},
+		},
+		mounted(){
+			this.instanceId = sessionStorage.getItem('instanceId');
+			this.getReviewModel();
 		},
 	}
 </script>
 
 <style>
-	
+	.modelInfo{
+		width:75%;
+		border: 2px solid #9E9E9E;
+	}
 </style>
