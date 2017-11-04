@@ -25,12 +25,17 @@
     <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 2" title="正在审核"></el-step>
     <el-step title="未进行" v-for="(item,index) in this.detailPages" v-if="item.status ==1"></el-step>
     </el-steps>
+    <model-info></model-info>
 </section>
 
 </template>
 
 <script>
+	import modelInfo from "../review/modelInfoComp";
 	export default{
+		components:{
+			modelInfo,
+		},
 		data(){
 			return {
 				instanceId: 0,
