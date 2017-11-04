@@ -14,6 +14,7 @@ import VueRouter from 'vue-router'
 
 import store from './vuex/store'
 import Vuex from 'vuex'
+import Vuetify from 'vuetify';
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
 import routes from './routes'
@@ -32,6 +33,7 @@ Vue.config.debug = true;
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(Vuetify);
 
 //NProgress.configure({ showSpinner: false });
 

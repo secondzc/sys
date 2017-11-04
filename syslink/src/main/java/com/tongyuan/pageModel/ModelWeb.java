@@ -5,6 +5,7 @@ package com.tongyuan.pageModel;
  */
 public class ModelWeb {
     private Long index;
+    private Long parentId;
     private String  imageUrl;
     private String name;
     private String discription;
@@ -29,6 +30,14 @@ public class ModelWeb {
     private  Long directoryParentId;
     private String createTime;
     private Long uploadTime;
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
     public Long getUploadTime() {
         return uploadTime;

@@ -43,6 +43,7 @@ public class ComponentController {
         //在这个模型下的所有model（modelList）
         List<ComponentTreeObj> modelTreeList = new ArrayList<>();
         List<ComponentTreeObj> modelList = new ArrayList<>();
+        List<ComponentTreeObj> componentTreeObjList = new ArrayList<>();
         try {
             //查询到所有的model
             List<Model> allModel = modelService.findAllModel();
@@ -59,7 +60,9 @@ public class ComponentController {
                     //这个模型下的组件树
                     List<ComponentTreeObj> compTreeList = new ArrayList<>();
                     varibaleTreeObj.setChildren(compTreeList);
-                    getCompFromModel(varibaleTreeObj.getId(),allComp,varibaleTreeObj.getChildren(),allVariable);
+                 //   getCompFromModel(varibaleTreeObj.getId(),allComp,varibaleTreeObj.getChildren(),allVariable);
+                    //不含模型名称
+                    getCompFromModel(varibaleTreeObj.getId(),allComp,componentTreeObjList,allVariable);
                 }
             }
 
@@ -73,7 +76,7 @@ public class ComponentController {
         jo.put("status",1);
         jo.put("code",0);
         jo.put("msg","ok");
-        jo.put("data",modelList);
+        jo.put("data",componentTreeObjList);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
