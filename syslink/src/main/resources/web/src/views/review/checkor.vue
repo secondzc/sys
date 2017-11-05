@@ -12,7 +12,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="200">
 				<template scope="scope">
-					<el-button size="small" @click="detail(scope.$index, scope.row)">详情</el-button>
+					<el-button size="small" @click="toDetail(scope.$index, scope.row)">详情</el-button>
 					<el-button size="small" @click="handleAgree(scope.$index, scope.row)">同意</el-button>
 					<el-button type="danger" size="small" @click="handleDisagree(scope.$index, scope.row)">拒绝</el-button>
 				</template>
@@ -94,10 +94,10 @@
 					}
 				})
 			},
-			detail(index,row){
+			toDetail(index,row){
 				//转到详情页
 				sessionStorage.setItem('instanceId',row.instanceId);
-				this.$router.push({path:'/mySubmitDetail'});
+				this.$router.push({path:'/checkorDetail'});
 			},
 		},
 		mounted() {

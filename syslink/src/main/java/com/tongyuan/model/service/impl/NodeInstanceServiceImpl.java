@@ -1,6 +1,7 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.NodeInstanceMapper;
+import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.model.service.NodeInstanceService;
@@ -39,5 +40,25 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
     @Override
     public List<DetailPage> details(Long instanceId){
         return nodeInstanceMapper.details(instanceId);
+    }
+
+    @Override
+    public List<CommentPage> queryCommentPages(Long instanceId) {
+        //按照review_node的sequence由小到大的顺序 查询instanceId下的commentPages,只查询审核过的，
+        //也就是3同意，4不同意
+        List<CommentPage> commentPages = nodeInstanceMapper.queryCommentPages(instanceId);
+        for(CommentPage commentPage:commentPages){
+            if(commentPage.getStatus()==3){
+                commentPage.setShowStatus("同意");
+            }else{
+                commentPage.setShowStatus("不同意");
+            }
+        }
+        return commentPages;
+    }
+
+    @Override
+    public int updateComment(Map<String, Object> map) {
+        return nodeInstanceMapper.updateComment(map);
     }
 }

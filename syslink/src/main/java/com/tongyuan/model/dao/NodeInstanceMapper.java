@@ -1,5 +1,6 @@
 package com.tongyuan.model.dao;
 
+import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,4 +19,6 @@ public interface NodeInstanceMapper {
     int updateTime(Map<String, Object> map);
 
     List<DetailPage> details(Long instanceId);
+    List<CommentPage> queryCommentPages(Long instanceId);
+    int updateComment(Map<String,Object> map);
 }

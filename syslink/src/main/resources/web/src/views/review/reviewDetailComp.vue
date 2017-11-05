@@ -20,7 +20,7 @@
         </ul>
  -->
         <!--步骤条的审签状态-->
-    <el-steps :space="200" :active="1" finish-status="success">
+    <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
     <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 3||item.status == 4" title="审核完成"></el-step>
     <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 2" title="正在审核"></el-step>
     <el-step title="未进行" v-for="(item,index) in this.detailPages" v-if="item.status ==1"></el-step>
@@ -40,6 +40,8 @@
 			return {
 				instanceId: 0,
 				detailPages:[],
+				sequence:0,
+				stepLoading:false,
 			}
 		},
 		methods: {
@@ -52,11 +54,13 @@
 					instanceId: this.instanceId,
 				}
 				let url='api/nodeInstance/details';
+				this.stepLoading = true;
 				this.func.ajaxPost(url,params,res=>{
 					this.detailPages = res.data.records;
-					//console.log(this.detailPages[0].node.sequence);
+					this.sequence = res.data.sequence;
+					this.stepLoading = false;
 				})
-			}
+			},
 		},
 		mounted() {
 			this.instanceId = sessionStorage.getItem('instanceId');

@@ -4,12 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.domain.ReviewNodeInstance;
+import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.CheckorPage;
 import com.tongyuan.model.domain.ReviewFlowInstance;
-import com.tongyuan.model.service.CheckorService;
-import com.tongyuan.model.service.ReviewFlowInstanceService;
-import com.tongyuan.model.service.ReviewModelService;
-import com.tongyuan.model.service.StatusChangeService;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +33,8 @@ public class CheckorController extends BaseController{
     private ReviewFlowInstanceService reviewFlowInstanceService;
     @Autowired
     private ReviewModelService reviewModelService;
+    @Autowired
+    private NodeInstanceService nodeInstanceService;
 
     @RequestMapping("")
     public String checkor(){
@@ -51,6 +51,22 @@ public class CheckorController extends BaseController{
         result.put("flag",true);
         ServletUtil.createSuccessResponse(200,result,response);
     }
+    @PostMapping("/agreeWithComment")
+    @ResponseBody
+    public JSONObject agreeWithComment(HttpServletRequest request) throws NumberFormatException,SqlNumberException{
+        Long id = Long.valueOf(request.getParameter("id"));
+        String comment = request.getParameter("comment");
+        statusChangeService.agree(id);
+        Map<String,Object> commentMap = new HashMap<>();
+        commentMap.put("id",id);
+        commentMap.put("comment",comment);
+        nodeInstanceService.updateComment(commentMap);
+
+        JSONObject result = new JSONObject();
+        result.put("message","操作成功!");
+        result.put("flag",true);
+        return result;
+    }
 
     @PostMapping(value="/disagree")
     public void disagree(HttpServletRequest request, HttpServletResponse response){
@@ -62,18 +78,32 @@ public class CheckorController extends BaseController{
         result.put("flag",true);
         ServletUtil.createSuccessResponse(200,result,response);
     }
+    @PostMapping("/disagreeWithComment")
+    @ResponseBody
+    public JSONObject disagreeWithComment(HttpServletRequest request)throws NumberFormatException{
+        Long id = Long.valueOf(request.getParameter("id"));
+        String comment = request.getParameter("comment");
+        statusChangeService.disagree(id);
+        Map<String,Object> commentMap = new HashMap<>();
+        commentMap.put("id",id);
+        commentMap.put("comment",comment);
+        nodeInstanceService.updateComment(commentMap);
+
+        JSONObject result = new JSONObject();
+        result.put("message","操作成功!");
+        result.put("flag",true);
+        return result;
+    }
 
     //展示给审签者的review_node_instance列表
     @PostMapping(value="/queryByReviewer")
     public void queryByReviewer(HttpServletRequest request, HttpServletResponse response){
-        //Long userId = getUserId();
+        Long userId = getUserId();
         String page = request.getParameter("page");
         String rows = request.getParameter("rows");
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("page",page);
         map.put("rows",rows);
-        //测试用
-        Long userId = 2L;
         map.put("userId",userId);
 
         List<CheckorPage> chekorPages = checkorService.queryByReviewer(map);

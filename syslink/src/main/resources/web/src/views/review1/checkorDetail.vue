@@ -6,7 +6,7 @@
 </template>
 <script >
     import reviewDetail from '../review/reviewDetailComp';
-    import commmentComp from '../review/commmentComp'
+    import commentComp from '../review/commentComp';
 	export default{
 
 		data(){
@@ -16,7 +16,7 @@
 		},
 		components:{
 			reviewDetail,
-			commmentComp,
+			commentComp,
 		}
 	}
 </script>

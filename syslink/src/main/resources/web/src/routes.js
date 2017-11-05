@@ -27,6 +27,7 @@ import checkor from './views/review/checkor.vue'
 import brief from './views/review1/brief.vue'
 import mySubmitAll from './views/review1/mySubmitAll.vue'
 import checkorAll from './views/review1/checkorAll.vue'
+import checkorDetail from './views/review1/checkorDetail.vue'
 
 let routes = [
       {
@@ -38,6 +39,7 @@ let routes = [
               // { path: '/main', component: Main, name: '项目', hidden: true },
               { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
               { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
+              {path:'/checkorDetail',component:checkorDetail,name:'审核详情',hidden:true},
           ]
       },
       {
@@ -47,6 +49,7 @@ let routes = [
           iconCls: 'el-icon-star-on',//图标样式class
           children: [
               // { path: '/main', component: Main, name: '项目', hidden: true },
+              {path:'/template',component:template,name:'模板管理'},
               {path:'/brief',component:brief,name:'我的流程'},
               {path:'/checkorAll',component:checkorAll,name:'我的审核'},
               {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交'},
