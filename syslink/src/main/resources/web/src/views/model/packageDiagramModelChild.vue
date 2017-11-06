@@ -1,8 +1,20 @@
 <template>
     <div class="modelContent">
       <!--<div class="left">-->
-          <div><p>模型变量视图：</p></div>
+          <!--<div ><p>模型库：</p>-->
+          <!--<modeltree></modeltree>-->
+          <!--</div>-->
+          <!--组件树-->
+          <div >
+              <p>模型组件视图：</p>
+              <modelComponent></modelComponent>
+          </div>
+          <hr  style="width: 100%;margin-top: 10px">
+          <div style="margin-top: 50px;"><p>模型变量视图：</p></div>
           <variabletree  ></variabletree>
+      <!--</div>-->
+
+      <!--<div class="right">-->
       <!--</div>-->
 
     </div>

@@ -1,50 +1,30 @@
 <template>
     <div>
         {{getVarTree}}
-        {{treeModelVar}}
-        <zk-table
-                ref="table"
-                sum-text="sum"
-                index-text="#"
-                :data="data"
-                :columns="columns"
-                :stripe="props.stripe"
-                :border="props.border"
-                :show-header="props.showHeader"
-                :show-summary="props.showSummary"
-                :show-row-hover="props.showRowHover"
-                :show-index="props.showIndex"
-                :tree-type="props.treeType"
-                :is-fold="props.isFold"
-                :expand-type="props.expandType"
-                :selection-type="props.selectionType">
-            <template slot="$expand" scope="scope">
-                {{ `My name is ${scope.row.name},
-           this rowIndex is ${scope.rowIndex}.`
-                }}
-            </template>
-            <template slot="likes" scope="scope">
-                {{ scope.row.likes.join(',') }}
-            </template>
-        </zk-table>
+        <tree
+            :data="data"
+            :props="defaultProps"
+            node-key="id"
+            show-checkbox
+            :expand-on-click-node="false"
+            :columns="columns"
+            ref="tree1"
+        >
+        </tree>
     </div>
 </template>
 
 <script>
-    import zkTable from 'vue-table-with-tree-grid'
+    import tree from './../../components/index'
     import { mapState,mapGetters} from 'vuex'
+    console.log(tree)
     export default {
         name: 'modelComponent',
         computed: {
             ...mapState({
                 modelId: state => state.modelId,
             }),
-            ...mapGetters(['modelId','treeModelId']),
-            propList() {
-                return Object.keys(this.props).map(item => ({
-                    name: item,
-                }));
-            },
+            ...mapGetters(['modelId']),
             getVarTree(){
                 var _this = this;
                 if(_this.modelId == null || _this.modelId == ''){
@@ -60,79 +40,109 @@
                             console.log(error)
                         })
                 }
-            },getVarTree(){
-                var _this = this;
-                if(_this.modelId == null || _this.modelId == ''){
-                    this.$router.push({path: '/model/index'});
-                }else {
-                    var url = '/api/component/componentTree?modelId=' + _this.treeModelId;
-                    _this.$http.post(url)
-                        .then(function (response) {
-                            _this.data = response.data.data;
-                        })
-                        .catch(function (error) {
-                            console.log(error)
-                        })
-                }
             }
-
         },
         data () {
             return {
-                props: {
-                    stripe: true,
-                    border: false,
-                    showHeader: true,
-                    showSummary: false,
-                    showRowHover: true,
-                    showIndex: false,
-                    treeType: true,
-                    isFold: true,
-                    expandType: false,
-                    selectionType: false,
-                },
                 columns: [{
                     minWidth: 100,
                     label: '名称',
-                    prop: 'name'
+                    name: 'name'
                 }, {
                     minWidth: 100,
                     label: '变量类型',
-                    prop: 'type'
+                    name: 'type'
                 }, {
                     minWidth: 100,
                     label: '重定义',
-                    prop: 'modification'
+                    name: 'modification'
                 }
+//              {
+//                    width: 140,
+//                    minWidth: 140,
+//                    label: '操作',
+//                    renderContent: this.renderContent
+//                }
                 ],
                 data: [
-                ],
-//                defaultProps: {
-//                    children: 'children',
-//                    label: 'label'
+//                    {
+//                    id: 1,
+//                    name: '一级 1',
+//                    type: '123',
+//                    defaultValue: '123',
+//                    units: '123',
+//                    children: [{
+//                        id: 1,
+//                        name: '二级 1-1',
+//                        type: '123',
+//                        defaultValue: '123',
+//                        units: '123',
+//                        children: [{
+//                            id: 9,
+//                            name: '三级 1-1-1',
+//                            type: '123',
+//                            defaultValue: '123',
+//                            units: '123',
+//                        }, {
+//                            id: 10,
+//                            name: '三级 1-1-2',
+//                            type: '123',
+//                            defaultValue: '123',
+//                            units: '123',
+//                        }]
+//                    }]
+//                }, {
+//                    id: 2,
+//                    name: '一级 2',
+//                    type: '123',
+//                    defaultValue: '123',
+//                    units: '123',
+//                    children: [{
+//                        id: 5,
+//                        name: '二级 2-1',
+//                        type: '123',
+//                        defaultValue: '123',
+//                        units: '123',
+//                    }, {
+//                        id: 6,
+//                        name: '二级 2-2',
+//                        type: '123',
+//                        defaultValue: '123',
+//                        units: '123',
+//                    }]
+//                }, {
+//                    id: 3,
+//                    name: '一级 3',
+//                    type: '123',
+//                    defaultValue: '123',
+//                    units: '123',
+//                    children: [{
+//                        id: 7,
+//                        name: '二级 3-1',
+//                        type: '123',
+//                        defaultValue: '123',
+//                        units: '123',
+//                    }, {
+//                        id: 8,
+//                        name: '二级 3-2',
+//                        type: '123',
+//                        defaultValue: '123',
+//                        units: '123',
+//                    }]
 //                }
+                ],
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                }
             }
         },
         components: {
-            zkTable,
+            tree
         }
     }
 </script>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
 
-    .switch-list {
-        margin: 20px 0;
-        list-style: none;
-        overflow: hidden;
-    }
-
-    .switch-item {
-        margin: 20px;
-        float: left;
-    }
 </style>
