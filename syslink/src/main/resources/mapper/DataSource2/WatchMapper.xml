@@ -12,4 +12,17 @@
     <insert id="add"  parameterType="com.tongyuan.gogs.domain.Watch">
     INSERT  INTO watch (user_id,repo_id) VALUES (#{UserID},#{RepoID})
     </insert>
+    <delete id="delete" parameterType="com.tongyuan.gogs.domain.Watch">
+        delete from watch where id=#{ID}
+    </delete>
+    <select id="queryListByParam" resultMap="baseResultMap"  resultType="com.tongyuan.gogs.domain.Watch">
+        SELECT   <include refid="baseColumnList" ></include> FROM
+        watch
+        where uid=#{Uid} and repo_id = #{RepoId}
+    </select>
+    <select id="findAllWatch" resultMap="baseResultMap"  resultType="com.tongyuan.gogs.domain.Watch">
+        SELECT <include refid="baseColumnList" ></include>
+        FROM watch
+        where 1=1
+    </select>
 </mapper>

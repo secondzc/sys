@@ -1,51 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tongyuan.model.dao.ReviewModelMapper">
-    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.Model">
-        <id column="id" property="id" jdbcType="BIGINT"  />
-        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="classes" property="classes" jdbcType="VARCHAR"/>
-        <result column="type" property="type" jdbcType="VARCHAR"/>
-        <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
-        <result column="file_id" property="fileId" jdbcType="BIGINT"/>
-        <result column="discription" property="discription" jdbcType="VARCHAR"/>
-        <result column="Import" property="Import" jdbcType="VARCHAR"/>
-        <result column="Extends" property="Extends" jdbcType="VARCHAR"/>
-        <result column="model_file_path" property="modelFilePath" jdbcType="VARCHAR"/>
-        <result column="icon_svg_path" property="iconSvgPath" jdbcType="VARCHAR"/>
-        <result column="diagram_svg_path" property="diagramSvgPath" jdbcType="VARCHAR"/>
-        <result column="info_text_path" property="infoTextPath" jdbcType="VARCHAR"/>
-        <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
-        <result column="user_id" property="userId" jdbcType="BIGINT"/>
-        <result column="create_time" property="createTime" jdbcType="DATE"/>
-        <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
-        <result column="scope" property="scope" jdbcType="BOOLEAN"/>
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.ReviewModel">
+        <id column="model_id" property="modelId" jdbcType="BIGINT"  />
+        <result column="model_description" property="modelDescription" jdbcType="VARCHAR"/>
+        <result column="model_name" property="modelName" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <sql id="baseColumnList" >
-        id,parent_id,name,classes,type,directory_id,file_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
-        info_text_path,is_deleted,user_id,create_time,last_update_time,scope
+    <sql id="baseColumnList">
+        model_id,model_description,model_name
     </sql>
 
-    <select id="queryAll" resultMap="baseResultMap">
+    <select id="queryAll" parameterType="java.util.Map" resultMap="baseResultMap">
         SELECT
         <include refid="baseColumnList"/>
-        FROM model
+        FROM review_model
+        WHERE 1=1
     </select>
 
     <select id="queryByModelId" resultMap="baseResultMap" parameterType="java.lang.Long">
         SELECT
         <include refid="baseColumnList"/>
-        FROM model WHERE id=#{modelId}
+        FROM review_model WHERE model_id=#{modelId}
     </select>
 
     <select id="queryByModelName" resultMap="baseResultMap" parameterType="java.util.Map">
         SELECT
         <include refid="baseColumnList"/>
-        FROM model WHERE 1=1
+        FROM review_model WHERE 1=1
         <if test="modelName!=null and modelName!=''">
-            AND name LIKE CONCAT(CONCAT('%',#{modelName,jdbcType=VARCHAR}),'%')
+            AND modelName LIKE CONCAT(CONCAT('%',#{modelName,jdbcType=VARCHAR}),'%')
         </if>
     </select>
 </mapper>

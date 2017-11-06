@@ -2,7 +2,7 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.domain.ReviewModel;
 import com.tongyuan.model.service.ReviewModelService;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class ReviewModelController extends BaseController {
         map.put("page", page);
         map.put("rows", rows);
 
-        List<Model> reviewModels = reviewModelService.queryAll(map);
-        PageInfo<Model> pageInfo = new PageInfo<Model>(reviewModels);
+        List<ReviewModel> reviewModels = reviewModelService.queryAll(map);
+        PageInfo<ReviewModel> pageInfo = new PageInfo<ReviewModel>(reviewModels);
         JSONObject jo = new JSONObject();
         jo.put("rows", reviewModels);
         jo.put("total", pageInfo.getPages());

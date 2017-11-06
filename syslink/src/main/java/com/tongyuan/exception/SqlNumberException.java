@@ -8,7 +8,4 @@ public class SqlNumberException extends Exception{
         super(msg);
 		//xyx
     }
-    public SqlNumberException(){
-        super();
-    }
 }

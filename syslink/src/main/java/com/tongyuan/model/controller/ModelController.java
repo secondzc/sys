@@ -2,7 +2,13 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.domain.Repository;
+import com.tongyuan.gogs.domain.Star;
+import com.tongyuan.gogs.domain.Watch;
 import com.tongyuan.gogs.service.GUserService;
+import com.tongyuan.gogs.service.RepositoryService;
+import com.tongyuan.gogs.service.StarService;
+import com.tongyuan.gogs.service.WatchService;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
@@ -12,6 +18,7 @@ import com.tongyuan.pageModel.TreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.DateUtil;
+import com.tongyuan.util.FileUtils;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
@@ -54,6 +61,12 @@ public class ModelController {
     private ComponentService componentService;
     @Autowired
     private ModelUtil modelUtil;
+    @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
+    private WatchService watchService;
+    @Autowired
+    private StarService starService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -362,10 +375,22 @@ public class ModelController {
         List<Model> oneOfModel = new ArrayList<>();
         //查询所有direactory
         List<Directory> allDirectory = directoryService.findAllDirectory();
+        //查询所有的repository
+        List<Repository> allRepository = repositoryService.findAllRepository();
+        //查询所有的watch
+        List<Watch> allWatch = watchService.findAllWatch();
+        //查询所有的star
+        List<Star> allStar = starService.findAllStar();
         //存放directory的id
         List<Long> directoryIdList  = new ArrayList<>();
-        List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
+        if(parent_id == null){
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
         try {
+            List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
             List<Model> allModelList = modelService.findAllModel();
             if(parent_id != null && parent_id != 0 && rootDirectoryList.size() >0){
                 //仅有一个directory
@@ -384,11 +409,9 @@ public class ModelController {
                         }
                     }
                 }
-
-
-                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
+                for(int  j= 0; j<= searchModel.size() -1; j++){
                     for (Model model: allModelList) {
-                        if(model.getParentId() == rootDirectoryList.get(j).getId()){
+                        if(model.getParentId() == searchModel.get(j).getId()){
                             oneOfModel.add(model);
                             break;
                         }
@@ -416,10 +439,11 @@ public class ModelController {
                 ModelWeb modelWeb = new ModelWeb();
                 GUser user = gUserService.queryById(oneOfModel.get(i).getUserId());
                 modelWeb.setIndex(oneOfModel.get(i).getId());
+                modelWeb.setTotal(oneOfModel.size());
                 modelWeb.setName(modelUtil.splitName(oneOfModel.get(i).getName()));
+                modelWeb.setRepositoryName(oneOfModel.get(i).getName().split("\\.")[0]);
                 modelWeb.setParentId(oneOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
-//                modelWeb.setImageUrl("../../assets/test1.png");
                 if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
@@ -427,8 +451,31 @@ public class ModelController {
                 modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
                 modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
                 modelWeb.setType(oneOfModel.get(i).getType());
-    //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
+                modelWeb.setNumberStar(0);
+                modelWeb.setNumberWatch(0);
                 repositoryModelList.add(modelWeb );
+            }
+            for (ModelWeb modelWeb : repositoryModelList) {
+                for (Repository repository: allRepository) {
+                    if(modelWeb.getRepositoryName().equals(repository.getName())){
+                        //关注列表
+                        List<Watch> watches = new ArrayList<>();
+                        for (Watch watch : allWatch){
+                            if(repository.getID() == watch.getRepoID()){
+                                watches.add(watch);
+                            }
+                        }
+                        modelWeb.setNumberWatch(watches.size());
+                        //收藏列表
+                        List<Star> stars = new ArrayList<>();
+                        for (Star star : allStar) {
+                            if (repository.getID() == star.getRepoId()){
+                                stars.add(star);
+                            }
+                        }
+                        modelWeb.setNumberStar(stars.size());
+                    }
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -755,5 +802,59 @@ public class ModelController {
          //修改componentMap
          componentMap.put("parentName",realParentName.substring(0,realParentName.length()-1));
      }
+
+    @RequestMapping(value = "/download",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject download(@RequestParam(value = "modelId",required = false)Long modelId,
+                                HttpServletRequest request , HttpServletResponse response){
+
+        JSONObject jo=new JSONObject();
+        String realUrl ="";
+        try{
+            Model model = modelService.queryModelById(modelId);
+            String name = modelUtil.splitName(model.getName());
+            FileUtils.copyFileCover(model.getModelFilePath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".dom.xml",true);
+            FileUtils.copyFileCover(model.getDiagramSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".diagram.svg",true);
+            FileUtils.copyFileCover(model.getInfoTextPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".info.html",true);
+            FileUtils.copyFileCover(model.getIconSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".icon.svg",true);
+            FileUtils.zipFiles("C:\\Temp\\FileLibrary\\","C:\\Temp\\FileLibrary\\" +name,"C:\\Temp\\FileLibrary\\"+name+"Model");
+             realUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/"+name+"Model";
+            }catch(Exception e) {
+                e.printStackTrace();
+                jo.put("status","1");
+                jo.put("code",0);
+                jo.put("msg","error");
+                return jo;
+            }
+                jo.put("status",1);
+                jo.put("code",0);
+                jo.put("msg","ok");
+                jo.put("data",realUrl);
+                return (JSONObject) JSONObject.toJSON(jo);
+
+            }
+    @RequestMapping(value = "/deleted",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject deleted(@RequestParam(value = "modelId",required = false)Long modelId,
+                               HttpServletRequest request , HttpServletResponse response){
+
+        JSONObject jo=new JSONObject();
+        try{
+            Model model = modelService.queryModelById(modelId);
+            model.setDeleted(true);
+            modelService.update(model);
+        }catch(Exception e) {
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","error");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        return (JSONObject) JSONObject.toJSON(jo);
+
+    }
 
 }

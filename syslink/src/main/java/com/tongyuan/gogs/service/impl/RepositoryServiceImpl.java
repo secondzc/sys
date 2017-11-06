@@ -6,6 +6,8 @@ import com.tongyuan.gogs.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017-9-18.
  */
@@ -23,6 +25,11 @@ public class RepositoryServiceImpl implements RepositoryService{
     @Override
     public Repository queryByName(String Name) {
         return this.repositoryMapper.queryByName(Name);
+    }
+
+    @Override
+    public List<Repository> findAllRepository() {
+        return this.repositoryMapper.findAllRepository();
     }
 
 

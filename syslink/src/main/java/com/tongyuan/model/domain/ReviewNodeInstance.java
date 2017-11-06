@@ -24,16 +24,6 @@ public class ReviewNodeInstance {
     private Timestamp createTime;
     @Column
     private Timestamp lastUpdateTime;
-    @Column
-    private String comment;
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 
     public Long getId() {
         return id;

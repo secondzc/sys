@@ -30,6 +30,45 @@ public class ModelWeb {
     private  Long directoryParentId;
     private String createTime;
     private Long uploadTime;
+    private String repositoryName;
+    //模型库数量
+    private Integer total;
+    //模型库关注数
+    private Integer numberWatch;
+    //模型库收藏数
+    private Integer numberStar;
+
+    public Integer getNumberWatch() {
+        return numberWatch;
+    }
+
+    public void setNumberWatch(Integer numberWatch) {
+        this.numberWatch = numberWatch;
+    }
+
+    public Integer getNumberStar() {
+        return numberStar;
+    }
+
+    public void setNumberStar(Integer numberStar) {
+        this.numberStar = numberStar;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
+    public String getRepositoryName() {
+        return repositoryName;
+    }
+
+    public void setRepositoryName(String repositoryName) {
+        this.repositoryName = repositoryName;
+    }
 
     public Long getParentId() {
         return parentId;
