@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.gogs.dao.StarMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.gogs.domain.Star">
+        <id column="id" property="ID" jdbcType="BIGINT"  />
+        <result column="uid" property="Uid" jdbcType="BIGINT"  />
+        <result column="repo_id" property="RepoId" jdbcType="BIGINT"  />
+    </resultMap>
+    <sql id="baseColumnList" >
+        id,uid,repo_id
+    </sql>
+    <insert id="add"  parameterType="com.tongyuan.gogs.domain.Star">
+        INSERT  INTO star (uid,repo_id) VALUES (#{Uid},#{RepoId})
+    </insert>
+    <delete id="delete" >
+         delete from star where id=#{ID}
+    </delete>
+    <select id="queryListByParam" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Star">
+        SELECT   <include refid="baseColumnList" ></include> FROM
+        star
+        where uid=#{Uid} and repo_id = #{RepoId}
+    </select>
+    <select id="findAllStar" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Star">
+        SELECT <include refid="baseColumnList" ></include>
+        FROM star
+        where 1=1
+    </select>
+</mapper>
