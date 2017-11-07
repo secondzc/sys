@@ -1,5 +1,9 @@
 <template >
+<<<<<<< HEAD
     <el-container style="height: 100%;">
+=======
+    <el-container>
+>>>>>>> a894fdacd57791befddc286140ce4711aad8d62d
         <el-header style="height: 30px">
         </el-header>
     <el-container style="border: 0.1px solid #eee">

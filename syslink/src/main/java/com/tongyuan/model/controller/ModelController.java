@@ -447,6 +447,7 @@ public class ModelController extends  BaseController{
                 modelWeb.setRepositoryName(oneOfModel.get(i).getName().split("\\.")[0]);
                 modelWeb.setParentId(oneOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
+                modelWeb.setUserId(user.getID());
                 if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
