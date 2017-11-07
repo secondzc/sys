@@ -26,6 +26,8 @@ public class ModelWeb {
     private String infoTextPath;
     //上传者
     private String userName;
+    //上传者id
+    private Long userId;
     //directoryparentId
     private  Long directoryParentId;
     private String createTime;
@@ -37,6 +39,14 @@ public class ModelWeb {
     private Integer numberWatch;
     //模型库收藏数
     private Integer numberStar;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Integer getNumberWatch() {
         return numberWatch;

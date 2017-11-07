@@ -12,4 +12,5 @@ public interface RepositoryService {
 //    public Repository setData(Repository repository);
     Repository queryByName(String Name);
     public List<Repository> findAllRepository();
+//    boolean update(Repository repository);
 }
