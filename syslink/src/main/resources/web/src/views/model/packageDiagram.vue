@@ -1,117 +1,90 @@
 <template>
-    <div class="modelContent">
-        <div style="border: 2px solid #9E9E9E;height: 70px;width: 100%;">
-         <span style="font-size: 20px;position: relative;top: 20px;">模型库：{{form.name}}</span>
-        </div>
-
-        <div class="left">
-            <div style="border: 2px solid #9E9E9E;margin-top: 20px;padding: 10px">
-            <!--<modelbasecont></modelbasecont>-->
-            <!--模型基本信息-->
-            <!--<div><p>模型基本信息：</p></div>-->
-            <!--<modelbasecont></modelbasecont>-->
-            <!--模型树-->
-            <!--<div><p>模型树：</p></div>-->
-            <modeltree style="height: 544px;"></modeltree>
-            <!--变量树-->
-            <!--<div style="margin-top: 80px">-->
-            <!--<p>变量树：</p>-->
-            <!--<variabletree  ></variabletree>-->
-            </div>
-        </div>
-
-
-
-
-      <div class="right"  style="margin-left: 10px;margin-top: 20px">
-          <div style="border: 2px solid #9E9E9E;min-height: 550px">
-          <template>
-              <section>
-                  <div id="tabs" class="tabs-bottom">
-                      <ul>
-                          <li><a href="#tabs-1">基本信息</a></li>
-                          <li><a href="#tabs-2">视图</a></li>
-                          <!--<li><a href="#tabs-3">Aenean lacinia</a></li>-->
-                      </ul>
-                      <div class="tabs-spacer"></div>
-                      <div id="tabs-1">
-                          <div style="min-height: 452px;">
-                              <el-form :inline="true" ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;">
-                                  <!--<div-->
-                                  <!--&gt;{{modelId}}</div>-->
-                                  {{getModelVar}}
-                                  <el-form-item label="模型信息:" >
-                                      <el-input  disabled="disabled" v-model="form.name"></el-input>
-                                  </el-form-item>
-                                  <el-form-item label="模型受限类型:" label-width="100px">
-                                      <el-input disabled="disabled" v-model="form.classes"></el-input>
-                                  </el-form-item>
-                                  <el-form-item label="模型类型:" >
-                                      <el-input  disabled="disabled" v-model="form.type"></el-input>
-                                  </el-form-item>
-
-                                  <el-form-item  label-width="100px" label="导入包名:" >
-                                      <el-input  disabled="disabled" v-model="form.import"></el-input>
-                                  </el-form-item>
-                                  <el-form-item label="基类名:" >
-                                      <el-input disabled="disabled" v-model="form.extends"></el-input>
-                                  </el-form-item>
-                                  <el-form-item label="上传者:"  label-width="100px">
-                                      <el-input  disabled="disabled" v-model="form.userName"></el-input>
-                                  </el-form-item>
-                                  <el-form-item label="模型描述:" >
-                                      <el-input disabled="disabled" v-model="form.discription"></el-input>
-                                  </el-form-item>
-                              </el-form>
-                          </div>
-                      </div>
-                      <div id="tabs-2">
-                          <div style="min-height: 452px;">
-                              <component></component>
-                          </div>
-                      </div>
-                      <!--<div id="tabs-3">-->
-                          <!--<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>-->
-                          <!--<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>-->
-                      <!--</div>-->
-                  </div>
-              </section>
-          </template>
-          </div>
-          <!--组件图-->
-          <!--<div><p>组件图：</p></div>-->
-          <!--<component></component>-->
-
-
-      </div>
-    </div>
+    <el-container>
+        <el-header style="height: 50px;background-color: rgb(238, 241, 246);border: 1px solid #B0C4DE">
+            <span style="font-size: 20px;position: relative;top: 20px;">模型：{{form.name}}</span>
+        </el-header>
+        <el-container>
+        <el-aside width="300px" style="background-color: rgb(238, 241, 246);border: 1px solid #B0C4DE;min-height: -webkit-fill-available">
+            <modeltree ></modeltree>
+        </el-aside>
+        <el-main style="background-color: rgb(238, 241, 246);border: 1px solid #B0C4DE;margin-left: 20px">
+            <template>
+                <section>
+                    <div id="tabs" class="tabs-bottom">
+                        {{getModelVar}}{{treeModelVar}}
+                        <ul>
+                            <li><a href="#tabs-3">文本</a></li>
+                            <li><a href="#tabs-2">图标</a></li>
+                            <li><a href="#tabs-1">组件</a></li>
+                            <li><a href="#tabs-4">说明</a></li>
+                            <li><a href="#tabs-5">变量</a></li>
+                        </ul>
+                        <div class="tabs-spacer"></div>
+                        <div id="tabs-1">
+                            <div style="min-height: 452px;">
+                                <modelComponent></modelComponent>
+                            </div>
+                        </div>
+                        <div id="tabs-2">
+                            <div style="min-height: 452px;">
+                                <img :src=svgUrl class="image"/>
+                            </div>
+                        </div>
+                        <div id="tabs-3">
+                            <div style="min-height: 452px;">
+                                <img :src=iconUrl class="image"/>
+                            </div>
+                        </div>
+                        <div id="tabs-4">
+                            <div style="min-height: 452px;">
+                                <iframe :src=infoUrl  style="width: 100%;height: 464px;overflow: auto;" ></iframe>
+                            </div>
+                        </div>
+                        <div id="tabs-5">
+                            <div style="min-height: 452px;">
+                                <package-diagram-model-child ></package-diagram-model-child>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </template>
+        </el-main>
+        </el-container>
+    </el-container>
 </template>
 
 <script>
 import {mapActions} from 'vuex'
-import modelbasecont from './modelBaseContent.vue'
 import modeltree from './modelTree.vue'
 import component from './Component.vue'
+import modelComponent from './ModelComponent.vue'
 import variabletree from './Variabletree.vue'
+import PackageDiagramModelChild from "./packageDiagramModelChild.vue";
 import { mapState,mapGetters} from 'vuex'
 
 import 'jquery-ui/external/jquery-1.9.1/jquery'
 import 'jquery-ui/ui/widgets/tabs'
 import 'jquery-ui/themes/base/all.css'
 import 'jquery-ui/external/jquery/jquery'
+import ElContainer from "../../../node_modules/element-ui/packages/container/src/main";
 
 export default {
   name: 'packageDiagram',
   components: {
-//      modelbasecont,
+      ElContainer,
       modeltree,
       component,
+      modelComponent,
+      PackageDiagramModelChild,
 //      variabletree
   },
   data () {
     return {
         form:[],
       data :{
+          svgUrl:'',
+          iconUrl:'',
+          infoUrl:'',
       },
     }
   },
@@ -120,7 +93,7 @@ export default {
             modelId: state => state.modelId,
             a:state =>state.a
         }),
-        ...mapGetters(['modelId','amsg']),
+        ...mapGetters(['modelId','amsg','treeModelId']),
         getModelVar(){
             var _this = this;
             if(_this.modelId == null || _this.modelId == ''){
@@ -150,28 +123,41 @@ export default {
                     .catch(function (error) {
                         console.log(error)
                     })
+            }
+        },treeModelVar(){
+            var _this = this;
+            if(_this.modelId == null || _this.modelId == ''){
+                this.$router.push({path: '/model/index'});
+            }else {
+                var url = '/api/model/modelVariable?modelId=' + _this.treeModelId;
+                _this.$http.post(url)
+                    .then(function (response) {
+                        _this.form = response.data.form;
+                        if(response.data.form.diagramSvgPath == null){
+                            _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                        }else{
+                            _this.svgUrl = response.data.form.diagramSvgPath;
+                        }
+                        if(response.data.form.iconSvgPath == null){
+                            _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                        }else{
+                            _this.iconUrl = response.data.form.iconSvgPath;
+                        }
+                        if(response.data.form.infoTextPath == null){
+                            _this.infoUrl = ""
+                        }else{
+                            _this.infoUrl = response.data.form.infoTextPath;
+                        }
 
-
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
             }
         }
+
     },
   methods: {
-//    hanldeNodeClick (data) {
-//      //该目录下的模型列表
-//        this.treeItem = data;
-////        this.$emit("node-click",data)
-//        this.$store.dispatch('sendA',data.parent_id);
-//        if(data.parent_id <= 0){
-//            this.$store.dispatch('sendB',-1);
-//        }
-//        else{
-//            this.$store.dispatch('sendB',data.parent_id);
-//        }
-//    }
-//      getRepos (data) {
-//          //该目录下的模型列表
-//          this.treeItem = data;
-//      }
       Tabs(){
           $( "#tabs" ).tabs();
           // 修改 class
