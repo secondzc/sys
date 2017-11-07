@@ -76,5 +76,17 @@ public class DirectoryServiceImpl implements DirectoryService{
         return this.directoryMapper.queryByParentName(params);
     }
 
+    @Override
+    public List<Map<String,Object>> queryMapListByParentId(Long id)
+    {
+        return this.directoryMapper.queryMapListByParentId(id);
+    }
+
+    @Override
+    public Map<String,Object> queryMapById(Long id)
+    {
+        return this.directoryMapper.queryMapById(id);
+    }
+
 
 }

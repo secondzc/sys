@@ -5,16 +5,17 @@
 
 
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+   <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
-          <el-button v-if="" type="primary" @click="handleAdd"  >新建组</el-button>
-          <el-button  @click="handleEdit">编辑组</el-button>
-          <el-button type="danger"  @click="handleDel">删除组</el-button>
+          <el-button size="small" v-if="" type="primary" @click="handleAdd"  >新建组</el-button>
+          <el-button  size="small" @click="handleEdit">编辑组</el-button>
+          <el-button type="danger" size="small" @click="handleDel">删除组</el-button>
         </el-form-item>
       </el-form>
-       
-    </el-col>
+
+      <hr/> 
+   <!--  </el-col> -->
 
     <!--列表-->
     <el-table :data="group" highlight-current-row  @selection-change="selsChange"     style="width: 100%;">
@@ -78,7 +79,7 @@
    
 
     <!--编辑权限组界面-->
-    <el-dialog title="编辑权限组" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑权限组" :visible="editFormVisible" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="80px" ref="editForm"    >
         <el-form-item label="名称" prop="authName"  :rules="[{required:true,message:'请输入权限组名称',trigger:'blur'}]"  >
           <el-input v-model="editForm.authName" auto-complete="off"></el-input>
@@ -103,7 +104,7 @@
     </el-dialog>
   
   <!--编辑权限项界面-->
-    <el-dialog title="编辑权限项" v-model="editItemVisible"         :close-on-click-modal="false"  >
+    <el-dialog title="编辑权限项" :visible="editItemVisible"         :close-on-click-modal="false"  >
       <el-form :model="editItem" label-width="80px"  ref="editItem"    >
         <el-form-item label="名称" prop="authName"  :rules="[{required:true,message:'请输入权限项名称',trigger:'blur'}]"  >
           <el-input v-model="editItem.authName" auto-complete="off"></el-input>
@@ -128,7 +129,7 @@
 
 
     <!--新建权限组界面-->
-    <el-dialog title="新建权限组" v-model="addFormVisible" :close-on-click-modal="false"  >
+    <el-dialog title="新建权限组" :visible="addFormVisible" :close-on-click-modal="false"  >
       <el-form :model="addForm" label-width="80px"  ref="addForm"    >
         <el-form-item label="名称" prop="authName"  :rules="[{required:true,message:'请输入权限组名称',trigger:'blur'}]"  >
           <el-input v-model="addForm.authName" auto-complete="off"></el-input>
@@ -152,7 +153,7 @@
       </div>
     </el-dialog>
      <!--新增权限项界面-->
-    <el-dialog title="新增权限项" v-model="addItemVisible" :close-on-click-modal="false"  >
+    <el-dialog title="新增权限项" :visible="addItemVisible" :close-on-click-modal="false"  >
       <el-form :model="addItem" label-width="80px"  ref="addItem"    >
         <el-form-item label="名称" prop="authName"  :rules="[{required:true,message:'请输入权限项名称',trigger:'blur'}]"  >
           <el-input v-model="addItem.authName" auto-complete="off"></el-input>

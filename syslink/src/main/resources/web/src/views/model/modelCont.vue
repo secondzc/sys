@@ -169,18 +169,6 @@
                 // 移动导航到底部
                 $( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
             }
-//            svgUrl : function () {
-//                var svg = this.$refs.form.model.diagramSvgPath;
-//                window.open(svg,"_blank");
-//            },
-//            iconUrl : function () {
-//                var svg = this.$refs.form.model.iconSvgPath;
-//                window.open(svg,"_blank");
-//            },
-//            infoUrl : function () {
-//                var svg = this.$refs.form.model.infoTextPath;
-//                window.open(svg,"_blank");
-//            }
         },mounted(){
             this.Tabs();
         }

@@ -1,7 +1,7 @@
 <template>
   <section>
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+   <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.realName" placeholder="姓名"  min-width="120" ></el-input>
@@ -22,10 +22,10 @@
           
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="query">查询</el-button>
+          <el-button type="primary" v-on:click="query" size="small" >查询</el-button>
         </el-form-item>
          <el-form-item>
-          <el-button type="primary" v-on:click="reset">重置</el-button>
+          <el-button type="primary" v-on:click="reset"  size="small" >重置</el-button>
         </el-form-item>
         <!--
        <el-form-item>
@@ -35,10 +35,11 @@
        
       
       </el-form>
-    </el-col>
+      <hr/>
+    <!-- </el-col> -->
 
     <!--列表-->
-    <el-table :data="logs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;">
+    <el-table :data="logs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;"  @selection-change="selsChange" >
       <el-table-column type="selection" min-width="100">
       </el-table-column>
       <el-table-column type="index" min-width="120">
@@ -55,6 +56,7 @@
       </el-table-column>
     </el-table>
 
+
     <!--工具条-->
     <el-col :span="24" class="toolbar">
      
@@ -67,18 +69,20 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="pager.total">
     </el-pagination>
+    <el-button type="danger"  size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
     </el-col>
 
-  
 
-  
   </section>
 </template>
 
 <script>
   import util from '../../common/js/util'
 
+
+
   export default {
+
     data() {
       return {
           pickerOptions2: {
@@ -124,9 +128,16 @@
     //    total: 0,
  //       page: 1,
         listLoading: false,
+        sels:[]
       }
     },
     methods: {
+    
+       selsChange: function (sels) {
+        this.sels = sels;
+      },
+
+     
        toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -198,7 +209,30 @@
           .catch(function (error) {
               console.log(error);
           });
+      },
+     
+       batchRemove: function () {
+        var ids = this.sels.map(item => item.id);
+
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { ids: ids };
+          this.$http({url:'/api/operationlog/deleteLogs',method:'post',data:para})
+          .then((res) => {
+            this.listLoading = false;
+            //NProgress.done();
+           
+           
+            this.getLogs();
+          });
+        }).catch(() => {
+
+        });
       }
+
  
     },
     mounted() {

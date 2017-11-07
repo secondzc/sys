@@ -16,9 +16,11 @@
 
   <div class="text item">
    {{this.team.description}}
+   <hr/>
   </div>
   <div class="text item">
   <span style="line-height: 36px;">{{team.numMembers}}名成员-{{team.numRepos}}个仓库</span>
+  <hr/>
   </div>
    <div class="text item">
   <span style="line-height: 36px;">{{team.authDes}}</span>

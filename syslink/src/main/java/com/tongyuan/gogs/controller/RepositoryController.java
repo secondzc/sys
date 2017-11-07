@@ -9,6 +9,8 @@ import com.tongyuan.gogs.service.ActionService;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.gogs.service.WatchService;
+import com.tongyuan.model.controller.BaseController;
+import com.tongyuan.model.wrapper.RepositoryWarpper;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +24,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017-9-18.
  */
 @Controller
 @RequestMapping("/api/repository")
-public class RepositoryController {
+public class RepositoryController extends BaseController{
     @Autowired
     private RepositoryService repositoryService;
     @Autowired
@@ -112,6 +117,69 @@ public class RepositoryController {
         return jo;
     }
 
+
+
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject queryRepo(HttpServletRequest request,HttpServletResponse response)
+    {
+        JSONObject jo = new JSONObject();
+        long uid = getUserId();
+        List<Map<String,Object>> repos = new ArrayList<>();
+        List<Map<String,Object>> cRepos = new ArrayList<>();
+        List<Map<String,Object>> allRepos = new ArrayList<>();
+//        JSONObject jsonObject = JSON.parseObject(para);
+//        Map<String,Object> map = new HashMap<String ,Object>();
+//        map.put("pageIndex",jsonObject.getIntValue("pageIndex"));
+//        map.put("pageSize",jsonObject.getIntValue("pageSize"));
+
+
+        try
+        {
+//            List <Operationlog>operationlogs = operationlogService.query(map);
+            repos=repositoryService.queryByUid(uid);
+            cRepos = repositoryService.getCollaboration(uid);
+            allRepos.addAll(repos);
+            allRepos.addAll(cRepos);
+            new RepositoryWarpper(allRepos).warp();
+            for(Map<String,Object> map1 :allRepos)
+            {
+                if(Long.parseLong(map1.get("ownerId").toString())==uid)
+                {
+                    map1.put("Collaboration",0);
+                }
+                else
+                {
+                    map1.put("Collaboration",1);
+                }
+            }
+
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取列表失败");
+            return jo;
+        }
+
+        jo.put("flag",true);
+        jo.put("msg","获取列表成功");
+        jo.put("allRepos",allRepos);
+//        jo.put("repos",new RepositoryWarpper(repositories).warp());
+//        jo.put("cRepos",new RepositoryWarpper(cRepos).warp());
+
+
+//        PageInfo<Operationlog> pageInfo =new PageInfo<Operationlog>(operationlogList);
+//        jo.put("logs",page);
+//        jo.put("total",page.getTotal());
+
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
 
 
 

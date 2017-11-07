@@ -40,7 +40,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/model")
-public class ModelController {
+public class ModelController extends  BaseController{
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Date nowDate = new Date();
@@ -67,6 +67,8 @@ public class ModelController {
     private WatchService watchService;
     @Autowired
     private StarService starService;
+    @Autowired
+    private AuthService authService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -398,6 +400,7 @@ public class ModelController {
                     Directory oneDirectory = rootDirectoryList.get(0);
                     getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
                     directoryIdList.add(oneDirectory.getId());
+                    //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
                 }
                 for (Long id : directoryIdList) {
                     for (Model model: allModelList) {

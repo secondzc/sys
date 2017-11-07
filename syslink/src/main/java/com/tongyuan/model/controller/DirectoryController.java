@@ -698,7 +698,34 @@ public class DirectoryController {
         jo.put("treeItem",treeItemList);
         return jo;
     }
-
+    @RequestMapping(value = "/getDirectoryTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getDirectoryTree(HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        //点击树节点父类列表
+        List<Map<String,Object>> directoryTree = new ArrayList<>();
+        try {
+            directoryTree = directoryService.queryMapListByParentId(Long.valueOf(0));
+            if(directoryTree.size()>0)
+            {
+                for(Map<String,Object>map:directoryTree)
+                {
+                    setChidren(map);
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("directoryTree",directoryTree);
+        return jo;
+    }
     public void addTreeItem(Long parentId,List<Directory> treeItemList,List<Directory> allDirectory){
         for (Directory directory: allDirectory) {
             if(directory.getId() == parentId){
@@ -706,6 +733,22 @@ public class DirectoryController {
                 addTreeItem(directory.getParentId(),treeItemList,allDirectory);
             }
         }
+    }
+
+    public void setChidren(Map<String ,Object>map)
+    {
+        List<Map<String,Object>>chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
+        if(chidlren.size()>0)
+        {
+            map.put("children",chidlren);
+            Iterator<Map<String,Object>> iterator = chidlren.iterator();
+            while (iterator.hasNext())
+            {
+                Map<String,Object> child =iterator.next();
+                setChidren(child);
+            }
+        }
+
     }
 }
 

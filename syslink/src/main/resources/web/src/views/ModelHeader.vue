@@ -1,5 +1,5 @@
 <template>
-	
+  
 <el-container style="height: 100%;overflow:hidden;">
  <el-header style="padding: 0px;">
     <!--  <loginHeader></loginHeader> -->
@@ -8,12 +8,12 @@
         {{collapsed?'':sysName}}
       </el-col>
   
-      <el-col :span="10 " style="flex: 0 0 230;">
+       <el-col :span="10 " style="flex: 0 0 230;">
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toMySpace"  >工作台</a>
-        <a  href="http://gogs.modelica-china.com/#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
+         <a  href="http://gogs.modelica-china.com/#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
         <a  href="http://gogs.modelica-china.com:3000/" v-show="this.func.isLogin()" >协同</a>
-        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
-        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
+        <a href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
+        <a href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
         <a  href="javascript:void(0)"  v-show="!this.func.isLogin()"  @click="toLogin">登录</a>
       
       </el-col>
@@ -35,17 +35,17 @@
 
  </el-header>
   <el-container >
-     <el-aside v-if="this.func.isLogin()">
-     <!--  <div style="width: 200px;height: 30px;border: solid 1px #e6e6e6; margin-bottom: 1%;">
+     <!-- <el-aside v-if="this.func.isLogin()">
+      <div style="width: 200px;height: 30px;border: solid 1px #e6e6e6; margin-bottom: 1%;">
         <span>导航菜单</span>
-      </div> -->
+      </div>
 
 
       <sidebar ></sidebar>
-      </el-aside>
+      </el-aside> -->
   
     <el-container>
-      <el-header style="height: 10px;margin-top: 2%; " v-if="this.func.isLogin()">
+   <!--    <el-header style="height: 10px;margin-top: 2%; " v-if="this.func.isLogin()">
 
         <el-breadcrumb separator="/">
      <el-breadcrumb-item :to="{ path: '/Myspace' }"><i class="el-icon-location-outline"></i>
@@ -55,8 +55,8 @@
         </el-breadcrumb-item>
        </el-breadcrumb>
 
-      </el-header>
-      <el-main>	<router-view></router-view></el-main>
+      </el-header> -->
+      <el-main> <router-view></router-view></el-main>
       <el-footer style="height: 30px;"></el-footer>
   
     </el-container>
@@ -73,7 +73,7 @@ import Sidebar from './Sidebar'
 import LoginHeader from './LoginHeader'
 import Cookies from 'js-cookie'
     export default {
-    	 components: {
+       components: {
           Sidebar,
           LoginHeader
  
@@ -142,7 +142,7 @@ import Cookies from 'js-cookie'
             },
             toLogin()
             {
-            	  var _this = this;
+                var _this = this;
               _this.$router.push('/login');
             },
             toMySpace()
@@ -178,7 +178,7 @@ import Cookies from 'js-cookie'
 </script>
 
 <style scoped lang="scss">
-	@import '~scss_vars';
+  @import '~scss_vars';
 
      .el-header{
   /*  background-color: #B3C0D1;*/
@@ -307,9 +307,8 @@ import Cookies from 'js-cookie'
       }
       .item:not(:hover) {
         /*color: #9d9d9dE*/
-         text-decoration:none;
       }
-       a:-webkit-any-link {
+         a:-webkit-any-link {
    /* color: -webkit-link;*/
        color:#fff;
        font-size: 18px;

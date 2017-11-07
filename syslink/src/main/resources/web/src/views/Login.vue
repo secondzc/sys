@@ -1,4 +1,6 @@
 <template>
+
+
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="userName">
@@ -13,10 +15,13 @@
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
   </el-form>
+
+
 </template>
 
 <script>
   import { requestLogin } from '../api/api';
+  import Cookies from 'js-cookie'
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -35,8 +40,8 @@
       return {
         logining: false,
         ruleForm2: {
-          userName: 'xyx',
-          password: '123456'
+          userName: 'yh',
+          password: '111111'
         },
         rules2: {
           userName: [
@@ -80,14 +85,35 @@
                           name: _this.ruleForm2.userName
                       }
                       sessionStorage.setItem('user', JSON.stringify(user));
+
+                      
+
+                      if(_this.ruleForm2.rememberMe)
+                      {
+                        let rememberMe = {rememberMe:true};
+                        localStorage.setItem('rememberMe',JSON.stringify(rememberMe));
+                      }
+
                       //存储用户信息
-                      sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo));
-                      let auths = response.data.userInfo.auths;
-                      let uid ={uid:''}; 
+                      let logined={logined:''};
+                      logined.logined = true;
+                      sessionStorage.setItem('logined',JSON.stringify(logined));
+                      console.log(sessionStorage.getItem('logined'));
+
+                     
+                      Cookies.set('abc','abbb');
+                     
+                       
+                     
+                      let uid ={uid:'',name:''}; 
                       uid.uid = response.data.userInfo.profile.iD;
+                      uid.userName = response.data.userInfo.profile.name;
                       //存储用户id
                       localStorage.setItem('uid',JSON.stringify(uid));
-                      _this.$router.push({path: '/repository/index'});
+                      
+                     
+                    
+                      _this.$router.push({path: '/Myspace'});
                  }else{
                      //如果返回500，就在页面上方弹出错误信息
                      _this.errormsg(response.data.errormsg);
@@ -136,7 +162,11 @@
     border-radius: 5px;
     -moz-border-radius: 5px;
     background-clip: padding-box;
-    margin: 180px auto;
+   /* margin: 180px auto;*/
+   /* margin-left: 50%;
+    margin-right: 50%;
+    margin-top: 10%; */  
+    margin:5% auto; 
     width: 350px;
     padding: 35px 35px 15px 35px;
     background: #fff;

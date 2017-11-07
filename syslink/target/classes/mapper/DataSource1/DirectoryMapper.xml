@@ -12,6 +12,17 @@
         <result column="relative_address" property="relativeAddress" jdbcType="VARCHAR"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
     </resultMap>
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
+        <result column="absolute_address" property="absoluteAddress" jdbcType="VARCHAR"/>
+        <result column="relative_address" property="relativeAddress" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
+    </resultMap>
 
     <sql id="baseColumnList" >
         id, name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted
@@ -114,4 +125,21 @@
             AND parent_id = #{parent_id,jdbcType=BIGINT}
         </if>
     </select>
+
+
+    <select id="queryMapListByParentId" resultMap="mapResultMap" resultType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where parent_id = #{parentId}
+        and is_deleted = "0"
+    </select>
+    <select id="queryMapById" resultMap="mapResultMap" resultType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where id = #{id}
+        and is_deleted = "0"
+    </select>
+
 </mapper>
