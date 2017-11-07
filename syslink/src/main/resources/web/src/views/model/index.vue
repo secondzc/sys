@@ -1,13 +1,9 @@
 <template >
-<<<<<<< HEAD
     <el-container style="height: 100%;">
-=======
-    <el-container>
->>>>>>> a894fdacd57791befddc286140ce4711aad8d62d
         <el-header style="height: 30px">
         </el-header>
     <el-container style="border: 0.1px solid #eee">
-        <el-aside width="300px" style="border: 0.1px solid #000000">
+        <el-aside width="300px" style="border: 0.1px solid #000000;">
           <!--模型分类树-->
             <el-container>
                 <el-main>
@@ -192,10 +188,10 @@
                                                                 size="small"
                                                                 type="primary"
                                                                 @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-                                                        <el-button
-                                                                size="small"
-                                                                type="primary"
-                                                                @click="handleDownload(scope.$index, scope.row)">下载</el-button>
+                                                        <!--<el-button-->
+                                                                <!--size="small"-->
+                                                                <!--type="primary"-->
+                                                                <!--@click="handleDownload(scope.$index, scope.row)">下载</el-button>-->
                                                         <el-button
                                                                 size="small"
                                                                 type="danger"
@@ -216,7 +212,7 @@
 
 
                                     <!--style="display: block;border: solid 2px #B0C4DE;"-->
-                                    <div id="modelList" >
+                                    <div id="modelList" style="display: block;" >
                                         <waterfall style="overflow-x: auto!important;overflow-y: auto!important;"
                                                 :align="align"
                                                 :line-gap="300"
@@ -247,35 +243,25 @@
                                                         </a>
                                                         <h4>模型库：{{item.repositoryName}}</h4>
                                                         <div >上传者：{{item.userName}}</div>
-                                                        <div>
+                                                        <div >
                                                             <div style="display: inline-block">
-                                                                <!--<i class="iconfont_star"  style="border: inset;">&#xe6ed;</i>-->
-                                                                <!--<div class="ui labeled button" tabindex="0">-->
                                                                     <a class="ui basic button" @click="addWatch(item)">
-                                                                        <i class="iconfont_star"  >&#xe6ed;</i>
+                                                                        <i v-if="item.alreadyWatch == true" class="iconfont_star"  >&#xe6ed;</i>
+                                                                        <i v-else="item.alreadyWatch == false" class="iconfont_star"  >&#xe668;</i>
                                                                         {{item.numberWatch}}
                                                                     </a>
-                                                                    <!--<a class="ui basic label" >-->
-
-                                                                        <!--1-->
-                                                                    <!--</a>-->
-                                                                <!--</div>-->
                                                             </div>
                                                             <div style="display:inline-block;">
-                                                                <!--<div class="ui labeled button" tabindex="0">-->
                                                                     <a class="ui basic button" @click="addStar(item)">
-                                                                        <i class="iconfont_star" >&#xe733;</i>
+                                                                        <i v-if="item.alreadyStar == true" class="iconfont_star" >&#xe733;</i>
+                                                                        <i v-else="item.alreadyStar == false" class="iconfont_star"  >&#xe605;</i>
                                                                         {{item.numberStar}}
                                                                     </a>
-                                                                    <!--<a class="ui basic label" >-->
-                                                                        <!--1-->
-                                                                    <!--</a>-->
-                                                                <!--</div>-->
-
                                                             </div>
                                                         </div>
+
                                                         <!--<h4>上传日期：{{item.createTime}}</h4>-->
-                                                        <div >描述：{{item.discription}}</div>
+                                                        <!--<div >描述：{{item.discription}}</div>-->
                                                     </div>
                                                     <!--<div  class="cardButton">-->
                                                     <!--<a class="user username" href="javascript:void(0)">-->
@@ -309,7 +295,7 @@
 
                         <!--</el-col >-->
 
-                          <el-col :span="6" style="display: none;border: 2px solid #B0C4DE" id="variable" >
+                          <el-col :span="6" style="display: none;border: 0.1px solid #000000" id="variable" >
                               <template>
                                   <section>
                                       <el-row>
@@ -563,14 +549,14 @@ export default {
           this.list=repositories
       },
       viewInfo(){
-          if($("#variable")[0].style.display == "block"){
+          if($("#variable")[0].style.display == "block" &&  $("#modelList")[0].style.display =="block"){
               $("#variable")[0].style.display = "none";
 //              $("#modelList")[0].style.width = "100%";
 //              $("#packageList")[0].style.width = "100%";
               $("#girdTable")[0].style.width = "100%";
 
           }
-          else if($("#variable")[0].style.display == "none"){
+          else if($("#variable")[0].style.display == "none" &&  $("#modelList")[0].style.display =="block"){
 //              $("#modelList")[0].style.width = "100%";
 //              $("#packageList")[0].style.width = "100%";
               $("#girdTable")[0].style.width = "75%";
@@ -652,20 +638,57 @@ export default {
           });
       },
       addStar(item){
+          if(item.alreadyStar == false){
+              var _this = this;
+              var url = '/api/star/add?userId='+ item.userId +"&repoName=" +item.repositoryName
+              _this.$http.post(url)
+                  .then(function (response) {
+                      if(response.data.msg == "ok"){
+                          _this.getModel();
+                      }
+                  }).catch(function (error) {
+                  console.log(error);
+              });
+          }
+          if(item.alreadyStar == true){
+              var _this = this;
+              var url = '/api/star/delete?userId='+ item.userId +"&repoName=" +item.repositoryName
+              _this.$http.post(url)
+                  .then(function (response) {
+                      if(response.data.msg == "ok"){
+                          _this.getModel();
+                      }
+                  }).catch(function (error) {
+                  console.log(error);
+              });
+          }
 
       },
       addWatch(item){
-          console.log(item);
-          var _this = this;
-          var url = '/api/watch/add?userId='+ item.userId +"&repoName=" +item.repositoryName
-          _this.$http.post(url)
-              .then(function (response) {
-                  if(response.data.msg == "ok"){
-                      _this.getModel();
-                  }
-              }).catch(function (error) {
-              console.log(error);
-          });
+          if(item.alreadyWatch == false){
+              var _this = this;
+              var url = '/api/watch/add?userId='+ item.userId +"&repoName=" +item.repositoryName
+              _this.$http.post(url)
+                  .then(function (response) {
+                      if(response.data.msg == "ok"){
+                          _this.getModel();
+                      }
+                  }).catch(function (error) {
+                  console.log(error);
+              });
+          }
+          if(item.alreadyWatch == true){
+              var _this = this;
+              var url = '/api/watch/delete?userId='+ item.userId +"&repoName=" +item.repositoryName
+              _this.$http.post(url)
+                  .then(function (response) {
+                      if(response.data.msg == "ok"){
+                          _this.getModel();
+                      }
+                  }).catch(function (error) {
+                  console.log(error);
+              });
+          }
       }
   }
 }

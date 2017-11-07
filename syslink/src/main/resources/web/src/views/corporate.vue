@@ -10,7 +10,7 @@
   
       <el-col :span="10 " style="flex: 0 0 230;">
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toMySpace"  >工作台</a>
-        <a  href="http://gogs.modelica-china.com/#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
+        <a  href="http://gogs.modelica-china.com:8080/login.html#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
         <a  href="http://gogs.modelica-china.com:3000/" v-show="this.func.isLogin()" >协同</a>
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
