@@ -1,5 +1,7 @@
 package com.tongyuan.webservice;
 
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.ModelController;
 import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
@@ -10,6 +12,7 @@ import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.ReviewFlowInstanceService;
 import com.tongyuan.tools.StringUtil;
+import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,6 +49,8 @@ public class CommonServiceImp implements CommonService {
 	private FileModelService fileModelService;
 	@Autowired
 	private ReviewFlowInstanceService reviewFlowInstanceService;
+	@Autowired
+	private GUserService userService;
 
 	@Override
 	public String sayHello(String name) {
@@ -63,6 +68,16 @@ public class CommonServiceImp implements CommonService {
 			result = false;
 		}
 		try{
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("name",userName);
+			GUser user = userService.querListByName(userName);
+			if(user!=null)
+			{
+				String passwdCheck = EncodePasswd.getEncryptedPassword(passWord,user.getSalt(),10000,50);
+				if(!passwdCheck.equalsIgnoreCase(user.getPasswd())){
+					return false;
+				}
+			}
 
 		}catch (Exception e){
 			e.printStackTrace();

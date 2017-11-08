@@ -40,7 +40,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/model")
-public class ModelController extends  BaseController{
+public class ModelController extends  BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Date nowDate = new Date();
@@ -399,8 +399,8 @@ public class ModelController extends  BaseController{
                 if(rootDirectoryList.size() >0){
                     Directory oneDirectory = rootDirectoryList.get(0);
                     getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
-                    directoryIdList.add(oneDirectory.getId());
-                    //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
+                     directoryIdList.add(oneDirectory.getId());
+                     //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
                 }
                 for (Long id : directoryIdList) {
                     for (Model model: allModelList) {
@@ -457,6 +457,8 @@ public class ModelController extends  BaseController{
                 modelWeb.setType(oneOfModel.get(i).getType());
                 modelWeb.setNumberStar(0);
                 modelWeb.setNumberWatch(0);
+                modelWeb.setAlreadyStar(false);
+                modelWeb.setAlreadyWatch(false);
                 repositoryModelList.add(modelWeb );
             }
             for (ModelWeb modelWeb : repositoryModelList) {
@@ -468,6 +470,9 @@ public class ModelController extends  BaseController{
                             if(repository.getID() == watch.getRepoID()){
                                 watches.add(watch);
                             }
+                            if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
+                               modelWeb.setAlreadyWatch(true);
+                            }
                         }
                         modelWeb.setNumberWatch(watches.size());
                         //收藏列表
@@ -475,6 +480,9 @@ public class ModelController extends  BaseController{
                         for (Star star : allStar) {
                             if (repository.getID() == star.getRepoId()){
                                 stars.add(star);
+                            }
+                            if(repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()){
+                                modelWeb.setAlreadyStar(true);
                             }
                         }
                         modelWeb.setNumberStar(stars.size());

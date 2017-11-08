@@ -52,6 +52,8 @@ public class WatchController {
                 GUser gUser = gUserService.queryById(user_id);
                 gUser.setNumRepos(gUser.getNumRepos()+1);
                 boolean updateResult =gUserService.update(gUser);
+                repository.setNumWatches(repository.getNumWatches()+1);
+                repositoryService.update(repository);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -77,13 +79,15 @@ public class WatchController {
             Repository repository = repositoryService.queryByName(repoName);
             if(user_id != null && !user_id.equals("") && repository != null  ){
                 Map<String, Object> params = new HashMap<>();
-                params.put("uid",user_id);
+                params.put("user_id",user_id);
                 params.put("repo_id",repository.getID());
                  Watch watch = watchService.queryListByParam(params);
                  boolean result = watchService.delete(watch.getID());
                 GUser gUser = gUserService.queryById(user_id);
                 gUser.setNumRepos(gUser.getNumRepos()-1);
                 boolean updateResult =gUserService.update(gUser);
+                repository.setNumWatches(repository.getNumWatches()-1);
+                repositoryService.update(repository);
             }
         }catch (Exception e){
             e.printStackTrace();

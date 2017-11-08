@@ -18,7 +18,7 @@
     <select id="queryListByParam" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Star">
         SELECT   <include refid="baseColumnList" ></include> FROM
         star
-        where uid=#{Uid} and repo_id = #{RepoId}
+        where uid=#{uid,jdbcType=BIGINT} and repo_id = #{repo_id,jdbcType=BIGINT}
     </select>
     <select id="findAllStar" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Star">
         SELECT <include refid="baseColumnList" ></include>

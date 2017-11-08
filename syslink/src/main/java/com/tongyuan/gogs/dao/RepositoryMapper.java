@@ -16,4 +16,5 @@ public interface RepositoryMapper {
     public List<Repository> findAllRepository();
     List<Map<String,Object>> queryByUid(long uid);
     Map<String,Object> queryById(long id);
+    boolean update(Repository repository);
 }

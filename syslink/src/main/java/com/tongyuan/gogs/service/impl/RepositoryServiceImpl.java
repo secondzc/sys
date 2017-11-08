@@ -60,4 +60,9 @@ public class RepositoryServiceImpl implements RepositoryService{
         return cRepos;
     }
 
+    @Override
+    public boolean update(Repository repository) {
+        return this.repositoryMapper.update(repository);
+    }
+
 }

@@ -39,6 +39,26 @@ public class ModelWeb {
     private Integer numberWatch;
     //模型库收藏数
     private Integer numberStar;
+    //本用户是否已经观察
+    private Boolean alreadyWatch;
+    //本用户是否已经收藏
+    private Boolean alreadyStar;
+
+    public Boolean getAlreadyWatch() {
+        return alreadyWatch;
+    }
+
+    public void setAlreadyWatch(Boolean alreadyWatch) {
+        this.alreadyWatch = alreadyWatch;
+    }
+
+    public Boolean getAlreadyStar() {
+        return alreadyStar;
+    }
+
+    public void setAlreadyStar(Boolean alreadyStar) {
+        this.alreadyStar = alreadyStar;
+    }
 
     public Long getUserId() {
         return userId;

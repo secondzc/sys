@@ -95,6 +95,14 @@
     ,#{AllowPublicWiki},#{EnableExternalWiki},#{ExternalWikiURL},#{EnableIssues},#{AllowPublicIssues},#{EnableExternalTracker},#{ExternalTrackerURL},
     #{ExternalTrackerFormat},#{ExternalTrackerStyle},#{EnablePulls},#{IsFork},#{ForkID} ,#{CreatedUnix},#{UpdatedUnix})
   </insert>
+  <update id="update" parameterType="com.tongyuan.gogs.domain.Repository">
+      UPDATE  repository set owner_id = #{OwnerID},lower_name = #{LowerName},name = #{Name},description = #{Description},website = #{Website},default_branch = #{DefaultBranch},
+      size = #{Size},num_watches = #{NumWatches},num_stars = #{NumStars},num_forks = #{NumForks},num_issues = #{NumIssues},
+      num_closed_issues = #{NumClosedIssues},num_pulls = #{NumPulls},num_closed_pulls = #{NumClosedPulls},num_milestones = #{NumMilestones},num_closed_milestones = #{NumClosedMilestones},is_private = #{IsPrivate},
+      is_bare = #{IsBare},is_mirror = #{IsMirror},enable_wiki = #{EnableWiki},allow_public_wiki = #{AllowPublicWiki},enable_external_wiki = #{EnableExternalWiki},external_wiki_url = #{ExternalWikiURL},
+      enable_issues = #{EnableIssues},allow_public_issues = #{AllowPublicIssues},enable_external_tracker = #{EnableExternalTracker},external_tracker_url = #{ExternalTrackerURL},external_tracker_format = #{ExternalTrackerFormat},external_tracker_style = #{ExternalTrackerStyle},
+      enable_pulls = #{EnablePulls},is_fork = #{IsFork},fork_id = #{ForkID},created_unix = #{CreatedUnix},updated_unix = #{UpdatedUnix} WHERE id = #{ID}
+    </update>
   <select id="queryByName" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
     SELECT  <include refid="baseColumnList" ></include>
     FROM repository
