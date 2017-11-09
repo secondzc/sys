@@ -21,17 +21,13 @@
             <result property="description" column="review_node_description"/>
             <result property="sequence" column="review_node_sequence"/>
         </association>
-        <association property="user" javaType="com.tongyuan.gogs.domain.GUser">
-            <id property="id" column="id"/>
-            <result property="name" column="user_user_name"/>
-        </association>
     </resultMap>
 
     <resultMap id="commentPageMap" type="com.tongyuan.pageModel.CommentPage">
         <result property="status" column="status"/>
         <result property="lastUpdateTime" column="last_update_time"/>
         <result property="comment" column="comment"/>
-        <result property="checkorName" column="checkor_name"/>
+        <result property="checkorId" column="checkor_id"/>
     </resultMap>
 
     <sql id="baseColumnList">
@@ -79,13 +75,10 @@
         B.node_id AS review_node_node_id,
         B.user_id AS review_node_user_id,
         B.description AS review_node_description,
-        B.sequence AS review_node_sequence,
-        C.id AS user_id,
-        C.name AS user_user_name
+        B.sequence AS review_node_sequence
 
         FROM review_node_instance A
         INNER JOIN review_node B ON A.node_id = B.node_id
-        INNER JOIN user C ON B.user_id = C.id
         WHERE A.instance_id = #{instanceId}
     </select>
 
@@ -94,11 +87,10 @@
         A.status AS status,
         A.last_update_time AS last_update_time,
         A.comment AS comment,
-        user.name AS checkor_name
+        review_node.user_id AS checkor_id
 
         FROM review_node_instance A
         INNER JOIN review_node ON A.node_id = review_node.node_id
-        INNER JOIN user ON review_node.user_id = user.id
         WHERE A.instance_id = #{instanceId}
         AND (A.status=3 OR A.status=4)
         ORDER BY

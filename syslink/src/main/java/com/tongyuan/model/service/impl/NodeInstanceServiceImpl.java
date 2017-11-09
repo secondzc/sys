@@ -1,5 +1,7 @@
 package com.tongyuan.model.service.impl;
 
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.NodeInstanceMapper;
 import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
@@ -19,6 +21,8 @@ import java.util.Map;
 public class NodeInstanceServiceImpl implements NodeInstanceService {
     @Autowired
     private NodeInstanceMapper nodeInstanceMapper;
+    @Autowired
+    private GUserService gUserService;
 
     @Override
     public int add(ReviewNodeInstance reviewNodeInstance){
@@ -39,7 +43,14 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
 
     @Override
     public List<DetailPage> details(Long instanceId){
-        return nodeInstanceMapper.details(instanceId);
+        List<DetailPage> detailPageList = nodeInstanceMapper.details(instanceId);
+        for(DetailPage detailPage:detailPageList){
+            Long userId = detailPage.getNode().getUserId();
+            GUser gUser = new GUser();
+            gUser.setName(gUserService.queryById(userId).getName());
+            detailPage.setUser(gUser);
+        }
+        return detailPageList;
     }
 
     @Override
@@ -53,6 +64,9 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
             }else{
                 commentPage.setShowStatus("不同意");
             }
+            //查询gogs库，添加user属性,因为guser分库了，所以不能联合查询，
+            Long checkorId = commentPage.getCheckorId();
+            commentPage.setCheckorName(gUserService.queryById(checkorId).getName());
         }
         return commentPages;
     }

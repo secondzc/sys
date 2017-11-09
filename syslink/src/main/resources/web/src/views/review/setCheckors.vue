@@ -76,7 +76,8 @@
 		</el-dialog>
 
 		<!--选择人员-->
-		<el-dialog title="选择人员" v-model="chooseNameVisible" :close-on-click-modal="false">
+		<el-dialog title="选择人员" v-model="chooseNameVisible" :close-on-click-modal="false"
+		v-loading="userNamesLoading">
 			<template>
 			  <el-transfer
 			    filterable
@@ -115,18 +116,32 @@
 			  editItemsDialogVisible: false,
 			  sequence: 0,
 			  chooseNameVisible: false,
-			  userNames: ['zhang','hhhh','dihd'],
+			  userNames: [],
 			  value2: [],
 			  data2: [],
 			  userName: '',
 			  submitAllLoading: false,
 			  nodesLoading: false,
+			  userNamesLoading: false,
 			}
 		},
 		created(){
 			this.templateId = sessionStorage.getItem('templateId');
 		},
 		methods: {
+			query() {
+				let url="/api/user/query";
+				this.func.ajaxPost(url,{},res=>{
+					this.userNamesLoading = true;
+					if(res.data.flag==true){
+						let users = res.data.users;
+						for(var i=0;i<users.length;i++){
+							this.userNames.push(users[i].name);
+						}
+						this.userNamesLoading = false;
+					}
+				})
+			},
 			submitOne(){
 				let str=",";
 				let index1=this.addItemsDialog.reviewNodeName.indexOf(str);
@@ -201,6 +216,7 @@
 			},
 			chooseName() {
 				this.chooseNameVisible = true;
+				this.query();
 			},
 			getUserNames() {
 

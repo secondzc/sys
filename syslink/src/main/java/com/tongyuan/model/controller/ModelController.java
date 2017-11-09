@@ -12,7 +12,7 @@ import com.tongyuan.pageModel.TreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.DateUtil;
-import com.tongyuan.util.ModelUtil;
+//import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +52,8 @@ public class ModelController {
     private VariableService variableService;
     @Autowired
     private ComponentService componentService;
-    @Autowired
-    private ModelUtil modelUtil;
+//    @Autowired
+//    private ModelUtil modelUtil;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -350,99 +350,99 @@ public class ModelController {
     }
 
 
-    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
-                           HttpServletRequest request , HttpServletResponse response){
-        JSONObject jo=new JSONObject();
-        List<ModelWeb>  repositoryModelList = new ArrayList<>();
-        //过滤后的modelList
-        List<Model> searchModel = new ArrayList<>();
-        //查询过滤后模型库内的一个组件
-        List<Model> oneOfModel = new ArrayList<>();
-        //查询所有direactory
-        List<Directory> allDirectory = directoryService.findAllDirectory();
-        //存放directory的id
-        List<Long> directoryIdList  = new ArrayList<>();
-        List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
-        try {
-            List<Model> allModelList = modelService.findAllModel();
-            if(parent_id != null && parent_id != 0 && rootDirectoryList.size() >0){
-                //仅有一个directory
-                if(rootDirectoryList.size() >0){
-                    Directory oneDirectory = rootDirectoryList.get(0);
-                    getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
-                    directoryIdList.add(oneDirectory.getId());
-                }
-                for (Long id : directoryIdList) {
-                    for (Model model: allModelList) {
-                        if(model.getDirectoryId() == id){
-                            if(model.getParentId() == 0){
-                                searchModel.add(model);
-                            }
-
-                        }
-                    }
-                }
-
-
-                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
-                    for (Model model: allModelList) {
-                        if(model.getParentId() == rootDirectoryList.get(j).getId()){
-                            oneOfModel.add(model);
-                            break;
-                        }
-                    }
-                }
-            }
-      //      if(parent_id != null  && rootDirectoryList.size() >0){
-            if(parent_id == 0){
-                for (Model model: allModelList) {
-                    if(model.getParentId() == 0) {
-                        searchModel.add(model);
-                    }
-                }
-                for(int  j= 0; j<= searchModel.size() -1; j++){
-                    for (Model model: allModelList) {
-                        if(model.getParentId() == searchModel.get(j).getId()){
-                            oneOfModel.add(model);
-                            break;
-                        }
-                    }
-                }
-
-            }
-            for (int i = 0; i <= oneOfModel.size() -1; i++) {
-                ModelWeb modelWeb = new ModelWeb();
-                GUser user = gUserService.queryById(oneOfModel.get(i).getUserId());
-                modelWeb.setIndex(oneOfModel.get(i).getId());
-                modelWeb.setName(modelUtil.splitName(oneOfModel.get(i).getName()));
-                modelWeb.setParentId(oneOfModel.get(i).getParentId());
-                modelWeb.setUserName(user.getLowerName());
-//                modelWeb.setImageUrl("../../assets/test1.png");
-                if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
-                    modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
-                }
-                modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
-                modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
-                modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
-                modelWeb.setType(oneOfModel.get(i).getType());
-    //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
-                repositoryModelList.add(modelWeb );
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","ok");
-            return jo;
-        }
-        jo.put("status",1);
-        jo.put("code",0);
-        jo.put("msg","ok");
-        jo.put("repositories",repositoryModelList);
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
+//    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
+//                           HttpServletRequest request , HttpServletResponse response){
+//        JSONObject jo=new JSONObject();
+//        List<ModelWeb>  repositoryModelList = new ArrayList<>();
+//        //过滤后的modelList
+//        List<Model> searchModel = new ArrayList<>();
+//        //查询过滤后模型库内的一个组件
+//        List<Model> oneOfModel = new ArrayList<>();
+//        //查询所有direactory
+//        List<Directory> allDirectory = directoryService.findAllDirectory();
+//        //存放directory的id
+//        List<Long> directoryIdList  = new ArrayList<>();
+//        List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
+//        try {
+//            List<Model> allModelList = modelService.findAllModel();
+//            if(parent_id != null && parent_id != 0 && rootDirectoryList.size() >0){
+//                //仅有一个directory
+//                if(rootDirectoryList.size() >0){
+//                    Directory oneDirectory = rootDirectoryList.get(0);
+//                    getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
+//                    directoryIdList.add(oneDirectory.getId());
+//                }
+//                for (Long id : directoryIdList) {
+//                    for (Model model: allModelList) {
+//                        if(model.getDirectoryId() == id){
+//                            if(model.getParentId() == 0){
+//                                searchModel.add(model);
+//                            }
+//
+//                        }
+//                    }
+//                }
+//
+//
+//                for(int  j= 0; j<= rootDirectoryList.size() -1; j++){
+//                    for (Model model: allModelList) {
+//                        if(model.getParentId() == rootDirectoryList.get(j).getId()){
+//                            oneOfModel.add(model);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//      //      if(parent_id != null  && rootDirectoryList.size() >0){
+//            if(parent_id == 0){
+//                for (Model model: allModelList) {
+//                    if(model.getParentId() == 0) {
+//                        searchModel.add(model);
+//                    }
+//                }
+//                for(int  j= 0; j<= searchModel.size() -1; j++){
+//                    for (Model model: allModelList) {
+//                        if(model.getParentId() == searchModel.get(j).getId()){
+//                            oneOfModel.add(model);
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//            }
+//            for (int i = 0; i <= oneOfModel.size() -1; i++) {
+//                ModelWeb modelWeb = new ModelWeb();
+//                GUser user = gUserService.queryById(oneOfModel.get(i).getUserId());
+//                modelWeb.setIndex(oneOfModel.get(i).getId());
+//                modelWeb.setName(modelUtil.splitName(oneOfModel.get(i).getName()));
+//                modelWeb.setParentId(oneOfModel.get(i).getParentId());
+//                modelWeb.setUserName(user.getLowerName());
+////                modelWeb.setImageUrl("../../assets/test1.png");
+//                if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
+//                    modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
+//                }
+//                modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
+//                modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+//                modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
+//                modelWeb.setType(oneOfModel.get(i).getType());
+//    //            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(modelWeb);
+//                repositoryModelList.add(modelWeb );
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            jo.put("status","1");
+//            jo.put("code",0);
+//            jo.put("msg","ok");
+//            return jo;
+//        }
+//        jo.put("status",1);
+//        jo.put("code",0);
+//        jo.put("msg","ok");
+//        jo.put("repositories",repositoryModelList);
+//        return (JSONObject) JSONObject.toJSON(jo);
+//    }
 
     @RequestMapping(value = "/modelVariable",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
