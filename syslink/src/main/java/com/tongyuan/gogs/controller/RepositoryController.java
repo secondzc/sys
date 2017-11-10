@@ -55,6 +55,13 @@ public class RepositoryController extends BaseController{
                           @RequestParam(value = "fileName", required = false) String fileName,
                           HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
+        //查看模型库是否存在
+        File fileExits = new File("C:/Users/Administrator/gogs-repositories/\"+name.toLowerCase()");
+        if(fileExits.exists()){
+            System.out.println("file exists");
+            return jo;
+        }
+
         GUser user = guserService.querListByName(name);
         user.setNumRepos(user.getNumRepos()+1);
         boolean UserResult = guserService.update(user);

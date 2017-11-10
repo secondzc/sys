@@ -286,7 +286,7 @@ public class DirectoryController {
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     @CrossOrigin(origins = "http://gogs.modelica-china.com:8080", maxAge = 3600)
-    public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
+    public boolean uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 HttpServletRequest request , HttpServletResponse response){
 
@@ -299,6 +299,8 @@ public class DirectoryController {
          if(fileNames2.length >=1){
              fileName = fileNames2[0];
          }
+         //判断这个模型是更新模型还是上传新的模型
+        Boolean updateOrCreate = true;
         try {
              bytes =  map.get("file").get(0).getBytes();
         } catch (IOException e) {
@@ -372,6 +374,7 @@ public class DirectoryController {
             model.setDeleted(false);
             if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
                 modelService.add(model);
+                updateOrCreate = false;
             }
             //查找最外层空的model
             Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
@@ -426,7 +429,7 @@ public class DirectoryController {
         }
         System.out.println("上传完毕！！！");
 //        return result;
-
+        return updateOrCreate;
     }
 
     //web端增加模型目录

@@ -453,6 +453,7 @@ public class ModelController extends  BaseController {
                 }
                 modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
                 modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+                modelWeb.setUpdateTime(DateUtil.format(oneOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
                 modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
                 modelWeb.setType(oneOfModel.get(i).getType());
                 modelWeb.setNumberStar(0);

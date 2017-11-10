@@ -201,7 +201,7 @@ public class ResourceUtil {
         String renametaskName = getNowTime();
         //输出文件的路径
         String outputDirectory = getunzipPath() + userName + "/"
-                + renametaskName;
+                + renametaskName + "/" + fileName;
         try {
             unzip(filePath, outputDirectory);
         } catch (IOException e) {
@@ -237,7 +237,8 @@ public class ResourceUtil {
     public String getModelPath(String modelDir, String modelName) {
         String modelPath = "";
         String modelRealDir = getunzipPath() + modelDir;
-            modelPath = modelRealDir + modelName;
+        modelPath = modelRealDir;
+//            modelPath = modelRealDir + modelName;
         return modelPath;
     }
 
