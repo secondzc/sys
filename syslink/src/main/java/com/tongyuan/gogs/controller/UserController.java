@@ -17,11 +17,9 @@ import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -324,7 +322,7 @@ public class UserController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/getUserInfo",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getUserInfo",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject getUserInfo( HttpServletRequest request)
     {
@@ -351,18 +349,18 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/getUserInfoFirst",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getUserInfoFirst(@RequestBody String uid, HttpServletRequest request,HttpServletResponse response)
+    public JSONObject getUserInfoFirst(@RequestBody String userName, HttpServletRequest request, HttpServletResponse response)
     {
         JSONObject jo = new JSONObject();
-        JSONObject jsonObject = JSON.parseObject(uid);
-        Long id = jsonObject.getLongValue("uid");
+        JSONObject jsonObject = JSON.parseObject(userName);
+
         LoginedUserModel loginedUserModel = new LoginedUserModel();
-        GUser user = userService.queryById(id);
-        HttpSession session = request.getSession(false);
-        if(session==null)
-        {
-            jo.put("session",0);
-        }
+        GUser user = userService.querListByName(jsonObject.getString("userName"));
+//        HttpSession session = request.getSession(false);
+//        if(session==null)
+//        {
+//            jo.put("session",0);
+//        }
 
 
 //        Cookie[] cookies = request.getCookies();
@@ -373,11 +371,11 @@ public class UserController extends BaseController {
 //        }
 //
 //
-//        Cookie c = new Cookie("gogs_awesome",user.getName());
-//        c.setDomain(".modelica-china.com");
-//        c.setMaxAge(60);
-//        c.setPath("/");
-//        response.addCookie(c);
+        Cookie c = new Cookie("gogs_awesome",user.getName());
+        c.setDomain(".modelica-china.com");
+        c.setMaxAge(60);
+        c.setPath("/");
+        response.addCookie(c);
 
 
  //       HttpSession session = request.getSession();
@@ -506,8 +504,8 @@ public class UserController extends BaseController {
     {
 
         JSONObject jo = new JSONObject();
-        HttpSession session = request.getSession();
-        request.getSession().invalidate();
+        HttpSession session = request.getSession(false);
+        session.removeAttribute("uid");
         System.out.println(session.getId());
 
 //        Cookie[] cookies = request.getCookies();
@@ -533,14 +531,29 @@ public class UserController extends BaseController {
 
         JSONObject jo = new JSONObject();
         HttpSession session = request.getSession(false);
-        if(session!=null)
+        if(session.getAttribute("uid")!=null)
         {
-            jo.put("session",1);
+            jo.put("session",true);
         }
         else
         {
-            jo.put("session",0);
+            jo.put("session",false);
         }
+        jo.put("abc",session);
+        jo.put("uid",session.getAttribute("uid"));
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+    @RequestMapping(value = "/autoPass",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject autoPass(HttpServletRequest request, HttpServletResponse response)
+    {
+
+        JSONObject jo = new JSONObject();
+        HttpSession session = request.getSession(true);
+
+            jo.put("session",true);
+
         return (JSONObject) JSONObject.toJSON(jo);
     }
 }
