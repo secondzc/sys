@@ -1,9 +1,11 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.model.domain.Auth;
 import com.tongyuan.model.domain.UserRole;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by yh on 2017/9/8.
@@ -28,6 +30,9 @@ public interface RoleService {
     public boolean updateUserRoles(long uid, Integer[] roles);
 
     public List<Integer> queryUserRoleByUid(long uid);
+
+
+    public Set<Auth> getAuthByUserRole(Long uid);
 
 
 

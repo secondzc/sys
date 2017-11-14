@@ -1,34 +1,6 @@
 <template>
 	<section>
 		<p>{{getModel}}</p>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="filters">
-				<el-form-item>
-					<el-input v-model="filters.name" placeholder="模型名称"></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" v-on:click="searchModel" >查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
-
-		<!--列表-->
-		<!--<template>-->
-			<!--<el-table :data="repositories" highlight-current-row v-loading="loading" style="width: 100%;">-->
-				<!--<el-table-column type="index" width="60">-->
-				<!--</el-table-column>-->
-				<!--<el-table-column prop="name" label="姓名" width="120" sortable>-->
-				<!--</el-table-column>-->
-				<!--<el-table-column prop="userName" label="上传者" width="120" sortable>-->
-				<!--</el-table-column>-->
-				<!--<el-table-column prop="createTime" label="上传日期" width="120" sortable>-->
-				<!--</el-table-column>-->
-				<!--<el-table-column prop="discription" label="模型描述" width="120">-->
-				<!--</el-table-column>-->
-			<!--</el-table>-->
-		<!--</template>-->
-
 		<el-table
 				:data="repositories"
 				border
@@ -77,7 +49,7 @@
 				<!--</template>-->
 			<!--</el-table-column>-->
 
-			<el-table-column label="操作">
+			<el-table-column label="操作" width="180">
 				<template scope="scope">
 					<el-button
 							size="small"
@@ -85,10 +57,11 @@
 					<el-button
 							size="small"
 							type="danger"
-							@click="handleDelete(scope.$index, scope.row)">删除</el-button>
+							@click="handleDownload(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+
 
 	</section>
 </template>
@@ -103,7 +76,13 @@
 				},
 				loading: false,
                 repositories: [
-				]
+				],
+                pager:{
+                    total:1,
+                    pageSize:30,
+                    pageIndex:1,
+                    currentPage:'1'
+                }
 			}
 		},
         computed:{
@@ -175,9 +154,15 @@
             handleEdit(index, row) {
                 console.log(index, row);
             },
-            handleDelete(index, row) {
+            handleDownload(index, row) {
                 console.log(index, row);
-            }
+            },
+			handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+			},
+			handleSizeChange(val){
+                console.log(`每页 ${val} 条`);
+			},
 
 
 		},

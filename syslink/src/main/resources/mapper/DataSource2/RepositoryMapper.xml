@@ -39,6 +39,44 @@
     <result column="updated_unix" property="UpdatedUnix" jdbcType="BIGINT"/>
   </resultMap>
 
+  <resultMap id="mapResultMap" type="map">
+    <id column="id" property="id" jdbcType="BIGINT"  />
+    <result column="owner_id" property="ownerId" jdbcType="BIGINT"/>
+    <result column="lower_name" property="lowerName" jdbcType="VARCHAR"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="description" property="description" jdbcType="VARCHAR"/>
+    <result column="website" property="website" jdbcType="VARCHAR"/>
+    <result column="default_branch" property="defaultBranch" jdbcType="VARCHAR"/>
+    <result column="size" property="size" jdbcType="BIGINT"/>
+    <result column="num_watches" property="numWatches" jdbcType="INTEGER"/>
+    <result column="num_stars" property="numStars" jdbcType="INTEGER"/>
+    <result column="num_forks" property="numForks" jdbcType="INTEGER"/>
+    <result column="num_issues" property="numIssues" jdbcType="INTEGER"/>
+    <result column="num_closed_issues" property="numClosedIssues" jdbcType="INTEGER"/>
+    <result column="num_pulls" property="numPulls" jdbcType="INTEGER"/>
+    <result column="num_closed_pulls" property="numClosedPulls" jdbcType="INTEGER"/>
+    <result column="num_milestones" property="numMilestones" jdbcType="INTEGER"/>
+    <result column="num_closed_milestones" property="numClosedMilestones" jdbcType="INTEGER"/>
+    <result column="is_private" property="isPrivate" jdbcType="TINYINT"/>
+    <result column="is_bare" property="isBare" jdbcType="TINYINT"/>
+    <result column="is_mirror" property="isMirror" jdbcType="TINYINT"/>
+    <result column="enable_wiki" property="enableWiki" jdbcType="TINYINT"/>
+    <result column="allow_public_wiki" property="allowPublicWiki" jdbcType="TINYINT"/>
+    <result column="enable_external_wiki" property="enableExternalWiki" jdbcType="TINYINT"/>
+    <result column="external_wiki_url" property="externalWikiURL" jdbcType="VARCHAR"/>
+    <result column="enable_issues" property="enableIssues" jdbcType="TINYINT"/>
+    <result column="allow_public_issues" property="allowPublicIssues" jdbcType="TINYINT"/>
+    <result column="enable_external_tracker" property="enableExternalTracker" jdbcType="TINYINT"/>
+    <result column="external_tracker_url" property="externalTrackerURL" jdbcType="VARCHAR"/>
+    <result column="external_tracker_format" property="externalTrackerFormat" jdbcType="VARCHAR"/>
+    <result column="external_tracker_style" property="externalTrackerStyle" jdbcType="VARCHAR"/>
+    <result column="enable_pulls" property="enablePulls" jdbcType="TINYINT"/>
+    <result column="is_fork" property="isFork" jdbcType="TINYINT"/>
+    <result column="fork_id" property="forkID" jdbcType="BIGINT"/>
+    <result column="created_unix" property="createdUnix" jdbcType="BIGINT"/>
+    <result column="updated_unix" property="updatedUnix" jdbcType="BIGINT"/>
+  </resultMap>
+
   <sql id="baseColumnList" >
     id, owner_id, lower_name,name,description,website,default_branch,size,num_watches,num_stars,num_forks,
     num_issues,num_closed_issues,num_pulls,num_closed_pulls,num_milestones,num_closed_milestones,is_private,
@@ -57,10 +95,35 @@
     ,#{AllowPublicWiki},#{EnableExternalWiki},#{ExternalWikiURL},#{EnableIssues},#{AllowPublicIssues},#{EnableExternalTracker},#{ExternalTrackerURL},
     #{ExternalTrackerFormat},#{ExternalTrackerStyle},#{EnablePulls},#{IsFork},#{ForkID} ,#{CreatedUnix},#{UpdatedUnix})
   </insert>
+  <update id="update" parameterType="com.tongyuan.gogs.domain.Repository">
+      UPDATE  repository set owner_id = #{OwnerID},lower_name = #{LowerName},name = #{Name},description = #{Description},website = #{Website},default_branch = #{DefaultBranch},
+      size = #{Size},num_watches = #{NumWatches},num_stars = #{NumStars},num_forks = #{NumForks},num_issues = #{NumIssues},
+      num_closed_issues = #{NumClosedIssues},num_pulls = #{NumPulls},num_closed_pulls = #{NumClosedPulls},num_milestones = #{NumMilestones},num_closed_milestones = #{NumClosedMilestones},is_private = #{IsPrivate},
+      is_bare = #{IsBare},is_mirror = #{IsMirror},enable_wiki = #{EnableWiki},allow_public_wiki = #{AllowPublicWiki},enable_external_wiki = #{EnableExternalWiki},external_wiki_url = #{ExternalWikiURL},
+      enable_issues = #{EnableIssues},allow_public_issues = #{AllowPublicIssues},enable_external_tracker = #{EnableExternalTracker},external_tracker_url = #{ExternalTrackerURL},external_tracker_format = #{ExternalTrackerFormat},external_tracker_style = #{ExternalTrackerStyle},
+      enable_pulls = #{EnablePulls},is_fork = #{IsFork},fork_id = #{ForkID},created_unix = #{CreatedUnix},updated_unix = #{UpdatedUnix} WHERE id = #{ID}
+    </update>
   <select id="queryByName" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
     SELECT  <include refid="baseColumnList" ></include>
     FROM repository
     where name = #{Name}
+  </select>
+    <select id="findAllRepository" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
+      SELECT <include refid="baseColumnList" ></include>
+      FROM repository
+      where 1=1
+    </select>
+
+  <select id="queryByUid" resultMap="mapResultMap" parameterType="long">
+    SELECT  <include refid="baseColumnList" ></include>
+    FROM repository
+    where owner_id = #{uid}
+  </select>
+
+  <select id="queryById" resultMap="mapResultMap" parameterType="long">
+    SELECT  <include refid="baseColumnList" ></include>
+    FROM repository
+    where id = #{id}
   </select>
 
 

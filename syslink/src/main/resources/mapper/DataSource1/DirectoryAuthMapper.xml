@@ -22,7 +22,7 @@
         WHERE uid = #{uid}
     </select>
     <delete id="deleteByUid" parameterType="long">
-        delete from user_deaprt where uid=#{uid}
+        delete from directory_auth where uid=#{uid}
     </delete>
 
 

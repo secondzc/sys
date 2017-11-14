@@ -1,16 +1,17 @@
 <template>
   <section>
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
-          <el-button type="primary" @click="handleAdd"  >新建</el-button>
-          <el-button  @click="handleEdit">编辑</el-button>
-          <el-button type="danger"  @click="handleDel">删除</el-button>
+          <el-button size="small" type="primary" @click="handleAdd"  >新建</el-button>
+          <el-button size="small"  @click="handleEdit">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDel">删除</el-button>
         </el-form-item>
       </el-form>
        
-    </el-col>
+    <!-- </el-col> -->
+    <hr/>
 
     <!--列表-->
     <el-table :data="roles" highlight-current-row       style="width: 100%;">
@@ -35,7 +36,7 @@
    
 
     <!--编辑角色界面-->
-    <el-dialog title="编辑角色" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑角色" :visible="editFormVisible" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="80px" ref="editForm"    >
         <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入角色名称',trigger:'blur'}]"  >
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
@@ -53,7 +54,7 @@
   
 
     <!--新增角色界面-->
-    <el-dialog title="新建角色" v-model="addFormVisible" :close-on-click-modal="false"  >
+    <el-dialog title="新建角色" :visible="addFormVisible" :close-on-click-modal="false"  >
       <el-form :model="addForm" label-width="80px"  ref="addForm"    >
         <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入角色名称',trigger:'blur'}]"  >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -72,17 +73,20 @@
 
 
      <!--分配权限界面-->
-    <el-dialog title="分配权限" v-model="permissionVisible"  :close-on-click-modal="false"    >
-   <el-form :model="permission" label-width="80px"  ref="permission"    >
+   <el-dialog title="分配权限" :visible="permissionVisible" ref="permissionDialog" :close-on-click-modal="false" :show-close="false" >
+   <el-form :model="permission" label-width="80px"  ref="permissionForm"    >
+ <!--    <div slot="title">
+      <span>分配权限</span> -->
+       <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps">
+    </el-tree>
 
-  <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps">
-  </el-tree>
-
+<!--     </div> -->
+   
       </el-form>
-      <div slot="footer" class="dialog-footer">
+    <div slot="footer" class="dialog-footer">
         <el-button @click.native="permissionVisible=false">取消</el-button>
         <el-button type="primary" @click.native="permissionSubmit" :loading="permissionLoading">提交</el-button>
-      </div>
+    </div>
     </el-dialog>
    
   </section>
@@ -259,9 +263,12 @@
 
       handlePermission(index,row)
       {
+
          this.ids.roleId=row.id;
          this.permissionVisible=true;
-         this.setCheckedNodes(row.permissions);
+          console.log( this.$refs.tree);
+          this.$refs.tree.setCheckedNodes(row.permissions);
+      //   this.setCheckedNodes(row.permissions);
        
       },
       //编辑
@@ -307,7 +314,7 @@
        permissionSubmit: function () {
 
 
-        this.$refs.permission.validate((valid) => {
+        this.$refs.permissionForm.validate((valid) => {
           if (valid) {
         
               this.permissionLoading = true;
@@ -337,7 +344,7 @@
                   type: 'error'
                 });
                 } 
-                this.$refs['permission'].resetFields();
+                this.$refs['permissionForm'].resetFields();
                 this.permissionVisible = false;
                 this.getGroups();
                 this.getRoles();
@@ -390,6 +397,7 @@
       this.getRoles();
    //   this.getCheckBox();
       this.getGroups();
+      console.log(this.$refs.permissionDialog);
   
     }
   }

@@ -38,8 +38,20 @@ export default {
     }
     }
     ,
-	 changeDate (){
+	changeDate (){
   	console.log('123');
-  }
+    } , 
+  isLogin()
+    {
+    	let logined  = sessionStorage.getItem('logined');
+    	if(logined)
+    	{
+        return true;
+    	}
+    	else
+    	{
+        return false;
+    	}
+    }
 	
 }

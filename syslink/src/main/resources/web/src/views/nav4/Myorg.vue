@@ -4,14 +4,14 @@
   
     
   <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
           <el-button type="primary" @click="handleAdd"  >新建</el-button>
         </el-form-item>
       </el-form>
-       
-    </el-col>
+      <hr/>
+   <!--  </el-col> -->
 
     <!--列表-->
     <el-table :data="orgs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;">

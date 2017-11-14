@@ -21,6 +21,7 @@
             <result property="description" column="review_node_description"/>
             <result property="sequence" column="review_node_sequence"/>
         </association>
+<<<<<<< HEAD
     </resultMap>
 
     <resultMap id="commentPageMap" type="com.tongyuan.pageModel.CommentPage">
@@ -30,6 +31,14 @@
         <result property="checkorId" column="checkor_id"/>
     </resultMap>
 
+=======
+        <association property="user" javaType="com.tongyuan.gogs.domain.GUser">
+            <id property="id" column="id"/>
+            <result property="userName" column="user_user_name"/>
+        </association>
+    </resultMap>
+
+>>>>>>> master
     <sql id="baseColumnList">
         id,create_time,instance_id,last_update_time,node_id,status
     </sql>
@@ -60,12 +69,6 @@
         WHERE id=#{id}
     </update>
 
-    <update id="updateComment" parameterType="java.util.Map">
-        UPDATE review_node_instance
-        SET comment=#{comment}
-        WHERE id=#{id}
-    </update>
-
     <select id="details" parameterType="java.lang.Long" resultMap="pageResultMap">
         SELECT
         A.id AS review_node_instance_id,
@@ -75,13 +78,20 @@
         B.node_id AS review_node_node_id,
         B.user_id AS review_node_user_id,
         B.description AS review_node_description,
+<<<<<<< HEAD
         B.sequence AS review_node_sequence
+=======
+        B.sequence AS review_node_sequence,
+        C.id AS user_id,
+        C.user_name AS user_user_name
+>>>>>>> master
 
         FROM review_node_instance A
         INNER JOIN review_node B ON A.node_id = B.node_id
         WHERE A.instance_id = #{instanceId}
     </select>
 
+<<<<<<< HEAD
     <select id="queryCommentPages" parameterType="java.lang.Long" resultMap="commentPageMap">
         SELECT
         A.status AS status,
@@ -97,4 +107,6 @@
         review_node.sequence
     </select>
 
+=======
+>>>>>>> master
 </mapper>

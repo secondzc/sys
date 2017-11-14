@@ -1,5 +1,5 @@
 <template>
-    <el-menu mode="vertical" theme="light"  :default-active="$route.path" :collapse="isCollapse">
+    <el-menu mode="vertical"  class="naviMenu" :default-active="$route.path" :collapse="false">
       <sidebar-item :routes='routers'></sidebar-item>
     </el-menu>
 </template>
@@ -24,3 +24,34 @@ export default {
   }
 }
 </script>
+
+<style type="text/css">
+  
+  .naviMenu
+  {
+   /* position: relative;*/
+  /*  border-left: solid 1px #e6e6e6;
+    border-right: solid 1px #e6e6e6;
+    border-top: solid 1px #e6e6e6;*/
+  /*  border-bottom: solid 1px  #e6e6e6; */
+    height: inherit;
+    /*margin-top: 50px;*/
+   /* margin-left: 20px;
+    margin-right: 10px;*/
+    width: 200px;
+   /* overflow-y: auto;*/
+
+  }
+  a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: auto;
+    text-decoration: none;
+    text-decoration-line: none;
+    text-decoration-style: initial;
+    text-decoration-color: initial;
+}
+
+</style>
+
+
+

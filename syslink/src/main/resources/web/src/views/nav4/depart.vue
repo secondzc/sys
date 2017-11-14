@@ -3,16 +3,15 @@
    
 
      <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+   <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
-          <el-button type="primary" @click="handleAdd"  >新建</el-button>
-          <el-button  @click="handleEdit">编辑</el-button>
-          <el-button type="danger"  @click="handleDel">删除</el-button>
+          <el-button type="primary" @click="handleAdd" size="small" >新建</el-button>
         </el-form-item>
       </el-form>
+      <hr />
        
-    </el-col>
+    <!-- </el-col> -->
     <zk-table
       ref="table"
       sum-text="sum"

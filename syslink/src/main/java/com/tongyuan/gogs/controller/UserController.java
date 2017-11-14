@@ -3,6 +3,7 @@ package com.tongyuan.gogs.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
@@ -16,10 +17,7 @@ import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -113,9 +111,10 @@ public class UserController extends BaseController {
     {
         JSONObject jo = new JSONObject();
         List<Map<String,Object>> list = new ArrayList<>();
+        Page<Map<String,Object>> users = new Page<>();
         try
         {
-               list = userService.queryUser(map);
+            users = userService.queryUser(map);
         }
         catch (Exception e)
         {
@@ -126,7 +125,8 @@ public class UserController extends BaseController {
         }
         jo.put("flag",true);
         jo.put("msg","获取用户列表成功");
-        jo.put("users",new GUserWarpper(list).warp());
+        jo.put("users",new GUserWarpper(users).warp());
+        jo.put("total",users.getTotal());
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
@@ -322,7 +322,7 @@ public class UserController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/getUserInfo",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getUserInfo",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject getUserInfo( HttpServletRequest request)
     {
@@ -349,21 +349,28 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/getUserInfoFirst",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getUserInfoFirst(@RequestBody String uid, HttpServletRequest request,HttpServletResponse response)
+    public JSONObject getUserInfoFirst(@RequestBody String userName, HttpServletRequest request, HttpServletResponse response)
     {
         JSONObject jo = new JSONObject();
-        JSONObject jsonObject = JSON.parseObject(uid);
-        Long id = jsonObject.getLongValue("uid");
+        JSONObject jsonObject = JSON.parseObject(userName);
+
         LoginedUserModel loginedUserModel = new LoginedUserModel();
-        GUser user = userService.queryById(id);
-        Cookie[] cookies = request.getCookies();
-        for (int i =0;i<cookies.length;i++)
-        {
-            System.out.println(cookies[i].getName());
-            System.out.println(cookies[i].getValue());
-        }
+        GUser user = userService.querListByName(jsonObject.getString("userName"));
+//        HttpSession session = request.getSession(false);
+//        if(session==null)
+//        {
+//            jo.put("session",0);
+//        }
 
 
+//        Cookie[] cookies = request.getCookies();
+//        for (int i =0;i<cookies.length;i++)
+//        {
+//            System.out.println(cookies[i].getName());
+//            System.out.println(cookies[i].getValue());
+//        }
+//
+//
         Cookie c = new Cookie("gogs_awesome",user.getName());
         c.setDomain(".modelica-china.com");
         c.setMaxAge(60);
@@ -371,17 +378,17 @@ public class UserController extends BaseController {
         response.addCookie(c);
 
 
-        HttpSession session = request.getSession();
+ //       HttpSession session = request.getSession();
 
         //  session.setAttribute("user", user);
-        session.setAttribute("uid",user.getID());
-        session.setAttribute("user", user);
-        session.setAttribute("base_path", request.getContextPath());
+//        session.setAttribute("uid",user.getID());
+//        session.setAttribute("user", user);
+ //       session.setAttribute("base_path", request.getContextPath());
         String lginIp = IpUtil.getIpAddr(request);
         Date loginDate = DateUtil.getTimestamp();
         userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
-        System.out.println(session.getId());
+ //       System.out.println(session.getId());
         operationlogService.addLog("登录","登录系统",request);
 
 
@@ -389,7 +396,7 @@ public class UserController extends BaseController {
         try
         {
             loginedUserModel = userService.CreateLoginedUser(user);
-            setSessionUser(request,loginedUserModel);
+//            setSessionUser(request,loginedUserModel);
         }
         catch (Exception e)
         {
@@ -428,12 +435,54 @@ public class UserController extends BaseController {
 
         //      String a = map.get("permissionId").toString();
         //     a=a.substring(1,a.length()-1);
-        Integer uid = jsonObject.getIntValue("uid");
+        Long uid = jsonObject.getLongValue("uid");
         //     Integer []authIds =   Convert.toIntArray(",",a);
 
         try
         {
             userService.updateAuth(uid,authIds);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","分配权限失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","分配权限成功");
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+    @RequestMapping(value = "/modelAuth",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject modelAuth(@RequestBody String para, HttpServletRequest request)
+    {
+        JSONObject jo = new JSONObject();
+        // JSONObject jsonObject = JSON.parseObject(para);
+        JSONObject jsonObject = JSONObject.parseObject(para);
+
+        //  JSONArray jsonArray = JSONArray.parseArray(para);
+        JSONArray jsonArray = jsonObject.getJSONArray("directoryIds");
+        Long []directoryIds = new Long[jsonArray.size()];
+
+        for(int i=0;i<jsonArray.size();i++)
+        {
+            directoryIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
+        }
+
+        //   map.put("permissions",map.get("permissionId").toString());
+//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
+
+        //      String a = map.get("permissionId").toString();
+        //     a=a.substring(1,a.length()-1);
+        Long uid = jsonObject.getLongValue("uid");
+        //     Integer []authIds =   Convert.toIntArray(",",a);
+
+        try
+        {
+            userService.updateModelAuth(uid,directoryIds);
         }
         catch (Exception e)
         {
@@ -455,19 +504,56 @@ public class UserController extends BaseController {
     {
 
         JSONObject jo = new JSONObject();
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        session.removeAttribute("uid");
         System.out.println(session.getId());
 
-        Cookie[] cookies = request.getCookies();
-        for (int i =0;i<cookies.length;i++)
+//        Cookie[] cookies = request.getCookies();
+//        for (int i =0;i<cookies.length;i++)
+//        {
+//            System.out.println(cookies[i].getName());
+//            System.out.println(cookies[i].getValue());
+//            if (cookies[i].getName().equalsIgnoreCase("gogs_awesome"))
+//            {
+//                cookies[i].setMaxAge(0);
+//
+//            }
+//        }
+
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+    @RequestMapping(value = "/sessionJudge",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject sessionJudge(HttpServletRequest request, HttpServletResponse response)
+    {
+
+        JSONObject jo = new JSONObject();
+        HttpSession session = request.getSession(false);
+        if(session.getAttribute("uid")!=null)
         {
-            System.out.println(cookies[i].getName());
-            System.out.println(cookies[i].getValue());
-            if (cookies[i].getName().equalsIgnoreCase("gogs_awesome"))
-            {
-                cookies[i].setMaxAge(0);
-            }
+            jo.put("session",true);
         }
+        else
+        {
+            jo.put("session",false);
+        }
+        jo.put("abc",session);
+        jo.put("uid",session.getAttribute("uid"));
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+    @RequestMapping(value = "/autoPass",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject autoPass(HttpServletRequest request, HttpServletResponse response)
+    {
+
+        JSONObject jo = new JSONObject();
+        HttpSession session = request.getSession(true);
+
+            jo.put("session",true);
+
         return (JSONObject) JSONObject.toJSON(jo);
     }
 }

@@ -286,7 +286,7 @@ public class DirectoryController {
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     @CrossOrigin(origins = "http://gogs.modelica-china.com:8080", maxAge = 3600)
-    public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
+    public boolean uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 HttpServletRequest request , HttpServletResponse response){
 
@@ -299,6 +299,8 @@ public class DirectoryController {
          if(fileNames2.length >=1){
              fileName = fileNames2[0];
          }
+         //判断这个模型是更新模型还是上传新的模型
+        Boolean updateOrCreate = true;
         try {
              bytes =  map.get("file").get(0).getBytes();
         } catch (IOException e) {
@@ -372,6 +374,7 @@ public class DirectoryController {
             model.setDeleted(false);
             if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
                 modelService.add(model);
+                updateOrCreate = false;
             }
             //查找最外层空的model
             Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
@@ -426,7 +429,7 @@ public class DirectoryController {
         }
         System.out.println("上传完毕！！！");
 //        return result;
-
+        return updateOrCreate;
     }
 
     //web端增加模型目录
@@ -698,7 +701,34 @@ public class DirectoryController {
         jo.put("treeItem",treeItemList);
         return jo;
     }
-
+    @RequestMapping(value = "/getDirectoryTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getDirectoryTree(HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        //点击树节点父类列表
+        List<Map<String,Object>> directoryTree = new ArrayList<>();
+        try {
+            directoryTree = directoryService.queryMapListByParentId(Long.valueOf(0));
+            if(directoryTree.size()>0)
+            {
+                for(Map<String,Object>map:directoryTree)
+                {
+                    setChidren(map);
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","ok");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("directoryTree",directoryTree);
+        return jo;
+    }
     public void addTreeItem(Long parentId,List<Directory> treeItemList,List<Directory> allDirectory){
         for (Directory directory: allDirectory) {
             if(directory.getId() == parentId){
@@ -706,6 +736,22 @@ public class DirectoryController {
                 addTreeItem(directory.getParentId(),treeItemList,allDirectory);
             }
         }
+    }
+
+    public void setChidren(Map<String ,Object>map)
+    {
+        List<Map<String,Object>>chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
+        if(chidlren.size()>0)
+        {
+            map.put("children",chidlren);
+            Iterator<Map<String,Object>> iterator = chidlren.iterator();
+            while (iterator.hasNext())
+            {
+                Map<String,Object> child =iterator.next();
+                setChidren(child);
+            }
+        }
+
     }
 }
 

@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "echarts": "^3.3.2",
-    "element-ui": "^1.4.3",
+    "element-ui": "^2.0.1",
     "font-awesome": "^4.7.0",
     "nprogress": "^0.2.0",
     "vue": "^2.2.2",
@@ -21,7 +21,10 @@
     "vue-waterfall": "^1.0.6",
     "vuex": "^2.0.0-rc.6",
     "vuetify": "^0.15.7",
-    "jquery": "^2.2.4"
+    "jquery": "^2.2.4",
+    "vue-table-with-tree-grid":"^0.2.4",
+    "js-cookie":"2.2.0"
+
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

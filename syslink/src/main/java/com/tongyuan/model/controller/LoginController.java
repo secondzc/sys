@@ -61,13 +61,12 @@ public class LoginController extends BaseController {
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        GUser gUser = userService.queryById(1);
         String username = request.getParameter("userName");
         String password = request.getParameter("password");
         String rememberMe = request.getParameter("rememberMe");
         Map<String,Object> map =new HashMap<String,Object>();
         Map<String,Object> params = new HashMap<String,Object>();
-     //   params.put("userName",username);
+        //   params.put("userName",username);
         params.put("name",username);
 
 
@@ -75,95 +74,9 @@ public class LoginController extends BaseController {
         if(user!=null)
         {
             String passwdCheck = EncodePasswd.getEncryptedPassword(password,user.getSalt(),10000,50);
-          if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
-          {
+            if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
+            {
 
-              if(rememberMe != null && "1".equals(rememberMe)){
-                  Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
-                  int seconds=60*60;
-                  userCookie.setMaxAge(seconds);
-                  response.addCookie(userCookie);
-              }else{
-                  Cookie[] cookies = request.getCookies();
-                  if(cookies != null&&cookies.length>0){
-                      for(Cookie cookie : cookies){
-                          String cookieName = cookie.getName();
-                          if("syslinkUser".equals(cookieName)){
-                              Cookie new_cookie = new Cookie(cookieName, null);
-                              new_cookie.setMaxAge(0);
-                              response.addCookie(new_cookie);
-                          }
-                      }
-                  }
-              }
-              HttpSession session = request.getSession();
-
-            //  session.setAttribute("user", user);
-              session.setAttribute("uid",user.getID());
-              session.setAttribute("user", user);
-              session.setAttribute("base_path", request.getContextPath());
-              String lginIp = IpUtil.getIpAddr(request);
-              Date loginDate = DateUtil.getTimestamp();
-        //      userService.updateLoginstate(user.getID(),lginIp,loginDate);
-
-
-              LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
-              setSessionUser(request,loginedUser);
-
-              operationlogService.addLog("登录","登录系统",request);
-
-
-
-              Cookie c = new Cookie("gogs_awesome",username);
-              c.setDomain(".modelica-china.com");
-              c.setMaxAge(60);
-              c.setPath("/");
-              response.addCookie(c);
-
-
-              Cookie[] cookies = request.getCookies();
-              for (int i =0;i<cookies.length;i++)
-              {
-                  System.out.println(cookies[i].getName());
-                  System.out.println(cookies[i].getValue());
-              }
-              System.out.println(session.getId());
-
-
-
-              //             return "redirect:/model/getMyIndex";
-              map.put("result","1");
-              map.put("userInfo",loginedUser);
-              map.put("errormsg","登陆成功！");
-          }else{
-              request.setAttribute("loginFlag",1);
-              //             return "login";
-              map.put("result","0");
-              map.put("errormsg","用户名/密码错误！");
-          }
-        }else{
-            request.setAttribute("loginFlag", -1);
-            //  return "login";
-            map.put("result","0");
-            map.put("errormsg","登陆失败，请输入正确的用户！");
-        }
-
-
-
-
-
-
-
-
-    /**
-        Subject currentUser = ShiroKit.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        currentUser.login(token);
-        ShiroUser shiroUser = ShiroKit.getUser();
-    **/
-        /**
-        if(user != null){
-            if(user != null && password.equals(user.getPassWord())){
                 if(rememberMe != null && "1".equals(rememberMe)){
                     Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
                     int seconds=60*60;
@@ -183,11 +96,17 @@ public class LoginController extends BaseController {
                     }
                 }
                 HttpSession session = request.getSession();
+
+
                 session.setAttribute("user", user);
-                session.setAttribute("base_path", request.getContextPath());
+                session.setAttribute("uid",user.getID());
+                session.setAttribute("uname",user.getName());
+                //session.setAttribute("user", user);
+                //   session.setAttribute("base_path", request.getContextPath());
                 String lginIp = IpUtil.getIpAddr(request);
-                Date loginDate =DateUtil.getTimestamp();
-                userService.updateLoginstate(user.getId(),lginIp,loginDate);
+                Date loginDate = DateUtil.getTimestamp();
+                userService.updateLoginstate(user.getID(),lginIp,loginDate);
+
 
                 LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
                 setSessionUser(request,loginedUser);
@@ -198,25 +117,108 @@ public class LoginController extends BaseController {
 
                 Cookie c = new Cookie("gogs_awesome",username);
                 c.setDomain(".modelica-china.com");
-                c.setMaxAge(60);
+                c.setMaxAge(-1);
                 c.setPath("/");
                 response.addCookie(c);
-   //             return "redirect:/model/getMyIndex";
+
+
+                Cookie[] cookies = request.getCookies();
+                for (int i =0;i<cookies.length;i++)
+                {
+                    System.out.println(cookies[i].getName());
+                    System.out.println(cookies[i].getValue());
+                }
+                System.out.println(session.getAttribute("uid"));
+                System.out.println(session.getAttribute("uname"));
+
+
+
+                //return "redirect:/model/getMyIndex";
                 map.put("result","1");
+                map.put("userInfo",loginedUser);
                 map.put("errormsg","登陆成功！");
             }else{
                 request.setAttribute("loginFlag",1);
-   //             return "login";
-                map.put("result","1");
-                map.put("errormsg","登陆成功！");
+                //             return "login";
+                map.put("result","0");
+                map.put("errormsg","用户名/密码错误！");
             }
         }else{
             request.setAttribute("loginFlag", -1);
-          //  return "login";
+            //  return "login";
             map.put("result","0");
             map.put("errormsg","登陆失败，请输入正确的用户！");
         }
-        **/
+
+
+
+
+
+
+
+
+        /**
+         Subject currentUser = ShiroKit.getSubject();
+         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+         currentUser.login(token);
+         ShiroUser shiroUser = ShiroKit.getUser();
+         **/
+        /**
+         if(user != null){
+         if(user != null && password.equals(user.getPassWord())){
+         if(rememberMe != null && "1".equals(rememberMe)){
+         Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
+         int seconds=60*60;
+         userCookie.setMaxAge(seconds);
+         response.addCookie(userCookie);
+         }else{
+         Cookie[] cookies = request.getCookies();
+         if(cookies != null&&cookies.length>0){
+         for(Cookie cookie : cookies){
+         String cookieName = cookie.getName();
+         if("syslinkUser".equals(cookieName)){
+         Cookie new_cookie = new Cookie(cookieName, null);
+         new_cookie.setMaxAge(0);
+         response.addCookie(new_cookie);
+         }
+         }
+         }
+         }
+         HttpSession session = request.getSession();
+         session.setAttribute("user", user);
+         session.setAttribute("base_path", request.getContextPath());
+         String lginIp = IpUtil.getIpAddr(request);
+         Date loginDate =DateUtil.getTimestamp();
+         userService.updateLoginstate(user.getId(),lginIp,loginDate);
+
+         LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
+         setSessionUser(request,loginedUser);
+
+         operationlogService.addLog("登录","登录系统",request);
+
+
+
+         Cookie c = new Cookie("gogs_awesome",username);
+         c.setDomain(".modelica-china.com");
+         c.setMaxAge(60);
+         c.setPath("/");
+         response.addCookie(c);
+         //             return "redirect:/model/getMyIndex";
+         map.put("result","1");
+         map.put("errormsg","登陆成功！");
+         }else{
+         request.setAttribute("loginFlag",1);
+         //             return "login";
+         map.put("result","1");
+         map.put("errormsg","登陆成功！");
+         }
+         }else{
+         request.setAttribute("loginFlag", -1);
+         //  return "login";
+         map.put("result","0");
+         map.put("errormsg","登陆失败，请输入正确的用户！");
+         }
+         **/
 
         return map;
     }

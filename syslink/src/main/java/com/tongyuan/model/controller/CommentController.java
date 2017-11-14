@@ -18,14 +18,14 @@ public class CommentController extends BaseController{
     @Autowired
     private NodeInstanceService nodeInstanceService;
 
-    @PostMapping("/queryCommentPages")
-    @ResponseBody
-    public JSONObject queryCommentPages(HttpServletRequest request) throws NumberFormatException{
-            Long instanceId = Long.valueOf(request.getParameter("instanceId"));
-            List<CommentPage> commentPages = nodeInstanceService.queryCommentPages(instanceId);
-            JSONObject jo = new JSONObject();
-            jo.put("flag",true);
-            jo.put("commentPages",commentPages);
-            return jo;
-    }
+//    @PostMapping("/queryCommentPages")
+//    @ResponseBody
+//    public JSONObject queryCommentPages(HttpServletRequest request) throws NumberFormatException{
+//            Long instanceId = Long.valueOf(request.getParameter("instanceId"));
+//            List<CommentPage> commentPages = nodeInstanceService.queryCommentPages(instanceId);
+//            JSONObject jo = new JSONObject();
+//            jo.put("flag",true);
+//            jo.put("commentPages",commentPages);
+//            return jo;
+//    }
 }

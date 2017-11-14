@@ -23,4 +23,6 @@ public interface DirectoryMapper {
     public List<Directory> queryListByParentId(Long id);
     public List<Directory> queryListById(Long id);
     public List<Directory> queryByParentName(Map<String, Object> params);
+    public List<Map<String,Object>> queryMapListByParentId(Long parentId);
+    public Map<String,Object> queryMapById(Long id);
 }

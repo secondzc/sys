@@ -9,7 +9,7 @@
     <el-tab-pane label="组织成员" name="first">   
 
       
-     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+   <!--   <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
           <el-autocomplete  class="inline-input"  v-model="inviteUser.name" :fetch-suggestions="querySearch" placeholder="搜索用户" 
@@ -17,8 +17,8 @@
           <el-button type="primary" @click="inviteSubmit"  >邀请他人加入</el-button>
         </el-form-item>
       </el-form>
-       
-    </el-col>
+       <hr/>
+    <!-- </el-col> -->
 
 
     <!--列表-->
@@ -62,14 +62,15 @@
 
     <el-tab-pane label="组织团队" name="second">
 
-     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
           <el-button type="primary" @click="addTeam"  >创建新的团队</el-button>
         </el-form-item>
       </el-form>
+      <hr/>
        
-    </el-col>
+    <!-- </el-col> -->
 
   <template >
     <el-form label-width="80px"   :inline="true"  >
@@ -84,6 +85,7 @@
     </div>
     <div v-for="user in item.member" :key=item.member.id class="text item">
     {{user.name }}
+    <hr/>
     </div>
 
       <div class="bottom clearfix">

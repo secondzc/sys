@@ -46,7 +46,9 @@ public interface GUserService {
 
     public Map<String,Object> queryOrgById(long orgId);
 
-    public boolean updateAuth(Integer uid, Integer[] authId);
+    public boolean updateAuth(Long uid, Integer[] authId);
+
+    public boolean updateModelAuth(Long uid,Long[] directoryIds);
 
 
     Page<GUser>test1(Map<String, Object> map);

@@ -18,17 +18,7 @@ public class CheckorPage {
     private String templateName;
     private String description;
     private Timestamp createTime;
-
-    public Long getInstanceId() {
-        return instanceId;
-    }
-
-    public void setInstanceId(Long instanceId) {
-        this.instanceId = instanceId;
-    }
-
     private Timestamp lastUpdateTime;
-    private Long instanceId;
     private Model model;
     private ReviewFlowTemplate template;
     private ReviewNodeInstance reviewNodeInstance;

@@ -8,11 +8,17 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.*;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
+<<<<<<< HEAD
 import com.tongyuan.pageModel.ReviewUserPage;
+=======
+import com.tongyuan.model.service.AuthService;
+import com.tongyuan.model.service.RoleService;
+>>>>>>> master
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Guard;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,6 +44,12 @@ public class GUserServiceImpl implements GUserService {
     RoleAuthMapper roleAuthMapper;
     @Autowired
     UserDepartMapper userDepartMapper;
+    @Autowired
+    DirectoryAuthMapper directoryAuthMapper;
+    @Autowired
+    AuthService authService;
+    @Autowired
+    RoleService roleService;
 
 
 
@@ -182,7 +194,61 @@ public class GUserServiceImpl implements GUserService {
         userDepart.setUid(Long.parseLong(map.get("id").toString()));
         userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
         boolean b = this.userDepartMapper.add(userDepart);
+
+
+
+//        Integer name = Integer.parseInt(map.get("name").toString());
+//
+//        for(int i=1;i<=1000;i++)
+//        {
+//            map.put("id",Long.parseLong(map.get("id").toString())+1);
+//            map.put("name",name+i);
+//            map.put("lowerName",name+i);
+//            String email = name+i+"@gogs.com";
+//            map.put("email",email);
+//            map.put("fullName","");
+//
+//            //  map.put("email","");
+//            //  map.put("passwd","");
+//            map.put("loginType",0);
+//            map.put("loginSource",0);
+//            map.put("loginName","");
+//            map.put("type",0);
+//            map.put("location","");
+//            map.put("website","");
+//            map.put("lastRepoVisibility",0);
+//            map.put("createdUnix", System.currentTimeMillis()/1000L);
+//            map.put("updatedUnix",System.currentTimeMillis()/1000L);
+//            map.put("maxRepoCreation",-1);
+//            map.put("isActive",1);
+//            map.put("isAdmin",0);
+//            map.put("allowGitHook",0);
+//            map.put("allowImportLocal",0);
+//            map.put("prohibitLogin",0);
+//
+//            map.put("useCustomAvatar",1);
+//            map.put("numFollowers",0);
+//            map.put("numFollowing",0);
+//            map.put("numStars",0);
+//            map.put("numRepos",0);
+//            map.put("description","");
+//
+//            map.put("numTeams",1);
+//
+//            map.put("numMembers",1);
+//            map.put("avatar","");
+//            map.put("avatarEmail","");
+//            gUserMapper.add(map);
+//            UserDepart userDepart1 = new UserDepart();
+//            userDepart1.setUid(Long.parseLong(map.get("id").toString()));
+//            userDepart1.setDepartId(Integer.parseInt(map.get("departId").toString()));
+//            userDepartMapper.add(userDepart1);
+//        }
         return  a&b;
+
+
+
+
 
 
     }
@@ -202,7 +268,6 @@ public class GUserServiceImpl implements GUserService {
         userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
         boolean a =userDepartMapper.update(userDepart);
         boolean b =gUserMapper.updateUser(map);
-
         return a&b;
     }
 
@@ -216,7 +281,7 @@ public class GUserServiceImpl implements GUserService {
     public Page<Map<String,Object>> queryUser(Map<String,Object>map)
     {
         Page<Map<String,Object>>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
-      List<Map<String,Object>> a= gUserMapper.queryUser(map);
+        List<Map<String,Object>> a= gUserMapper.queryUser(map);
         return page;
     }
 
@@ -249,14 +314,14 @@ public class GUserServiceImpl implements GUserService {
         return this.gUserMapper.querySimpleUser(map);
     }
 
-   @Override
-   public Map<String,Object> queryUserByName(String name)
-   {
-       return this.gUserMapper.queryUserByName(name);
-   }
+    @Override
+    public Map<String,Object> queryUserByName(String name)
+    {
+        return this.gUserMapper.queryUserByName(name);
+    }
 
-   @Override
-   public Map<String,Object> queryOrgByName(String name)
+    @Override
+    public Map<String,Object> queryOrgByName(String name)
     {
         return this.gUserMapper.queryOrgByName(name);
     }
@@ -268,8 +333,80 @@ public class GUserServiceImpl implements GUserService {
 
 
     @Override
-    public boolean updateAuth(Integer uid, Integer[] authIds)
+    public boolean updateAuth(Long uid, Integer[] authIds)
     {
+        GUser user = gUserMapper.queryById(uid);
+        if(user.getAdmin())
+        {
+            //用户权限中是否含有仓库权限
+            boolean c = false;
+            //角色权限中是否含有仓库权限
+            boolean d = false;
+//            List<UserAuth> userAuths = userAuthMapper.queryByUid(uid);
+//
+//            if(userAuths.size()>0)
+//            {
+//                for(UserAuth userAuth:userAuths)
+//                {
+//                    Auth auth = authMapper.queryById(userAuth.getAuthId());
+//                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+//                    {
+//                        // user.setAdmin(false);
+//                        // gUserMapper.update(user);
+//                        c = true;
+//                    }
+//                }
+//            }
+//
+//            List<UserRole> userRoles = userRoleMapper.query(uid);
+//            if(userRoles.size()>0)
+//            {
+//                for (UserRole userRole : userRoles)
+//                {
+//                    List<RoleAuth> roleAuths = roleAuthMapper.queryByRoleId(userRole.getRoleId());
+//                    for(RoleAuth roleAuth :roleAuths)
+//                    {
+//                        Auth auth = authMapper.queryById(roleAuth.getAuthId());
+//                        if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+//                        {
+//                            d = true;
+//                        }
+//                    }
+//                }
+//            }
+
+            Set<Auth> userAuths = authService.getAuthByUserAuth(uid);
+            if(userAuths.size()>0)
+            {
+                for(Auth auth :userAuths)
+                {
+                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+                    {
+                        c=true;
+                    }
+                }
+            }
+            Set<Auth> userRoleAuths = roleService.getAuthByUserRole(uid);
+            if(userRoleAuths.size()>0)
+            {
+                for(Auth auth :userRoleAuths)
+                {
+                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+                    {
+                        d=true;
+                    }
+                }
+            }
+
+            if(c&!d)
+            {
+                user.setAdmin(false);
+                gUserMapper.update(user);
+            }
+
+
+        }
+
         boolean a = userAuthMapper.deleteByUid(uid);
         boolean b = true;
         for(int i=0;i<authIds.length;i++)
@@ -277,9 +414,32 @@ public class GUserServiceImpl implements GUserService {
             UserAuth userAuth = new UserAuth();
             userAuth.setUid(uid);
             userAuth.setAuthId(authIds[i]);
+            Auth auth = authMapper.queryById(authIds[i]);
+            if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+            {
+                user.setAdmin(true);
+                gUserMapper.update(user);
+            }
             b = b&userAuthMapper.add(userAuth);
         }
         return a&b;
+    }
+
+
+    @Override
+    public boolean updateModelAuth(Long uid,Long[] directoryIds)
+    {
+        boolean a = directoryAuthMapper.deleteByUid(uid);
+        boolean b =true;
+        for(int i=0;i<directoryIds.length;i++)
+        {
+            DirectoryAuth directoryAuth = new DirectoryAuth();
+            directoryAuth.setUid(uid);
+            directoryAuth.setDirectoryId(directoryIds[i]);
+            b = b&directoryAuthMapper.add(directoryAuth);
+        }
+        return a&b;
+
     }
 
     @Override
