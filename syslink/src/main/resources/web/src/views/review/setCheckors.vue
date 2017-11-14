@@ -79,20 +79,18 @@
 		<el-dialog title="选择人员" v-model="chooseNameVisible" :close-on-click-modal="false"
 		v-loading="userNamesLoading">
 			<template>
-			  <el-transfer
-			    filterable
-			    filter-placeholder="请输入审核者名字"
-			    v-model="value2"
-			    :data="data2">
-			  </el-transfer>
-			  <el-button @click.native="submitName">确认</el-button>
+			  <user-tree @affirmName="affirmName1">确认</user-tree>
 			</template>
 		</el-dialog>
 	</section>
 </template>
 
 <script>
+    import userTree from "../review/userTreeComp";
 	export default {
+		components:{
+			userTree
+		},
 		data(){
 			return {
 			  tempateId: 0,
@@ -129,6 +127,11 @@
 			this.templateId = sessionStorage.getItem('templateId');
 		},
 		methods: {
+			affirmName1(userName){
+				this.chooseNameVisible = false;
+				this.addItemsDialog.userName = userName;
+				this.editItemsDialog.userName = userName;
+			},
 			query() {
 				let url="/api/user/query";
 				this.func.ajaxPost(url,{},res=>{
@@ -216,7 +219,7 @@
 			},
 			chooseName() {
 				this.chooseNameVisible = true;
-				this.query();
+				//this.query();
 			},
 			getUserNames() {
 

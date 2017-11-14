@@ -27,7 +27,7 @@
         FROM user_depart
         WHERE uid = #{uid}
     </select>
-    <select id="queryByDepartId" resultMap="baseResultMap" resultType="map" parameterType="long">
+    <select id="queryByDepartId" resultMap="baseResultMap" resultType="map" parameterType="int">
         SELECT
         <include refid="baseColumnList" />
         FROM user_depart
