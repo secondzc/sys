@@ -8,12 +8,12 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.*;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-<<<<<<< HEAD
+
 import com.tongyuan.pageModel.ReviewUserPage;
-=======
+
 import com.tongyuan.model.service.AuthService;
 import com.tongyuan.model.service.RoleService;
->>>>>>> master
+
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -36,7 +36,7 @@
 		</el-table>
 
 		<!--新增界面-->
-		<el-dialog title="配置人员" v-model="addItemsDialogVisible" :close-on-click-modal="false">
+		<el-dialog title="配置人员" :visible.sync="addItemsDialogVisible" v-model="addItemsDialogVisible" :close-on-click-modal="false">
 			<el-form :model="addItemsDialog" label-width="80px" >
 				<el-form-item label="节点名字" prop="reviewNodeName">
 					<el-input v-model="addItemsDialog.reviewNodeName" ></el-input>
@@ -76,10 +76,10 @@
 		</el-dialog>
 
 		<!--选择人员-->
-		<el-dialog title="选择人员" v-model="chooseNameVisible" :close-on-click-modal="false"
+		<el-dialog title="选择人员" :visible.sync="chooseNameVisible" v-model="chooseNameVisible" :close-on-click-modal="false"
 		v-loading="userNamesLoading">
 			<template>
-			  <user-tree @affirmName="affirmName1">确认</user-tree>
+			  <user-tree @affirmName="affirmName1"></user-tree>
 			</template>
 		</el-dialog>
 	</section>

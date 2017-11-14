@@ -30,11 +30,7 @@ import packageTransfModel from  './views/model/packageTransfModel.vue'
 
 
 
-import template from './views/review/template.vue'
-import setCheckors from './views/review/setCheckors.vue'
 import mySubmit from './views/review/mySubmit.vue'
-import mySubmitDetail from './views/review/mySubmitDetail.vue'
-import checkor from './views/review/checkor.vue'
 import Myorg from './views/nav4/Myorg.vue'
 import OrgEdit from './views/nav4/OrgEdit.vue'
 import GUser from './views/nav4/GUser.vue'
@@ -60,6 +56,15 @@ import myRepo from './views/nav4/myRepo.vue'
 
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import template from './views/review/template.vue' 
+import setCheckors from './views/review/setCheckors.vue' 
+import mySubmitDetail from './views/review1/mySubmitDetail.vue' 
+import checkor from './views/review/checkor.vue' 
+import brief from './views/review1/brief.vue' 
+import mySubmitAll from './views/review1/mySubmitAll.vue' 
+import checkorAll from './views/review1/checkorAll.vue' 
+import checkorDetail from './views/review1/checkorDetail.vue' 
 
 
 Vue.use(Router)
@@ -90,6 +95,18 @@ export let  commonRoutes = [
     //         {path:'/mySubmit',component:mySubmit,name:'我的提交'},
     //     ]
     // },
+     {  
+          path: '', 
+          component: corporate, 
+          name: '审签管理', 
+          iconCls: 'el-icon-setting',//图标样式class 
+          children: [ 
+              // { path: '/main', component: Main, name: '项目', hidden: true }, 
+              { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true }, 
+              { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true }, 
+              {path:'/checkorDetail',component:checkorDetail,name:'审核详情',hidden:true}, 
+          ] 
+      }, 
     {
         path: '',
         component: corporate,
@@ -97,8 +114,10 @@ export let  commonRoutes = [
         name: '我的流程',
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
-            {path:'/mySubmit',component:mySubmit,name:'我的提交'},
-            {path:'/checkor',component:checkor,name:'我的审核'}
+              {path:'/template',component:template,name:'模板管理'}, 
+              {path:'/brief',component:brief,name:'我的流程'}, 
+              {path:'/checkorAll',component:checkorAll,name:'我的审核'}, 
+              {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交'}, 
         ]
     },
 

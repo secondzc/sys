@@ -3,6 +3,7 @@ package com.tongyuan.model.service.impl;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.NodeInstanceMapper;
+import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.model.service.NodeInstanceService;
@@ -51,7 +52,6 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
         }
         return detailPageList;
     }
-<<<<<<< HEAD
 
     @Override
     public List<CommentPage> queryCommentPages(Long instanceId) {
@@ -75,6 +75,4 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
     public int updateComment(Map<String, Object> map) {
         return nodeInstanceMapper.updateComment(map);
     }
-=======
->>>>>>> master
 }

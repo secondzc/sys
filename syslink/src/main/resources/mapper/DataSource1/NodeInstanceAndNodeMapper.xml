@@ -74,7 +74,7 @@
         INNER JOIN review_node_instance D ON A.instance_id = D.instance_id
         INNER JOIN review_node E ON D.node_id = E.node_id
         WHERE
-        AND E.user_id = #{userId}
+        E.user_id = #{userId}
         <if test="instanceName!=null and instanceName!=''">
             AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
         </if>

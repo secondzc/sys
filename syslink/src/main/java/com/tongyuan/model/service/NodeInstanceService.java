@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
 
@@ -16,4 +17,6 @@ public interface NodeInstanceService {
     int updateTime(Map<String, Object> map);
 
     List<DetailPage> details(Long instanceId);
+    List<CommentPage> queryCommentPages(Long instanceId);
+    int updateComment(Map<String, Object> map);
 }
