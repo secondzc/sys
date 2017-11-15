@@ -65,6 +65,12 @@
         WHERE id=#{id}
     </update>
 
+    <update id="updateComment" parameterType="java.util.Map">
+        UPDATE review_node_instance
+        SET comment=#{comment}
+        WHERE id=#{id}
+    </update>
+
     <select id="details" parameterType="java.lang.Long" resultMap="pageResultMap">
         SELECT
         A.id AS review_node_instance_id,

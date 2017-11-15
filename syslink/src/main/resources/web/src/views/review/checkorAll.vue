@@ -13,12 +13,12 @@
 			</el-table-column>
 			<el-table-column prop="nodeInstance.status" label="审签状态" width="150" :formatter="format">
 			<--!这个组件不知道能否起作用-->
-			<el-table-column label="操作" width="150">
+			<!-- <el-table-column label="操作" width="150">
 				<template scope="scope" v-if="nodeInstance.status==2">
 					<el-button size="small" @click="handleAgree(scope.$index, scope.row)">同意</el-button>
 					<el-button type="danger" size="small" @click="handleDisagree(scope.$index, scope.row)">拒绝</el-button>
 				</template>
-			</el-table-column>
+			</el-table-column> -->
 			</el-table-column>
 		</el-table>
 
