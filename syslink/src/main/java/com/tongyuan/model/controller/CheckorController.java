@@ -3,10 +3,10 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.exception.SqlNumberException;
+import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.CheckorPage;
 import com.tongyuan.model.domain.ReviewFlowInstance;
-import com.tongyuan.model.domain.ReviewModel;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,15 +86,18 @@ public class CheckorController extends BaseController{
 
     //点击详细信息，可查看审签实例对应的模型信息
     @PostMapping(value="/showModelDetails")
-    public void showModelDetails(HttpServletRequest request, HttpServletResponse response){
+    @ResponseBody
+    public JSONObject showModelDetails(HttpServletRequest request, HttpServletResponse response){
         Long instanceId = Long.valueOf(request.getParameter("instanceId"));
         ReviewFlowInstance reviewFlowInstance=reviewFlowInstanceService.queryByInstanceId(instanceId);
         Long modelId = reviewFlowInstance.getModelId();
-        ReviewModel reviewModel = reviewModelService.queryByModelId(modelId);
-
+        //ReviewModel reviewModel = reviewModelService.queryByModelId(modelId);
+        Model reviewModel = reviewModelService.queryByModelId(modelId);
         JSONObject js = new JSONObject();
         js.put("reviewModel",reviewModel);
-        ServletUtil.createSuccessResponse(200,js,response);
+        js.put("flag",true);
+        //ServletUtil.createSuccessResponse(200,js,response);
+        return js;
     }
 
     //于上面queryByReviewer方法的区别是，这个方法是查看所有的记录，包括历史记录

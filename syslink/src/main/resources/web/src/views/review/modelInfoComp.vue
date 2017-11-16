@@ -58,6 +58,7 @@
 						this.listLoading = false;
 					}
 				})
+				console.log(this.reviewModel);
 			},
 		},
 		mounted(){

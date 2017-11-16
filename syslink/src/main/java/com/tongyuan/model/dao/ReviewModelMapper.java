@@ -1,6 +1,6 @@
 package com.tongyuan.model.dao;
 
-import com.tongyuan.model.domain.ReviewModel;
+import com.tongyuan.model.domain.Model;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,7 +11,8 @@ import java.util.Map;
  */
 @Mapper
 public interface ReviewModelMapper {
-    List<ReviewModel> queryAll(Map<String, Object> map);
-    ReviewModel queryByModelId(Long modelId);
-    List<ReviewModel> queryByModelName(Map<String, Object> map);
+
+    List<Model> queryAll(Map<String, Object> map);
+    Model queryByModelId(Long modelId);
+    List<Model> queryByModelName(Map<String, Object> map);
 }
