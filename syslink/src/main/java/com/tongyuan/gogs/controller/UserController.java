@@ -4,13 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
+import com.tongyuan.model.domain.UserDepart;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.GUserWarpper;
+import com.tongyuan.model.wrapper.test;
+import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.Convert;
 import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.EncodePasswd;
@@ -103,6 +107,55 @@ public class UserController extends BaseController {
         jo.put("userRoles",userRoles);
         return (JSONObject) JSONObject.toJSON(jo);
     }
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject list(@RequestBody Map<String,Object> map, HttpServletRequest request)
+    {
+        JSONObject jo = new JSONObject();
+
+
+            List<Map<String,Object>> users = new ArrayList<>();
+            Page<UserDepart> userDeaprts = new Page<>();
+
+            try
+            {
+//            users = userService.queryUser(map);
+                userDeaprts = userService.queryUserDepart(map);
+                if (userDeaprts.size()>0)
+                {
+                    for(UserDepart userDepart : userDeaprts)
+                    {
+                        Map<String,Object> user = userService.queryUserById(userDepart.getUid());
+                        if(user!=null)
+                        {
+                            users.add(user);
+                        }
+                    }
+
+
+                    new GUserWarpper(users).warp();
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                jo.put("flag",false);
+                jo.put("msg","获取用户列表失败");
+                return jo;
+            }
+            jo.put("flag",true);
+            jo.put("msg","获取用户列表成功");
+            jo.put("users",users);
+            jo.put("total",userDeaprts.getTotal());
+//        jo.put("users",new GUserWarpper(users).warp());
+//        jo.put("total",users.getTotal());
+            return (JSONObject) JSONObject.toJSON(jo);
+
+
+    }
+
 
 
     @RequestMapping(value = "/query",method = RequestMethod.POST,produces="application/json;charset=UTF-8")

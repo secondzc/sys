@@ -22,4 +22,6 @@ public interface UserDepartMapper {
     public UserDepart queryByUid(long uid);
 
     public List<UserDepart> queryByDepartId(Integer departId);
+
+    public List<UserDepart> queryByDepartIds (List<Integer> departIds);
 }

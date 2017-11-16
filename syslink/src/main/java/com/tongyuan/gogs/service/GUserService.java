@@ -1,7 +1,10 @@
+
+
 package com.tongyuan.gogs.service;
 
 import com.github.pagehelper.Page;
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.model.domain.UserDepart;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.pageModel.ReviewUserPage;
 
@@ -30,6 +33,8 @@ public interface GUserService {
 
     public Page<Map<String,Object>> queryUser(Map<String, Object> map);
 
+    public Page<UserDepart> queryUserDepart(Map<String,Object>map);
+
     public boolean deleteUser(long id);
 
 
@@ -42,6 +47,8 @@ public interface GUserService {
 
     public Map<String,Object> queryUserByName(String name);
 
+    public Map<String,Object> queryUserById (long userId);
+
     public Map<String,Object> queryOrgByName(String name);
 
     public Map<String,Object> queryOrgById(long orgId);
@@ -51,8 +58,10 @@ public interface GUserService {
     public boolean updateModelAuth(Long uid,Long[] directoryIds);
 
 
-    Page<GUser>test1(Map<String, Object> map);
 
     //这个没有分页 by：zhangcy
     public List<ReviewUserPage> queryAll();
+
+
 }
+

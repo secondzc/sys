@@ -75,4 +75,20 @@ public class DepartWarpper extends BaseControllerWarpper {
         return  path;
     }
 
+    public List<Map<String,Object>> getChildren (Map<String,Object>map)
+    {
+        List<Map<String,Object>>allChildren = new ArrayList<>();
+        List<Map<String,Object>> children = departMapper.queryByPid(Integer.parseInt(map.get("id").toString()));
+        allChildren.addAll(children);
+
+        Iterator<Map<String,Object>> iterator = children.iterator();
+        while (iterator.hasNext())
+        {
+            allChildren.addAll(getChildren(iterator.next()));
+        }
+
+        return allChildren;
+
+    }
+
 }

@@ -109,6 +109,13 @@ public class DepartController {
         JSONObject jo = new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
         Integer id  = jsonObject.getIntValue("id");
+        if(id==1)
+        {
+            jo.put("flag",false);
+            jo.put("msg","根部门不能删除！");
+            return (JSONObject) JSONObject.toJSON(jo);
+        }
+
         try
         {
             departService.deleteDepart(id);

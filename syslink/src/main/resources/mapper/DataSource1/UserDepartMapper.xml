@@ -27,16 +27,28 @@
         FROM user_depart
         WHERE uid = #{uid}
     </select>
-    <select id="queryByDepartId" resultMap="baseResultMap" resultType="map" parameterType="int">
+    <select id="queryByDepartId" resultMap="baseResultMap" resultType="map" parameterType="INTEGER">
         SELECT
         <include refid="baseColumnList" />
         FROM user_depart
         WHERE depart_id = #{departId}
     </select>
+
+
+    <select id="queryByDepartIds" resultMap="baseResultMap" >
+         SELECT
+         <include refid="baseColumnList"/>
+         FROM user_depart
+         WHERE  depart_id IN
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
     <delete id="deleteByUid" parameterType="long">
-        delete from user_deaprt where uid=#{uid}
+        delete from user_depart where uid=#{uid}
     </delete>
-    <delete id="deleteByDepartId" parameterType="long">
+    <delete id="deleteByDepartId" parameterType="INTEGER">
         delete from user_depart where depart_id=#{departId}
     </delete>
 

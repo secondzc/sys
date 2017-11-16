@@ -1,3 +1,4 @@
+
 package com.tongyuan.gogs.service.impl;
 
 import com.github.pagehelper.Page;
@@ -8,12 +9,10 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.*;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-
-import com.tongyuan.pageModel.ReviewUserPage;
-
 import com.tongyuan.model.service.AuthService;
 import com.tongyuan.model.service.RoleService;
-
+import com.tongyuan.model.wrapper.DepartWarpper;
+import com.tongyuan.pageModel.ReviewUserPage;
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +49,8 @@ public class GUserServiceImpl implements GUserService {
     AuthService authService;
     @Autowired
     RoleService roleService;
+    @Autowired
+    DepartMapper departMapper;
 
 
 
@@ -265,16 +266,33 @@ public class GUserServiceImpl implements GUserService {
             map.put("lowerName",map.get("name").toString().toLowerCase());
         }
         UserDepart userDepart = userDepartMapper.queryByUid(Long.parseLong(map.get("id").toString()));
-        userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
-        boolean a =userDepartMapper.update(userDepart);
-        boolean b =gUserMapper.updateUser(map);
-        return a&b;
+        if(userDepart!=null)
+        {
+            userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
+            boolean a =userDepartMapper.update(userDepart);
+            boolean b =gUserMapper.updateUser(map);
+            return a&b;
+        }
+        else
+        {
+            UserDepart userDepart1 = new UserDepart();
+            userDepart1.setDepartId(Integer.parseInt(map.get("departId").toString()));
+            userDepart1.setUid(Long.parseLong(map.get("id").toString()));
+            boolean a = userDepartMapper.add(userDepart1);
+            boolean b =gUserMapper.updateUser(map);
+            return a&b;
+        }
+
     }
 
     @Override
     public boolean deleteUser(long id)
     {
-        return this.gUserMapper.delete(id);
+
+
+        boolean b = userDepartMapper.deleteByUid(id);
+        boolean a = gUserMapper.delete(id);
+        return a&b;
     }
 
     @Override
@@ -283,6 +301,27 @@ public class GUserServiceImpl implements GUserService {
         Page<Map<String,Object>>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
         List<Map<String,Object>> a= gUserMapper.queryUser(map);
         return page;
+    }
+
+    @Override
+    public Page<UserDepart> queryUserDepart(Map<String,Object>map)
+    {
+        Integer depatrId = Integer.parseInt(map.get("departId").toString());
+        Map<String,Object> depart = departMapper.queryById(depatrId);
+        List<Integer> departIds = new ArrayList<>();
+        List<Map<String,Object>> departs = new DepartWarpper(depart).getChildren(depart);
+        for(Map<String,Object>map1 : departs)
+        {
+            departIds.add(Integer.parseInt(map1.get("id").toString()));
+        }
+        departIds.add(Integer.parseInt(map.get("departId").toString()));
+        Page<UserDepart>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+        List<UserDepart> userDepartList = userDepartMapper.queryByDepartIds(departIds);
+
+
+
+
+        return  page;
     }
 
     @Override
@@ -318,6 +357,12 @@ public class GUserServiceImpl implements GUserService {
     public Map<String,Object> queryUserByName(String name)
     {
         return this.gUserMapper.queryUserByName(name);
+    }
+
+    @Override
+    public Map<String,Object> queryUserById (long userId)
+    {
+        return this.gUserMapper.queryUserById(userId);
     }
 
     @Override
@@ -442,13 +487,7 @@ public class GUserServiceImpl implements GUserService {
 
     }
 
-    @Override
-    public Page<GUser> test1(Map<String,Object>map)
-    {
-        Page<GUser>user = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
-        gUserMapper.test1(map);
-        return user;
-    }
+
 
     @Override
     public List<ReviewUserPage> queryAll() {
@@ -456,4 +495,7 @@ public class GUserServiceImpl implements GUserService {
     }
 
 
+
+
 }
+
