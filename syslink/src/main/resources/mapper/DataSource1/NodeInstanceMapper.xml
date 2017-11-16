@@ -98,5 +98,11 @@
         review_node.sequence
     </select>
 
+    <select id="queryByInstanceId" parameterType="java.lang.Long" resultMap="baseResultMap">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM review_node_instance
+        WHERE instance_id=#{instanceId}
+    </select>
 
 </mapper>

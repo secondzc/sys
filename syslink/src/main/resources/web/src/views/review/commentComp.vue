@@ -10,7 +10,7 @@
 				</el-radio-group>
 			</el-form-item>
 			<el-form-item label="意见:">
-				<el-input type="textarea" v-model="comment" style="width:75%;margin-left:10px"></el-input>
+				<el-input type="textarea" v-model="comment" style="width:75%;margin-left:20px"></el-input>
 			</el-form-item>
 			<el-form-item>
 			<el-button type="primary" @click="submit" v-loading="submitLoading">提交</el-button>
@@ -19,7 +19,7 @@
 		</div>
 		<div style="width:60%">
 			<h3>处理人意见区</h3>
-			<div style="border: 1px solid #9E9E9E;" v-for="(commentPage,index) in commentPages">
+			<div style="border: 1px solid #9E9E9E;margin-left:20px" v-for="(commentPage,index) in commentPages">
 				<div style="width:20%;float:left">审核者：{{commentPage.checkorName}}</div>
 				<div style="width:40%;float:left">审核结果：{{commentPage.showStatus}}</div>
 				<div style="width:40%;float:left">审核时间：{{commentPage.lastUpdateTime}}</div>
@@ -87,7 +87,7 @@
 <style >
 	#comment{
 		border: 1px solid #9E9E9E;
-		margin-left: 10px;
+		margin-left: 20px;
 		margin-top: 10px;
 	}
 </style>

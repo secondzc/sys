@@ -75,4 +75,9 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
     public int updateComment(Map<String, Object> map) {
         return nodeInstanceMapper.updateComment(map);
     }
+
+    @Override
+    public List<ReviewNodeInstance> queryByInstanceId(Long instanceId) {
+        return nodeInstanceMapper.queryByInstanceId(instanceId);
+    }
 }

@@ -21,13 +21,22 @@ public class ReviewNodeInstanceController {
     @Autowired
     private NodeInstanceService nodeInstanceService;
 
+
     @PostMapping("/details")
     @ResponseBody
     public JSONObject details(@RequestParam("instanceId")Long instanceId){
         //Map<String,Object> map = new HashMap<>();
+        //本方法是为了审签流程条准备的，返回节点实例，并返回当前激活的节点的sequence
         List<DetailPage> reviewNodeInstanceList = nodeInstanceService.details(instanceId);
+        String sequence = "";
+        for(DetailPage detail:reviewNodeInstanceList){
+            if(new Byte((byte)2).equals(detail.getStatus())){
+                sequence = detail.getNode().getSequence();
+            }
+        }
         JSONObject jo = new JSONObject();
         jo.put("records",reviewNodeInstanceList);
+        jo.put("sequence",sequence);
         return jo;
     }
 }

@@ -4,12 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.domain.ReviewFlowInstance;
+import com.tongyuan.model.domain.ReviewNodeInstance;
+import com.tongyuan.model.domain.enums.ConstReviewFlowInstanceStatus;
+import com.tongyuan.model.service.NodeInstanceService;
 import com.tongyuan.model.service.ReviewFlowInstanceService;
 import com.tongyuan.model.service.ReviewModelService;
 import com.tongyuan.model.service.StatusChangeService;
 import com.tongyuan.tools.ServletUtil;
+import jdk.nashorn.internal.scripts.JO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,12 +37,40 @@ public class ReviewFlowInstanceController extends BaseController {
     private StatusChangeService statusChangeService;
     @Autowired
     private ReviewModelService reviewModelService;
+    @Autowired
+    private NodeInstanceService nodeInstanceService;
 
 
     @RequestMapping("")
     public String reviewFlowInstance(){
         return "review-flow-instance";
     }
+
+    @PostMapping("/cancel")
+    @ResponseBody
+    public JSONObject cancel(HttpServletRequest request){
+        JSONObject jo = new JSONObject();
+        Long instanceId = Long.valueOf(request.getParameter("instanceId"));
+        //设置流程实例的status
+        Map<String,Object> map = new HashMap<>();
+        map.put("instanceId",instanceId);
+        map.put("status", ConstReviewFlowInstanceStatus.CANCEL);
+        reviewFlowInstanceService.setStatus(map);
+        //设置节点实例的status
+        List<ReviewNodeInstance> nodeInstances = nodeInstanceService.queryByInstanceId(instanceId);
+        for(ReviewNodeInstance nodeInstance:nodeInstances){
+            Byte status = new Byte((byte)(nodeInstance.getStatus()+4));
+            Long id = nodeInstance.getId();
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("status",status);
+            map1.put("id",id);
+            nodeInstanceService.updateStatus(map1);
+        }
+        jo.put("flag",true);
+        return jo;
+    }
+
+
     /**
      * 新增一个流程实例
      * @param request
