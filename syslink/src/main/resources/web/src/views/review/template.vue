@@ -52,7 +52,7 @@
 	
 
 		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+		<el-dialog title="新增" v-model="addFormVisible"  :visible.sync="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addTemplate" label-width="80px" >
 				<el-form-item label="模板名" prop="templateName">
 					<el-input v-model="addTemplate.templateName" ></el-input>
@@ -143,7 +143,7 @@
 				//let templateId = row.templateId;
 				//sessionStorage.setItem('templateId',this.sels[0].templateId);
 				sessionStorage.setItem('templateId',row.templateId);
-				this.$router.push({path:'/setCheckors'});
+				this.$router.push({path:'setCheckors'});
 			},
 			
 			//批量删除

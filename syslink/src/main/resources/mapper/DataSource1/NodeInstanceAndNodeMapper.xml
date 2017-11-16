@@ -24,7 +24,8 @@
             <id property="templateId" column="review_flow_template_template_id"/>
             <result column="review_flow_template_template_name" property="templateName"/>
         </association>
-        <association property="nodeInstance" javaType="com.tongyuan.model.domain.ReviewNodeInstance">
+        <association property="reviewNodeInstance" javaType="com.tongyuan.model.domain.ReviewNodeInstance">
+            <result property="instanceId" column="review_node_instance_instance_id"/>
             <result property="status" column="review_node_instance_status"/>
         </association>
     </resultMap>
@@ -35,6 +36,7 @@
         SELECT
         D.id AS review_node_instance_id,
         D.status AS review_node_instance_status,
+        D.instance_id AS review_node_instance_instance_id,
         A.create_time AS review_flow_instance_create_time,
         A.last_update_time AS review_flow_instance_last_update_time,
         A.description AS review_flow_instance_description,
@@ -60,13 +62,15 @@
     <select id="queryAllByReviewer" resultMap="pageResultMap" parameterType="java.util.Map">
         SELECT
         D.id AS review_node_instance_id,
+        D.instance_id AS review_node_instance_instance_id,
         A.create_time AS review_flow_instance_create_time,
         A.last_update_time AS review_flow_instance_last_update_time,
         A.description AS review_flow_instance_description,
         A.instance_name AS review_flow_instance_instance_name,
         B.name AS model_name,
         C.template_id AS review_flow_template_template_id,
-        C.template_name AS review_flow_template_template_name
+        C.template_name AS review_flow_template_template_name,
+        D.status AS review_node_instance_status
 
         FROM  review_flow_instance A
         INNER JOIN model B ON  A.model_id = B.id
@@ -74,7 +78,7 @@
         INNER JOIN review_node_instance D ON A.instance_id = D.instance_id
         INNER JOIN review_node E ON D.node_id = E.node_id
         WHERE
-        AND E.user_id = #{userId}
+        E.user_id = #{userId}
         <if test="instanceName!=null and instanceName!=''">
             AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
         </if>

@@ -3,6 +3,7 @@ package com.tongyuan.gogs.service;
 import com.github.pagehelper.Page;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
+import com.tongyuan.pageModel.ReviewUserPage;
 
 import java.util.Date;
 import java.util.List;
@@ -51,4 +52,7 @@ public interface GUserService {
 
 
     Page<GUser>test1(Map<String, Object> map);
+
+    //这个没有分页 by：zhangcy
+    public List<ReviewUserPage> queryAll();
 }

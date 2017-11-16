@@ -1,6 +1,7 @@
 package com.tongyuan.gogs.dao;
 
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.pageModel.ReviewUserPage;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -50,4 +51,6 @@ public interface GUserMapper {
     List<Map<String,Object>>test2(Map<String, Object> map);
 
     List<GUser>test1(Map<String, Object> map);
+
+    List<ReviewUserPage> queryAll();
 }

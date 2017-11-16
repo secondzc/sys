@@ -61,7 +61,6 @@ public class LoginController extends BaseController {
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        GUser gUser = userService.queryById(1);
         String username = request.getParameter("userName");
         String password = request.getParameter("password");
         String rememberMe = request.getParameter("rememberMe");

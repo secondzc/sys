@@ -10,6 +10,16 @@ public class CommentPage {
     private String checkorName;
     private String showStatus;
 
+    public Long getCheckorId() {
+        return checkorId;
+    }
+
+    public void setCheckorId(Long checkorId) {
+        this.checkorId = checkorId;
+    }
+
+    private Long checkorId;
+
     public String getShowStatus() {
         return showStatus;
     }

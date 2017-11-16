@@ -21,6 +21,14 @@
             <result property="description" column="review_node_description"/>
             <result property="sequence" column="review_node_sequence"/>
         </association>
+    </resultMap>
+
+    <resultMap id="commentPageMap" type="com.tongyuan.pageModel.CommentPage">
+        <result property="status" column="status"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="comment" column="comment"/>
+        <result property="checkorId" column="checkor_id"/>
+
         <association property="user" javaType="com.tongyuan.gogs.domain.GUser">
             <id property="id" column="id"/>
             <result property="userName" column="user_user_name"/>
@@ -57,6 +65,12 @@
         WHERE id=#{id}
     </update>
 
+    <update id="updateComment" parameterType="java.util.Map">
+        UPDATE review_node_instance
+        SET comment=#{comment}
+        WHERE id=#{id}
+    </update>
+
     <select id="details" parameterType="java.lang.Long" resultMap="pageResultMap">
         SELECT
         A.id AS review_node_instance_id,
@@ -66,14 +80,28 @@
         B.node_id AS review_node_node_id,
         B.user_id AS review_node_user_id,
         B.description AS review_node_description,
-        B.sequence AS review_node_sequence,
-        C.id AS user_id,
-        C.user_name AS user_user_name
+        B.sequence AS review_node_sequence
 
         FROM review_node_instance A
         INNER JOIN review_node B ON A.node_id = B.node_id
-        INNER JOIN user C ON B.user_id = C.id
         WHERE A.instance_id = #{instanceId}
     </select>
+
+
+    <select id="queryCommentPages" parameterType="java.lang.Long" resultMap="commentPageMap">
+        SELECT
+        A.status AS status,
+        A.last_update_time AS last_update_time,
+        A.comment AS comment,
+        review_node.user_id AS checkor_id
+
+        FROM review_node_instance A
+        INNER JOIN review_node ON A.node_id = review_node.node_id
+        WHERE A.instance_id = #{instanceId}
+        AND (A.status=3 OR A.status=4)
+        ORDER BY
+        review_node.sequence
+    </select>
+
 
 </mapper>

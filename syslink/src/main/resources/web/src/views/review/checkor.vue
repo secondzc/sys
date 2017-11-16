@@ -12,6 +12,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
+					 <el-button size="small" @click="details(scope.$index, scope.row)">详情</el-button> 
 					<el-button size="small" @click="handleAgree(scope.$index, scope.row)">同意</el-button>
 					<el-button type="danger" size="small" @click="handleDisagree(scope.$index, scope.row)">拒绝</el-button>
 				</template>
@@ -46,6 +47,12 @@
 			}
 		},
 		methods: {
+			details(index,row){ 
+              //转到详情页 
+              sessionStorage.setItem('instanceId',row.reviewNodeInstance.instanceId);
+              sessionStorage.setItem('id',row.id); 
+              this.$router.push({path:'/checkorDetail'}); 
+            }, 
 			getDetail(){
 				this.listLoading = true;
 				let url = "api/checkor/queryByReviewer";

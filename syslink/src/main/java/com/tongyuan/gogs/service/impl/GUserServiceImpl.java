@@ -8,8 +8,12 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.*;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
+
+import com.tongyuan.pageModel.ReviewUserPage;
+
 import com.tongyuan.model.service.AuthService;
 import com.tongyuan.model.service.RoleService;
+
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -444,6 +448,11 @@ public class GUserServiceImpl implements GUserService {
         Page<GUser>user = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
         gUserMapper.test1(map);
         return user;
+    }
+
+    @Override
+    public List<ReviewUserPage> queryAll() {
+        return gUserMapper.queryAll();
     }
 
 

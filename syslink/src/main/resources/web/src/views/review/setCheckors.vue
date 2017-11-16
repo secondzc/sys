@@ -36,7 +36,7 @@
 		</el-table>
 
 		<!--新增界面-->
-		<el-dialog title="配置人员" v-model="addItemsDialogVisible" :close-on-click-modal="false">
+		<el-dialog title="配置人员" :visible.sync="addItemsDialogVisible" v-model="addItemsDialogVisible" :close-on-click-modal="false">
 			<el-form :model="addItemsDialog" label-width="80px" >
 				<el-form-item label="节点名字" prop="reviewNodeName">
 					<el-input v-model="addItemsDialog.reviewNodeName" ></el-input>
@@ -76,22 +76,21 @@
 		</el-dialog>
 
 		<!--选择人员-->
-		<el-dialog title="选择人员" v-model="chooseNameVisible" :close-on-click-modal="false">
+		<el-dialog title="选择人员" :visible.sync="chooseNameVisible" v-model="chooseNameVisible" :close-on-click-modal="false"
+		v-loading="userNamesLoading">
 			<template>
-			  <el-transfer
-			    filterable
-			    filter-placeholder="请输入审核者名字"
-			    v-model="value2"
-			    :data="data2">
-			  </el-transfer>
-			  <el-button @click.native="submitName">确认</el-button>
+			  <user-tree @affirmName="affirmName1"></user-tree>
 			</template>
 		</el-dialog>
 	</section>
 </template>
 
 <script>
+    import userTree from "../review/userTreeComp";
 	export default {
+		components:{
+			userTree
+		},
 		data(){
 			return {
 			  tempateId: 0,
@@ -115,18 +114,37 @@
 			  editItemsDialogVisible: false,
 			  sequence: 0,
 			  chooseNameVisible: false,
-			  userNames: ['zhang','hhhh','dihd'],
+			  userNames: [],
 			  value2: [],
 			  data2: [],
 			  userName: '',
 			  submitAllLoading: false,
 			  nodesLoading: false,
+			  userNamesLoading: false,
 			}
 		},
 		created(){
 			this.templateId = sessionStorage.getItem('templateId');
 		},
 		methods: {
+			affirmName1(userName){
+				this.chooseNameVisible = false;
+				this.addItemsDialog.userName = userName;
+				this.editItemsDialog.userName = userName;
+			},
+			query() {
+				let url="/api/user/query";
+				this.func.ajaxPost(url,{},res=>{
+					this.userNamesLoading = true;
+					if(res.data.flag==true){
+						let users = res.data.users;
+						for(var i=0;i<users.length;i++){
+							this.userNames.push(users[i].name);
+						}
+						this.userNamesLoading = false;
+					}
+				})
+			},
 			submitOne(){
 				let str=",";
 				let index1=this.addItemsDialog.reviewNodeName.indexOf(str);
@@ -201,6 +219,7 @@
 			},
 			chooseName() {
 				this.chooseNameVisible = true;
+				//this.query();
 			},
 			getUserNames() {
 

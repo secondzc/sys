@@ -59,6 +59,8 @@ public class DirectoryController {
     private GUserService gUserService;
     @Autowired
     private ModelUtil modelUtil;
+    @Autowired
+    private ReviewFlowInstanceService reviewFlowInstanceService;
 
 
 
@@ -376,7 +378,11 @@ public class DirectoryController {
            // model.setUserId(1);
             model.setDeleted(false);
             if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
-                modelService.add(model);
+//                modelService.add(model);
+                //modelService.add(model);
+                //by:zhangcy  在这里加入了审签的代码
+                Long modelId = modelService.add(model);
+                reviewFlowInstanceService.startInstance(modelId);
                 updateOrCreate = false;
             }
             //查找最外层空的model
@@ -760,4 +766,5 @@ public class DirectoryController {
 
     }
 }
+
 
