@@ -15,6 +15,7 @@ import com.tongyuan.model.enums.VariableType;
 import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.pageModel.TreeObj;
+import com.tongyuan.pageModel.VariableTreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.DateUtil;
@@ -70,11 +71,14 @@ public class ModelController extends  BaseController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private VariableController variableController;
+
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
         //验证model
-        //   Model validateModel = new Model();
+     //   Model validateModel = new Model();
         model.setFileId(directory.getId());
         model.setDirectoryId(directoryId);
         model.setParentId(nullModel.getId());
@@ -116,14 +120,23 @@ public class ModelController extends  BaseController {
                             if (svgEntry.getKey().equals(entry.getValue()+".dom.xml")){
                                 model.setModelFilePath(svgEntry.getValue());
                             }
+                            if(svgEntry.getKey().equals(entry.getValue()+".mo")){
+                                if(svgEntry.getValue().length() <= 2000){
+                                    model.setTextInfo(svgEntry.getValue());
+                                }
+                                else{
+                                    model.setTextInfo(svgEntry.getValue().substring(0,1999));
+                                }
+
+                            }
                         }
                     }
-                }
+            }
 
             }
             if(entry.getKey().endsWith("_Model")){
-                String [] modelNames = entry.getKey().split("\\_");
-                model.setType(modelNames[0]);
+               String [] modelNames = entry.getKey().split("\\_");
+                 model.setType(modelNames[0]);
             }
             if("ModelDescript".equals(entry.getKey())){
                 String type = "";
@@ -131,7 +144,7 @@ public class ModelController extends  BaseController {
                 type = decideType(entry.getValue(),type);
                 if("String".equals(type)){
                     if(!StringUtil.isNull((String) entry.getValue())){
-                        model.setDiscription((String) entry.getValue());
+                    model.setDiscription((String) entry.getValue());
                     }
                 }
             }
@@ -245,7 +258,7 @@ public class ModelController extends  BaseController {
         }
         //插入到variable表中
         insertV(xmlMap,model);
-    }
+      }
     public  void insertV(Map<String,Object> xmlMap,Model model) {
         //存储组件的id和parentName
         Map<String,Long> compName = new HashMap<String,Long>();
@@ -258,21 +271,21 @@ public class ModelController extends  BaseController {
                 //判断value是什么类型
                 type = decideType(entry.getValue(), type);
                 if("Map".equals(type)){
-                    Map<String, List> compMap = (Map<String, List>) entry.getValue();
-                    type = decideType(compMap.get("component"),type);
-                    if("List".equals(type)){
-                        List<Map<String, Object>> compList = compMap.get("component");
-                        for(int i = 0;i<compList.size(); i++){
-                            type = decideType(compList.get(i),type);
-                            if("Map".equals(type) && compList.get(i).get("parentName") != null){
-                                analysis(compList.get(i),model,compName,variableId);
-                            }
-                            if("Map".equals(type) && compList.get(i).get("component") != null){
-                                type = decideType(compList.get(i).get("component"),type);
-                                analysisComponent((HashMap<String, Object>) compList.get(i),model,compName,variableId);
-                            }
+                Map<String, List> compMap = (Map<String, List>) entry.getValue();
+                type = decideType(compMap.get("component"),type);
+                if("List".equals(type)){
+                    List<Map<String, Object>> compList = compMap.get("component");
+                    for(int i = 0;i<compList.size(); i++){
+                        type = decideType(compList.get(i),type);
+                        if("Map".equals(type) && compList.get(i).get("parentName") != null){
+                            analysis(compList.get(i),model,compName,variableId);
+                        }
+                        if("Map".equals(type) && compList.get(i).get("component") != null){
+                            type = decideType(compList.get(i).get("component"),type);
+                            analysisComponent((HashMap<String, Object>) compList.get(i),model,compName,variableId);
                         }
                     }
+                 }
                 }
             }
         }
@@ -314,7 +327,7 @@ public class ModelController extends  BaseController {
                         }
                     }
                 }
-                //   if(parentName != null && parentName != ""){
+             //   if(parentName != null && parentName != ""){
                 if(parentNameArr.length >= 2){
                     if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName()+componentList.get(j).getName())){
                         componentList.get(i).setParentId(componentList.get(j).getId());
@@ -345,9 +358,9 @@ public class ModelController extends  BaseController {
                 publicModelList.add(allmodel);
                 if(false == allmodel.getScope()){
                     allPrivateModelLsit.add(allmodel);
-                    //                 if(user.getId() != null && user.getId() == allmodel.getUserId()){
-                    //                 privateModelList.add(allmodel);
-                    //                   }
+   //                 if(user.getId() != null && user.getId() == allmodel.getUserId()){
+   //                 privateModelList.add(allmodel);
+ //                   }
                 }
             }
         }
@@ -361,7 +374,7 @@ public class ModelController extends  BaseController {
         jo.put("flag",true);
         ServletUtil.createSuccessResponse(200, jo, response);
         return;
-        //      return modelListMap;
+  //      return modelListMap;
     }
 
 
@@ -399,8 +412,8 @@ public class ModelController extends  BaseController {
                 if(rootDirectoryList.size() >0){
                     Directory oneDirectory = rootDirectoryList.get(0);
                     getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
-                    directoryIdList.add(oneDirectory.getId());
-                    //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
+                     directoryIdList.add(oneDirectory.getId());
+                     //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
                 }
                 for (Long id : directoryIdList) {
                     for (Model model: allModelList) {
@@ -421,7 +434,7 @@ public class ModelController extends  BaseController {
                     }
                 }
             }
-            //      if(parent_id != null  && rootDirectoryList.size() >0){
+      //      if(parent_id != null  && rootDirectoryList.size() >0){
             if(parent_id == 0){
                 for (Model model: allModelList) {
                     if(model.getParentId() == 0) {
@@ -448,6 +461,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setParentId(oneOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
                 modelWeb.setUserId(user.getID());
+                modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
                 if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
@@ -472,7 +486,7 @@ public class ModelController extends  BaseController {
                                 watches.add(watch);
                             }
                             if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
-                                modelWeb.setAlreadyWatch(true);
+                               modelWeb.setAlreadyWatch(true);
                             }
                         }
                         modelWeb.setNumberWatch(watches.size());
@@ -507,7 +521,7 @@ public class ModelController extends  BaseController {
     @RequestMapping(value = "/modelVariable",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject modelVariable(@RequestParam(value = "modelId",required = false)String modelId,
-                                    HttpServletRequest request , HttpServletResponse response){
+                           HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         //获取model对象
         Model model =  new Model();
@@ -527,6 +541,7 @@ public class ModelController extends  BaseController {
             modelWeb.setExtends(model.getExtends());
             modelWeb.setUserName(user.getLowerName());
             modelWeb.setDiscription(model.getDiscription());
+            modelWeb.setTextInfo(model.getTextInfo().replaceAll("\\n","<\\/br>"));
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
                 modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
             }
@@ -551,55 +566,83 @@ public class ModelController extends  BaseController {
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
+//    @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
+//                           HttpServletRequest request , HttpServletResponse response){
+//        JSONObject jo=new JSONObject();
+//        //查询到所有的model
+//        List<Model> allModel = modelService.findAllModel();
+//        //过滤后的modelList
+//        List<Model> searchModel = new ArrayList<>();
+//        //树子节点所有id
+//        List<Long> modelIdList = new ArrayList<>();
+//        TreeObj treeObj = new TreeObj();
+//        //返回一个Tree数组对象
+//        List<TreeObj> treeObjList = new ArrayList<>();
+//        try {
+//            //获取根节点模型
+//            Model rootModel = modelService.queryModelById(modelId);
+//            //获取树节点的所有id
+////            getModelChildTree(rootModel.getId(), allModel,modelIdList);
+////            modelIdList.add(modelId);
+////            //所需要的ModelTree
+////            for (Long id: modelIdList) {
+////                for (Model model: allModel) {
+////                   if(id == model.getId()) {
+////                       searchModel.add(model);
+////                   }
+////                }
+////            }
+//            //子节点
+//            List<TreeObj> treeChild = new ArrayList<>();
+//            treeObj.setId(rootModel.getId());
+//            treeObj.setLabel(rootModel.getName());
+//            getModelChildTree(modelId,allModel,treeChild);
+//            treeObj.setChildren(treeChild);
+//            treeObjList.add(treeObj);
+//
+//        }catch(Exception e) {
+//            e.printStackTrace();
+//            jo.put("status","1");
+//            jo.put("code",0);
+//            jo.put("msg","ok");
+//            return jo;
+//        }
+//        jo.put("status",1);
+//        jo.put("code",0);
+//        jo.put("msg","ok");
+//        jo.put("data",treeObjList);
+//        return (JSONObject) JSONObject.toJSON(jo);
+//    }
+
+
     @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
-                                HttpServletRequest request , HttpServletResponse response){
+                           HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo=new JSONObject();
-        //查询到所有的model
-        List<Model> allModel = modelService.findAllModel();
-        //过滤后的modelList
-        List<Model> searchModel = new ArrayList<>();
-        //树子节点所有id
-        List<Long> modelIdList = new ArrayList<>();
-        TreeObj treeObj = new TreeObj();
-        //返回一个Tree数组对象
-        List<TreeObj> treeObjList = new ArrayList<>();
+        //在这个模型下的所有model（modelList）
+        List<VariableTreeObj> modelTreeList = new ArrayList<>();
+        List<VariableTreeObj> modelList = new ArrayList<>();
         try {
-            //获取根节点模型
-            Model rootModel = modelService.queryModelById(modelId);
-            //获取树节点的所有id
-//            getModelChildTree(rootModel.getId(), allModel,modelIdList);
-//            modelIdList.add(modelId);
-//            //所需要的ModelTree
-//            for (Long id: modelIdList) {
-//                for (Model model: allModel) {
-//                   if(id == model.getId()) {
-//                       searchModel.add(model);
-//                   }
-//                }
-//            }
-            //子节点
-            List<TreeObj> treeChild = new ArrayList<>();
-            treeObj.setId(rootModel.getId());
-            treeObj.setLabel(rootModel.getName());
-            getModelChildTree(modelId,allModel,treeChild);
-            treeObj.setChildren(treeChild);
-            treeObjList.add(treeObj);
-
+            //查询到所有的model
+            List<Model> allModel = modelService.findAllModel();
+            variableController.getSearchModel(modelId,allModel,modelTreeList,modelList);
         }catch(Exception e) {
             e.printStackTrace();
             jo.put("status","1");
             jo.put("code",0);
-            jo.put("msg","ok");
+            jo.put("msg","error");
             return jo;
         }
         jo.put("status",1);
         jo.put("code",0);
         jo.put("msg","ok");
-        jo.put("data",treeObjList);
-        return (JSONObject) JSONObject.toJSON(jo);
+        jo.put("data",modelTreeList);
+        return  jo;
     }
+
 
 
 
@@ -617,10 +660,12 @@ public class ModelController extends  BaseController {
     public static void getModelChildTree(Long modelId,List<Model> allModel,List<TreeObj> treeChild ){
         for(int i=0; i<allModel.size(); i++){
             if(allModel.get(i).getParentId() == modelId){
-                TreeObj treeObj = new TreeObj();
-                treeObj.setId(allModel.get(i).getId());
-                treeObj.setLabel(allModel.get(i).getName());
-                treeChild.add(treeObj);
+                 TreeObj treeObj = new TreeObj();
+                 treeObj.setId(allModel.get(i).getId());
+                 treeObj.setLabel(allModel.get(i).getName());
+                List<TreeObj> childVar = new ArrayList<>();
+                treeObj.setChildren(childVar);
+                 treeChild.add(treeObj);
             }
         }
         if( treeChild != null){
@@ -643,7 +688,7 @@ public class ModelController extends  BaseController {
             //判断这个组件是否需要插入到数据库
             doSet(xmlData,variable);
 //          int variableAdd = variableService.add(variable);
-            variableName.put(variable.getParentName(), (long) -1);
+           variableName.put(variable.getParentName(), (long) -1);
             for (Map.Entry<String,Long> varName : variableName.entrySet()) {
                 String variableArr[] = varName.getKey().split("\\;");
                 //用来比较的变量父类名
@@ -668,16 +713,16 @@ public class ModelController extends  BaseController {
 
         }
         if(xmlData.get("IsVariable").equals("False")){
-            Component component = new Component();
-            component.setCurrentModelId(model.getId());
-            component.setCreateTime(nowDate);
-            doComponentSet(xmlData,component);
-            int componentResult = componentService.add(component);
-            long index_last_id = component.getId();
-            if(component.getParentName().equals("")){
-                compName.put(component.getName(),index_last_id);
-            }
-            compName.put(component.getParentName()+component.getName(),index_last_id);
+               Component component = new Component();
+               component.setCurrentModelId(model.getId());
+               component.setCreateTime(nowDate);
+               doComponentSet(xmlData,component);
+               int componentResult = componentService.add(component);
+               long index_last_id = component.getId();
+               if(component.getParentName().equals("")){
+                   compName.put(component.getName(),index_last_id);
+               }
+               compName.put(component.getParentName()+component.getName(),index_last_id);
         }
 
     }
@@ -780,11 +825,11 @@ public class ModelController extends  BaseController {
         if (xmlData.get("parentName") != null) {
             component.setParentName((String) xmlData.get("parentName"));
         }
-    }
+        }
 
-    //组件存在conpent和componentVar同时存在
+        //组件存在conpent和componentVar同时存在
     public void  analysisComponentVar(HashMap<String, Object> map, Model model,Map<String,Long> compName,Map<String,Long> variableId){
-        //组件内容
+                //组件内容
         List<HashMap<String,Object>>  componentList = new ArrayList<>();
         //获取组件内容插入到数据库
         componentList = (List<HashMap<String, Object>>) map.get("componentVar");
@@ -803,23 +848,23 @@ public class ModelController extends  BaseController {
         analysisComponentVar((HashMap<String, Object>) map.get("component"),model,compName,variableId);
     }
 
-    public void reviseVariable(HashMap<String, Object> componentMap){
+     public void reviseVariable(HashMap<String, Object> componentMap){
         String parentName = "";
         String realParentName = "";
         parentName = (String) componentMap.get("parentName");
         String variableArr[] = parentName.split("\\;");
         //得出正真的parentName(实际上在得到parentName时无法规避特殊性)
-        for(int i= 0; i<variableArr.length-1; i++){
-            realParentName += variableArr[i]+";";
-        }
-        //修改componentMap
-        componentMap.put("parentName",realParentName.substring(0,realParentName.length()-1));
-    }
+         for(int i= 0; i<variableArr.length-1; i++){
+             realParentName += variableArr[i]+";";
+         }
+         //修改componentMap
+         componentMap.put("parentName",realParentName.substring(0,realParentName.length()-1));
+     }
 
     @RequestMapping(value = "/download",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject download(@RequestParam(value = "modelId",required = false)Long modelId,
-                               HttpServletRequest request , HttpServletResponse response){
+                                HttpServletRequest request , HttpServletResponse response){
 
         JSONObject jo=new JSONObject();
         String realUrl ="";
@@ -831,25 +876,25 @@ public class ModelController extends  BaseController {
             FileUtils.copyFileCover(model.getInfoTextPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".info.html",true);
             FileUtils.copyFileCover(model.getIconSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".icon.svg",true);
             FileUtils.zipFiles("C:\\Temp\\FileLibrary\\","C:\\Temp\\FileLibrary\\" +name,"C:\\Temp\\FileLibrary\\"+name+"Model");
-            realUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/"+name+"Model";
-        }catch(Exception e) {
-            e.printStackTrace();
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","error");
-            return jo;
-        }
-        jo.put("status",1);
-        jo.put("code",0);
-        jo.put("msg","ok");
-        jo.put("data",realUrl);
-        return (JSONObject) JSONObject.toJSON(jo);
+             realUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/"+name+"Model";
+            }catch(Exception e) {
+                e.printStackTrace();
+                jo.put("status","1");
+                jo.put("code",0);
+                jo.put("msg","error");
+                return jo;
+            }
+                jo.put("status",1);
+                jo.put("code",0);
+                jo.put("msg","ok");
+                jo.put("data",realUrl);
+                return (JSONObject) JSONObject.toJSON(jo);
 
-    }
+            }
     @RequestMapping(value = "/deleted",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject deleted(@RequestParam(value = "modelId",required = false)Long modelId,
-                              HttpServletRequest request , HttpServletResponse response){
+                               HttpServletRequest request , HttpServletResponse response){
 
         JSONObject jo=new JSONObject();
         try{
@@ -871,3 +916,4 @@ public class ModelController extends  BaseController {
     }
 
 }
+

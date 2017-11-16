@@ -44,6 +44,8 @@ public class ModelWeb {
     private Boolean alreadyWatch;
     //本用户是否已经收藏
     private Boolean alreadyStar;
+    //text信息（.mo文件）
+    private String textInfo;
 
     public String getUpdateTime() {
         return updateTime;
@@ -243,5 +245,13 @@ public class ModelWeb {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getTextInfo() {
+        return textInfo;
+    }
+
+    public void setTextInfo(String textInfo) {
+        this.textInfo = textInfo;
     }
 }

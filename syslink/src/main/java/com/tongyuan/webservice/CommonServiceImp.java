@@ -196,21 +196,21 @@ public class CommonServiceImp implements CommonService {
 
 			//更新模型的层次结构
 			//获取package下面的所有model
-//            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-//            for (Model modelParent: modelList) {
-//                for (Model modelChild: modelList) {
-//                    int modelChildLen = modelChild.getName().split("\\.").length;
-//                    //匹配model名称是否有父子关系
-//                    int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
-//                    if( modelChildLen> 1){
-//                        if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
-//                            modelParent.setParentId(modelChild.getId());
-//                            modelService.update(modelParent);
-//                        }
-//                    }
-//                }
-//            }
-			//        this.doCmd(name,fileXmlPath,fileName);
+            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
+            for (Model modelParent: modelList) {
+                for (Model modelChild: modelList) {
+                    int modelChildLen = modelChild.getName().split("\\.").length;
+                    //匹配model名称是否有父子关系
+                    int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
+                    if( modelChildLen> 1){
+                        if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
+                            modelParent.setParentId(modelChild.getId());
+                            modelService.update(modelParent);
+                        }
+                    }
+                }
+            }
+//			        this.doCmd(name,fileXmlPath,fileName);
 			result = true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

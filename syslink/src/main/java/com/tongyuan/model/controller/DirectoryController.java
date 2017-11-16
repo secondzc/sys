@@ -14,6 +14,7 @@ import com.tongyuan.pageModel.DirectoryModel;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.FileX;
+import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import com.tongyuan.webservice.CommonServiceImp;
 import org.slf4j.Logger;
@@ -56,6 +57,8 @@ public class DirectoryController {
     private ModelController modelController;
     @Autowired
     private GUserService gUserService;
+    @Autowired
+    private ModelUtil modelUtil;
     @Autowired
     private ReviewFlowInstanceService reviewFlowInstanceService;
 
@@ -375,11 +378,11 @@ public class DirectoryController {
            // model.setUserId(1);
             model.setDeleted(false);
             if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
+//                modelService.add(model);
                 //modelService.add(model);
                 //by:zhangcy  在这里加入了审签的代码
                 Long modelId = modelService.add(model);
                 reviewFlowInstanceService.startInstance(modelId);
-
                 updateOrCreate = false;
             }
             //查找最外层空的model
@@ -403,6 +406,11 @@ public class DirectoryController {
                 }else if("html".equals(fileType)){
                     svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
                 }
+                else if("mo".equals(fileType)){
+                    //mo文件信息
+                    String textAllInfo = fileX.read(xmlFilePath +"/" +subFiles[i]);
+                    svgPath.put(subFiles[i],textAllInfo);
+                }
             }
             //遍历xmlMap进行数据的插入
             for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
@@ -412,20 +420,18 @@ public class DirectoryController {
 
             //更新模型的层次结构
             //获取package下面的所有model
-//            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-//            for (Model modelParent: modelList) {
-//                for (Model modelChild: modelList) {
-//                    int modelChildLen = modelChild.getName().split("\\.").length;
-//                    //匹配model名称是否有父子关系
-//                    int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
-//                    if( modelChildLen> 1){
-//                        if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
-//                            modelParent.setParentId(modelChild.getId());
-//                            modelService.update(modelParent);
-//                        }
-//                    }
-//                }
-//            }
+            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
+            for (Model modelParent: modelList) {
+                for (Model modelChild: modelList) {
+                  String childParentName = modelUtil.getParentName(modelChild.getName());
+                  if(childParentName != null && !childParentName.equals("")){
+                     if(childParentName.equals(modelParent.getName())){
+                         modelChild.setParentId(modelParent.getId());
+                         modelService.update(modelChild);
+                     }
+                  }
+                }
+            }
     //        this.doCmd(name,fileXmlPath,fileName);
             result = true;
         } catch (IOException e) {
@@ -760,4 +766,5 @@ public class DirectoryController {
 
     }
 }
+
 
