@@ -92,6 +92,10 @@ public class Model {
     //是否为公共的模型 0；非公共的
     private Boolean scope;
 
+    //text信息（.mo文件）
+    @Column(length = 2000)
+    private String textInfo;
+
     public long getId() {
         return id;
     }
@@ -242,5 +246,13 @@ public class Model {
 
     public void setFileId(long fileId) {
         this.fileId = fileId;
+    }
+
+    public String getTextInfo() {
+        return textInfo;
+    }
+
+    public void setTextInfo(String textInfo) {
+        this.textInfo = textInfo;
     }
 }

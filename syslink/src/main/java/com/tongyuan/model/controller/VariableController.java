@@ -53,7 +53,6 @@ public class VariableController {
             //查询到所有的变量
             List<Variable> allVariable = variableService.findAllVariable();
             //获取列表model
-
             getSearchModel(modelId,allModel,modelTreeList,modelList);
             if(modelList.size() >0){
                 //生成组件树（含变量）= 变量树
@@ -100,6 +99,8 @@ public class VariableController {
                  VariableTreeObj treeObj = new VariableTreeObj();
                  treeObj.setId(allModel.get(i).getId());
                  treeObj.setName(splitName(allModel.get(i).getName()));
+                 List<VariableTreeObj> childVar = new ArrayList<>();
+                 treeObj.setChildren(childVar);
                  modelTreeList.add(treeObj);
 //                 modelList.add(treeObj);
              }
@@ -222,6 +223,61 @@ public class VariableController {
             return name;
         }
 
+    }
+
+     //组件浏览器（点击某个指定的模型，展示组件变量，切模型名要全称，组件变量名称要简写）
+    @RequestMapping(value = "/contAndVariableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject contAndVariableTree(@RequestParam(value = "modelId",required = false)Long modelId,
+                                   HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        //只有一个模型（包含模型名称）
+        List<VariableTreeObj> variableTreeObjList = new ArrayList<>();
+        try{
+            //查询指定的模型
+            Model model = modelService.queryModelById(modelId);
+            if(model == null ){
+                jo.put("status","1");
+                jo.put("code",0);
+                jo.put("msg","error");
+                return jo;
+            }
+            //查询到所有的Comp（组件）
+            List<Component> allComp = componentService.findAllComp();
+            //查询到所有的变量
+            List<Variable> allVariable = variableService.findAllVariable();
+            //模型树对象（root）
+            VariableTreeObj variableTreeObj = new VariableTreeObj();
+            variableTreeObj.setId(model.getId());
+            variableTreeObj.setName(model.getName());
+            //创建子对象
+            List<VariableTreeObj> modelChild = new ArrayList<>();
+            variableTreeObj.setChildren(modelChild);
+            variableTreeObjList.add(variableTreeObj);
+            getCompFromModel(variableTreeObj.getId(),allComp,variableTreeObj.getChildren(),allVariable);
+            //当变量没有父类组件的时直接添加进去
+            //查询这个model下所有的顶层变量
+            List<Variable> topVariableList = variableService.findVarByModelId(variableTreeObj.getId());
+            for (Variable variable: topVariableList) {
+                //模型的变量
+                VariableTreeObj modelVar = new VariableTreeObj();
+                doSetVarTree(modelVar,variable);
+                variableTreeObj.getChildren().add(modelVar);
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            jo.put("status","1");
+            jo.put("code",0);
+            jo.put("msg","error");
+            return jo;
+        }
+        jo.put("status",1);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        jo.put("rootData",variableTreeObjList);
+        return  jo;
     }
 
 }

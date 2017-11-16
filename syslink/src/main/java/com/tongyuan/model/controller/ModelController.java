@@ -15,6 +15,7 @@ import com.tongyuan.model.enums.VariableType;
 import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.pageModel.TreeObj;
+import com.tongyuan.pageModel.VariableTreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.DateUtil;
@@ -70,6 +71,9 @@ public class ModelController extends  BaseController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private VariableController variableController;
+
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
@@ -115,6 +119,15 @@ public class ModelController extends  BaseController {
                             }
                             if (svgEntry.getKey().equals(entry.getValue()+".dom.xml")){
                                 model.setModelFilePath(svgEntry.getValue());
+                            }
+                            if(svgEntry.getKey().equals(entry.getValue()+".mo")){
+                                if(svgEntry.getValue().length() <= 2000){
+                                    model.setTextInfo(svgEntry.getValue());
+                                }
+                                else{
+                                    model.setTextInfo(svgEntry.getValue().substring(0,1999));
+                                }
+
                             }
                         }
                     }
@@ -448,6 +461,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setParentId(oneOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
                 modelWeb.setUserId(user.getID());
+                modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
                 if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
@@ -527,6 +541,7 @@ public class ModelController extends  BaseController {
             modelWeb.setExtends(model.getExtends());
             modelWeb.setUserName(user.getLowerName());
             modelWeb.setDiscription(model.getDiscription());
+            modelWeb.setTextInfo(model.getTextInfo().replaceAll("\\n","<\\/br>"));
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
                 modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
             }
@@ -551,55 +566,83 @@ public class ModelController extends  BaseController {
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
+//    @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
+//                           HttpServletRequest request , HttpServletResponse response){
+//        JSONObject jo=new JSONObject();
+//        //查询到所有的model
+//        List<Model> allModel = modelService.findAllModel();
+//        //过滤后的modelList
+//        List<Model> searchModel = new ArrayList<>();
+//        //树子节点所有id
+//        List<Long> modelIdList = new ArrayList<>();
+//        TreeObj treeObj = new TreeObj();
+//        //返回一个Tree数组对象
+//        List<TreeObj> treeObjList = new ArrayList<>();
+//        try {
+//            //获取根节点模型
+//            Model rootModel = modelService.queryModelById(modelId);
+//            //获取树节点的所有id
+////            getModelChildTree(rootModel.getId(), allModel,modelIdList);
+////            modelIdList.add(modelId);
+////            //所需要的ModelTree
+////            for (Long id: modelIdList) {
+////                for (Model model: allModel) {
+////                   if(id == model.getId()) {
+////                       searchModel.add(model);
+////                   }
+////                }
+////            }
+//            //子节点
+//            List<TreeObj> treeChild = new ArrayList<>();
+//            treeObj.setId(rootModel.getId());
+//            treeObj.setLabel(rootModel.getName());
+//            getModelChildTree(modelId,allModel,treeChild);
+//            treeObj.setChildren(treeChild);
+//            treeObjList.add(treeObj);
+//
+//        }catch(Exception e) {
+//            e.printStackTrace();
+//            jo.put("status","1");
+//            jo.put("code",0);
+//            jo.put("msg","ok");
+//            return jo;
+//        }
+//        jo.put("status",1);
+//        jo.put("code",0);
+//        jo.put("msg","ok");
+//        jo.put("data",treeObjList);
+//        return (JSONObject) JSONObject.toJSON(jo);
+//    }
+
+
     @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
-                           HttpServletRequest request , HttpServletResponse response){
+                           HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo=new JSONObject();
-        //查询到所有的model
-        List<Model> allModel = modelService.findAllModel();
-        //过滤后的modelList
-        List<Model> searchModel = new ArrayList<>();
-        //树子节点所有id
-        List<Long> modelIdList = new ArrayList<>();
-        TreeObj treeObj = new TreeObj();
-        //返回一个Tree数组对象
-        List<TreeObj> treeObjList = new ArrayList<>();
+        //在这个模型下的所有model（modelList）
+        List<VariableTreeObj> modelTreeList = new ArrayList<>();
+        List<VariableTreeObj> modelList = new ArrayList<>();
         try {
-            //获取根节点模型
-            Model rootModel = modelService.queryModelById(modelId);
-            //获取树节点的所有id
-//            getModelChildTree(rootModel.getId(), allModel,modelIdList);
-//            modelIdList.add(modelId);
-//            //所需要的ModelTree
-//            for (Long id: modelIdList) {
-//                for (Model model: allModel) {
-//                   if(id == model.getId()) {
-//                       searchModel.add(model);
-//                   }
-//                }
-//            }
-            //子节点
-            List<TreeObj> treeChild = new ArrayList<>();
-            treeObj.setId(rootModel.getId());
-            treeObj.setLabel(rootModel.getName());
-            getModelChildTree(modelId,allModel,treeChild);
-            treeObj.setChildren(treeChild);
-            treeObjList.add(treeObj);
-
+            //查询到所有的model
+            List<Model> allModel = modelService.findAllModel();
+            variableController.getSearchModel(modelId,allModel,modelTreeList,modelList);
         }catch(Exception e) {
             e.printStackTrace();
             jo.put("status","1");
             jo.put("code",0);
-            jo.put("msg","ok");
+            jo.put("msg","error");
             return jo;
         }
         jo.put("status",1);
         jo.put("code",0);
         jo.put("msg","ok");
-        jo.put("data",treeObjList);
-        return (JSONObject) JSONObject.toJSON(jo);
+        jo.put("data",modelTreeList);
+        return  jo;
     }
+
 
 
 
@@ -620,6 +663,8 @@ public class ModelController extends  BaseController {
                  TreeObj treeObj = new TreeObj();
                  treeObj.setId(allModel.get(i).getId());
                  treeObj.setLabel(allModel.get(i).getName());
+                List<TreeObj> childVar = new ArrayList<>();
+                treeObj.setChildren(childVar);
                  treeChild.add(treeObj);
             }
         }

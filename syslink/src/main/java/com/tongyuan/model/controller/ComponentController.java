@@ -90,6 +90,8 @@ public class ComponentController {
                  ComponentTreeObj treeObj = new ComponentTreeObj();
                  treeObj.setId(allModel.get(i).getId());
                  treeObj.setName(allModel.get(i).getName());
+                 List<ComponentTreeObj> childVar = new ArrayList<>();
+                 treeObj.setChildren(childVar);
                  modelTreeList.add(treeObj);
 //                 modelList.add(treeObj);
              }
