@@ -8,7 +8,7 @@
                 <el-radio-group v-model="tab" style="margin-bottom: 30px;">
         <el-radio-button label="create">新建(模型上传)</el-radio-button>
         <el-radio-button label="download">下载模型</el-radio-button>
-        <el-radio-button label="cancel">撤销流程</el-radio-button>
+        <el-radio-button label="cancel">撤销流程...</el-radio-button>
         </el-radio-group>
 
 				<el-form-item>
