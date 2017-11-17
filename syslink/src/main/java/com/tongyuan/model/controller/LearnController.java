@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.tongyuan.model.domain.LearnResouce;
 import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.LearnService;
+//import com.tongyuan.rabbit.Sender;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import org.slf4j.Logger;
@@ -33,6 +34,9 @@ public class LearnController {
 
     @Autowired
     private DirectoryService directoryService;
+
+//    @Autowired
+//    private Sender sender;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -174,6 +178,13 @@ public class LearnController {
         ServletUtil.createSuccessResponse(200, result, response);
     }
 
-
+//
+//    @RequestMapping(value="/send",method = RequestMethod.GET)
+//    @ResponseBody
+//    public void send(HttpServletRequest request , HttpServletResponse response){
+//        System.out.print("1111start send");
+//        sender.send();
+//        System.out.print("1111end send");
+//    }
 }
 

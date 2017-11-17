@@ -1,12 +1,16 @@
 package com.tongyuan.model.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.domain.Component;
+import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.domain.Variable;
 import com.tongyuan.model.service.ComponentService;
+import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.VariableService;
+import com.tongyuan.pageModel.ComponentTreeObj;
 import com.tongyuan.pageModel.VariableTreeObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +37,8 @@ public class VariableController {
     private ComponentService componentService;
     @Autowired
     private VariableService variableService;
+    @Autowired
+    private DirectoryService directoryService;
 
 
     @RequestMapping(value = "/variableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -280,4 +286,57 @@ public class VariableController {
         return  jo;
     }
 
+
+    @RequestMapping(value = "/send",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public String send(HttpServletRequest request, HttpServletResponse response){
+        List<ComponentTreeObj> classTree = new ArrayList<>();
+        String jsonStr = null;
+        JSONArray json = new JSONArray();
+        try {
+            //查找所有的树
+            List<Directory> directoryList = directoryService.findAllDirectory();
+            for (Directory directory : directoryList) {
+                //找出顶层模型分类
+                if (directory.getParentId() == 0) {
+                    ComponentTreeObj componentTreeObj = new ComponentTreeObj();
+                    componentTreeObj.setId(directory.getId());
+                    componentTreeObj.setName(directory.getName());
+                    //新增一个子对象
+                    List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
+                    componentTreeObj.setChildren(componentTreeObjChild);
+                    classTree.add(componentTreeObj);
+                }
+            }
+            //迭代插入子模型对象
+            for (ComponentTreeObj  classTreeRoot:classTree) {
+                insertChild(classTreeRoot,  directoryList);
+            }
+            ;json.add(classTree);
+            jsonStr = json.toString();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jsonStr;
+    }
+
+    private void insertChild(ComponentTreeObj classTreeRoot,List<Directory> directoryList){
+        List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
+        for (Directory directory: directoryList) {
+            if(directory.getParentId() == classTreeRoot.getId()){
+                ComponentTreeObj componentTreeObj = new ComponentTreeObj();
+                componentTreeObj.setId(directory.getId());
+                componentTreeObj.setName(directory.getName());
+                //新增一个子对象
+                componentTreeObj.setChildren(componentTreeObjChild);
+                componentTreeObjChild.add(componentTreeObj);
+            }
+        }
+        classTreeRoot.setChildren(componentTreeObjChild);
+        if(componentTreeObjChild.size() >0){
+            for (ComponentTreeObj componentTreeObj: componentTreeObjChild) {
+                insertChild(componentTreeObj,directoryList);
+            }
+        }
+    }
 }

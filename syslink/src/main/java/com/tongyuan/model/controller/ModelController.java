@@ -528,20 +528,35 @@ public class ModelController extends  BaseController {
         List<Variable> variableList = new ArrayList<>();
         ModelWeb modelWeb = new ModelWeb();
         try {
+            //查询所有的repository
+            List<Repository> allRepository = repositoryService.findAllRepository();
+            //查询所有的watch
+            List<Watch> allWatch = watchService.findAllWatch();
+            //查询所有的star
+            List<Star> allStar = starService.findAllStar();
             model = modelService.queryModelById(Long.parseLong(modelId));
             variableList = variableService.queryListByModelId(Long.parseLong(modelId));
             GUser user = gUserService.queryById(model.getUserId());
+            modelWeb.setUserId(user.getID());
             List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
             modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
             modelWeb.setIndex(Long.parseLong(modelId));
             modelWeb.setName(model.getName());
             modelWeb.setType(model.getType());
+            modelWeb.setRepositoryName(model.getName().split("\\.")[0]);
             modelWeb.setClasses(model.getClasses());
             modelWeb.setImport(model.getImport());
             modelWeb.setExtends(model.getExtends());
             modelWeb.setUserName(user.getLowerName());
             modelWeb.setDiscription(model.getDiscription());
-            modelWeb.setTextInfo(model.getTextInfo().replaceAll("\\n","<\\/br>"));
+            modelWeb.setNumberStar(0);
+            modelWeb.setNumberWatch(0);
+            modelWeb.setAlreadyStar(false);
+            modelWeb.setAlreadyWatch(false);
+            if(model.getTextInfo() != null){
+                modelWeb.setTextInfo(model.getTextInfo().replaceAll("\\n","<\\/br>"));
+            }
+
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
                 modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
             }
@@ -550,6 +565,32 @@ public class ModelController extends  BaseController {
             }
             if(model.getInfoTextPath() != null && model.getInfoTextPath() != ""){
                 modelWeb.setInfoTextPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getInfoTextPath().substring(7));
+            }
+            for (Repository repository: allRepository) {
+                if(modelWeb.getRepositoryName().equals(repository.getName())){
+                    //关注列表
+                    List<Watch> watches = new ArrayList<>();
+                    for (Watch watch : allWatch){
+                        if(repository.getID() == watch.getRepoID()){
+                            watches.add(watch);
+                        }
+                        if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
+                            modelWeb.setAlreadyWatch(true);
+                        }
+                    }
+                    modelWeb.setNumberWatch(watches.size());
+                    //收藏列表
+                    List<Star> stars = new ArrayList<>();
+                    for (Star star : allStar) {
+                        if (repository.getID() == star.getRepoId()){
+                            stars.add(star);
+                        }
+                        if(repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()){
+                            modelWeb.setAlreadyStar(true);
+                        }
+                    }
+                    modelWeb.setNumberStar(stars.size());
+                }
             }
         }catch(Exception e){
             e.printStackTrace();

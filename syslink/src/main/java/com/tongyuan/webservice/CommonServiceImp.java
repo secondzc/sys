@@ -1,8 +1,12 @@
 package com.tongyuan.webservice;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.ModelController;
+import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.enums.ModelClasses;
@@ -10,6 +14,8 @@ import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.ReviewFlowInstanceService;
+import com.tongyuan.pageModel.ComponentTreeObj;
+import com.tongyuan.pageModel.TreeObj;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.ModelUtil;
@@ -20,10 +26,7 @@ import org.springframework.stereotype.Component;
 import javax.jws.WebService;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 接口实现
@@ -54,6 +57,7 @@ public class CommonServiceImp implements CommonService {
 	private GUserService userService;
 	@Autowired
 	private ModelUtil modelUtil;
+	private String userName;
 
 	@Override
 	public String sayHello(String name) {
@@ -100,6 +104,7 @@ public class CommonServiceImp implements CommonService {
 		System.out.println("filePath==" + filePath);
 		try {
 			System.out.println("starting writing file...");
+			//TODO:上传到内存中，并在内存中完成解压
 			resourceUtil.writeFile(filePath, beginPos, length, data);
 
 			// 模型相对路径xieyx/20170620.../
@@ -221,6 +226,57 @@ public class CommonServiceImp implements CommonService {
         return result;
 	}
 
+	/**
+	 * 模型分类树
+	 * @param userName
+	 * @return
+	 */
+	public String getClassTree(String userName){
+		List<ComponentTreeObj> classTree = new ArrayList<>();
+		String jsonStr = null;
+		JSONArray json = new JSONArray();
+		try {
+			//查找所有的树
+			List<Directory> directoryList = directoryService.findAllDirectory();
+			for (Directory directory : directoryList) {
+				//找出顶层模型分类
+				if (directory.getParentId() == 0) {
+					ComponentTreeObj componentTreeObj = new ComponentTreeObj();
+					componentTreeObj.setId(directory.getId());
+					componentTreeObj.setName(directory.getName());
+					//新增一个子对象
+					List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
+					componentTreeObj.setChildren(componentTreeObjChild);
+					classTree.add(componentTreeObj);
+				}
+			}
+			//迭代插入子模型对象
+			for (ComponentTreeObj  classTreeRoot:classTree) {
+				insertChild(classTreeRoot,  directoryList);
+			}
+			;json.add(classTree);
+			jsonStr = json.toString();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return jsonStr;
+	}
+
+//
+//	/**
+//	 * 上传模型并返回模型仓库路径
+//	 * @param userName
+//	 * @param fileName
+//	 * @param beginPos
+//	 * @param length
+//	 * @param data
+//	 * @return
+//	 */
+//	public String uploadModel(String userName,Long classID,String fileName, long beginPos, long length,
+//							byte[] data){
+//
+//	}
+
 
 
 	public  void uploadFileDate(String filename ,String username,String modelName,String description){
@@ -241,6 +297,28 @@ public class CommonServiceImp implements CommonService {
 				parentPath.length() ),description);
 		return ;
 	}
-}
+
+
+	private void insertChild(ComponentTreeObj classTreeRoot,List<Directory> directoryList){
+		List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
+		for (Directory directory: directoryList) {
+			if(directory.getParentId() == classTreeRoot.getId()){
+				ComponentTreeObj componentTreeObj = new ComponentTreeObj();
+				componentTreeObj.setId(directory.getId());
+				componentTreeObj.setName(directory.getName());
+				//新增一个子对象
+				componentTreeObj.setChildren(componentTreeObjChild);
+				componentTreeObjChild.add(componentTreeObj);
+			}
+		}
+		classTreeRoot.setChildren(componentTreeObjChild);
+		if(componentTreeObjChild.size() >0){
+			for (ComponentTreeObj componentTreeObj: componentTreeObjChild) {
+				insertChild(componentTreeObj,directoryList);
+			}
+		}
+	}
+	}
+
 
 
