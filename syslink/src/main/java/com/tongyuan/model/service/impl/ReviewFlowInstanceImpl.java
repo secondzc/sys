@@ -86,9 +86,9 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
         ReviewFlowTemplate reviewFlowTemplate = reviewFlowTemplateService.getTemplateByDefault();
         Long templateId = reviewFlowTemplate.getTemplateId();
         Timestamp timestamp = DateUtil.getCurrentTime();
-        ReviewModel reviewModel = reviewModelService.queryByModelId(modelId);
-        String instanceName = reviewModel.getModelName()+"的审签实例";
-        String description = reviewModel.getModelName()+"的审签实例描述";
+        Model reviewModel = reviewModelService.queryByModelId(modelId);
+        String instanceName = reviewModel.getName()+"的审签实例";
+        String description = reviewModel.getName()+"的审签实例描述";
 
         ReviewFlowInstance reviewFlowInstance = new ReviewFlowInstance();
         reviewFlowInstance.setInstanceName(instanceName);

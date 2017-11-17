@@ -21,4 +21,5 @@ public interface NodeInstanceMapper {
     List<DetailPage> details(Long instanceId);
     int updateComment(Map<String, Object> map);
     List<CommentPage> queryCommentPages(Long instanceId);
+    List<ReviewNodeInstance> queryByInstanceId(Long instanceId);
 }

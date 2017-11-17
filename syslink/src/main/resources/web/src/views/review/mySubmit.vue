@@ -68,11 +68,13 @@
     	},
     	methods: {
     		getInstance(){
+                //这里是brief的组件，只查询提交的审签中的流程，即status为1 
     			this.listLoading = true;
     			let params = {
     				flowInstanceName: this.filters.name,
     				page: this.page,
     				rows: this.pageSize,
+                    flowInstanceStatus: 1, 
     			}
     			let url="/api/reviewFlowInstance/queryByNameAndStatus";
     			this.func.ajaxPost(url,params,res=>{
@@ -98,7 +100,9 @@
     				msg = '被拒绝';
     			}else if(row.status == 3){
     				msg = '完成审签';
-    			}
+    			}else if(row.status == 4){
+                    msg = '已撤销';
+                }
     			return msg;
     		},
     		detail(index,row){

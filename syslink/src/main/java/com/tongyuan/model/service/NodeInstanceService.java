@@ -19,4 +19,5 @@ public interface NodeInstanceService {
     List<DetailPage> details(Long instanceId);
     List<CommentPage> queryCommentPages(Long instanceId);
     int updateComment(Map<String, Object> map);
+    List<ReviewNodeInstance> queryByInstanceId(Long instanceId);
 }

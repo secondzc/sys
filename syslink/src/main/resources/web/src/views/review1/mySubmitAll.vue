@@ -8,7 +8,7 @@
                 <el-radio-group v-model="tab" style="margin-bottom: 30px;">
         <el-radio-button label="create">新建(模型上传)</el-radio-button>
         <el-radio-button label="download">下载模型</el-radio-button>
-        <el-radio-button label="cancel">撤销流程...</el-radio-button>
+        <!-- <el-radio-button label="cancel">撤销流程...</el-radio-button> -->
         </el-radio-group>
 
 				<el-form-item>
@@ -37,7 +37,8 @@
 			<el-table-column label="操作" width="200">
 				<template scope="scope">
 					<el-button size="small" @click="detail(scope.$index,scope.row)">查看详情</el-button>
-					<el-button type="danger" size="small" @click="remove(scope.row)">删除</el-button>
+                    <el-button size="small" @click="cancel(scope.$index,scope.row)">撤销流程</el-button>
+					<el-button type="danger" size="small" @click="remove(scope.row)">删除记录</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -76,8 +77,23 @@
     		}
     	},
     	methods: {
+            cancel(index,row){
+                var url='/api/reviewFlowInstance/cancel';
+                this.listLoading = true;
+                this.func.ajaxPost(url,{instanceId:row.instanceId},res=>{
+                    if(res.data.flag===true){
+                        this.listLoading = false;
+                        this.$message({
+                            type:'success',
+                            message:'撤销成功',
+                        });
+                        this.getInstance();
+                    };
+                });
+            },
     		getInstance(){
                 //查询的是所有的流程，包括审签中的和拒绝、通过的
+                //这时flowInstanceStatus为空，查询所有的
     			this.listLoading = true;
     			let params = {
     				flowInstanceName: this.filters.name,
@@ -108,7 +124,9 @@
     				msg = '被拒绝';
     			}else if(row.status == 3){
     				msg = '完成审签';
-    			}
+    			}else if(row.status == 4){
+                    msg = '已撤销';
+                }
     			return msg;
     		},
     		detail(index,row){

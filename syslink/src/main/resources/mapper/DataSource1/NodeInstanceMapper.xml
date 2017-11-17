@@ -28,11 +28,6 @@
         <result property="lastUpdateTime" column="last_update_time"/>
         <result property="comment" column="comment"/>
         <result property="checkorId" column="checkor_id"/>
-
-        <association property="user" javaType="com.tongyuan.gogs.domain.GUser">
-            <id property="id" column="id"/>
-            <result property="userName" column="user_user_name"/>
-        </association>
     </resultMap>
 
     <sql id="baseColumnList">
@@ -103,5 +98,11 @@
         review_node.sequence
     </select>
 
+    <select id="queryByInstanceId" parameterType="java.lang.Long" resultMap="baseResultMap">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM review_node_instance
+        WHERE instance_id=#{instanceId}
+    </select>
 
 </mapper>
