@@ -45,10 +45,21 @@ function filterAsyncRouter(limitRoutes, roles) {
 /**
 **通过localStorage 中的uid获取用户信息
 **/
-function getUserInfoFirst(para){
-  return axios.post('api/user/getUserInfoFirst',para)
+function getUserInfoFirst(userName){
+  return axios.post('api/user/getUserInfoFirst',userName)
 }
 
+function getUserInfo(){
+  return axios.post('api/user/getUserInfo')
+}
+
+function getSession(){
+  return axios.post('api/user/sessionJudge')
+}
+
+function autoPass(){
+  return axios.post('api/user/autoPass')
+}
 
 
 export default{
@@ -67,14 +78,22 @@ export default{
 
     GetUserInfo({ commit, state },userInfo){
      
-
-            commit('SET_USERINFO',userInfo)  
+           return new Promise((resolve, reject) => {
+        getUserInfo().then(response => {
+          const data = response.data
+          commit('SET_USERINFO',data.userInfo)  
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+          
       },
 
-    GetUserInfoFirst({ commit, state },uid){
+    GetUserInfoFirst({ commit, state },userName){
       
        return new Promise((resolve, reject) => {
-        getUserInfoFirst(uid).then(response => {
+        getUserInfoFirst(userName).then(response => {
           const data = response.data
           commit('SET_USERINFO',data.userInfo) 
           resolve(response)
@@ -83,6 +102,32 @@ export default{
         })
       })
       },
+    GetSession({commit,state}){
+      return new Promise((resolve,reject)=>{
+        getSession().then(response=>{
+          const data = response.data
+          console.log(data.session)
+          commit('SET_SESSION',data.session)
+          // commit('SET_UID',data.uid)
+          console.log(state.session)
+          resolve(response)
+        }).catch(error=>{
+          reject(error)
+        })
+      })
+    },
+    AutoPass({commit,state}){
+      return new Promise((resolve,reject)=>{
+        autoPass().then(response=>{
+          const data = response.data
+          commit('SET_SESSION',data.session)
+          // commit('SET_UID',data.uid)
+          resolve(response)
+        }).catch(error=>{
+          reject(error)
+        })
+      })
+    },
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
         const  roles  = data
@@ -129,6 +174,15 @@ export default{
           resolve()
 
       })
+    },
+     ToggleSideBar({ commit }) {
+      commit('TOGGLE_SIDEBAR')
+    },
+    ListCard({ commit }) {
+      commit('LIST_CARD')
+    },
+    CardList({ commit }) {
+      commit('CARD_LIST')
     }
 
 

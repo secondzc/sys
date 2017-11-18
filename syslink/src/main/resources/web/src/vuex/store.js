@@ -3,6 +3,7 @@ import vue from 'vue'
 import actions from './action'
 import mutations from './mutation'
 import { commonRoutes, limitRoutes } from '../asyncRoutes'
+import Cookies from 'js-cookie'
 vue.use(vuex);
 export default new vuex.Store({
     state:{
@@ -15,7 +16,10 @@ export default new vuex.Store({
         addRouters:[],
         permission:[],
         isLoaded:false,
-        userInfo:''
+        userInfo:'',
+        opened:!+Cookies.get('sidebarStatus'),
+        list:Cookies.get('bbb'),
+        session:false
     },
     actions,
     mutations,
@@ -53,6 +57,15 @@ export default new vuex.Store({
         },
         userInfo(state){
             return state.userInfo
-        }
+        },
+         opened(state){
+            return state.opened
+        },
+        list(state){
+            return state.list
+        },
+        session(state){
+            return state.session
+        },
     }
 })

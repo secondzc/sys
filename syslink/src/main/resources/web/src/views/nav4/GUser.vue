@@ -14,7 +14,7 @@
           <el-input v-model="filters.name" placeholder="用户名/全名/邮箱"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="small" v-on:click="getUsers">查询</el-button>
+          <el-button type="primary" size="small" v-on:click="query">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" v-on:click="reset">重置</el-button>
@@ -52,7 +52,7 @@
       @row-click="handleDepart"
       >
      </zk-table> -->
-      <el-tree :data="data4" :props="defaultProps1"   @node-click="queryByDepart" ref="tree2"></el-tree>
+      <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2"></el-tree>
 
 
 
@@ -266,7 +266,8 @@
         <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="分配角色" :visible="roleVisble" :close-on-click-modal="false">
+    <el-dialog title="分配角色" :visible="roleVisble" :close-on-click-modal="false" width="60%"
+    >
 
 
      <el-transfer :data="roles"  v-model="userRole.assigned"
@@ -281,28 +282,40 @@
     </el-dialog>
 
      <!--分配权限界面-->
-    <el-dialog title="分配权限" :visible="permissionVisible"  :close-on-click-modal="false" :show-close="false"   >
-      <!-- <div slot="title"> -->
-   <el-form :model="permission" label-width="100px"  ref="permission"    >
+    <el-dialog title="分配权限" :visible="permissionVisible"  v-if="permissionVisible"   >
 
-  <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"   highlight-current :props="defaultProps">
+        <div>
+      <el-form :model="permission" label-width="100px"  ref="permission"    >
+
+  <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"   highlight-current :props="defaultProps"    :default-checked-keys="authTree">
   </el-tree>
 
       </el-form>
-   <!--  </div> -->
+        </div>
+ 
+
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="permissionVisible=false">取消</el-button>
         <el-button type="primary" @click.native="permissionSubmit" :loading="permissionLoading">提交</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="模型访问控制" :visible="modelVisible" :close-on-click-modal="false" :show-close="false"   >
+
+
+
+
+
+
+
+
+    <el-dialog title="模型访问控制" :visible="modelVisible" v-if="modelVisible"   >
 
  <!--    <div slot="title">    -->
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
 
     <el-tree :data="data3" show-checkbox  node-key="id"  
-    :default-expanded-keys="[0]" ref="tree1"  highlight-current :props="defaultProps1">
+    ref="tree1"  highlight-current :props="defaultProps1"  
+    :default-checked-keys="modelTree"   :default-expand-all="true">
     </el-tree>
 
     </el-form>
@@ -398,7 +411,9 @@
           currentPage:''
         },
         filters: {
-          name: '',
+          name: ''
+        },
+        filters1:{
           departId:''
         },
         state1:'',
@@ -572,8 +587,8 @@
           });
       },
   
-      //获取用户列表
-      getUsers() {
+      
+      query() {
          var _this = this;
          let para = Object.assign({},_this.filters,_this.pager);
           _this.$http({method:'post',
@@ -582,13 +597,45 @@
               .then(function (response) {
                   _this.users = response.data.users;
                   _this.pager.total=response.data.total;
-              //    _this.userSearch=response.data.userName;
-
           })
           .catch(function (error) {
               console.log(error);
           });
       },
+
+
+  getUsers(node)
+      {
+
+         var _this = this;
+         console.log(node);
+         if(node)
+         {
+            _this.filters1.departId=node.id;
+         }
+         else
+         {
+           _this.filters1.departId=1;
+         }
+       
+          let para = Object.assign({},_this.filters1,_this.pager);
+          _this.$http({method:'post',
+            url:'/api/user/list',
+            data:para})
+              .then(function (response) {
+                  _this.users = response.data.users;
+                  _this.pager.total=response.data.total;
+                  console.log(_this.users);
+                  console.log(_this.pager.total);
+
+
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+
+      },
+
       getGroups() {
          var _this = this;
           _this.$http.post('/api/auth/list')
@@ -659,14 +706,31 @@
 
          this.ids.uid=row.id;
          this.permissionVisible=true;
-         this.setCheckedNodes(row.auths);
+         let temp =  [];
+
+         row.auths.forEach(x=>temp.push(x.authId));
+         console.log(temp);
+         this.authTree=temp;
+
+         // this.setCheckedNodes(row.auths);
       },
       modelAuth(index,row)
       {
         console.log(row.modelAuth);
          this.ids.uid=row.id;
          this.modelVisible = true;
-         this.$refs.tree1.setCheckedNodes(row.modelAuth);
+
+            let temp =  [];
+
+         row.modelAuth.forEach(x=>temp.push(x.id));
+         console.log(temp);
+         this.modelTree=temp;
+
+
+
+
+
+         // this.$refs.tree1.setCheckedNodes(row.modelAuth);
       },
       //显示新增界面
       handleAdd: function () {
@@ -962,11 +1026,7 @@
 
      //   this.getDeparts();
       },
-      queryByDepart(node)
-      {
-         console.log(node);
-         this.filters.departId=node.id;
-      }
+    
 
 
 
@@ -988,7 +1048,7 @@
 </script>
 
 
-<style>
+<style scoped>
   .demo-table-expand {
     font-size: 0;
   }

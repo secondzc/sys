@@ -102,7 +102,7 @@
 
 
  <!--新增界面-->
-    <el-dialog :title="title" v-model="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog :title="title" :visible="addFormVisible" :close-on-click-modal="false"   >
           <el-form :model="addForm" label-width="80px"    ref="addForm"   :inline="true"  >
         
 

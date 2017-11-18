@@ -77,7 +77,7 @@
    <el-form :model="permission" label-width="80px"  ref="permissionForm"    >
  <!--    <div slot="title">
       <span>分配权限</span> -->
-       <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps">
+       <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps"  :default-checked-keys="roleTree">
     </el-tree>
 
 <!--     </div> -->
@@ -158,7 +158,8 @@
          name:'',
          description:''
 
-        }
+        },
+         roleTree:[]
         ,   
       }
     },
@@ -266,8 +267,15 @@
 
          this.ids.roleId=row.id;
          this.permissionVisible=true;
-          console.log( this.$refs.tree);
-          this.$refs.tree.setCheckedNodes(row.permissions);
+          // console.log( this.$refs.tree);
+          // this.$refs.tree.setCheckedNodes(row.permissions);
+
+
+            let temp =  [];
+
+         row.auths.forEach(x=>temp.push(x.authId));
+         console.log(temp);
+         this.authTree=temp;
       //   this.setCheckedNodes(row.permissions);
        
       },

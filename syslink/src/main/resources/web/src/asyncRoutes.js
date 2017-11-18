@@ -47,12 +47,18 @@ import OrgMange from './views/nav4/OrgMange.vue'
 import error401 from './views/401.vue'
 import error404 from './views/404.vue'
 
+
 import depart from './views/nav4/depart.vue'
 import Sidebar from './views/Sidebar.vue'
 import corporate from './views/corporate.vue'
 import Index from './views/Index.vue'
 import ModelHeader from './views/ModelHeader.vue'
 import myRepo from './views/nav4/myRepo.vue'
+import changePassWd from './views/nav4/changePassWd.vue'
+import personalInfo from './views/nav4/personalInfo.vue'
+import NewIndex from  './views/NewIndex.vue'
+import NewDetails from './views/NewDetails.vue'
+import LoginHeader from './views/LoginHeader.vue'
 
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -123,12 +129,32 @@ export let  commonRoutes = [
 
     {
         path: '',
-        component: corporate,
+        component: ModelHeader,
         name: '',
         hidden: true,
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
             {path:'/login',component:Login,name:'登录'}
+        ]
+    },
+      {
+        path: '',
+        component: corporate,
+        name: '个人设置',
+        hidden: true,
+        children: [
+            // { path: '/main', component: Main, name: '项目', hidden: true },
+            {path:'/changePassWd',component:changePassWd,name:'修改密码'}
+        ]
+    },
+      {
+        path: '',
+        component: corporate,
+        name: '个人设置',
+        hidden: true,
+        children: [
+            // { path: '/main', component: Main, name: '项目', hidden: true },
+            {path:'/personalInfo',component:personalInfo,name:'个人信息'}
         ]
     },
 
@@ -155,6 +181,18 @@ export let  commonRoutes = [
         name: '',
         hidden: true
     },
+       {
+        path: '/NewIndex',
+        component: NewIndex,
+        name: '',
+        hidden: true
+    },
+    {
+        path: '/NewDetails',
+        component: NewDetails,
+        name: '',
+        hidden: true
+    },
     
     // {
     //     path: '',
@@ -171,7 +209,7 @@ export let  commonRoutes = [
         path: '',
         component: ModelHeader,
         name: '模型',
-        iconCls: 'el-icon-document',
+        iconCls: 'iconfont icon-moxing',
         leaf: true,//只有一个节点
         children: [
             { path: '/model/index', component: Model, name: '我的模型' },
@@ -190,11 +228,11 @@ export let  commonRoutes = [
             // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
         ]
     },
-    {
+   {
         path: '',
         component: corporate,
         name: '仿真',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'iconfont icon-guize',
         leaf: true,//只有一个节点
    
         children: [
@@ -206,7 +244,7 @@ export let  commonRoutes = [
         path: '',
         component: corporate,
         name: '仓库',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'iconfont icon-cangku',
         leaf: true,//只有一个节点
    
         children: [
@@ -273,22 +311,22 @@ export let  commonRoutes = [
 
 
 export let limitRoutes=[
-    {
+     {
         path: '',
         component: corporate,
         name: '系统管理',
-        iconCls: 'el-icon-setting',//图标样式class
+        iconCls: 'iconfont icon-shezhi',//图标样式class
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
             // { path: '/test2', component: test2, name: '项目管理' },
             // { path: '/tree', component: tree, name: '组织管理' ,meta:{role:['management_org_list']}},
-            { path: '/depart', component: depart, name: '组织管理' ,meta:{role:['management_org_list']}},
+            { path: '/depart', component: depart, name: '组织管理' ,iconCls:'iconfont icon-zuzhijiagoujiekou', meta:{role:['management_org_list']}},
           //  { path: 'TreeGrid', component: TreeGrid, name: '用户管理' ,meta:{role:['management_user_list']}},
-            { path: '/GUser', component: GUser, name: '用户管理' ,meta:{role:['management_user_list']}},
-            { path: '/role', component: role, name: '角色管理' ,meta:{role:['management_role_list']}},
-            { path: '/permission', component: permission, name: '权限管理' ,meta:{role:['management_auth_list']} },
+            { path: '/GUser', component: GUser, name: '用户管理' ,iconCls:'iconfont icon-hezuoguanxi', meta:{role:['management_user_list']}},
+            { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{role:['management_role_list']}},
+            { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{role:['management_auth_list']} },
          //   { path: 'user', component: user, name: '应用监控' },
-            { path: '/log', component: log, name: '日志管理' ,meta:{role:['management_log_list']}},
+            { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{role:['management_log_list']}},
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
         ]

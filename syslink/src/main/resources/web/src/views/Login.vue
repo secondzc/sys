@@ -1,7 +1,7 @@
 <template>
 
 
-  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="login-container" style="height: 400px;">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="userName">
       <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"></el-input>
@@ -82,7 +82,6 @@
                           id: 1,
                           username: _this.ruleForm2.userName,
                           avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-                          name: _this.ruleForm2.userName
                       }
                       sessionStorage.setItem('user', JSON.stringify(user));
 
@@ -90,26 +89,28 @@
 
                       if(_this.ruleForm2.rememberMe)
                       {
-                        let rememberMe = {rememberMe:true};
-                        localStorage.setItem('rememberMe',JSON.stringify(rememberMe));
+                        // let rememberMe = {rememberMe:true};
+                        // localStorage.setItem('rememberMe',JSON.stringify(rememberMe));
+                        Cookies.set('syslink', _this.ruleForm2.userName,{ expires: 30, path: '' });
+
                       }
 
                       //存储用户信息
-                      let logined={logined:''};
-                      logined.logined = true;
-                      sessionStorage.setItem('logined',JSON.stringify(logined));
-                      console.log(sessionStorage.getItem('logined'));
+                      // let logined={logined:''};
+                      // logined.logined = true;
+                      // sessionStorage.setItem('logined',JSON.stringify(logined));
+                      // console.log(sessionStorage.getItem('logined'));
 
                      
-                      Cookies.set('abc','abbb');
+                      // Cookies.set('sidebarStatus',0);
                      
                        
                      
-                      let uid ={uid:'',name:''}; 
-                      uid.uid = response.data.userInfo.profile.iD;
-                      uid.userName = response.data.userInfo.profile.name;
-                      //存储用户id
-                      localStorage.setItem('uid',JSON.stringify(uid));
+                      // let uid ={uid:'',name:''}; 
+                      // uid.uid = response.data.userInfo.profile.iD;
+                      // uid.userName = response.data.userInfo.profile.name;
+                      // //存储用户id
+                      // localStorage.setItem('uid',JSON.stringify(uid));
                       
                      
                     
@@ -157,6 +158,7 @@
 
 <style lang="scss" scoped>
   .login-container {
+    max-height: 350px;
     /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
     -webkit-border-radius: 5px;
     border-radius: 5px;
