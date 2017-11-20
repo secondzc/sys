@@ -53,7 +53,7 @@
 //                    this.$store.dispatch('sendTreeModelId',_this.modelId);
                     _this.$http.post(url)
                         .then(function (response) {
-                            _this.data = response.data.data;
+                            _this.data = response.data.rootData;
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -68,7 +68,7 @@
 //                    this.$store.dispatch('sendTreeModelId',_this.modelId);
                     _this.$http.post(url)
                         .then(function (response) {
-                            _this.data = response.data.data;
+                            _this.data = response.data.rootData;
                         })
                         .catch(function (error) {
                             console.log(error)

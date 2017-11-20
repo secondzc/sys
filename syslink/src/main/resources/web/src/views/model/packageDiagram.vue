@@ -2,7 +2,7 @@
 
     <el-container   style="height: 100%;">
         <el-header class="top-header">
-            <span style="font-size: 20px;position: relative;top: -5px;">模型：{{form.name}}</span>
+            <span style="font-size: 20px;position: relative;top: 2px;">模型：{{form.name}}</span>
             <div style="display: inline-block;margin-left: 95px">
 
                 <a class="ui basic button" @click="addWatch(form)">

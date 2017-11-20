@@ -38,11 +38,11 @@
                 if(_this.modelId == null || _this.modelId == ''){
                     this.$router.push({path: '/model/index'});
                 }else {
-                    var url = '/api/variable/variableTree?modelId=' + _this.modelId;
+                    var url = '/api/model/treeModel?modelId=' + _this.modelId;
 //                   this.$store.dispatch('sendTreeModelId',_this.modelId);
                     _this.$http.post(url)
                         .then(function (response) {
-                           _this.data2 = response.data.rootData;
+                           _this.data2 = response.data.data;
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -54,7 +54,7 @@
         methods: {
             filterNode(value, data) {
                 if (!value) return true;
-                return data.label.indexOf(value) !== -1;
+                return data.name.indexOf(value) !== -1;
             },
             treeNodeClick(arg){
                 this.$store.dispatch('sendTreeModelId',arg.id);
