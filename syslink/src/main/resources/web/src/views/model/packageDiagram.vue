@@ -1,100 +1,144 @@
 <template>
-    <el-container>
-        <el-header style="height: 50px;background-color: rgb(238, 241, 246);border: 1px solid #B0C4DE">
-            <span style="font-size: 20px;position: relative;top: 20px;">模型：{{form.name}}</span>
+
+    <el-container   style="height: 100%;">
+        <el-header class="top-header">
+            <span style="font-size: 20px;position: relative;top: -5px;">模型：{{form.name}}</span>
+            <div style="display: inline-block;margin-left: 95px">
+
+                <a class="ui basic button" @click="addWatch(form)">
+                    <span>关注</span>
+                    <i v-if="form.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
+                    <i v-else="form.alreadyWatch == false" class="iconfont icon-quxiaoguanzhu01"  ></i>
+                    {{form.numberWatch}}
+                </a>
+            </div>
+            <div style="display:inline-block;margin-top: 8px">
+
+                <a class="ui basic button" @click="addStar(form)">
+                    <span>点赞</span>
+                    <i v-if="form.alreadyStar == true" class="iconfont icon-guanzhu3" ></i>
+                    <i v-else="form.alreadyStar == false" class="iconfont icon-guanzhu4"  ></i>
+                    {{form.numberStar}}
+                </a>
+            </div>
         </el-header>
-        <el-container>
-        <el-aside width="300px" style="background-color: rgb(238, 241, 246);border: 1px solid #B0C4DE;min-height: -webkit-fill-available">
-            <modeltree ></modeltree>
-        </el-aside>
-        <el-main style="background-color: rgb(238, 241, 246);border: 1px solid #B0C4DE;margin-left: 20px">
-            <template>
-                <section>
-                    <div id="tabs" class="tabs-bottom">
-                        {{getModelVar}}{{treeModelVar}}
-                        <ul>
-                            <li><a href="#tabs-3">文本</a></li>
-                            <li><a href="#tabs-2">图标</a></li>
-                            <li><a href="#tabs-1">组件</a></li>
-                            <li><a href="#tabs-4">说明</a></li>
-                            <li><a href="#tabs-5">变量</a></li>
-                        </ul>
-                        <div class="tabs-spacer"></div>
-                        <div id="tabs-1">
-                            <div style="min-height: 452px;">
-                                <modelComponent></modelComponent>
+        <el-container  class="main-container" >
+
+            <el-aside class="left-aside" style="overflow: hidden">
+                <!--<el-tree-->
+                        <!--:props="props"-->
+                        <!--:load="loadNode"-->
+                        <!--lazy-->
+                        <!--show-checkbox-->
+                        <!--@check-change="handleCheckChange"  style="margin-top: 20px;overflow: inherit;">-->
+                <!--</el-tree>-->
+                <div style="height: 50%">
+                    <span>模型浏览器：</span>
+                    <modeltree style="height: 100%;overflow-y: auto"></modeltree>
+                </div>
+                <div style="margin-top: 30px;height: 50%">
+                    <span>组件浏览器：</span>
+                    <modeltreeContAndVar style="overflow-y: auto"> </modeltreeContAndVar>
+                </div>
+            </el-aside>
+            <el-main style="height: inherit;overflow-y: hidden;">
+                <el-tabs   tab-position="bottom" style="height: 100%">
+                    {{getModelVar}}{{treeModelVar}}
+                    <el-tab-pane class="el-tabs--bottom" style="height: 100%">
+                        <span slot="label"><i class="el-icon-document"></i> 文本</span>
+                        <!--11111111-->
+                        <!--<img :src="errGif"  v-for="o in 10"  />-->
+                        <div style="height: 100%;">
+                            <div v-html="textInfo" class="font">
+                                <div >
+                                    {{this.textInfo}}
+                                </div>
                             </div>
                         </div>
-                        <div id="tabs-2">
-                            <div style="min-height: 452px;">
-                                <img :src=svgUrl class="image"/>
-                            </div>
+                    </el-tab-pane>
+                    <el-tab-pane style="height: 100%">
+                        <span slot="label"><i class="el-icon-picture"></i> 图标</span>
+                        <div style="">
+                            <img :src=iconUrl class="images"/>
                         </div>
-                        <div id="tabs-3">
-                            <div style="min-height: 452px;">
-                                <img :src=iconUrl class="image"/>
-                            </div>
+                    </el-tab-pane >
+                    <el-tab-pane style="height: 100%">
+                        <span slot="label"><i class="el-icon-picture-outline"></i> 组件</span>
+                        <div style="">
+                            <img :src=svgUrl class="images"/>
                         </div>
-                        <div id="tabs-4">
-                            <div style="min-height: 452px;">
-                                <iframe :src=infoUrl  style="width: 100%;height: 464px;overflow: auto;" ></iframe>
-                            </div>
+                    </el-tab-pane>
+                    <el-tab-pane style="height: 100%">
+                        <span slot="label"><i class="el-icon-document"></i> 说明</span>
+                        <div style="height: 100%;">
+                            <iframe :src=infoUrl  style="width: 100%;height: 100%;overflow: auto;" ></iframe>
                         </div>
-                        <div id="tabs-5">
-                            <div style="min-height: 452px;">
-                                <package-diagram-model-child ></package-diagram-model-child>
-                            </div>
+                    </el-tab-pane>
+                    <el-tab-pane style="height: 100%">
+                        <span slot="label"><i class="el-icon-tickets"></i> 变量</span>
+                        <div style="">
+                            <package-diagram-model-child ></package-diagram-model-child>
                         </div>
-                    </div>
-                </section>
-            </template>
-        </el-main>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-main>
         </el-container>
+
+
+        <!--<el-footer class="main-footer" style="">-->
+		<!--<span>-->
+			<!--############################################-->
+		<!--</span>-->
+
+        <!--</el-footer>-->
     </el-container>
+
+
+
 </template>
 
-<script>
-import {mapActions} from 'vuex'
-import modeltree from './modelTree.vue'
-import component from './Component.vue'
-import modelComponent from './ModelComponent.vue'
-import variabletree from './Variabletree.vue'
-import PackageDiagramModelChild from "./packageDiagramModelChild.vue";
-import { mapState,mapGetters} from 'vuex'
 
-import 'jquery-ui/external/jquery-1.9.1/jquery'
-import 'jquery-ui/ui/widgets/tabs'
-import 'jquery-ui/themes/base/all.css'
-import 'jquery-ui/external/jquery/jquery'
-import ElContainer from "../../../node_modules/element-ui/packages/container/src/main";
+<script >
+    import errGif from '@/assets/401_images/401.gif'
+    import modeltree from './modelTree.vue'
+    import modeltreeContAndVar from './modelTreeContAndVar.vue'
+    import PackageDiagramModelChild from "./packageDiagramModelChild.vue";
+    import { mapState,mapGetters} from 'vuex'
+    import {mapActions} from 'vuex'
+    import '../../assets/jqueryUI/tabs.css'
+    export default {
+        components: {
+            modeltree,
+            modeltreeContAndVar,
+            PackageDiagramModelChild,
+        },
+        data() {
+            return {
+//                errGif: errGif + '?' + +new Date(),
+//                props: {
+//                    label: 'name',
+//                    children: 'zones'
+//                },
+//                count: 1,
+//                info:false,
+//                list:true,
+                form:[],
+                textInfo : '',
+                data :{
+                    svgUrl:'',
+                    iconUrl:'',
+                    infoUrl:'',
+                },
 
-export default {
-  name: 'packageDiagram',
-  components: {
-      ElContainer,
-      modeltree,
-      component,
-      modelComponent,
-      PackageDiagramModelChild,
-//      variabletree
-  },
-  data () {
-    return {
-        form:[],
-      data :{
-          svgUrl:'',
-          iconUrl:'',
-          infoUrl:'',
-      },
-    }
-  },
+            };
+        },
     computed: {
-        ...mapState({
+    ...mapState({
             modelId: state => state.modelId,
             a:state =>state.a
         }),
-        ...mapGetters(['modelId','amsg','treeModelId']),
-        getModelVar(){
+    ...mapGetters(['modelId','amsg','treeModelId']),
+            getModelVar(){
             var _this = this;
             if(_this.modelId == null || _this.modelId == ''){
                 this.$router.push({path: '/model/index'});
@@ -103,6 +147,7 @@ export default {
                 _this.$http.post(url)
                     .then(function (response) {
                         _this.form = response.data.form;
+                        _this.textInfo= response.data.form.textInfo;
                         if(response.data.form.diagramSvgPath == null){
                             _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
@@ -118,6 +163,10 @@ export default {
                         }else{
                             _this.infoUrl = response.data.form.infoTextPath;
                         }
+//                        if(response.data.form.textInfo != null){
+//                            var htmlTextInfo = "";
+//                            htmlTextInfo = response.data.form.textInfo
+//                        }
 
                     })
                     .catch(function (error) {
@@ -133,6 +182,7 @@ export default {
                 _this.$http.post(url)
                     .then(function (response) {
                         _this.form = response.data.form;
+                        _this.textInfo= response.data.form.textInfo
                         if(response.data.form.diagramSvgPath == null){
                             _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
@@ -157,33 +207,172 @@ export default {
         }
 
     },
-  methods: {
-      Tabs(){
-          $( "#tabs" ).tabs();
-          // 修改 class
-          $( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
-              .removeClass( "ui-corner-all ui-corner-top" )
-              .addClass( "ui-corner-bottom" );
+        methods: {
+            toDetails()
+            {
+                this.$router.push('/NewDetails');
+            },
+            handleCheckChange(data, checked, indeterminate) {
+                console.log(data, checked, indeterminate);
+            },
+            handleNodeClick(data) {
+                console.log(data);
+            },
+            loadNode(node, resolve) {
+                if (node.level === 0) {
+                    return resolve([{ name: 'region1' }, { name: 'region2' }]);
+                }
+                if (node.level > 3) return resolve([]);
 
-          // 移动导航到底部
-          $( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
-      }
-  },
-    mounted(){
-        this.Tabs();
-    }
-}
+                var hasChild;
+                if (node.data.name === 'region1') {
+                    hasChild = true;
+                } else if (node.data.name === 'region2') {
+                    hasChild = false;
+                } else {
+                    hasChild = Math.random() > 0.5;
+                }
+
+                setTimeout(() => {
+                    var data;
+                    if (hasChild) {
+                        data = [{
+                            name: 'zone' + this.count++
+                        }, {
+                            name: 'zone' + this.count++
+                        }];
+                    } else {
+                        data = [];
+                    }
+
+                    resolve(data);
+                }, 500);
+            },
+            addStar(item){
+                if(item.alreadyStar == false){
+                    var _this = this;
+                    var url = '/api/star/add?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    _this.$http.post(url)
+                        .then(function (response) {
+                            if(response.data.msg == "ok"){
+                                _this.getModel();
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                if(item.alreadyStar == true){
+                    var _this = this;
+                    var url = '/api/star/delete?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    _this.$http.post(url)
+                        .then(function (response) {
+                            if(response.data.msg == "ok"){
+                                _this.getModel();
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+
+            },
+            addWatch(item){
+                if(item.alreadyWatch == false){
+                    var _this = this;
+                    var url = '/api/watch/add?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    _this.$http.post(url)
+                        .then(function (response) {
+                            if(response.data.msg == "ok"){
+                                _this.getModel();
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                if(item.alreadyWatch == true){
+                    var _this = this;
+                    var url = '/api/watch/delete?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    _this.$http.post(url)
+                        .then(function (response) {
+                            if(response.data.msg == "ok"){
+                                _this.getModel();
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+            }
+        }
+    };
+
 </script>
-<style scoped>
 
-.left {
-  max-width: 320px;
-  float: left;
-}
-.right{
-    min-width: 300px;
-    float: right;
-}
 
+
+<style scoped lang="scss">
+
+    .main-container{
+        height: inherit;;
+        overflow-y:hidden;
+    }
+    .top-header{
+        max-height: 40px;
+        background-color: #f8f8f8;
+    }
+    .middle-header{
+        max-height: 50px;
+        border-top: solid 1px #e7e7e7;
+    }
+    .main-footer{
+        max-height: 10px;
+        text-align: center;
+        border-top: solid 1px #e7e7e7;
+    }
+
+    .left-aside
+    {
+        border-right: solid 1px #e7e7e7;
+    }
+    /*.el-tabs.el-tabs--bottom{
+        height: inherit;
+    }
+    .el-tab-pane
+    {
+        height: 100px;
+        overflow-y: auto;
+    }
+    .el-tabs__content{
+        overflow: hidden;
+        position: relative;
+        height: 200px;
+    }
+    .el-tabs.el-tabs--bottom .el-tabs__header
+    {
+        height: 400px;
+    }
+    */
+
+    .el-tabs.el-tabs--bottom
+    {
+        height: inherit;
+        overflow-y: hidden;
+
+    }
+    .el-tabs__content {
+        overflow-y: auto;
+        position: relative;
+        height: 88%!important;
+    }
+    .el-tab-pane
+    {
+        overflow-y: auto;
+    }
+    @font-face {
+        font-family: 'iconfont';  /* project id 445633 */
+        src: url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.eot');
+        src: url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.eot?#iefix') format('embedded-opentype'),
+        url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.woff') format('woff'),
+        url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.ttf') format('truetype'),
+        url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.svg#iconfont') format('svg');
+    }
 
 </style>

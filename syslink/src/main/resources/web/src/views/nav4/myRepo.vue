@@ -147,6 +147,11 @@
         sels:[]
       }
     },
+    computed:{
+     abc:function(){
+       return 333;
+     }
+    },
     methods: {
     
        selsChange: function (sels) {

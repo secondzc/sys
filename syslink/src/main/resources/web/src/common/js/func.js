@@ -41,17 +41,29 @@ export default {
 	changeDate (){
   	console.log('123');
     } , 
-  isLogin()
+   isLogin()
     {
-    	let logined  = sessionStorage.getItem('logined');
-    	if(logined)
-    	{
+    
+      if(store.getters.session)
+      {
         return true;
-    	}
-    	else
-    	{
+      }
+      else
+      {
         return false;
-    	}
+      }
+    },
+      isOpened()
+    {
+    
+      if(store.getters.opened)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
 	
 }

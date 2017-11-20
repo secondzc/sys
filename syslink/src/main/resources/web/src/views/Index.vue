@@ -1,65 +1,91 @@
 <template>
-	
-<el-container style="height: 100%; overflow:hidden;">
-  <el-header style="padding: 0px;">
+  
+<el-container style="height: 100%;overflow:hidden;">
+ <el-header style="padding: 0px;">
+    <!--  <loginHeader></loginHeader> -->
   <el-col :span="24" class="header" >
       <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
         {{collapsed?'':sysName}}
       </el-col>
-     <!--  <el-col :span="2"> -->
-        <!-- <div class="tools" @click.prevent="collapse"> -->
-         <!--  <div class="tools" >
-          <i class="fa fa-align-justify"></i>
-        </div> -->
-      <!-- </el-col> -->
-      <el-col :span="8">
-         <a class="item" href="http://gogs.modelica-china.com/#/index"  id="home-page">首页</a>
-        <a class="item" href="javascript:void(0)"   @click="toLogin">登录</a>
-        <!-- <a class="item" href="http://gogs.modelica-china.com:3000/issues">工单管理</a>
-        <a class="item" href="http://gogs.modelica-china.com:3000/pulls">合并请求</a>
-        <a class="item" href="http://gogs.modelica-china.com:3000/explore/repos">探索</a> -->
-        <!--        <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                                     <el-menu-item index="1">处理中心</el-menu-item>
-                                     <el-menu-item index="2">处理中心</el-menu-item>
-                                     <el-menu-item index="3">处理中心</el-menu-item>
-
-                                </el-menu> -->
+  
+      <el-col :span="10 " style="flex: 0 0 230;">
+        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toMySpace"  >工作台</a>
+        <a  href="http://gogs.modelica-china.com:8080/login.html#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
+        <a  href="http://gogs.modelica-china.com:3000/" v-show="this.func.isLogin()" >协同</a>
+        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
+        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
+        <a  href="javascript:void(0)"  v-show="!this.func.isLogin()"  @click="toLogin">登录</a>
+      
       </el-col>
-    <!--   <el-col :span="4" class="userinfo">
-        <el-dropdown v-if="func.isLogin" trigger="hover">
-          <span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
+      <el-col :span="4" class="userinfo">
+        <el-dropdown v-if="this.func.isLogin()" trigger="hover">
+          <span class="el-dropdown-link userinfo-inner">
+            <i class="el-icon-bell"></i>
+            <!-- <img :src="this.sysUserAvatar" />  -->{{this.$store.state.userInfo.profile.name}}</span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>我的消息</el-dropdown-item>
-            <el-dropdown-item>设置</el-dropdown-item>
+            <el-dropdown-item @click.native="changePassWd">修改密码</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-      </el-col> -->
+      </el-col>
     </el-col>
     </el-col>
-<!-- 
-<el-menu :default-active="activeIndex"  mode="horizontal"  class="navigation" @select="handleSelect"> -->
+ 
 
-<!--   <el-menu-item index="7" style="float:left;margin-left: 10%;">
-  <i class="el-icon-location-outline"></i></el-menu-item>
-  <el-menu-item index="1">首页</el-menu-item>
-  <el-menu-item index="2">工作台</el-menu-item>
-  <el-menu-item index="3">协同</el-menu-item>
-  <el-menu-item index="4">模型</el-menu-item>
-  <el-menu-item index="5">仿真</el-menu-item>
-  <el-menu-item index="6" style="float: right;margin-right: 10%;" @click="toLogin">登录</el-menu-item>
- </el-menu> -->
  </el-header>
-  <el-main> <router-view></router-view></el-main>
- </el-container>
+  <el-container >
+     <el-aside v-if="this.func.isLogin()" class="left-menu">
+     <!--  <div style="width: 200px;height: 30px;border: solid 1px #e6e6e6; margin-bottom: 1%;">
+        <span>导航菜单</span>
+      </div> -->
+
+
+      <sidebar ></sidebar>
+      </el-aside>
+      <el-aside  class="toggle">
+        <i class="el-icon-d-arrow-left toggleIcon" @click="toggle"></i>
+      </el-aside>
+
+    <el-container>
+      <el-header style="height: 10px;margin-top: 2%; " v-if="this.func.isLogin()">
+
+        <el-breadcrumb separator="/">
+     <el-breadcrumb-item :to="{ path: '/Myspace' }"><i class="el-icon-location-outline"></i>
+     </el-breadcrumb-item>
+       <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+          {{ item.name }}
+        </el-breadcrumb-item>
+       </el-breadcrumb>
+
+      </el-header>
+      <el-main> <router-view></router-view></el-main>
+      <el-footer style="height: 30px;"></el-footer>
+  
+    </el-container>
+  </el-container>
+</el-container>
+
+
+ 
+
 </template>
 
 <script>
-
+import Sidebar from './Sidebar'
+import LoginHeader from './LoginHeader'
+import Cookies from 'js-cookie'
     export default {
-
+       components: {
+          Sidebar,
+          LoginHeader
+ 
+  },
         data() {
             return {
+                // changePassWdVisible:false,
+                // changePassWdLoading:false,
+                // changePassWdForm:[],
                 sysName:'SYSLINK',
                 collapsed:false,
                 sysUserName: '',
@@ -76,13 +102,44 @@
                 }
             }
         },
-        methods: {
+        computed:{
             
-           toModel :function () {
+        },
+        methods: {
+          
+            //退出登录
+            logout: function () {
+                var _this = this;
+                this.$confirm('确认退出吗?', '提示', {
+                    //type: 'warning'
+                }).then(() => {
+  
+               sessionStorage.clear();
+               localStorage.clear();
+               _this.$store.dispatch('LogOut');
+               console.log(sessionStorage.getItem('logined'));
+                _this.$http.post('api/user/destory');  
+               /**  **/
+               Cookies.remove('abc');
+                _this.$router.push('/index');
+                location.reload();
+
+                }).catch(() => {
+
+                });
+
+
+            },
+            changePassWd()
+            {
+
+            },
+            
+            toModel :function () {
                 var _this = this;
                 _this.$router.push('/model/index');
             },
-              toCorporate :function () {
+            toCorporate :function () {
                 var _this = this;
               _this.$router.push({path: '/repository/index'});
             },
@@ -96,19 +153,41 @@
                  var _this = this;
               _this.$router.push('/Myspace');
             },
+            //折叠导航栏
+            collapse:function(){
+                this.collapsed=!this.collapsed;
+                if (this.collapsed) {
+
+                }
+            },
+            toggle()
+            {
+              this.$store.dispatch('ToggleSideBar');
+            }
+          
         },
         mounted() {
-           
-           console.log(sessionStorage.getItem('logined'));
+            var user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                this.sysUserName = user.name || '';
+                this.sysUserAvatar = user.avatar || '';
+            // let abc = sessionStorage.getItem('logined');
+            // console.log(abc);
+            }
+            // const uid = JSON.parse(localStorage.getItem('uid'));
+            // console.log(uid);
+            // this.sysUserName = uid.userName;
+
         }
     }
 
 </script>
 
 <style scoped lang="scss">
-	@import '~scss_vars';
+  @import '~scss_vars';
 
-    .el-header{
+     .el-header{
   /*  background-color: #B3C0D1;*/
     color: #333;
     text-align: center;
@@ -125,25 +204,37 @@
 
   }
   
-  .el-aside {
-    /*background-color: #D3DCE6;*/
+  .left-menu {
+  /*  background-color: #D3DCE6;*/
+    /*width: 100px;*/
+    flex: 0 0 230px;
     color: #333;
     text-align: left;
     line-height: 200px;
     height: 90%;
    /* width: 250px;*/
-    overflow:auto;
+   overflow-x: visible;
+   overflow-y: auto;
     margin-top: 30px;
     margin-left: 20px;
    
     /*border-top: solid 1px #e6e6e6;*/
 
   }
+  .toggle{
+      flex: 0 0 30px;
+  }
+  .toggleIcon{
+    height: 50%;
+    position: absolute;
+
+  }
+  
   .navigation{
     border: solid 1px #e6e6e6;
   }
   .el-main {
-   /* background-color: #E9EEF3;*/
+/*    background-color: #E9EEF3;*/
     color: #333;
  /*   text-align: center;*/
   /*  line-height: 160px;*/
@@ -224,16 +315,31 @@
       .item{
         color:#fff;
         font-size: 18px;
-        line-height: 38px;
+        /*line-height: 38px;*/
         position: relative;
-        display: inline-block;
+        /*display: inline-block;*/
         margin-right: 48px;
         text-decoration:none;
+
       }
       .item:not(:hover) {
-        color: #9d9d9d
+        /*color: #9d9d9dE*/
+         text-decoration:none;
       }
+       a:-webkit-any-link {
+   /* color: -webkit-link;*/
+       color:#fff;
+       font-size: 18px;
+       position: relative;
+       margin-right: 48px;
+       cursor: auto;
+       text-decoration: none;
+       text-decoration-line: none;
+       text-decoration-style: initial;
+       text-decoration-color: initial;
+}
     }
+
 
   
   

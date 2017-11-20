@@ -1,7 +1,7 @@
 <template>
 	
 <el-container style="height: 100%;overflow:hidden;">
- <el-header style="padding: 0px;">
+ <el-header style="padding: 0px;height: 50px;">
     <!--  <loginHeader></loginHeader> -->
   <el-col :span="24" class="header" >
       <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
@@ -9,12 +9,21 @@
       </el-col>
   
       <el-col :span="10 " style="flex: 0 0 230;">
+            <!--  <el-tooltip class="item" effect="dark" content="折叠" placement="top-start"> -->
+        <i class="iconfont icon-weibiaoti261" @click="collapse" v-show="this.func.isLogin()&&this.func.isOpened()"></i>
+        <!--   </el-tooltip>
+               <el-tooltip class="item" effect="dark" content="展开" placement="top-start"> -->
+         <i class="iconfont icon-weibiaoti26" @click="collapse" v-show="this.func.isLogin()&&!this.func.isOpened()"></i>
+          <!-- </el-tooltip> -->
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toMySpace"  >工作台</a>
         <a  href="http://gogs.modelica-china.com:8080/login.html#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
         <a  href="http://gogs.modelica-china.com:3000/" v-show="this.func.isLogin()" >协同</a>
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
         <a  href="javascript:void(0)"  v-show="!this.func.isLogin()"  @click="toLogin">登录</a>
+
+        
+
       
       </el-col>
       <el-col :span="4" class="userinfo">
@@ -23,7 +32,7 @@
             <i class="el-icon-bell"></i>
             <!-- <img :src="this.sysUserAvatar" />  -->{{this.$store.state.userInfo.profile.name}}</span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>我的消息</el-dropdown-item>
+            <el-dropdown-item @click.native="personalInfo">个人信息</el-dropdown-item>
             <el-dropdown-item @click.native="changePassWd">修改密码</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -34,18 +43,21 @@
  
 
  </el-header>
-  <el-container >
-     <el-aside v-if="this.func.isLogin()">
+  <el-container style="height: 100%;">
+     <el-aside v-if="this.func.isLogin()" :class="{hideAside:!sidebar,MainAside:sidebar}">
+
+
      <!--  <div style="width: 200px;height: 30px;border: solid 1px #e6e6e6; margin-bottom: 1%;">
         <span>导航菜单</span>
       </div> -->
 
 
       <sidebar ></sidebar>
+       
       </el-aside>
   
-    <el-container>
-      <el-header style="height: 10px;margin-top: 2%; " v-if="this.func.isLogin()">
+   <!--  <el-container  :class="{hideMain:!sidebar,Main:sidebar}"> -->
+    <!--   <el-header style="height: 10px;margin-top: 2%; " v-if="this.func.isLogin()">
 
         <el-breadcrumb separator="/">
      <el-breadcrumb-item :to="{ path: '/Myspace' }"><i class="el-icon-location-outline"></i>
@@ -55,11 +67,31 @@
         </el-breadcrumb-item>
        </el-breadcrumb>
 
-      </el-header>
-      <el-main>	<router-view></router-view></el-main>
-      <el-footer style="height: 30px;"></el-footer>
+      </el-header > -->
+      
+
+
+      <el-main  :class="{hideMain:!sidebar,Main:sidebar}"  >
+        <div style="height: 10px;" v-if="this.func.isLogin()">
+         
+          <el-breadcrumb separator="/">
+     <el-breadcrumb-item :to="{ path: '/Myspace' }"><i class="el-icon-location-outline"></i>
+     </el-breadcrumb-item>
+       <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+          {{ item.name }}
+        </el-breadcrumb-item>
+       </el-breadcrumb>
+              
+        </div>
+
+      	<router-view style="height: cacl(100%-10px);margin-top: 20px;"></router-view>
+
+
+
+      </el-main>
+     <!--  <el-footer style="height: 30px;"></el-footer> -->
   
-    </el-container>
+    <!-- </el-container> -->
   </el-container>
 </el-container>
 
@@ -100,6 +132,10 @@ import Cookies from 'js-cookie'
             }
         },
         computed:{
+
+          sidebar() {
+      return this.$store.state.opened
+    }
             
         },
         methods: {
@@ -111,26 +147,39 @@ import Cookies from 'js-cookie'
                     //type: 'warning'
                 }).then(() => {
   
-               sessionStorage.clear();
-               localStorage.clear();
-               _this.$store.dispatch('LogOut');
-               console.log(sessionStorage.getItem('logined'));
-                _this.$http.post('api/user/destory');  
+               // sessionStorage.clear();
+               // localStorage.clear();
+               this.$store.dispatch('LogOut');
+               // _this.$router.push('/Myspace');
+               // console.log(sessionStorage.getItem('logined'));
+                this.$http.post('api/user/destory');  
                /**  **/
                Cookies.remove('abc');
-                _this.$router.push('/index');
+              
+               //Cookies.remove('JSESSIONID');
+               // Cookies.set('JSESSIONID','');
+               Cookies.remove('syslink');
+               // this.$router.push('/index');
                 location.reload();
+
+              
 
                 }).catch(() => {
 
                 });
-
+                 
 
             },
             changePassWd()
             {
-
+               this.$router.push('/changePassWd');
             },
+            personalInfo()
+            {
+               this.$router.push('/personalInfo');
+            },
+
+
             
             toModel :function () {
                 var _this = this;
@@ -152,10 +201,12 @@ import Cookies from 'js-cookie'
             },
             //折叠导航栏
             collapse:function(){
-                this.collapsed=!this.collapsed;
-                if (this.collapsed) {
+                // this.collapsed=!this.collapsed;
+                // if (this.collapsed) {
 
-                }
+                // }
+                this.$store.dispatch('ToggleSideBar');
+                console.log(this.$store.state.opened);
             },
           
         },
@@ -197,49 +248,46 @@ import Cookies from 'js-cookie'
 
   }
   
-  .el-aside {
-  /*  background-color: #D3DCE6;*/
-    width: 230px;
-    flex: 0 0 230px;
-    color: #333;
-    text-align: left;
-    line-height: 200px;
-    height: 90%;
-   /* width: 250px;*/
-    overflow:auto;
-    margin-top: 30px;
-    margin-left: 20px;
-   
-    /*border-top: solid 1px #e6e6e6;*/
 
+
+  .hideAside{
+      margin-left: 10px;
+    position: fixed;
+    height: inherit;
+    overflow-x: visible;
+    z-index: 1000;
+    max-width: 50px;
   }
+  .MainAside{
+    margin-left: 10px;
+    position: fixed;
+    height: inherit;
+    overflow-x: visible;
+    z-index: 1000;
+    max-width: 210px;
+  }
+
   .navigation{
     border: solid 1px #e6e6e6;
   }
-  .el-main {
-/*    background-color: #E9EEF3;*/
-    color: #333;
- /*   text-align: center;*/
-  /*  line-height: 160px;*/
-     /*height: 100%;*/
-    min-height: 400px;
-    margin: 1%;
-    overflow-x: hidden;
-    /* margin-bottom: 20px;
-     margin-left: 20px;
-     margin-right: 20px;*/
 
-     /*margin: auto;*/
- 
-  }
-  
   body > .el-container {
 
     margin-bottom: 40px;
 
 
   }
-  ::-webkit-scrollbar{width:0px}
+  .hideMain{
+    height: inherit;
+    margin-left: 100px;
+  }
+  .Main{
+    height: inherit;
+    margin-left: 240px;
+
+  }
+
+
 
   .header {
       height: 50px;
@@ -322,6 +370,7 @@ import Cookies from 'js-cookie'
        text-decoration-color: initial;
 }
     }
+
 
 
   

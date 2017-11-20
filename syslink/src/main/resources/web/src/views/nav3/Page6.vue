@@ -13,7 +13,7 @@
             :before-upload="beforeUploadFile"
             :auto-upload="true"
     >
-        <el-button slot="trigger" size="small" type="primary" style="font-size: 18px;" >上传文件</el-button>
+        <el-button slot="trigger" size="small" type="primary"  >上传文件<i class="el-icon-upload el-icon--right"></i></el-button>
         <!--<p>{{directoryContent}}</p>-->
         <!--{{bmsg}}-->
         <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
@@ -24,13 +24,15 @@
 </template>
 <script>
     import { mapState,mapGetters} from 'vuex'
+
     var fileNub = 0;
     export default {
         data() {
             return {
                 fileList: [
                 ],
-                name : JSON.parse(sessionStorage.getItem('user')).name,
+                name : this.$store.state.userInfo.profile.name,
+                // JSON.parse(sessionStorage.getItem('user')).name,
             };
         },
         computed: {

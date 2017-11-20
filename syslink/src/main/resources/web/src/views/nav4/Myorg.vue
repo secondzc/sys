@@ -7,7 +7,7 @@
     <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" >
         <el-form-item>
-          <el-button type="primary" @click="handleAdd"  >新建</el-button>
+          <el-button type="primary" @click="handleAdd" size="small" >新建</el-button>
         </el-form-item>
       </el-form>
       <hr/>
@@ -59,7 +59,7 @@
 
 
       <!--新增界面-->
-    <el-dialog title="创建新的组织" v-model="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog title="创建新的组织" :visible="addFormVisible" :close-on-click-modal="false"   >
       <el-form :model="addForm" label-width="80px"    ref="addForm"   :inline="true"  >
         <el-form-item label="组织名称" prop="name"  :rules="[{required:true,message:'请输入组织名称',trigger:'blur'}]"  >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>

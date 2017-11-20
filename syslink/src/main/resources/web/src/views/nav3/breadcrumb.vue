@@ -2,13 +2,14 @@
     <section >
         <p>{{getTreeItem}}</p>
     <div >
-        <el-col :span="24" class="breadcrumb-container">
-        <el-breadcrumb separator="/" class="breadcrumb-inner">
-        <el-breadcrumb-item v-for="item in treeItem" :key="item.index" style="font-size: 18px">
-        {{ item.name }}
+       <!--  <el-col :span="24" class="breadcrumb-container"> -->
+        <el-breadcrumb separator="/" style="line-height: 30px;margin-left: 10px;">
+        <el-breadcrumb-item v-for="item in treeItem" :key="item.index" >
+            <span >  {{ item.name }}</span>
+      
         </el-breadcrumb-item>
         </el-breadcrumb>
-        </el-col>
+    <!--     </el-col> -->
     </div>
     </section>
 </template>
@@ -26,10 +27,12 @@
             }),
             ...mapGetters(['amsg']),
             getTreeItem(){
+                console.log(this.amsg);
                 var _this = this;
                 if(_this.amsg != null && _this.amsg != ""){
                     var url = '/api/directory/getTreeItem?parent_id='+ _this.amsg
                 }
+
                 _this.$http.post(url)
                     .then(function (response) {
                         _this.treeItem = response.data.treeItem;
@@ -45,3 +48,4 @@
     }
 
 </script>
+

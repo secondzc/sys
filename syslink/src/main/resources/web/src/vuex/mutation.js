@@ -1,4 +1,5 @@
 import * as types from './mutation_type'
+import Cookies from 'js-cookie'
 export default{
     [types.SEND_A](state,aData){
         state.amsg=aData;
@@ -29,6 +30,32 @@ export default{
     },
     RESET_ROUTERS :(state,routers) => {
         state.routers = routers
+    },
+     TOGGLE_SIDEBAR: state => {
+      if (state.opened) {
+        Cookies.set('sidebarStatus', 1)
+      } else {
+        Cookies.set('sidebarStatus', 0)
+      }
+      state.opened = !state.opened
+    },
+     LIST_CARD: state => {
+    
+       
+        Cookies.set('bbb', true)
+      
+      state.list = Cookies.get('bbb')
+      console.log(state.list)
+      },
+      CARD_LIST:state => {
+    
+        Cookies.set('bbb', false)
+          state.list = Cookies.get('bbb')
+           console.log(state.list)
+      
+      },
+    SET_SESSION:(state,session)=>{
+      state.session = session
     }
 
 }

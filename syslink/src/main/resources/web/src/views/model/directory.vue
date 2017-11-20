@@ -1,8 +1,8 @@
 <template>
   <div class="kz-tree__wrapper">
-    <div class="kz-tree__top">
+    <!-- <div class="kz-tree__top">
       <el-button size="small" icon="plus" type="primary" @click="treeAdd({ id: 0 })">增加分类</el-button>
-    </div>
+    </div> -->
     <el-tree
       ref="kzTree"
       :data ="treeData"
@@ -16,9 +16,9 @@
     </el-tree>
     <!--dialog-->
     <el-dialog :title="dialog.title" :visible.sync="dialog.dialogVisible" :close-on-click-modal="false">
-      <el-form :model="dialog.form" ref="dialogForm" :rules="dialog.rules" class="el-col-offset-4">
+      <el-form :model="dialog.form" ref="dialogForm" :rules="dialog.rules" >
         <el-form-item label="分类名称" prop="name" label-width="120" required>
-          <el-input v-model="dialog.form.name" auto-complete="off" class="el-col-12"></el-input>
+          <el-input v-model="dialog.form.name" auto-complete="off" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -357,5 +357,13 @@
   }
   .el-tree {
   border: none;
+  }
+
+  .el-tree-node__label
+  {
+    width: 120px;
+    white-space: nowrap;
+   text-overflow: ellipsis;
+    overflow: hidden;
   }
 </style>
