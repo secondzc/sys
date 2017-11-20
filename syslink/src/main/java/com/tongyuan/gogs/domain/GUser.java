@@ -44,7 +44,8 @@ public class GUser {
     @Column
     private Boolean LastRepoVisibility;
     @Column
-    private Boolean MaxRepoCreation;
+//    private Boolean MaxRepoCreation;
+    private  Integer MaxRepoCreation;
     @Column
     private Boolean IsActive;
     @Column
@@ -213,13 +214,22 @@ public class GUser {
         LastRepoVisibility = lastRepoVisibility;
     }
 
-    public Boolean getMaxRepoCreation() {
+    public Integer getMaxRepoCreation() {
         return MaxRepoCreation;
     }
 
-    public void setMaxRepoCreation(Boolean maxRepoCreation) {
+    public void setMaxRepoCreation(Integer maxRepoCreation) {
         MaxRepoCreation = maxRepoCreation;
     }
+
+
+    //    public Boolean getMaxRepoCreation() {
+//        return MaxRepoCreation;
+//    }
+//
+//    public void setMaxRepoCreation(Boolean maxRepoCreation) {
+//        MaxRepoCreation = maxRepoCreation;
+//    }
 
     public Boolean getActive() {
         return IsActive;

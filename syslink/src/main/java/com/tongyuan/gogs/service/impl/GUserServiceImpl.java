@@ -285,6 +285,18 @@ public class GUserServiceImpl implements GUserService {
 
     }
 
+
+    @Override
+    public boolean updateUserInfo(Map<String,Object>map)
+    {
+        if(map.get("name")!=null)
+        {
+            map.put("lowerName",map.get("name").toString().toLowerCase());
+        }
+       return this.gUserMapper.updateUser(map);
+
+    }
+
     @Override
     public boolean deleteUser(long id)
     {

@@ -19,7 +19,8 @@
         <result column="created_unix" property="CreatedUnix" jdbcType="BIGINT"/>
         <result column="updated_unix" property="UpdatedUnix" jdbcType="BIGINT"/>
         <result column="last_repo_visibility" property="LastRepoVisibility" jdbcType="TINYINT"/>
-        <result column="max_repo_creation" property="MaxRepoCreation" jdbcType="TINYINT"/>
+        <!--<result column="max_repo_creation" property="MaxRepoCreation" jdbcType="TINYINT"/>-->
+        <result column="max_repo_creation" property="MaxRepoCreation" jdbcType="INTEGER"/>
         <result column="is_active" property="IsActive" jdbcType="TINYINT"/>
         <result column="is_admin" property="IsAdmin" jdbcType="TINYINT"/>
         <result column="allow_git_hook" property="AllowGitHook" jdbcType="TINYINT"/>

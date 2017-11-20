@@ -31,6 +31,8 @@ public interface GUserService {
 
     public boolean updateUser(Map<String, Object> map);
 
+    public boolean updateUserInfo (Map<String,Object> map);
+
     public Page<Map<String,Object>> queryUser(Map<String, Object> map);
 
     public Page<UserDepart> queryUserDepart(Map<String,Object>map);

@@ -170,6 +170,7 @@
         }
 
         .sort-title{
+          width: 70px;
           height: 25px;
           line-height: 25px;
           position: relative;

@@ -66,6 +66,26 @@
         <el-container style="border-top:solid 1px #e7e7e7 ;height: 100%;overflow-y: hidden;">
             <el-aside class="left-aside">
 
+
+               <div style="display: inline-block;height: 50px; overflow: hidden;" id="searchMoudle">
+                  <!--<p>aaaa</p>-->
+                  <div style="display: inline-block;">
+                      <!--工具条-->
+                      <!--<el-col :span="24" class="toolbar" >-->
+                      <el-form :inline="true" :model="filters">
+                         
+                          <el-form-item style="margin-top: 5px;margin-left: 10px;">
+                            
+                              <el-input placeholder="模型名称" v-model="filters.name" class="input-with-select">
+  
+                        <el-button slot="append" icon="el-icon-search"  v-on:click="getModel"></el-button>
+                       </el-input>
+                      </el-form-item>
+                      </el-form>
+                      <!--</el-col>-->
+                  </div>
+              </div>
+
                 <kz-tree :data="tree" @node-click="hanldeNodeClick" class="left-tree" ></kz-tree>
               
 

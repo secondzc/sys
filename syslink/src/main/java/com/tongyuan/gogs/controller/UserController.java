@@ -27,6 +27,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.Guard;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
@@ -409,39 +410,16 @@ public class UserController extends BaseController {
 
         LoginedUserModel loginedUserModel = new LoginedUserModel();
         GUser user = userService.querListByName(jsonObject.getString("userName"));
-//        HttpSession session = request.getSession(false);
-//        if(session==null)
-//        {
-//            jo.put("session",0);
-//        }
-
-
-//        Cookie[] cookies = request.getCookies();
-//        for (int i =0;i<cookies.length;i++)
-//        {
-//            System.out.println(cookies[i].getName());
-//            System.out.println(cookies[i].getValue());
-//        }
-//
-//
         Cookie c = new Cookie("gogs_awesome",user.getName());
         c.setDomain(".modelica-china.com");
         c.setMaxAge(60);
         c.setPath("/");
         response.addCookie(c);
-
-
- //       HttpSession session = request.getSession();
-
-        //  session.setAttribute("user", user);
-//        session.setAttribute("uid",user.getID());
-//        session.setAttribute("user", user);
- //       session.setAttribute("base_path", request.getContextPath());
         String lginIp = IpUtil.getIpAddr(request);
         Date loginDate = DateUtil.getTimestamp();
         userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
- //       System.out.println(session.getId());
+
         operationlogService.addLog("登录","登录系统",request);
 
 
@@ -449,7 +427,7 @@ public class UserController extends BaseController {
         try
         {
             loginedUserModel = userService.CreateLoginedUser(user);
-//            setSessionUser(request,loginedUserModel);
+
         }
         catch (Exception e)
         {
@@ -483,14 +461,7 @@ public class UserController extends BaseController {
             authIds[i]=jsonArray.getJSONObject(i).getIntValue("authId");
         }
 
-        //   map.put("permissions",map.get("permissionId").toString());
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
-
-        //      String a = map.get("permissionId").toString();
-        //     a=a.substring(1,a.length()-1);
         Long uid = jsonObject.getLongValue("uid");
-        //     Integer []authIds =   Convert.toIntArray(",",a);
-
         try
         {
             userService.updateAuth(uid,authIds);
@@ -525,13 +496,9 @@ public class UserController extends BaseController {
             directoryIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
         }
 
-        //   map.put("permissions",map.get("permissionId").toString());
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
 
-        //      String a = map.get("permissionId").toString();
-        //     a=a.substring(1,a.length()-1);
         Long uid = jsonObject.getLongValue("uid");
-        //     Integer []authIds =   Convert.toIntArray(",",a);
+
 
         try
         {
@@ -561,17 +528,7 @@ public class UserController extends BaseController {
         session.removeAttribute("uid");
         System.out.println(session.getId());
 
-//        Cookie[] cookies = request.getCookies();
-//        for (int i =0;i<cookies.length;i++)
-//        {
-//            System.out.println(cookies[i].getName());
-//            System.out.println(cookies[i].getValue());
-//            if (cookies[i].getName().equalsIgnoreCase("gogs_awesome"))
-//            {
-//                cookies[i].setMaxAge(0);
-//
-//            }
-//        }
+
 
         return (JSONObject) JSONObject.toJSON(jo);
     }
@@ -599,14 +556,87 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/autoPass",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject autoPass(HttpServletRequest request, HttpServletResponse response)
+    public JSONObject autoPass(HttpServletRequest request, HttpServletResponse response,@RequestBody String userName)
     {
 
         JSONObject jo = new JSONObject();
         HttpSession session = request.getSession(true);
+        JSONObject jsonObject = JSON.parseObject(userName);
+        GUser user = userService.querListByName(jsonObject.getString("userName"));
+        session.setAttribute("uid",user.getID());
+        session.setAttribute("uname",user.getName());
+
+
 
             jo.put("session",true);
 
         return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+
+    @RequestMapping(value = "/personalInfo",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject personalInfo(HttpServletRequest request, HttpServletResponse response,@RequestBody String para) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        long userId = getUserId();
+        Map<String,Object> update = new HashMap<>();
+        update.put("id",userId);
+        update.put("email",jsonObject.getString("email"));
+        update.put("fullName",jsonObject.getString("fullName"));
+        GUser user = userService.queryById(userId);
+        if(jsonObject.getString("oldPassWd").equalsIgnoreCase(""))
+        {
+
+            try
+            {
+                userService.updateUserInfo(update);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                jo.put("flag",false);
+                jo.put("msg","修改失败");
+                return jo;
+            }
+            jo.put("flag",true);
+            jo.put("msg","修改成功");
+            return (JSONObject) JSONObject.toJSON(jo);
+        }
+        else
+        {
+            String passwdCheck = EncodePasswd.getEncryptedPassword(jsonObject.getString("oldPassWd"),user.getSalt(),10000,50);
+            if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
+            {
+                update.put("passwd",jsonObject.getString("newPassWd"));
+
+                try
+                {
+                    userService.updateUserInfo(update);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    jo.put("flag",false);
+                    jo.put("msg","修改失败");
+                    return jo;
+                }
+                jo.put("flag",true);
+                jo.put("msg","修改成功");
+                return (JSONObject) JSONObject.toJSON(jo);
+
+            }
+            else
+            {
+                jo.put("flag",false);
+                jo.put("msg","密码错误");
+                return (JSONObject) JSONObject.toJSON(jo);
+            }
+
+        }
+
+
     }
 }
