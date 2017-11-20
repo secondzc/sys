@@ -135,7 +135,7 @@ public class ResourceUtil {
      * @param zipFilename
      * @param outputDirectory
      */
-    private  synchronized void unzip(String zipFilename, String outputDirectory)
+    public synchronized void unzip(String zipFilename, String outputDirectory)
             throws IOException {
         File outFile = new File(outputDirectory);
         if (!outFile.exists()) {

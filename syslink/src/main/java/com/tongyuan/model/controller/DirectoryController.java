@@ -685,7 +685,6 @@ public class DirectoryController {
         {
         }
     }
-
     @RequestMapping(value = "/getTreeItem",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject getTreeItem(@RequestParam(value = "parent_id",required = false)Long parent_id,

@@ -12,6 +12,8 @@ import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.VariableService;
 import com.tongyuan.pageModel.ComponentTreeObj;
 import com.tongyuan.pageModel.VariableTreeObj;
+import com.tongyuan.util.ModelUtil;
+import com.tongyuan.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +45,10 @@ public class VariableController {
     private VariableService variableService;
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private ModelUtil modelUtil;
+    @Autowired
+    private ResourceUtil resourceUtil;
 
 
     @RequestMapping(value = "/variableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -338,5 +348,41 @@ public class VariableController {
                 insertChild(componentTreeObj,directoryList);
             }
         }
+    }
+
+
+    @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public void test(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        FileInputStream fin  = null;
+        try {
+            fin = new FileInputStream("D:\\syslink4.zip");
+        } catch (
+                FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int read;
+        byte[] bytes=new byte[1024];
+        try {
+            while((read = fin.read(bytes)) >0){
+                out.write(bytes, 0, read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fin.close();
+
+        bytes = out.toByteArray(); // 这就是全部的字节数组了。
+        out.close();
+        long byteslength = bytes.length;
+
+
+        //对压缩数据流进行解析
+        byte[] unZipByte = modelUtil.unZip(bytes);
+//        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
+        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
+
     }
 }
