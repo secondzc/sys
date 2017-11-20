@@ -69,7 +69,7 @@ router.beforeEach((to, from, next) => {
 
 
   store.dispatch('GetSession').then(()=>{
-
+       console.log(store.getters.session)
        if(store.getters.session)
      {
     
@@ -83,7 +83,7 @@ router.beforeEach((to, from, next) => {
         //  验证用户信息是否失效
             if(store.getters.userInfo)
             {
-               console.log(3)
+               console.log(1)
               if(store.getters.isLoaded)
               {
                  console.log(5)
@@ -106,7 +106,6 @@ router.beforeEach((to, from, next) => {
             {  
 
                console.log(4)
-               console.log(store.getters.uid)
 
               store.dispatch('GetUserInfo').then(res =>{
               const auths = res.data.userInfo.auths
@@ -131,11 +130,14 @@ router.beforeEach((to, from, next) => {
   console.log(rememberMe)
       if(rememberMe)
       {
-         store.dispatch('AutoPass')
+          let userName = {userName:rememberMe};
+         store.dispatch('AutoPass',userName).then(()=>{
+
+
 
             if(to.path=='/login'||to.path=='/index')
             {
-              console.log(9)
+           
              next('/Myspace')
             }
            else
@@ -144,12 +146,17 @@ router.beforeEach((to, from, next) => {
         //  验证用户信息是否失效
             if(store.getters.userInfo)
             {
+               console.log(11)
               if(store.getters.isLoaded)
               {
+                console.log(store.getters.userInfo)
+                  console.log(store.getters.session)
+                 console.log(9)
                 next()
               }
               else
               {
+                console.log(11)
            
               
               const auths = store.getters.userInfo.auths
@@ -162,8 +169,9 @@ router.beforeEach((to, from, next) => {
             }
             else
             {  
+               console.log(10)
 
-              let userName = {userName:rememberMe};
+            
 
               store.dispatch('GetUserInfoFirst',userName).then(res =>{
               const auths = res.data.userInfo.auths
@@ -181,7 +189,16 @@ router.beforeEach((to, from, next) => {
           })
             
          }
-        }   
+        }  
+         })
+         .catch(() => {
+               Cookies.remove('syslink')
+               Cookies.remove('JSESSIONID')    
+               next({ path: '/login' })
+          
+          })
+
+
 
       }
       else

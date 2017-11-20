@@ -57,8 +57,8 @@ function getSession(){
   return axios.post('api/user/sessionJudge')
 }
 
-function autoPass(){
-  return axios.post('api/user/autoPass')
+function autoPass(userName){
+  return axios.post('api/user/autoPass',userName)
 }
 
 
@@ -116,11 +116,12 @@ export default{
         })
       })
     },
-    AutoPass({commit,state}){
+    AutoPass({commit,state},userName){
       return new Promise((resolve,reject)=>{
-        autoPass().then(response=>{
+        autoPass(userName).then(response=>{
           const data = response.data
           commit('SET_SESSION',data.session)
+          console.log(data.session)
           // commit('SET_UID',data.uid)
           resolve(response)
         }).catch(error=>{
