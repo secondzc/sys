@@ -139,17 +139,17 @@
         }
 
         .sort-down-active{
-          color: #fb7299;
+          color: #878d99;
         }
         .sort-down-active .triangle-down{
-          border-top: 7px solid #fb7299 ;
+          border-top: 7px solid#409EFF ;
         }
 
         .sort-up-active{
-          color: #fb7299;
+          color: #878d99;
         }
         .sort-up-active .triangle-up{
-          border-bottom: 7px solid #fb7299 ;
+          border-bottom: 7px solid #409EFF ;
         }
 
         .sort-title-container{
