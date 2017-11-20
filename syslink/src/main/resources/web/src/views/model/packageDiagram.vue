@@ -36,7 +36,7 @@
                     <span>模型浏览器：</span>
                     <modeltree style="height: 100%;overflow-y: auto"></modeltree>
                 </div>
-                <div style="margin-top: 30px;height: 50%">
+                <div style="margin-top: 30px;height: 50%;overflow: auto">
                     <span>组件浏览器：</span>
                     <modeltreeContAndVar style="overflow-y: auto"> </modeltreeContAndVar>
                 </div>
@@ -58,14 +58,14 @@
                     </el-tab-pane>
                     <el-tab-pane style="height: 100%">
                         <span slot="label"><i class="el-icon-picture"></i> 图标</span>
-                        <div style="">
-                            <img :src=iconUrl class="images"/>
+                        <div style="height: 100%">
+                            <img :src=iconUrl class="images" style="height: 70%"/>
                         </div>
                     </el-tab-pane >
                     <el-tab-pane style="height: 100%">
                         <span slot="label"><i class="el-icon-picture-outline"></i> 组件</span>
-                        <div style="">
-                            <img :src=svgUrl class="images"/>
+                        <div style="height: 100%">
+                            <img :src=svgUrl class="images" style="height: 70%"/>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane style="height: 100%">
