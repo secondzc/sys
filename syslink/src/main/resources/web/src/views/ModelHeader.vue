@@ -28,7 +28,6 @@
             <!-- <img :src="this.sysUserAvatar" />  -->{{this.$store.state.userInfo.profile.name}}</span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="personalInfo">个人信息</el-dropdown-item>
-            <el-dropdown-item @click.native="changePassWd">修改密码</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

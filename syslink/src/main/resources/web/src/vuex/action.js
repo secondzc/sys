@@ -53,8 +53,8 @@ function getUserInfo(){
   return axios.post('api/user/getUserInfo')
 }
 
-function getSession(){
-  return axios.post('api/user/sessionJudge')
+function getSession(JSESSIONID){
+  return axios.post('api/user/sessionJudge',JSESSIONID)
 }
 
 function autoPass(userName){
@@ -102,7 +102,7 @@ export default{
         })
       })
       },
-    GetSession({commit,state}){
+    GetSession({commit,state},){
       return new Promise((resolve,reject)=>{
         getSession().then(response=>{
           const data = response.data

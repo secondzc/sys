@@ -33,7 +33,6 @@
             <!-- <img :src="this.sysUserAvatar" />  -->{{this.$store.state.userInfo.profile.name}}</span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="personalInfo">个人信息</el-dropdown-item>
-            <el-dropdown-item @click.native="changePassWd">修改密码</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -152,15 +151,18 @@ import Cookies from 'js-cookie'
                this.$store.dispatch('LogOut');
                // _this.$router.push('/Myspace');
                // console.log(sessionStorage.getItem('logined'));
-                this.$http.post('api/user/destory');  
-               /**  **/
-               Cookies.remove('abc');
+                this.$http.post('api/user/destory').then(()=>{
+                    Cookies.remove('abc');
               
-               //Cookies.remove('JSESSIONID');
+               // Cookies.remove('JSESSIONID');
                // Cookies.set('JSESSIONID','');
                Cookies.remove('syslink');
                // this.$router.push('/index');
-                location.reload();
+                 location.reload();
+               
+                })
+               /**  **/
+            
 
               
 

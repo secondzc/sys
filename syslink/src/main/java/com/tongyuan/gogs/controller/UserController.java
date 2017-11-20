@@ -382,7 +382,7 @@ public class UserController extends BaseController {
     {
         JSONObject jo = new JSONObject();
         LoginedUserModel loginedUserModel = new LoginedUserModel();
-        GUser user = userService.queryById(getCurrentUserId(request));
+        GUser user = userService.queryById(getUserId());
 
         try
         {
@@ -393,6 +393,7 @@ public class UserController extends BaseController {
             e.printStackTrace();
             jo.put("flag",false);
             jo.put("msg","获取用户信息失败");
+
             return jo;
         }
         jo.put("flag",true);
@@ -526,7 +527,10 @@ public class UserController extends BaseController {
         JSONObject jo = new JSONObject();
         HttpSession session = request.getSession(false);
         session.removeAttribute("uid");
+        session.removeAttribute("user");
         System.out.println(session.getId());
+        jo.put("sessinoId",session.getId());
+        jo.put("aaa",session);
 
 
 
@@ -540,9 +544,13 @@ public class UserController extends BaseController {
     {
 
         JSONObject jo = new JSONObject();
+
         HttpSession session = request.getSession(false);
-        if(session.getAttribute("uid")!=null)
+//        if(session.getAttribute("uid")!=null)
+        Long a = getUserId();
+        if(getUserId()>0)
         {
+
             jo.put("session",true);
         }
         else
@@ -565,6 +573,7 @@ public class UserController extends BaseController {
         GUser user = userService.querListByName(jsonObject.getString("userName"));
         session.setAttribute("uid",user.getID());
         session.setAttribute("uname",user.getName());
+        session.setAttribute("user",user);
 
 
 

@@ -66,9 +66,13 @@ router.beforeEach((to, from, next) => {
   
   
   //对sessionid 和 记住我做判断，是否登录从而更改弹出层的
+    console.log( Cookies.get('JSESSIONID') )
+    console.log( Cookies.get() )
 
 
-  store.dispatch('GetSession').then(()=>{
+    let sessionId = Cookies.get('JSESSIONID') 
+     let SID = {SID:sessionId};
+     store.dispatch('GetSession',SID).then(()=>{
        console.log(store.getters.session)
        if(store.getters.session)
      {
@@ -116,6 +120,9 @@ router.beforeEach((to, from, next) => {
                   }).catch(() => {
                Cookies.remove('syslink')
                Cookies.remove('JSESSIONID')
+               console.log(Cookies.get('syslink'))
+               console.log(Cookies.get('JSESSIONID'))
+
                console.log(8)
                next({ path: '/login' })
           
