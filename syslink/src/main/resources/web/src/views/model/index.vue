@@ -325,8 +325,23 @@
 
             </el-main>
             <el-aside class="right-aside" v-show="info">
+                <div v-if="varLength == 0" style="height: inherit;">
+                    <div style="height: inherit;overflow-y: hidden;">
+                    <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
+                    <div slot="header" class="clearfix">
+                        <span style="font-weight: bold;">我的模型</span>
+                        <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
+                    </div>
+                    <div style="padding: 14px;">
+                        <!--<div class="card-column">-->
+                            <h4 class="card-column-title">请选择一个模型！</h4>
+                        <!--</div>-->
+                    </div>
+                    </el-card>
+                    </div>
+                </div>
 
-                 <div  v-for="(o, index) in variable" :key="o.id" :offset="index > 0 ? 2 : 0" style="height: inherit;overflow-y: hidden;">
+                 <div v-else="this.varLength != 0" v-for="(o, index) in variable" :key="o.id" :offset="index > 0 ? 2 : 0" style="height: inherit;overflow-y: hidden;">
                         <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
                           <div slot="header" class="clearfix">
                         <span style="font-weight: bold;">{{o.name}}</span>
@@ -400,6 +415,7 @@
                                <!--  <el-button type="text" class="button" @click="viewInfo">关闭</el-button>
                             </div> -->
                         </div>
+
                     </el-card>  
 
                  </div>
@@ -482,6 +498,7 @@
                     pageIndex: 1,
                 },
                 variable: [],
+                varLength : 0,
                 drawer: false,
                 sorttitles: [{
                     key: 'name',
@@ -556,6 +573,7 @@
 //                    _this.repositories = response.data.repositories;
                         _this.pager.total = response.data.repositories.length;
                         _this.modelTotal = response.data.repositories.length;
+                        _this.varLength = _this.variable.length;
                         var filterModel = response.data.repositories.filter(
                             (u, index) => {
                                 if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
@@ -688,6 +706,7 @@
             var modelVariable = new Array;
             modelVariable.push(model);
             this.variable = modelVariable;
+            this.varLength = this.variable.length;
             if (model == null) {
                 $("#variable")[0].style.display = "none";
             }
@@ -704,6 +723,7 @@
             var modelVariable = new Array;
             modelVariable.push(val);
             this.variable = modelVariable;
+            this.varLength = this.variable.length;
             console.log(val);
         },
         handleCurrent(val) {
