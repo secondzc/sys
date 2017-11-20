@@ -255,7 +255,7 @@
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
-                                _this.getModel();
+                                _this.treeModelRefresh();
                             }
                         }).catch(function (error) {
                         console.log(error);
@@ -267,7 +267,7 @@
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
-                                _this.getModel();
+                                _this.treeModelRefresh();
                             }
                         }).catch(function (error) {
                         console.log(error);
@@ -282,7 +282,7 @@
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
-                                _this.getModel();
+                                _this.treeModelRefresh();
                             }
                         }).catch(function (error) {
                         console.log(error);
@@ -294,11 +294,43 @@
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
-                                _this.getModel();
+                                _this.treeModelRefresh();
                             }
                         }).catch(function (error) {
                         console.log(error);
                     });
+                }
+            },
+            treeModelRefresh(){
+                var _this = this;
+                if(_this.modelId == null || _this.modelId == ''){
+                    this.$router.push({path: '/model/index'});
+                }else {
+                    var url = '/api/model/modelVariable?modelId=' + _this.treeModelId;
+                    _this.$http.post(url)
+                        .then(function (response) {
+                            _this.form = response.data.form;
+                            _this.textInfo= response.data.form.textInfo
+                            if(response.data.form.diagramSvgPath == null){
+                                _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            }else{
+                                _this.svgUrl = response.data.form.diagramSvgPath;
+                            }
+                            if(response.data.form.iconSvgPath == null){
+                                _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            }else{
+                                _this.iconUrl = response.data.form.iconSvgPath;
+                            }
+                            if(response.data.form.infoTextPath == null){
+                                _this.infoUrl = ""
+                            }else{
+                                _this.infoUrl = response.data.form.infoTextPath;
+                            }
+
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
                 }
             }
         }

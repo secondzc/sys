@@ -390,11 +390,11 @@
 
             </el-aside>
         </el-container>
-        <el-footer class="main-footer">
-      <span >
-        ################################################################
-      </span>
-        </el-footer>
+        <!--<el-footer class="main-footer">-->
+      <!--<span >-->
+        <!--################################################################-->
+      <!--</span>-->
+        <!--</el-footer>-->
 
 
          <el-dialog :title="dialog.title" :visible.sync="dialog.dialogVisible" :close-on-click-modal="false">
