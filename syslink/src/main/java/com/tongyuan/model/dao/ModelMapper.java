@@ -21,4 +21,6 @@ public interface ModelMapper {
     public List<Model> vagueSearchByName(Map<String, Object> params);
     public Model queryModelById(Long id);
     List<Model> queryModelByParId(Long id);
+    //查询模型分类下是否存在这个模型
+    public Model queryByNameAndDirId(Map<String, Object> params);
 }
