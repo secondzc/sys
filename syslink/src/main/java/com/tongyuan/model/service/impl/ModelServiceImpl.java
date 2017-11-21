@@ -72,6 +72,11 @@ public class ModelServiceImpl implements ModelService{
         return this.modelMapper.queryModelByParId(id);
     }
 
+    @Override
+    public Model queryByNameAndDirId(Map<String, Object> params) {
+        return this.modelMapper.queryByNameAndDirId(params);
+    }
+
 
 
 
