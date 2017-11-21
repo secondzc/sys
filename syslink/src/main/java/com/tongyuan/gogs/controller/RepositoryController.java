@@ -56,7 +56,7 @@ public class RepositoryController extends BaseController{
                           HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         //查看模型库是否存在
-        File fileExits = new File("C:/Users/Administrator/gogs-repositories/\"+name.toLowerCase()");
+        File fileExits = new File(System.getProperty("user.home")+"/gogs-repositories/"+ name.toLowerCase()+"/" + fileName+".git");
         if(fileExits.exists()){
             System.out.println("file exists");
             return jo;
