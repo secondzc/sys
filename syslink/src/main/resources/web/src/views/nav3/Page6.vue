@@ -1,38 +1,52 @@
 <template>
     <section >
 
-    <div >
-    <el-upload
-            class="upload-demo"
-            ref="vueFileUploader"
-            :action = "uploadUrl()"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :on-success="uploadSuccess"
-            :file-list="fileList"
-            :before-upload="beforeUploadFile"
-            :auto-upload="true"
-    >
-        <el-button slot="trigger" size="small" type="primary"  >上传文件<i class="el-icon-upload el-icon--right"></i></el-button>
-        <!--<p>{{directoryContent}}</p>-->
-        <!--{{bmsg}}-->
-        <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
-        <!--<div slot="tip" class="el-upload__tip">只能上传zip文件，且不超过500M</div>-->
-    </el-upload>
-    </div>
+        <div >
+            <el-upload
+                    class="upload-demo"
+                    ref="vueFileUploader"
+                    multiple
+                    :action = "uploadUrl()"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :on-success="uploadSuccess"
+                    :file-list="fileList"
+                    :before-upload="beforeUploadFile"
+                    :auto-upload="true"
+                    :show-file-list = "false"
+            >
+                <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" >上传文件</el-button>
+                <!--<p>{{directoryContent}}</p>-->
+                <!--{{bmsg}}-->
+                <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
+                <!--<div slot="tip" class="el-upload__tip">只能上传zip文件，且不超过500M</div>-->
+            </el-upload>
+        </div>
+
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%"
+         >
+            <span>是否覆盖原有的模型？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="abortUpload">取 消</el-button>
+                    <el-button type="primary" @click="coverModel">确 定</el-button>
+                 </span>
+        </el-dialog>
     </section>
 </template>
 <script>
     import { mapState,mapGetters} from 'vuex'
-
-    var fileNub = 0;
     export default {
         data() {
             return {
+                isCover : false,
+                dialogVisible: false,
                 fileList: [
                 ],
+//                name : JSON.parse(sessionStorage.getItem('user')).name,
                 name : this.$store.state.userInfo.profile.name,
-                // JSON.parse(sessionStorage.getItem('user')).name,
             };
         },
         computed: {
@@ -59,49 +73,93 @@
                 console.log(file);
             },
             beforeUploadFile(file){
-                var modelUrl = '/api/repository/add?name=' + this.$data.name +'&fileName=' +file.name.split("\.")[0]
-                this.$http.post(modelUrl)
-                    .then(function (response) {
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
+                    //检验gogs仓库是否存在，不存在则创建一个仓库
+                    var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
+                    this.$http.post(modelUrl)
+                        .then(function (response) {
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                    if (this.bmsg < 0) {
+                        this.$message({
+                            message: '请选择一个模型目录！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        this.$refs.vueFileUploader.abort(file);
+                        return false;
+                    }
+//                    else {
+//                        //检验这个模型分类下是否存在这个模型
+//                        var checkModelUrl = '/api/directory/checkModel?fileName=' + file.name.split("\.")[0] + "&directoryId=" + this.bmsg
+//                        var _this = this;
+//                        _this.$http.post(checkModelUrl)
+//                            .then(function (response) {
+//                                if (response.data.status == 0) {
+//                                    _this.dialogVisible = true;
+//                                    return false;
+//                                }
+//                            })
+//                            .catch(function (error) {
+//                                console.log(error)
+//                            })
+//                    }
 
-                let fileMAx = 1024 * 1024 *500;
-                if(fileMAx < file.size){
-                    this.$message({
-                        message: '文件过大，只能上传500M以内！',
-                        type: 'warning',
-                        duration: 2000
+                    let fileMAx = 1024 * 1024 * 500;
+                    if (fileMAx < file.size) {
+                        this.$message({
+                            message: '文件过大，只能上传500M以内！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        this.$refs.vueFileUploader.abort(file);
+                        return false;
+                    }
+                    if (!(file.name).endsWith(".zip")) {
+                        this.$message({
+                            message: '请上传压缩文件！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        this.$refs.vueFileUploader.abort(file);
+                        return false;
+                    }
+                    if (this.$refs.vueFileUploader.uploadFiles.length > 1) {
+                        this.$message({
+                            message: '请上传一个文件！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        this.$refs.vueFileUploader.uploadFiles = [];
+                        this.$refs.vueFileUploader.abort(file);
+                        return false;
+                    }
+                    if(this.bmsg >= 0 && !this.isCover){
+                    return new Promise((resolve, reject) => {
+                        var checkModelUrl = '/api/directory/checkModel?fileName=' + file.name.split("\.")[0] + "&directoryId=" + this.bmsg
+                        var _this = this;
+                        _this.$http.post(checkModelUrl)
+                            .then(function (response) {
+                                if (response.data.status == 0) {
+                                    if(!_this.isCover){
+                                        _this.dialogVisible = true;
+                                    }else{
+                                        reject(true)
+                                    }
+              //                      reject(false)
+                                }else {
+                                    reject(true)
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                                reject(false)
+                            })
                     });
-                    abort(file);
-                }
-                if(!(file.name).endsWith(".zip")){
-                    this.$message({
-                        message: '请上传压缩文件！',
-                        type: 'warning',
-                        duration: 2000
-                    });
-                    abort(file);
-                }
-                fileNub +=1;
-                if(fileNub >1){
-                    this.$message({
-                        message: '请上传一个文件！',
-                        type: 'warning',
-                        duration: 2000
-                    });
-                    fileNub =0;
-                    abort(file);
-                }
-                if(this.bmsg < 0) {
-                    this.$message({
-                        message: '请选择一个模型目录！',
-                        type: 'warning',
-                        duration: 2000
-                    });
-                    abort(file);
-                }
+                    }
+                    return true;
+
             },
             uploadSuccess(response,file,fileList){
                 this.$message({
@@ -109,7 +167,27 @@
                     type: 'success',
                     duration: 1000
                 });
+                this.isCover = false;
                 this.$refs.vueFileUploader.clearFiles();
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            coverModel(){
+                var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg;
+                this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
+                this.isCover = true;
+                this.dialogVisible = false;
+                this.$refs.vueFileUploader.submit();
+
+            },
+            abortUpload(){
+//                this.$refs.vueFileUploader.abort(file);
+                this.dialogVisible = false;
             }
         }
     }
