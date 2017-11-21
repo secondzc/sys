@@ -764,6 +764,39 @@ public class DirectoryController {
         }
 
     }
+
+
+    @RequestMapping(value = "/checkModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject checkModel(@RequestParam(value = "fileName",required = false)String fileName,
+                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
+                                 HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        try{
+            Map<String, Object> params = new HashMap<>();
+            params.put("fileName",fileName);
+            params.put("directoryId",directoryId);
+            Model model = modelService.queryByNameAndDirId(params);
+            if(model == null){
+                jo.put("status",1);
+                jo.put("code",0);
+                jo.put("msg","ok");
+                return jo;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //status 为0 ，存在该模型
+        jo.put("status",0);
+        jo.put("code",0);
+        jo.put("msg","ok");
+        return jo;
+
+    }
+
+
+
 }
 
 

@@ -77,7 +77,7 @@ public class VariableController {
                     List<VariableTreeObj> compTreeList = new ArrayList<>();
                     varibaleTreeObj.setChildren(compTreeList);
                     getCompFromModel(varibaleTreeObj.getId(),allComp,varibaleTreeObj.getChildren(),allVariable);
-                    //不包含模型名称
+                    //不包含模型名称1
                     getCompFromModel(varibaleTreeObj.getId(),allComp,variableTreeObjList,allVariable);
                     //当变量没有父类组件的时直接添加进去
                     //查询这个model下所有的顶层变量
