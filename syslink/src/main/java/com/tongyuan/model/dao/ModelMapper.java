@@ -16,6 +16,8 @@ public interface ModelMapper {
     int deleteByIds(String[] ids);
     public List<Model> queryModelList(Map<String, Object> params);
     public Model queryModelByName(String name);
+    //根据Name和模型分类Id查找非package模型
+    public Model queryByNameAndDir(Map<String, Object> params);
     public List<Model> findAllModel();
     public List<Model> findRootModel();
     public List<Model> vagueSearchByName(Map<String, Object> params);

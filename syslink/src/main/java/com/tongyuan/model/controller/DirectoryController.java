@@ -377,16 +377,21 @@ public class DirectoryController {
             model.setCreateTime(new Date());
            // model.setUserId(1);
             model.setDeleted(false);
-            if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
+            Map<String, Object> param = new HashMap<>();
+            param.put("fileName",subFiles[0].split("\\.")[0]);
+            param.put("directoryId",directoryId);
+//            if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
+            if(modelService.queryByNameAndDir(param) == null){
 //                modelService.add(model);
-                //modelService.add(model);
                 //by:zhangcy  在这里加入了审签的代码
                 Long modelId = modelService.add(model);
-                reviewFlowInstanceService.startInstance(modelId);
-                updateOrCreate = false;
+//                reviewFlowInstanceService.startInstance(modelId);
+//                updateOrCreate = false;
             }
             //查找最外层空的model
-            Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
+            //修改成根据插入的分类id找到对应的package包
+          //  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
+            Model nullModel = modelService.queryByNameAndDir(param);
             for (int i = 0; i < subFiles.length; i++) {
                 //查看文件的格式
                 String [] fileNames = subFiles[i].split("\\.");

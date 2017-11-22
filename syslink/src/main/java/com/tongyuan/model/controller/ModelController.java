@@ -87,7 +87,12 @@ public class ModelController extends  BaseController {
         model.setCreateTime(nowDate);
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
-        Model validateModel = modelService.queryModelByName(model.getName());
+        // 修改
+        //Model validateModel = modelService.queryModelByName(model.getName());
+        Map<String, Object> param = new HashMap<>();
+        param.put("fileName",model.getName());
+        param.put("directoryId",directoryId);
+        Model validateModel = modelService.queryByNameAndDir(param);
         if( validateModel == null){
             modelService.add(model);
         }else{
@@ -95,7 +100,7 @@ public class ModelController extends  BaseController {
             model.setId(validateModel.getId());
             modelService.update(model);
         }
-        insertVaiable(xmlMap);
+        insertVaiable(xmlMap,directoryId);
     }
 
     public void analysisXmlMap(Map<String,Object> xmlMap,Model model,Map<String,String> svgPath){
@@ -242,7 +247,7 @@ public class ModelController extends  BaseController {
         return type;
     }
 
-    public void insertVaiable(Map<String,Object> xmlMap) {
+    public void insertVaiable(Map<String,Object> xmlMap,Long directoryId) {
         Model model = new Model();
         for (Map.Entry<String, Object> entry : xmlMap.entrySet()) {
             if ("ModelName".equals(entry.getKey())) {
@@ -251,7 +256,12 @@ public class ModelController extends  BaseController {
                 type = decideType(entry.getValue(), type);
                 if ("String".equals(type)) {
                     if (!StringUtil.isNull((String) entry.getValue())) {
-                        model = modelService.queryModelByName((String) entry.getValue());
+                        //修改
+                       // model = modelService.queryModelByName((String) entry.getValue());
+                        Map<String, Object> param = new HashMap<>();
+                        param.put("fileName",(String) entry.getValue());
+                        param.put("directoryId",directoryId);
+                        model = modelService.queryByNameAndDir(param);
                     }
                 }
             }
@@ -467,7 +477,9 @@ public class ModelController extends  BaseController {
                 }
                 modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
                 modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
-                modelWeb.setUpdateTime(DateUtil.format(oneOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+                if(oneOfModel.get(i).getLastUpdateTime() != null){
+                    modelWeb.setUpdateTime(DateUtil.format(oneOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+                }
                 modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
                 modelWeb.setType(oneOfModel.get(i).getType());
                 modelWeb.setNumberStar(0);
