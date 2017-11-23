@@ -20,7 +20,8 @@
 
                       <div style="position: absolute;left: 20px;display: inline-flex;
                       min-width: 200px;">
-                         <upload-file ></upload-file>
+                         <!--<upload-file ></upload-file>-->
+                          <myUpload></myUpload>
 
                       </div>
 
@@ -459,7 +460,8 @@
 <script >
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directory.vue';
-    import uploadFile from  '../nav3/Page6.vue'
+//    import uploadFile from  '../nav3/Page6.vue'
+    import myUpload from '../nav3/myUpload.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
     import { mapState,mapGetters} from 'vuex'
@@ -469,7 +471,8 @@
     export default {
         components: {
             kzTree,
-            uploadFile,
+//            uploadFile,
+            myUpload,
             breadcrumb,
             sortableList,
         },
@@ -700,7 +703,7 @@
         modelVar: function (item) {
             this.$store.dispatch('sendModelId', item.parentId);
             this.$store.dispatch('sendTreeModelId', item.index);
-            this.$router.push({path: '/model/packageDiagram'});
+            this.$router.push({path: '/model/myPackageDiagram'});
         },
         modelVariable: function (model) {
             var modelVariable = new Array;
@@ -753,7 +756,7 @@
             console.log(index, row);
             this.$store.dispatch('sendModelId', row.parentId);
             this.$store.dispatch('sendTreeModelId', row.index);
-            this.$router.push({path: '/model/packageDiagram'});
+            this.$router.push({path: '/model/myPackageDiagram'});
         },
         handleDownload(index, row){
             console.log(index, row);
