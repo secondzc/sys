@@ -13,6 +13,9 @@ export default{
     [types.Send_TreeModelId](state,treeMdoelIdData){
         state.treeModelId= treeMdoelIdData;
     },
+    [types.Send_TreeRootId](state,treeRootIdData){
+        state.treeRootId= treeRootIdData;
+    },
      SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = state.routers.concat(routers)
@@ -25,6 +28,14 @@ export default{
      SET_USERINFO: (state, userInfo) => {
       state.userInfo = userInfo
     },
+
+    SET_PrivateDirId: (state, privateDirId) => {
+        state.privateDirId = privateDirId
+    },
+    SET_PublicDirId: (state, publicDirId) => {
+        state.publicDirId = publicDirId
+    },
+
     SET_ISLOADED: (state) => {
       state.isLoaded = !state.isLoaded
     },

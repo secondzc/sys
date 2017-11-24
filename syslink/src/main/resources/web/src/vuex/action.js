@@ -61,6 +61,13 @@ function autoPass(userName){
   return axios.post('api/user/autoPass',userName)
 }
 
+function getPrivateDirId(privateDir){
+    return axios.post('api/directory/getPrivateDirId',privateDir)
+}
+function getPublicDirId(publicDir){
+    return axios.post('api/directory/getPublicDirId',publicDir)
+}
+
 
 export default{
     sendA({commit},aData){
@@ -75,6 +82,10 @@ export default{
     sendTreeModelId({commit},treeModelIdData){
         commit(types.Send_TreeModelId,treeModelIdData);
     },
+    // sendTreeRootId({commit},treeRootData){
+    //     commit(types.Send_TreeRootId,treeRootData);
+    // },
+
 
     GetUserInfo({ commit, state },userInfo){
      
@@ -86,9 +97,38 @@ export default{
         }).catch(error => {
           reject(error)
         })
+           getPrivateDirId().then(response => {
+               const data = response.data
+               commit('SET_PrivateDirId',data)
+               resolve(response)
+           }).catch(error => {
+               reject(error)
+           })
+           getPublicDirId().then(response => {
+               const data = response.data
+               commit('SET_PublicDirId',data)
+               resolve(response)
+           }).catch(error => {
+               reject(error)
+           })
       })
-          
       },
+
+    // GetPrivateDirId({ commit, state },privateDirId){
+    //
+    //     return new Promise((resolve, reject) => {
+    //         getPrivateDirId().then(response => {
+    //             const data = response.data
+    //             commit('SET_USERINFO',data.userInfo)
+    //             resolve(response)
+    //         }).catch(error => {
+    //             reject(error)
+    //         })
+    //     })
+    //
+    // },
+
+
 
     GetUserInfoFirst({ commit, state },userName){
       
@@ -100,6 +140,20 @@ export default{
         }).catch(error => {
           reject(error)
         })
+           getPrivateDirId().then(response => {
+               const data = response.data
+               commit('SET_PrivateDirId',data)
+               resolve(response)
+           }).catch(error => {
+               reject(error)
+           })
+           getPublicDirId().then(response => {
+               const data = response.data
+               commit('SET_PublicDirId',data)
+               resolve(response)
+           }).catch(error => {
+               reject(error)
+           })
       })
       },
     GetSession({commit,state},){
