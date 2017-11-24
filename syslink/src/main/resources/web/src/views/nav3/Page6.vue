@@ -27,9 +27,9 @@
                 title="提示"
                 :visible.sync="dialogVisible"
                 width="30%"
-         >
+        >
             <span>是否覆盖原有的模型？</span>
-                <span slot="footer" class="dialog-footer">
+            <span slot="footer" class="dialog-footer">
                     <el-button @click="abortUpload">取 消</el-button>
                     <el-button type="primary" @click="coverModel">确 定</el-button>
                  </span>
@@ -58,7 +58,8 @@
         methods: {
             //上传文件
             uploadUrl :function(){
-                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg
+                var scope = false;
+                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
             submitUpload() {
@@ -73,23 +74,23 @@
                 console.log(file);
             },
             beforeUploadFile(file){
-                    //检验gogs仓库是否存在，不存在则创建一个仓库
-                    var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
-                    this.$http.post(modelUrl)
-                        .then(function (response) {
-                        })
-                        .catch(function (error) {
-                            console.log(error)
-                        })
-                    if (this.bmsg < 0) {
-                        this.$message({
-                            message: '请选择一个模型目录！',
-                            type: 'warning',
-                            duration: 2000
-                        });
-                        this.$refs.vueFileUploader.abort(file);
-                        return false;
-                    }
+                //检验gogs仓库是否存在，不存在则创建一个仓库
+                var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
+                this.$http.post(modelUrl)
+                    .then(function (response) {
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+                if (this.bmsg < 0) {
+                    this.$message({
+                        message: '请选择一个模型目录！',
+                        type: 'warning',
+                        duration: 2000
+                    });
+                    this.$refs.vueFileUploader.abort(file);
+                    return false;
+                }
 //                    else {
 //                        //检验这个模型分类下是否存在这个模型
 //                        var checkModelUrl = '/api/directory/checkModel?fileName=' + file.name.split("\.")[0] + "&directoryId=" + this.bmsg
@@ -106,50 +107,52 @@
 //                            })
 //                    }
 
-                    let fileMAx = 1024 * 1024 * 500;
-                    if (fileMAx < file.size) {
-                        this.$message({
-                            message: '文件过大，只能上传500M以内！',
-                            type: 'warning',
-                            duration: 2000
-                        });
-                        this.$refs.vueFileUploader.abort(file);
-                        return false;
-                    }
-                    if (!(file.name).endsWith(".zip")) {
-                        this.$message({
-                            message: '请上传压缩文件！',
-                            type: 'warning',
-                            duration: 2000
-                        });
-                        this.$refs.vueFileUploader.abort(file);
-                        return false;
-                    }
-                    if (this.$refs.vueFileUploader.uploadFiles.length > 1) {
-                        this.$message({
-                            message: '请上传一个文件！',
-                            type: 'warning',
-                            duration: 2000
-                        });
-                        this.$refs.vueFileUploader.uploadFiles = [];
-                        this.$refs.vueFileUploader.abort(file);
-                        return false;
-                    }
-                    if(this.bmsg >= 0 && !this.isCover){
+                let fileMAx = 1024 * 1024 * 500;
+                if (fileMAx < file.size) {
+                    this.$message({
+                        message: '文件过大，只能上传500M以内！',
+                        type: 'warning',
+                        duration: 2000
+                    });
+                    this.$refs.vueFileUploader.abort(file);
+                    return false;
+                }
+                if (!(file.name).endsWith(".zip")) {
+                    this.$message({
+                        message: '请上传压缩文件！',
+                        type: 'warning',
+                        duration: 2000
+                    });
+                    this.$refs.vueFileUploader.abort(file);
+                    return false;
+                }
+                if (this.$refs.vueFileUploader.uploadFiles.length > 1) {
+                    this.$message({
+                        message: '请上传一个文件！',
+                        type: 'warning',
+                        duration: 2000
+                    });
+                    this.$refs.vueFileUploader.uploadFiles = [];
+                    this.$refs.vueFileUploader.abort(file);
+                    return false;
+                }
+                if(this.bmsg >= 0 && !this.isCover){
                     return new Promise((resolve, reject) => {
                         var checkModelUrl = '/api/directory/checkModel?fileName=' + file.name.split("\.")[0] + "&directoryId=" + this.bmsg
                         var _this = this;
                         _this.$http.post(checkModelUrl)
                             .then(function (response) {
+//                                var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+_this.$data.name+"&directoryId="+_this.bmsg;
+//                                _this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                                 if (response.data.status == 0) {
                                     if(!_this.isCover){
                                         _this.dialogVisible = true;
                                     }else{
-                                        reject(true)
+                                        resolve(true);
                                     }
-              //                      reject(false)
+                                    reject(false)
                                 }else {
-                                    reject(true)
+                                    resolve(true);
                                 }
                             })
                             .catch(function (error) {
@@ -157,8 +160,8 @@
                                 reject(false)
                             })
                     });
-                    }
-                    return true;
+                }
+//                    return true;
 
             },
             uploadSuccess(response,file,fileList){
@@ -178,7 +181,8 @@
                     .catch(_ => {});
             },
             coverModel(){
-                var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg;
+                var scope = false;
+                var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
                 this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                 this.isCover = true;
                 this.dialogVisible = false;
