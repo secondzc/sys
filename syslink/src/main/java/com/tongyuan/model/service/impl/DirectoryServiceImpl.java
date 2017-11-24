@@ -88,5 +88,20 @@ public class DirectoryServiceImpl implements DirectoryService{
         return this.directoryMapper.queryMapById(id);
     }
 
+    @Override
+    public List<Directory> selectDefaultDirectory() {
+        return this.directoryMapper.selectDefaultDirectory();
+    }
+
+    @Override
+    public List<Directory> getPublicDir() {
+        return this.directoryMapper.getPublicDir();
+    }
+
+    @Override
+    public List<Directory> getPrivateDir() {
+        return this.directoryMapper.getPrivateDir();
+    }
+
 
 }

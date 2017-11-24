@@ -1,6 +1,7 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.domain.Star;
@@ -83,7 +84,7 @@ public class ModelController extends  BaseController {
         model.setDirectoryId(directoryId);
         model.setParentId(nullModel.getId());
         model.setUserId(nullModel.getUserId());
-        model.setScope(false);
+        model.setScope(nullModel.getScope());
         model.setCreateTime(nowDate);
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
@@ -391,6 +392,7 @@ public class ModelController extends  BaseController {
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
+                           @RequestParam(value = "scope",required = false)Boolean scope,
                            HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
@@ -428,10 +430,15 @@ public class ModelController extends  BaseController {
                 for (Long id : directoryIdList) {
                     for (Model model: allModelList) {
                         if(model.getDirectoryId() == id){
-                            if(model.getParentId() == 0){
-                                searchModel.add(model);
+                            if(scope != null){
+                                if(model.getParentId() == 0 && model.getScope() == scope){
+                                    searchModel.add(model);
+                                }
+                            }else{
+                                if(model.getParentId() == 0){
+                                    searchModel.add(model);
+                                }
                             }
-
                         }
                     }
                 }
@@ -446,9 +453,17 @@ public class ModelController extends  BaseController {
             }
       //      if(parent_id != null  && rootDirectoryList.size() >0){
             if(parent_id == 0){
-                for (Model model: allModelList) {
-                    if(model.getParentId() == 0) {
-                        searchModel.add(model);
+                if(scope != null) {
+                    for (Model model : allModelList) {
+                        if (model.getParentId() == 0 && model.getScope() == scope) {
+                            searchModel.add(model);
+                        }
+                    }
+                }else{
+                    for (Model model : allModelList) {
+                        if (model.getParentId() == 0 ) {
+                            searchModel.add(model);
+                        }
                     }
                 }
                 for(int  j= 0; j<= searchModel.size() -1; j++){
@@ -471,6 +486,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setParentId(oneOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
                 modelWeb.setUserId(user.getID());
+                modelWeb.setClasses(oneOfModel.get(i).getClasses());
                 modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
                 if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
@@ -516,6 +532,7 @@ public class ModelController extends  BaseController {
                     }
                 }
             }
+
         }catch(Exception e){
             e.printStackTrace();
             jo.put("status","1");

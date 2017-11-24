@@ -293,6 +293,7 @@ public class DirectoryController {
     @CrossOrigin(origins = "http://gogs.modelica-china.com:8080", maxAge = 3600)
     public boolean uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
+                                   @RequestParam(value = "scope",required = false)Boolean scope,
                                 HttpServletRequest request , HttpServletResponse response){
 
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest)request;
@@ -372,7 +373,7 @@ public class DirectoryController {
             model.setDirectoryId(directoryId);
             model.setClasses(ModelClasses.Package.getKey());
             model.setModelFilePath(filePath);
-            model.setScope(false);
+            model.setScope(scope);
             model.setUserId(user.getID());
             model.setCreateTime(new Date());
            // model.setUserId(1);
@@ -554,20 +555,51 @@ public class DirectoryController {
     @RequestMapping(value="/list",method = RequestMethod.GET)
     @ResponseBody
     public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
+                           @RequestParam(value = "scope",required = false)Boolean scope,
+                           @RequestParam(value = "userName",required = false)String userName,
                            HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         List<JSONObject> directoryModelList = new ArrayList<>();
+        List<Directory> rootDirectoryList = new ArrayList<>();
+//        //公有模型目录
+//        List<JSONObject> publicDirModelList = new ArrayList<>();
+//        //私有模型目录
+//        List<JSONObject> privateDirModelList = new ArrayList<>();
         try {
-            List<Directory> rootDirectoryList = directoryService.queryListByParentId(parent_id);
+            if(scope != null && parent_id == 0){
+                 rootDirectoryList = directoryService.getPrivateDir();
+            }else if (parent_id == 0){
+                rootDirectoryList = directoryService.getPublicDir();
+            }else{
+                rootDirectoryList = directoryService.queryListByParentId(parent_id);
+            }
+
             for (int i = 0; i <= rootDirectoryList.size() -1; i++) {
-                DirectoryModel directoryModel = new DirectoryModel();
-                directoryModel.setId(rootDirectoryList.get(i).getId());
-                directoryModel.setName(rootDirectoryList.get(i).getName());
-                directoryModel.setParentId(rootDirectoryList.get(i).getParentId()+"");
-                JSONObject jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
-                directoryModelList.add(jsonObject );
+                if(scope != null && userName.equals(rootDirectoryList.get(i).getUserName())){
+                    DirectoryModel directoryModel = new DirectoryModel();
+                    directoryModel.setId(rootDirectoryList.get(i).getId());
+                    directoryModel.setName(rootDirectoryList.get(i).getName());
+                    directoryModel.setParentId(rootDirectoryList.get(i).getParentId()+"");
+                    JSONObject jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+                    directoryModelList.add(jsonObject );
+                }else{
+                    DirectoryModel directoryModel = new DirectoryModel();
+                    directoryModel.setId(rootDirectoryList.get(i).getId());
+                    directoryModel.setName(rootDirectoryList.get(i).getName());
+                    directoryModel.setParentId(rootDirectoryList.get(i).getParentId()+"");
+                    JSONObject jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+                    directoryModelList.add(jsonObject );
+                }
 
             }
+//            if(scope != null){
+//                DirectoryModel privateDirModel = new DirectoryModel();
+//                privateDirModel.setId(-1);
+//                privateDirModel.setName("公有模型库");
+//            }else{
+//
+//            }
+
         }catch(Exception e){
             e.printStackTrace();
             jo.put("status","1");
@@ -800,6 +832,45 @@ public class DirectoryController {
 
     }
 
+    @RequestMapping(value = "/getPrivateDirId",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getPrivateDirId(HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        Directory privateDir = new Directory();
+        try{
+            List<Directory> directoryList = directoryService.getPrivateDir();
+
+            if(directoryList.size() != 1){
+                return jo;
+            }else {
+                privateDir = directoryList.get(0);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        jo.put("data",privateDir);
+        return jo;
+    }
+
+    @RequestMapping(value = "/getPublicDirId",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getPublicDirId(HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        Directory publicDir = new Directory();
+        try{
+            List<Directory> directoryList = directoryService.getPublicDir();
+
+            if(directoryList.size() != 1){
+                return jo;
+            }else {
+                publicDir = directoryList.get(0);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        jo.put("data",publicDir);
+        return jo;
+    }
 
 
 }

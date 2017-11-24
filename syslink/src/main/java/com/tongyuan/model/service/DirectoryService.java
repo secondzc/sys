@@ -22,4 +22,9 @@ public interface DirectoryService {
     public List<Directory> queryByParentName(Map<String, Object> params);
     public List<Map<String,Object>> queryMapListByParentId(Long id);
     public Map<String,Object> queryMapById(Long id);
+    public List<Directory> selectDefaultDirectory ();
+    //获取公有目录（唯一）
+    public List<Directory> getPublicDir();
+    //获取我的模型目录（唯一）
+    public List<Directory> getPrivateDir();
 }

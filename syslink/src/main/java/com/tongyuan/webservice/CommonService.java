@@ -27,4 +27,15 @@ public interface CommonService {
 	@WebResult(name = "String",targetNamespace = "")
 	public boolean UploadFile(@WebParam(name = "fileName") String fileName,@WebParam(name = "beginPos") long beginPos,@WebParam(name = "length") long length,@WebParam(name = "data") byte[] data);
 
+	@WebMethod
+	@WebResult(name = "String",targetNamespace = "")
+	public String uploadModel(@WebParam(name = "userName") String userName,@WebParam(name = "classID") Long classID,@WebParam(name = "fileName") String fileName,@WebParam(name = "beginPos") long beginPos,@WebParam(name = "length") long length,@WebParam(name = "data") byte[] data);
+
+	@WebMethod
+	@WebResult(name = "String",targetNamespace = "")
+	public String getClassTree(@WebParam(name = "userName") String userName);
+
+	@WebMethod
+	@WebResult(name = "String",targetNamespace = "")
+	public String getModelListByDirId(@WebParam(name = "dirId") Long dirId);
 }

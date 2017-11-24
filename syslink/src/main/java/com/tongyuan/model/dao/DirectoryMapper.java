@@ -25,4 +25,7 @@ public interface DirectoryMapper {
     public List<Directory> queryByParentName(Map<String, Object> params);
     public List<Map<String,Object>> queryMapListByParentId(Long parentId);
     public Map<String,Object> queryMapById(Long id);
+    public List<Directory> selectDefaultDirectory();
+    List<Directory> getPublicDir();
+    List<Directory> getPrivateDir();
 }

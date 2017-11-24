@@ -47,6 +47,8 @@ public class Directory {
     @Column
     //删除标记为
     private Boolean isDeleted;
+    @Column
+    private String userName;
 
     public long getId() {
         return id;
@@ -118,6 +120,14 @@ public class Directory {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
 

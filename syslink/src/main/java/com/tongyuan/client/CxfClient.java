@@ -1,9 +1,12 @@
 package com.tongyuan.client;
 
+import com.tongyuan.model.domain.Directory;
+import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.webservice.CommonService;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CxfClient {
 /*	public static void main(String[] args) {
@@ -16,7 +19,7 @@ public class CxfClient {
 	public static void cl1() {
 		try {
 			// 接口地址
-			String address = "http://localhost:8080/services/CommonService?wsdl";
+			String address = "http://localhost:8080/services/sysplorerService?wsdl";
 			// 代理工厂
 			JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
 			// 设置代理地址
@@ -30,6 +33,7 @@ public class CxfClient {
 			// 调用代理接口的方法调用并返回结果
 			String result = cs.sayHello(userName);
 			System.out.println("返回结果:" + result);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,7 +45,7 @@ public class CxfClient {
 	public static void cl2() {
 		// 创建动态客户端
 		JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
-		Client client = dcf.createClient("http://localhost:8080/services/CommonService?wsdl");
+		Client client = dcf.createClient("http://localhost:8080/services/sysplorerService?wsdl");
 		// 需要密码的情况需要加上用户名和密码
 		// client.getOutInterceptors().add(new ClientLoginInterceptor(USER_NAME,
 		// PASS_WORD));
