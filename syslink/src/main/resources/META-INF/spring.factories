@@ -1,0 +1,6 @@
+org.springframework.context.ApplicationContextInitializer=\
+com.tongyuan.initializers.SimpleApplicationContextInitializer
+
+
+org.springframework.context.ApplicationListener=\
+com.tongyuan.listeners.SimpleApplicationListener
