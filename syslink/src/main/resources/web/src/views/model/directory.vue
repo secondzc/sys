@@ -169,7 +169,11 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                    typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)
+                      if(data.name == "我的模型" || data.name == "公有模型"){
+                          _self.$message({ message: '该模型不允许删除', type: 'warning',duration: 2000 })
+                      }else{
+                          typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)
+                      }
                   }
                 }
               })
@@ -263,7 +267,8 @@
 
                     this.$http.get(url)
                         .then(res => res)
-                        .then(data => success(data.data, resolve, reject))
+                        .then(data => success(data.data, resolve, reject),
+                        )
                 }
             })
         },
@@ -315,11 +320,6 @@
           WaterfallSlot,
           ModelContent
       },
-
-
-
-
-
 
   }
 </script>

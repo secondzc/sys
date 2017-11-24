@@ -26,7 +26,7 @@
                       </div>
 
                       <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
-                          <el-button size="small"  type="primary" @click="treeAdd({ id: 0 })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+                          <el-button size="small"  type="primary" @click="treeAdd({ id: privateDirId })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
                       </div>
 
                      
@@ -310,19 +310,9 @@
                                     layout="total, sizes, prev, pager, next, jumper"
                                     :total="pager.total"  style="min-height: 30px;max-height: 40px;">
                             </el-pagination>
-                   
-
-
-
-
-
-
-
-
                 </div>
 
               
-
 
             </el-main>
             <el-aside class="right-aside" v-show="info">
@@ -478,79 +468,78 @@
         },
         data() {
             return {
-               url: {
-              C: '',
-              U: '',
-              R: '',
-              D: ''
-            },
-                errGif: errGif + '?' + +new Date(),
-                props: {
-                    label: 'name',
-                    children: 'zones'
-                },
-                count: 1,
-                info: false,
-                listStatus:'true',
- 
+                       url: {
+                      C: '',
+                      U: '',
+                      R: '',
+                      D: ''
+                    },
+                        errGif: errGif + '?' + +new Date(),
+                        props: {
+                            label: 'name',
+                            children: 'zones'
+                        },
+                        count: 1,
+                        info: false,
+                        listStatus:'true',
 
-                modelTotal: '',
-                pager: {
-                    total: 0,
-                    pageSize: 10,
-                    pageIndex: 1,
-                },
-                variable: [],
-                varLength : 0,
-                drawer: false,
-                sorttitles: [{
-                    key: 'name',
-                    name: '名称'
-                }, {
-                    key: 'uploadTime',
-                    name: '上传时间'
-                }, {
-                    key: 'userName',
-                    name: '作者'
-                },],
-                tree: {
-                    url: {
-                        C: '/api/directory/add',
-                        U: '/api/directory/update',
-                        R: 'api/directory/list',
-                        D: '/api/directory/delete'
+
+                        modelTotal: '',
+                        pager: {
+                            total: 0,
+                            pageSize: 10,
+                            pageIndex: 1,
+                        },
+                        variable: [],
+                        varLength : 0,
+                        drawer: false,
+                        sorttitles: [{
+                            key: 'name',
+                            name: '名称'
+                        }, {
+                            key: 'uploadTime',
+                            name: '上传时间'
+                        }, {
+                            key: 'userName',
+                            name: '作者'
+                        },],
+                        tree: {
+                            url: {
+                                C: '/api/directory/add',
+                                U: '/api/directory/update',
+                                R: 'api/directory/list?scope='+true +"&userName="+ this.$store.state.userInfo.profile.name +"&",
+                                D: '/api/directory/delete'
+                            }
+                        },
+                        data: {
+                            treeItem: "",
+                        },
+                        filters: {
+                            name: ""
+                        },
+                        loading: false,
+                        isBusy: false,
+                        align: 'center',
+                        repositories: [],
+                          dialog: {
+                  title: '增加分类',
+                  dialogVisible: false,
+                  submiting: false,
+                  form: {
+                    name: '',
+                    id: '',
+                    parent_id: 0
+                  },
+                  rules: {
+                    name: {
+                      required: true,
+                      message: '请输入分类名称',
+                      trigger: 'blur'
                     }
+                  }
                 },
-                data: {
-                    treeItem: "",
-                },
-                filters: {
-                    name: ""
-                },
-                loading: false,
-                isBusy: false,
-                align: 'center',
-                repositories: [],
-                  dialog: {
-          title: '增加分类',
-          dialogVisible: false,
-          submiting: false,
-          form: {
-            name: '',
-            id: '',
-            parent_id: 0
-          },
-          rules: {
-            name: {
-              required: true,
-              message: '请输入分类名称',
-              trigger: 'blur'
-            }
-          }
-        },
-
-
-
+                name : this.$store.state.userInfo.profile.name,
+                privateDirId : this.$store.getters.privateDirId.data.id,
             };
         },
         computed: {
@@ -565,10 +554,10 @@
                     pageIndex: this.pager.pageIndex
                 };
                 if (_this.amsg != null && _this.amsg != "") {
-                    var url = '/api/model/list?parent_id=' + _this.amsg
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true
                 } else {
                     _this.$store.state.amsg = 0;
-                    var url = '/api/model/list?parent_id=' + _this.amsg
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true
                 }
                 console.log(url);
                 _this.$http.post(url)
