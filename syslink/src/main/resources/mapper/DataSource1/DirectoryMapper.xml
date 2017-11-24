@@ -11,6 +11,7 @@
         <result column="absolute_address" property="absoluteAddress" jdbcType="VARCHAR"/>
         <result column="relative_address" property="relativeAddress" jdbcType="VARCHAR"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="mapResultMap" type="map">
         <id column="id" property="id" jdbcType="BIGINT"  />
@@ -25,16 +26,16 @@
     </resultMap>
 
     <sql id="baseColumnList" >
-        id, name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted
+        id, name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted,user_name
     </sql>
     <insert id="add"  parameterType="com.tongyuan.model.domain.Directory">
-        INSERT INTO directory (name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted) VALUES
-        (#{name}, #{description}, #{parentId},#{createTime}, #{lastUpdateTime}, #{absoluteAddress},#{relativeAddress}, #{isDeleted})
+        INSERT INTO directory (name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted,user_name) VALUES
+        (#{name}, #{description}, #{parentId},#{createTime}, #{lastUpdateTime}, #{absoluteAddress},#{relativeAddress}, #{isDeleted},#{userName})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Directory">
             UPDATE directory SET
             name = #{name},description = #{description},parent_id = #{parentId},create_time = #{createTime},last_update_time = #{lastUpdateTime},absolute_address = #{absoluteAddress},relative_address = #{relativeAddress},is_deleted = #{isDeleted}
-            WHERE id = #{id}
+            user_name = #{userName}   WHERE id = #{id}
     </update>
     <delete id="deleteByIds" parameterType="java.lang.String">
         DELETE FROM directory WHERE id in
@@ -140,6 +141,24 @@
         FROM directory
         where id = #{id}
         and is_deleted = "0"
+    </select>
+    <select id="selectDefaultDirectory" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where parent_id = 0 and name = '公有模型'  or name = '我的模型' and is_deleted = "0"
+    </select>
+    <select id="getPrivateDir" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where parent_id = 0 and name = '我的模型' and is_deleted = "0"
+    </select>
+    <select id="getPublicDir" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where parent_id = 0 and name = '公有模型' and is_deleted = "0"
     </select>
 
 </mapper>
