@@ -14,6 +14,7 @@ import com.tongyuan.pageModel.ComponentTreeObj;
 import com.tongyuan.pageModel.VariableTreeObj;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
+import com.tongyuan.webservice.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,8 @@ public class VariableController {
     private ModelUtil modelUtil;
     @Autowired
     private ResourceUtil resourceUtil;
+    @Autowired
+    private CommonService commonService;
 
 
     @RequestMapping(value = "/variableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -378,11 +381,16 @@ public class VariableController {
         out.close();
         long byteslength = bytes.length;
 
+//        String treeClass = commonService.getClassTree("xyx");
+//        System.out.print(treeClass);
+        String packageModel = commonService.getModelListByDirId((long) 93);
+        System.out.print(packageModel);
+//
+//        //对压缩数据流进行解析
+//        byte[] unZipByte = modelUtil.unZip(bytes);
+////        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
+//        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
 
-        //对压缩数据流进行解析
-        byte[] unZipByte = modelUtil.unZip(bytes);
-//        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
-        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
 
     }
 }

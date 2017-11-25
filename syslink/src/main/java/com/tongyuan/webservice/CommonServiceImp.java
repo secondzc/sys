@@ -258,6 +258,7 @@ public class CommonServiceImp implements CommonService {
 					ComponentTreeObj componentTreeObj = new ComponentTreeObj();
 					componentTreeObj.setId(directory.getId());
 					componentTreeObj.setName(directory.getName());
+					componentTreeObj.setUserName(directory.getUserName());
 					//新增一个子对象
 					List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
 					componentTreeObj.setChildren(componentTreeObjChild);
@@ -266,7 +267,7 @@ public class CommonServiceImp implements CommonService {
 			}
 			//迭代插入子模型对象
 			for (ComponentTreeObj  classTreeRoot:classTree) {
-				insertChild(classTreeRoot,  directoryList);
+				insertChild(classTreeRoot,  directoryList,userName);
 			}
 			;json.add(classTree);
 			jsonStr = json.toString();
@@ -451,22 +452,35 @@ public class CommonServiceImp implements CommonService {
 	}
 
 
-	private void insertChild(ComponentTreeObj classTreeRoot,List<Directory> directoryList){
+	private void insertChild(ComponentTreeObj classTreeRoot,List<Directory> directoryList,String userName){
 		List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
 		for (Directory directory: directoryList) {
-			if(directory.getParentId() == classTreeRoot.getId()){
-				ComponentTreeObj componentTreeObj = new ComponentTreeObj();
-				componentTreeObj.setId(directory.getId());
-				componentTreeObj.setName(directory.getName());
-				//新增一个子对象
-				componentTreeObj.setChildren(componentTreeObjChild);
-				componentTreeObjChild.add(componentTreeObj);
+			if("我的模型".equals(classTreeRoot.getName())){
+				if(directory.getUserName() != null) {
+					if (directory.getParentId() == classTreeRoot.getId() && directory.getUserName().equals(userName)) {
+						ComponentTreeObj componentTreeObj = new ComponentTreeObj();
+						componentTreeObj.setId(directory.getId());
+						componentTreeObj.setName(directory.getName());
+						//新增一个子对象
+						componentTreeObj.setChildren(componentTreeObjChild);
+						componentTreeObjChild.add(componentTreeObj);
+					}
+				}
+			}else{
+				if(directory.getParentId() == classTreeRoot.getId()){
+					ComponentTreeObj componentTreeObj = new ComponentTreeObj();
+					componentTreeObj.setId(directory.getId());
+					componentTreeObj.setName(directory.getName());
+					//新增一个子对象
+					componentTreeObj.setChildren(componentTreeObjChild);
+					componentTreeObjChild.add(componentTreeObj);
+				}
 			}
 		}
 		classTreeRoot.setChildren(componentTreeObjChild);
 		if(componentTreeObjChild.size() >0){
 			for (ComponentTreeObj componentTreeObj: componentTreeObjChild) {
-				insertChild(componentTreeObj,directoryList);
+				insertChild(componentTreeObj,directoryList,userName);
 			}
 		}
 	}

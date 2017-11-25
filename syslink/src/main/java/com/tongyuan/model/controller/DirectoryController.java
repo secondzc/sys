@@ -456,6 +456,7 @@ public class DirectoryController {
     public  JSONObject  add(@RequestParam(value = "id",required = false)Long id,
                       @RequestParam(value = "name",required = false)String name,
                       @RequestParam(value = "parent_id",required = false)Long parent_id,
+                            @RequestParam(value = "userName",required = false)String userName,
                       HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         JSONObject jsonObject = new JSONObject();
@@ -464,6 +465,7 @@ public class DirectoryController {
                 Directory directory = new Directory();
                 directory.setName(name);
                 directory.setParentId(parent_id);
+                directory.setUserName(userName);
                 directory.setDeleted(false);
                 directoryService.add(directory);
                 Map<String,Object> params = new HashMap<String,Object>();
@@ -552,7 +554,7 @@ public class DirectoryController {
 
     }
 
-    @RequestMapping(value="/list",method = RequestMethod.GET)
+    @RequestMapping(value="/list",method = RequestMethod.POST)
     @ResponseBody
     public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
                            @RequestParam(value = "scope",required = false)Boolean scope,

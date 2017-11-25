@@ -393,6 +393,7 @@ public class ModelController extends  BaseController {
     @ResponseBody
     public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
                            @RequestParam(value = "scope",required = false)Boolean scope,
+                           @RequestParam(value = "userId",required = false)Long userId,
                            HttpServletRequest request , HttpServletResponse response){
         JSONObject jo=new JSONObject();
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
@@ -431,7 +432,7 @@ public class ModelController extends  BaseController {
                     for (Model model: allModelList) {
                         if(model.getDirectoryId() == id){
                             if(scope != null){
-                                if(model.getParentId() == 0 && model.getScope() == scope){
+                                if(model.getParentId() == 0 && model.getScope() == scope ){
                                     searchModel.add(model);
                                 }
                             }else{
