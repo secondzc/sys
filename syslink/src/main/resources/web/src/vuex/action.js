@@ -97,37 +97,33 @@ export default{
         }).catch(error => {
           reject(error)
         })
-           getPrivateDirId().then(response => {
+         
+          
+      })
+      },
+ GetPrivateDirId({ commit, state },privateDirId){
+    return new Promise((resolve, reject) => {
+        getPrivateDirId().then(response => {
                const data = response.data
                commit('SET_PrivateDirId',data)
                resolve(response)
            }).catch(error => {
                reject(error)
            })
-           getPublicDirId().then(response => {
+     })
+},
+ GetPublicDirId({ commit, state },privateDirId){
+         return new Promise((resolve, reject) => {
+            getPublicDirId().then(response => {
                const data = response.data
                commit('SET_PublicDirId',data)
                resolve(response)
            }).catch(error => {
                reject(error)
            })
-      })
-      },
-
-    // GetPrivateDirId({ commit, state },privateDirId){
-    //
-    //     return new Promise((resolve, reject) => {
-    //         getPrivateDirId().then(response => {
-    //             const data = response.data
-    //             commit('SET_USERINFO',data.userInfo)
-    //             resolve(response)
-    //         }).catch(error => {
-    //             reject(error)
-    //         })
-    //     })
-    //
-    // },
-
+ })
+ 
+},
 
 
     GetUserInfoFirst({ commit, state },userName){
