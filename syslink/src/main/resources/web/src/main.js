@@ -50,13 +50,7 @@ Vue.use(ZkTable);
 router.beforeEach((to, from, next) => {
 
 
-  // let uid = JSON.parse(localStorage.getItem('uid'))
-  // let logined  = JSON.parse(sessionStorage.getItem('logined'))
-  // let rememberMe = JSON.parse(localStorage.getItem('rememberMe'))
- 
-  // console.log(logined)
-  // console.log(uid)
-  //console.log(JSON.parse(sessionStorage.getItem('userInfo')))
+  console.log(from.path)
   console.log(to.path)
 
 
@@ -111,12 +105,14 @@ router.beforeEach((to, from, next) => {
 
                console.log(4)
 
+
               store.dispatch('GetUserInfo').then(res =>{
               const auths = res.data.userInfo.auths
               store.dispatch('GenerateRoutes',auths).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })
+
                   }).catch(() => {
                Cookies.remove('syslink')
                Cookies.remove('JSESSIONID')
@@ -127,6 +123,8 @@ router.beforeEach((to, from, next) => {
                next({ path: '/login' })
           
           })
+              store.dispatch('GetPublicDirId')
+              store.dispatch('GetPrivateDirId')
             
          }
      }
@@ -194,7 +192,8 @@ router.beforeEach((to, from, next) => {
                next({ path: '/login' })
           
           })
-            
+            store.dispatch('GetPublicDirId')
+              store.dispatch('GetPrivateDirId')
          }
         }  
          })

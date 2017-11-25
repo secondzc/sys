@@ -215,12 +215,37 @@ export let  commonRoutes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/model/MyIndex', component: myModel, name: '我的模型' },
-            { path: '/model/index', component: Model, name: '我的模型' },
+       
+            { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
+            { path: '/model/modelCont', component: modelCont, name: '模型信息'},
+            // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
+          
+            { path: '/model/myPackageDiagram', component: myPackageDiagram, name: '包视图'},
+            { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
+                iconCls: 'el-icon-document',
+                leaf: true,//只有一个节点
+                children: [
+                    { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+                    ]
+            },
+            // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+        ]
+    },
+     {
+        path: '',
+        component: ModelHeader,
+        name: '模型',
+        iconCls: 'iconfont icon-moxing',
+        leaf: true,//只有一个节点
+        hidden:true,
+        children: [
+            
+            { path: '/model/index', component: Model, name: '公共模型' },
             { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
             { path: '/model/modelCont', component: modelCont, name: '模型信息'},
             // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
             { path: '/model/packageDiagram', component: packageDiagram, name: '包视图'},
-            { path: '/model/myPackageDiagram', component: myPackageDiagram, name: '包视图'},
+           
             { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
                 iconCls: 'el-icon-document',
                 leaf: true,//只有一个节点
