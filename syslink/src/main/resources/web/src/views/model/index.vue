@@ -25,7 +25,7 @@
                       </div>
 
                       <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
-                          <el-button size="small"  type="primary" @click="treeAdd({ id: 0 })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+                          <el-button size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
                       </div>
 
                      
@@ -142,8 +142,8 @@
 
 
                                 <el-table-column
-                                        label="模型库"
-                                        prop="repositoryName"
+                                        label="类型"
+                                        prop="classes"
                                         min-width=100
                                          >
                                 
@@ -529,32 +529,30 @@
                 align: 'center',
                 repositories: [],
                   dialog: {
-          title: '增加分类',
-          dialogVisible: false,
-          submiting: false,
-          form: {
-            name: '',
-            id: '',
-            parent_id: 0
-          },
-          rules: {
-            name: {
-              required: true,
-              message: '请输入分类名称',
-              trigger: 'blur'
-            }
-          }
-        },
-
-
-
+                      title: '增加分类',
+                      dialogVisible: false,
+                      submiting: false,
+                      form: {
+                        name: '',
+                        id: '',
+                        parent_id: 0
+                      },
+                      rules: {
+                        name: {
+                          required: true,
+                          message: '请输入分类名称',
+                          trigger: 'blur'
+                        }
+                      }
+                    },
+                publicDirId : this.$store.getters.publicDirId.data.id,
             };
         },
         computed: {
             ...mapState({
                 a: state => state.a
             }),
-            ...mapGetters(['amsg','list']),
+            ...mapGetters(['amsg']),
             getRepos(){
                 var _this = this;
                 let para = {
@@ -562,10 +560,10 @@
                     pageIndex: this.pager.pageIndex
                 };
                 if (_this.amsg != null && _this.amsg != "") {
-                    var url = '/api/model/list?parent_id=' + _this.amsg
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&userId=" + _this.$store.state.userInfo.profile.iD
                 } else {
                     _this.$store.state.amsg = 0;
-                    var url = '/api/model/list?parent_id=' + _this.amsg
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&userId=" + _this.$store.state.userInfo.profile.iD
                 }
                 console.log(url);
                 _this.$http.post(url)
@@ -884,7 +882,7 @@
               }
             })
       },
-       fetch (url, data, type = 'GET') {
+       fetch (url, data, type = 'POST') {
             const success = (data, resolve, reject) => {
                 if (data.status === 1) {
                     resolve(data.data)

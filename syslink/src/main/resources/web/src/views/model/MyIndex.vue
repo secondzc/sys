@@ -143,8 +143,8 @@
 
 
                                 <el-table-column
-                                        label="模型库"
-                                        prop="repositoryName"
+                                        label="类型"
+                                        prop="classes"
                                         min-width=100
                                          >
                                 
@@ -467,7 +467,9 @@
             sortableList,
         },
         data() {
+            this.__currentNode = null
             return {
+
                        url: {
                       C: '',
                       U: '',
@@ -505,7 +507,7 @@
                         },],
                         tree: {
                             url: {
-                                C: '/api/directory/add',
+                                C: '/api/directory/add?userName='+ this.$store.state.userInfo.profile.name +"&",
                                 U: '/api/directory/update',
                                 R: 'api/directory/list?scope='+true +"&userName="+ this.$store.state.userInfo.profile.name +"&",
                                 D: '/api/directory/delete'
@@ -540,13 +542,14 @@
                 },
                 name : this.$store.state.userInfo.profile.name,
                 privateDirId : this.$store.getters.privateDirId.data.id,
+
             };
         },
         computed: {
             ...mapState({
                 a: state => state.a
             }),
-            ...mapGetters(['amsg','list']),
+            ...mapGetters(['amsg']),
             getRepos(){
                 var _this = this;
                 let para = {
@@ -554,10 +557,10 @@
                     pageIndex: this.pager.pageIndex
                 };
                 if (_this.amsg != null && _this.amsg != "") {
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
                 } else {
                     _this.$store.state.amsg = 0;
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
                 }
                 console.log(url);
                 _this.$http.post(url)
@@ -852,6 +855,7 @@
       fetchAddTreeNode () {
         const url = 'api/directory/add';
         this.dialog.submiting = true
+          var _this = this;
         this.fetch(url, this.dialog.form, 'post')
             .then(data => {
               /* 隐藏dialog */
@@ -859,27 +863,32 @@
                 submiting: false,
                 dialogVisible: false
               })
-              this.$refs.dialogForm.resetFields()
+                _this.$refs.dialogForm.resetFields()
               /* 提示结果 */
               const message = this.dialog.form.id ? '编辑成功' : '添加成功'
               this.$message({ message: message, type: 'success' })
 
-              if (this.dialog.form.id) { // 编辑
-                this.__currentNode && this.$set(this.__currentNode, 'data', data)
+              if (_this.dialog.form.id) { // 编辑
+                  _this.__currentNode && _this.$set(_this.__currentNode, 'data', data)
               } else { // 新增
                 /* treeNode api */
-                if (this.__currentNode) { // 子分类添加子类
-                  this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === "0") { // 顶级添加子类
-                  this.$refs.kzTree.root.doCreateChildren([data])
+                if (_this.__currentNode) { // 子分类添加子类
+                    _this.__currentNode.doCreateChildren([data])
+                } else if (data.parentId === (_this.privateDirId +"")) { // 顶级添加子类
+                    _this.$refs.kzTree.root.doCreateChildren([data])
+//                    var url = _this.tree.url.R
+//                    _this.fetch(url, {parent_id: _this.privateDirId })
+//                        .then(data => {
+//                            resolve(data)
+//                        });
                 }
               }
             })
       },
-       fetch (url, data, type = 'GET') {
+       fetch (url, data, type = 'POST') {
             const success = (data, resolve, reject) => {
                 if (data.status === 1) {
-                    resolve(data.data)
+                    resolve(data)
                 } else {
                //     console.error(data.data.code+":"+ data.data.message)
                     reject(data)
@@ -907,6 +916,8 @@
             })
         },
     },
+
+
         mounted() {
       
         }
