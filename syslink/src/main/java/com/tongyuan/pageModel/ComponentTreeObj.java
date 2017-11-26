@@ -15,6 +15,7 @@ public class ComponentTreeObj {
     //组件限制
     private String Modification;
     private List<ComponentTreeObj> children;
+    private String userName;
 
     public Long getId() {
         return id;
@@ -54,5 +55,13 @@ public class ComponentTreeObj {
 
     public void setChildren(List<ComponentTreeObj> children) {
         this.children = children;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

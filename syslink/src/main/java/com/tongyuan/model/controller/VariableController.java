@@ -14,6 +14,7 @@ import com.tongyuan.pageModel.ComponentTreeObj;
 import com.tongyuan.pageModel.VariableTreeObj;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
+import com.tongyuan.webservice.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,8 @@ public class VariableController {
     private ModelUtil modelUtil;
     @Autowired
     private ResourceUtil resourceUtil;
+    @Autowired
+    private CommonService commonService;
 
 
     @RequestMapping(value = "/variableTree",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -77,7 +80,7 @@ public class VariableController {
                     List<VariableTreeObj> compTreeList = new ArrayList<>();
                     varibaleTreeObj.setChildren(compTreeList);
                     getCompFromModel(varibaleTreeObj.getId(),allComp,varibaleTreeObj.getChildren(),allVariable);
-                    //不包含模型名称
+                    //不包含模型名称1
                     getCompFromModel(varibaleTreeObj.getId(),allComp,variableTreeObjList,allVariable);
                     //当变量没有父类组件的时直接添加进去
                     //查询这个model下所有的顶层变量
@@ -378,11 +381,16 @@ public class VariableController {
         out.close();
         long byteslength = bytes.length;
 
+//        String treeClass = commonService.getClassTree("xyx");
+//        System.out.print(treeClass);
+        String packageModel = commonService.getModelListByDirId((long) 93);
+        System.out.print(packageModel);
+//
+//        //对压缩数据流进行解析
+//        byte[] unZipByte = modelUtil.unZip(bytes);
+////        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
+//        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
 
-        //对压缩数据流进行解析
-        byte[] unZipByte = modelUtil.unZip(bytes);
-//        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
-        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
 
     }
 }

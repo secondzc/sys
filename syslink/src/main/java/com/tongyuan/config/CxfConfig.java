@@ -29,7 +29,7 @@ public class CxfConfig {
 	@Bean
 	public Endpoint endpoint() {
 		EndpointImpl endpoint = new EndpointImpl(bus, commonService);
-		endpoint.publish("/CommonService");
+		endpoint.publish("/sysplorerService");
 		return endpoint;
 	}
 }

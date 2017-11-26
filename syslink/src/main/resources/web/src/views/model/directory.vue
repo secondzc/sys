@@ -37,8 +37,6 @@
 
 //  上传文件
   import { mapState,mapGetters} from 'vuex'
-  var fileNub = 0;
-  //  上传文件
 
   export default {
     name: 'kz-tree',
@@ -169,7 +167,11 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                    typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)
+                      if(data.name == "我的模型" || data.name == "公有模型"){
+                          _self.$message({ message: '该模型不允许删除', type: 'warning',duration: 2000 })
+                      }else{
+                          typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)
+                      }
                   }
                 }
               })
@@ -224,6 +226,8 @@
             // https://github.com/ElemeFE/element/blob/dev/packages/tree/src/model/node.js#L187
             try {
               node.parent.removeChild(node)
+                var url = this.data.url.R
+                this.fetch(url,node.data.parentId)
             } catch (err) { console.error(err) }
             // 提示结果
             this.$message({ message: '删除成功', type: 'success',duration: 2000 })
@@ -237,7 +241,7 @@
         }).then(fetchDelOk).catch(e => e)
       },
       /* ajax封装 */
-        fetch (url, data, type = 'GET') {
+        fetch (url, data, type = 'POST') {
             const success = (data, resolve, reject) => {
                 if (data.status === 1) {
                     resolve(data.data)
@@ -263,7 +267,8 @@
 
                     this.$http.get(url)
                         .then(res => res)
-                        .then(data => success(data.data, resolve, reject))
+                        .then(data => success(data.data, resolve, reject),
+                        )
                 }
             })
         },
@@ -315,11 +320,6 @@
           WaterfallSlot,
           ModelContent
       },
-
-
-
-
-
 
   }
 </script>

@@ -1,6 +1,8 @@
 package com.tongyuan;
 
 import com.tongyuan.client.CxfClient;
+import com.tongyuan.client.DefalutAction;
+import com.tongyuan.model.domain.SimpleBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,9 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -18,6 +22,7 @@ import javax.servlet.MultipartConfigElement;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
+@Controller
 public class SyslinkApplication extends SpringBootServletInitializer {
     @Autowired
     private static CxfClient cxfClient;
@@ -35,9 +40,15 @@ public class SyslinkApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(SyslinkApplication.class, args);
+//        SpringApplication.run(SyslinkApplication.class, args);
+
+        ApplicationContext applicationContext = SpringApplication.run(SyslinkApplication.class, args);
+        SimpleBean sb = applicationContext.getBean("testBean", SimpleBean.class);
+        System.out.println("id: " + sb.getId() + ", name: " + sb.getName());
         cxfClient.cl1();
+
     }
+
 
     /**
      * 文件上传配置

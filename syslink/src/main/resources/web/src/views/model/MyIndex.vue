@@ -20,12 +20,13 @@
 
                       <div style="position: absolute;left: 20px;display: inline-flex;
                       min-width: 200px;">
-                         <upload-file ></upload-file>
+                         <!--<upload-file ></upload-file>-->
+                          <myUpload></myUpload>
 
                       </div>
 
                       <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
-                          <el-button size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+                          <el-button size="small"  type="primary" @click="treeAdd({ id: privateDirId })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
                       </div>
 
                      
@@ -309,19 +310,9 @@
                                     layout="total, sizes, prev, pager, next, jumper"
                                     :total="pager.total"  style="min-height: 30px;max-height: 40px;">
                             </el-pagination>
-                   
-
-
-
-
-
-
-
-
                 </div>
 
               
-
 
             </el-main>
             <el-aside class="right-aside" v-show="info">
@@ -459,7 +450,8 @@
 <script >
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directory.vue';
-    import uploadFile from  '../nav3/Page6.vue'
+//    import uploadFile from  '../nav3/Page6.vue'
+    import myUpload from '../nav3/myUpload.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
     import { mapState,mapGetters} from 'vuex'
@@ -469,83 +461,88 @@
     export default {
         components: {
             kzTree,
-            uploadFile,
+//            uploadFile,
+            myUpload,
             breadcrumb,
             sortableList,
         },
         data() {
+            this.__currentNode = null
             return {
-               url: {
-              C: '',
-              U: '',
-              R: '',
-              D: ''
-            },
-                errGif: errGif + '?' + +new Date(),
-                props: {
-                    label: 'name',
-                    children: 'zones'
-                },
-                count: 1,
-                info: false,
-                listStatus:'true',
- 
 
-                modelTotal: '',
-                pager: {
-                    total: 0,
-                    pageSize: 10,
-                    pageIndex: 1,
-                },
-                variable: [],
-                varLength : 0,
-                drawer: false,
-                sorttitles: [{
-                    key: 'name',
-                    name: '名称'
-                }, {
-                    key: 'uploadTime',
-                    name: '上传时间'
-                }, {
-                    key: 'userName',
-                    name: '作者'
-                },],
-                tree: {
-                    url: {
-                        C: '/api/directory/add',
-                        U: '/api/directory/update',
-                        R: 'api/directory/list',
-                        D: '/api/directory/delete'
-                    }
-                },
-                data: {
-                    treeItem: "",
-                },
-                filters: {
-                    name: ""
-                },
-                loading: false,
-                isBusy: false,
-                align: 'center',
-                repositories: [],
-                  dialog: {
-                      title: '增加分类',
-                      dialogVisible: false,
-                      submiting: false,
-                      form: {
-                        name: '',
-                        id: '',
-                        parent_id: 0
-                      },
-                      rules: {
-                        name: {
-                          required: true,
-                          message: '请输入分类名称',
-                          trigger: 'blur'
-                        }
-                      }
+                       url: {
+                      C: '',
+                      U: '',
+                      R: '',
+                      D: ''
                     },
-                publicDirId : this.$store.getters.publicDirId.data.id,
+                        errGif: errGif + '?' + +new Date(),
+                        props: {
+                            label: 'name',
+                            children: 'zones'
+                        },
+                        count: 1,
+                        info: false,
+                        listStatus:'true',
+
+
+                        modelTotal: '',
+                        pager: {
+                            total: 0,
+                            pageSize: 10,
+                            pageIndex: 1,
+                        },
+                        variable: [],
+                        varLength : 0,
+                        drawer: false,
+                        sorttitles: [{
+                            key: 'name',
+                            name: '名称'
+                        }, {
+                            key: 'uploadTime',
+                            name: '上传时间'
+                        }, {
+                            key: 'userName',
+                            name: '作者'
+                        },],
+                        tree: {
+                            url: {
+                                C: '/api/directory/add?userName='+ this.$store.state.userInfo.profile.name +"&",
+                                U: '/api/directory/update',
+                                R: 'api/directory/list?scope='+true +"&userName="+ this.$store.state.userInfo.profile.name +"&",
+                                D: '/api/directory/delete'
+                            }
+                        },
+                        data: {
+                            treeItem: "",
+                        },
+                        filters: {
+                            name: ""
+                        },
+                        loading: false,
+                        isBusy: false,
+                        align: 'center',
+                        repositories: [],
+                          dialog: {
+                  title: '增加分类',
+                  dialogVisible: false,
+                  submiting: false,
+                  form: {
+                    name: '',
+                    id: '',
+                    parent_id: 0
+                  },
+                  rules: {
+                    name: {
+                      required: true,
+                      message: '请输入分类名称',
+                      trigger: 'blur'
+                    }
+                  }
+                },
+                name : this.$store.state.userInfo.profile.name,
+                privateDirId : this.$store.getters.privateDirId.data.id,
+
             };
         },
         computed: {
@@ -560,10 +557,10 @@
                     pageIndex: this.pager.pageIndex
                 };
                 if (_this.amsg != null && _this.amsg != "") {
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&userId=" + _this.$store.state.userInfo.profile.iD
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
                 } else {
                     _this.$store.state.amsg = 0;
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&userId=" + _this.$store.state.userInfo.profile.iD
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
                 }
                 console.log(url);
                 _this.$http.post(url)
@@ -698,7 +695,7 @@
         modelVar: function (item) {
             this.$store.dispatch('sendModelId', item.parentId);
             this.$store.dispatch('sendTreeModelId', item.index);
-            this.$router.push({path: '/model/packageDiagram'});
+            this.$router.push({path: '/model/myPackageDiagram'});
         },
         modelVariable: function (model) {
             var modelVariable = new Array;
@@ -751,7 +748,7 @@
             console.log(index, row);
             this.$store.dispatch('sendModelId', row.parentId);
             this.$store.dispatch('sendTreeModelId', row.index);
-            this.$router.push({path: '/model/packageDiagram'});
+            this.$router.push({path: '/model/myPackageDiagram'});
         },
         handleDownload(index, row){
             console.log(index, row);
@@ -858,6 +855,7 @@
       fetchAddTreeNode () {
         const url = 'api/directory/add';
         this.dialog.submiting = true
+          var _this = this;
         this.fetch(url, this.dialog.form, 'post')
             .then(data => {
               /* 隐藏dialog */
@@ -865,19 +863,24 @@
                 submiting: false,
                 dialogVisible: false
               })
-              this.$refs.dialogForm.resetFields()
+                _this.$refs.dialogForm.resetFields()
               /* 提示结果 */
               const message = this.dialog.form.id ? '编辑成功' : '添加成功'
               this.$message({ message: message, type: 'success' })
 
-              if (this.dialog.form.id) { // 编辑
-                this.__currentNode && this.$set(this.__currentNode, 'data', data)
+              if (_this.dialog.form.id) { // 编辑
+                  _this.__currentNode && _this.$set(_this.__currentNode, 'data', data)
               } else { // 新增
                 /* treeNode api */
-                if (this.__currentNode) { // 子分类添加子类
-                  this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === "0") { // 顶级添加子类
-                  this.$refs.kzTree.root.doCreateChildren([data])
+                if (_this.__currentNode) { // 子分类添加子类
+                    _this.__currentNode.doCreateChildren([data])
+                } else if (data.parentId === (_this.privateDirId +"")) { // 顶级添加子类
+                    _this.$refs.kzTree.root.doCreateChildren([data])
+//                    var url = _this.tree.url.R
+//                    _this.fetch(url, {parent_id: _this.privateDirId })
+//                        .then(data => {
+//                            resolve(data)
+//                        });
                 }
               }
             })
@@ -885,7 +888,7 @@
        fetch (url, data, type = 'POST') {
             const success = (data, resolve, reject) => {
                 if (data.status === 1) {
-                    resolve(data.data)
+                    resolve(data)
                 } else {
                //     console.error(data.data.code+":"+ data.data.message)
                     reject(data)
@@ -913,6 +916,8 @@
             })
         },
     },
+
+
         mounted() {
       
         }

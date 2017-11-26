@@ -61,15 +61,17 @@
         where name = #{name} and is_deleted = "0"
     </select>
     <select id="findAllModel" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        <!--SELECT-->
+        <!--<include refid="baseColumnList" ></include> FROM-->
+        <!--(-->
         SELECT
-        <include refid="baseColumnList" ></include> FROM
-        (SELECT
         <include refid="baseColumnList" ></include>
         FROM  model
         WHERE
         is_deleted = "0"
-        order by create_time desc) m
-        where  1=1 GROUP BY NAME
+        order by create_time desc
+--         ) m
+--         where  1=1 GROUP BY NAME
     </select>
     <select id="findRootModel" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
         SELECT
@@ -110,5 +112,17 @@
         <include refid="baseColumnList" ></include>
         FROM  model
         where parent_id = #{parentId} and is_deleted = "0"
+    </select>
+    <select id="queryByNameAndDirId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM  model
+        where name = #{fileName} and directory_id = #{directoryId} and classes = "package" and is_deleted = "0"
+    </select>
+    <select id="queryByNameAndDir" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM  model
+        where name = #{fileName} and directory_id = #{directoryId}  and is_deleted = "0"
     </select>
 </mapper>

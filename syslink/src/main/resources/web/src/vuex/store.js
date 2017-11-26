@@ -11,12 +11,15 @@ export default new vuex.Store({
         bmsg: '',
         modelId : '',
         treeModelId : '',
+        // treeRootId : '',
         routers:commonRoutes,
         routers1:limitRoutes,
         addRouters:[],
         permission:[],
         isLoaded:false,
         userInfo:'',
+        privateDirId : '',
+        publicDirId : '',
         opened:!+Cookies.get('sidebarStatus'),
         list:Cookies.get('bbb'),
         session:false
@@ -37,6 +40,10 @@ export default new vuex.Store({
         treeModelId(state){
             return state.treeModelId
         },
+        // treeRootId(state){
+        //     return state.treeRootId
+        // },
+
          routers(state){
 
             return state.routers
@@ -57,6 +64,13 @@ export default new vuex.Store({
         },
         userInfo(state){
             return state.userInfo
+        },
+
+        privateDirId(state){
+            return state.privateDirId
+        },
+        publicDirId(state){
+            return state.publicDirId
         },
          opened(state){
             return state.opened

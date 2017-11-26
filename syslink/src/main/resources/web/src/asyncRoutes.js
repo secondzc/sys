@@ -16,8 +16,10 @@ import echarts from './views/charts/echarts.vue'
 
 import Repository from './views/repository/index2.vue'
 import Model from './views/model/index.vue'
+import myModel from './views/model/MyIndex.vue'
 import modelVariable from './views/model/modelVariable.vue' ;
 import packageDiagram from './views/model/packageDiagram.vue'
+import myPackageDiagram from  './views/model/myPackageDiagram.vue'
 import packageDiagramModel from './views/model/packageDiagramModel.vue'
 import packageDiagramVariable from './views/model/packageDiagramVariable.vue'
 import modelComponent from  './views/model/ModelComponent.vue'
@@ -214,12 +216,38 @@ export let  commonRoutes = [
         iconCls: 'iconfont icon-moxing',
         leaf: true,//只有一个节点
         children: [
-            { path: '/model/index', component: Model, name: '我的模型' },
+            { path: '/model/MyIndex', component: myModel, name: '我的模型' },
+       
+            { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
+            { path: '/model/modelCont', component: modelCont, name: '模型信息'},
+            // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
+          
+            { path: '/model/myPackageDiagram', component: myPackageDiagram, name: '包视图'},
+            { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
+                iconCls: 'el-icon-document',
+                leaf: true,//只有一个节点
+                children: [
+                    { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+                    ]
+            },
+            // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
+        ]
+    },
+     {
+        path: '',
+        component: ModelHeader,
+        name: '模型',
+        iconCls: 'iconfont icon-moxing',
+        leaf: true,//只有一个节点
+        hidden:true,
+        children: [
+            
+            { path: '/model/index', component: Model, name: '公共模型' },
             { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
             { path: '/model/modelCont', component: modelCont, name: '模型信息'},
             // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
             { path: '/model/packageDiagram', component: packageDiagram, name: '包视图'},
-            { path: '/model/packageDiagramModel', component: packageDiagramModel, name: '包视图组件信息' },
+           
             { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
                 iconCls: 'el-icon-document',
                 leaf: true,//只有一个节点
