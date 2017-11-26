@@ -44,9 +44,10 @@ public class ReviewUserNodeImpl implements ReviewUserNodeService{
     public void buildTree(Integer rootId,ReviewUserNode node,List<ReviewUserNode> deptLeaf){
         List<Map<String,Object>> children = departMapper.queryByPid(rootId);
         if(children.isEmpty()){
-            deptLeaf.add(node);
+            //此部门下没有子部门了
             return ;
         }
+        deptLeaf.add(node);
         List<ReviewUserNode> reviewUserNodeList = new ArrayList<>();
         for(Map<String,Object> child:children){
             ReviewUserNode reviewUserNode = new ReviewUserNode();
