@@ -44,8 +44,8 @@
 				<el-form-item label="节点描述" prop="description">
 				     <el-input v-model="addItemsDialog.description"></el-input>
 				</el-form-item>
-				<el-form-item label="审核者名字" prop="userName">
-				     <el-input v-model="addItemsDialog.userName" :disabled="true"></el-input>
+				<el-form-item label="审核者" prop="userName">
+				     <el-input v-model="addItemsDialog.userName" :disabled="true" style="width:80%"></el-input>
 				     <el-button type="primary" @click.native="chooseName">选择审核者</el-button>
 				</el-form-item>
 			</el-form>
@@ -56,7 +56,7 @@
 		</el-dialog>
 
 		<!--修改界面-->
-		<el-dialog title="配置人员" v-model="editItemsDialogVisible" :close-on-click-modal="false">
+		<el-dialog title="配置人员" :visible.sync="editItemsDialogVisible" v-model="editItemsDialogVisible" :close-on-click-modal="false">
 			<el-form :model="editItemsDialog" label-width="80px" >
 				<el-form-item label="节点名字" prop="reviewNodeName">
 					<el-input v-model="editItemsDialog.reviewNodeName" ></el-input>

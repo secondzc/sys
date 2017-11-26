@@ -29,13 +29,16 @@ public class StatusChangeServiceImpl implements StatusChangeService{
     private CheckorService checkorService;
     @Autowired
     private ReviewFlowInstanceService reviewFlowInstanceService;
+    @Autowired
+    private ModelService modelService;
+    @Autowired
+    private ReviewSuccessService reviewSuccessService;
 
     @Override
     public void agree(Long id) throws SqlNumberException{
         //1.将实例表中的status由2变为3, 调整其最后修改时间
         ReviewNodeInstance reviewNodeInstance = step1(id,"3");
         //2.查找下一个节点实例对应节点的sequence
-
         String sequence = step2(reviewNodeInstance);
         //3.多表联合查找，将下一个节点实例的status由1变成2
         Long instanceId = reviewNodeInstance.getInstanceId();
@@ -122,5 +125,9 @@ public class StatusChangeServiceImpl implements StatusChangeService{
             map.put("instanceId",instanceId);
             reviewFlowInstanceService.setStatus(map);
         }
+        //======将package的id加入到成功入库列表中
+        Long packageId = reviewFlowInstance.getModelId();
+        reviewSuccessService.add(packageId);
+        //======
     }
 }

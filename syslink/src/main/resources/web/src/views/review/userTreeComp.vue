@@ -9,7 +9,7 @@
 	highlight-current
 	:props="defaultProps">
 </el-tree>
-    <button @click="affirm">确认</button>
+    <el-button type="primary" @click="affirm" >确认</el-button>
 	</section>
 	
 

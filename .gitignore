@@ -1,2 +1,10 @@
 
 syslink/logback\.2017-11-02\.log
+
+
+
+*.log
+
+syslink/src/main/resources/web/script/dev-server\.js
+
+syslink/src/main/resources/web/config/index\.js

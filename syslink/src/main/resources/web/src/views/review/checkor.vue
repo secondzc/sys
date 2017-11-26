@@ -4,13 +4,13 @@
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
 			<el-table-column type="index" width="60" >
 			</el-table-column>
-			<el-table-column prop="model.name" label="模型名" width="100" >
+			<el-table-column prop="model.name" label="模型名" width="120" >
 			</el-table-column>
-			<el-table-column prop="template.templateName" label="模板名" width="100" >
+			<el-table-column prop="template.templateName" label="模板名" width="120" >
 			</el-table-column>
-			<el-table-column prop="instanceName" label="审签实例名" width="150" >
+			<el-table-column prop="instanceName" label="审签实例名" width="120" >
 			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column label="操作" width="300">
 				<template scope="scope">
 					<el-button size="small" @click="toDetail(scope.$index, scope.row)">详情</el-button> 
 					<el-button size="small" @click="handleAgree(scope.$index, scope.row)">同意</el-button>

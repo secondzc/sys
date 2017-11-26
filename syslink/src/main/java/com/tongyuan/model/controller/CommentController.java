@@ -1,6 +1,7 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tongyuan.model.service.NodeInstanceService;
 import com.tongyuan.pageModel.CommentPage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class CommentController extends BaseController{
             JSONObject jo = new JSONObject();
             jo.put("flag",true);
             jo.put("commentPages",commentPages);
-            return jo;
+            String joString = JSONObject.toJSONStringWithDateFormat(jo,"yyyy-MM-dd HH:mm:ss", SerializerFeature.PrettyFormat);
+            return JSONObject.parseObject(joString);
     }
 }

@@ -5,11 +5,9 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             
 			<el-form :inline="true" :model="filters">
-                <el-radio-group v-model="tab" style="margin-bottom: 30px;">
-        <el-radio-button label="create">新建(模型上传)</el-radio-button>
-        <el-radio-button label="download">下载模型</el-radio-button>
-        <!-- <el-radio-button label="cancel">撤销流程...</el-radio-button> -->
-        </el-radio-group>
+<!--                 <el-radio-group v-model="tab" style="margin-bottom: 30px;">
+        <el-radio-button label="cancel">撤销流程...</el-radio-button>
+        </el-radio-group> -->
 
 				<el-form-item>
 					<el-input v-model="filters.name" placeholder="模板名"></el-input>
@@ -30,11 +28,11 @@
 			</el-table-column>
 			<el-table-column prop="status" label="当前状态" width="120" :formatter="format">
 			</el-table-column>
-			<el-table-column prop="createTime" label="创建时间" width="120" >
+			<el-table-column prop="createTime" label="创建时间" width="180" >
 			</el-table-column>
-			<el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="180" >
+			<el-table-column prop="lastUpdateTime" label="最后修改时间" width="180" >
 			</el-table-column>
-			<el-table-column label="操作" width="200">
+			<el-table-column label="操作" width="300">
 				<template scope="scope">
 					<el-button size="small" @click="detail(scope.$index,scope.row)">查看详情</el-button>
                     <el-button size="small" @click="cancel(scope.$index,scope.row)">撤销流程</el-button>
@@ -132,9 +130,6 @@
     		detail(index,row){
 				sessionStorage.setItem('instanceId',row.instanceId);
 				this.$router.push({path:'/mySubmitDetail'});
-    		},
-    		remove(row){
-
     		},
     		selsChange(sels){
     			this.sels = sels;

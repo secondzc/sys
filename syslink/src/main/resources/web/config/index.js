@@ -29,7 +29,7 @@ module.exports = {
         assetsSubDirectory: 'assets',// <-----6.change
         assetsPublicPath: '/',
         proxyTable: {// <-----7.change
-            '/api/**': 'http://gogs.modelica-china.com:8080'//代理前台/api开头的请求，代理到8080端口，spring boot的访问端口
+            '/api/**': 'http://localhost:8080'//代理前台/api开头的请求，代理到8080端口，spring boot的访问端口
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"
         // with this option, according to the CSS-Loader README

@@ -18,11 +18,11 @@
 			</el-table-column>
 			<el-table-column prop="instanceName" label="流程名" width="120" >
 			</el-table-column>
-			<el-table-column prop="description" label="流程描述" width="120" >
+			<el-table-column prop="description" label="流程描述" width="180" >
 			</el-table-column>
 			<el-table-column prop="status" label="当前状态" width="120" :formatter="format">
 			</el-table-column>
-			<el-table-column prop="createTime" label="创建时间" width="120" >
+			<el-table-column prop="createTime" label="创建时间" width="180" >
 			</el-table-column>
 			<el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="180" >
 			</el-table-column>

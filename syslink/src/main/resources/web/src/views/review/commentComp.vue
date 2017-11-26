@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div style="width:40%" id="comment">
+		<div style="width:40%" id="comment" v-if="isCheckor">
 			<h3>协同</h3>
 			<el-form>
 			<el-form-item label="是否通过:">
@@ -44,6 +44,7 @@
 			    submitLoading:false,
 			}
 		},
+		props:['isCheckor'],
 		methods:{
 			getCommentPages(id){
 				let url="/api/comment/queryCommentPages";

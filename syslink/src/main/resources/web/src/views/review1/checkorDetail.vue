@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<review-detail></review-detail>
-		<comment-comp></comment-comp>
+		<comment-comp :isCheckor="isCheckor"></comment-comp>
 	</div>
 </template>
 <script >
@@ -11,7 +11,7 @@
 
 		data(){
 			return {
-
+				isCheckor:true,
 			}
 		},
 		components:{

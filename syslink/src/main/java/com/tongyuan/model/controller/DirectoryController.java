@@ -2,6 +2,7 @@ package com.tongyuan.model.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.controller.InputStreamRunnable;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
@@ -61,6 +62,8 @@ public class DirectoryController {
     private ModelUtil modelUtil;
     @Autowired
     private ReviewFlowInstanceService reviewFlowInstanceService;
+    @Autowired
+    private StatusChangeService statusChangeService;
 
 
 
@@ -381,8 +384,14 @@ public class DirectoryController {
 //                modelService.add(model);
                 //modelService.add(model);
                 //by:zhangcy  在这里加入了审签的代码
-                Long modelId = modelService.add(model);
-                reviewFlowInstanceService.startInstance(modelId);
+                modelService.add(model);
+                Long modelId = model.getId();
+                Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                try{
+                    statusChangeService.updateNextStatus(instanceId,"1");
+                }catch(SqlNumberException e){
+                    e.printStackTrace();
+                }
                 updateOrCreate = false;
             }
             //查找最外层空的model
