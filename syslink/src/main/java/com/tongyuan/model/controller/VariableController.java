@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -381,16 +378,25 @@ public class VariableController {
         out.close();
         long byteslength = bytes.length;
 
+//        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
+
 //        String treeClass = commonService.getClassTree("xyx");
 //        System.out.print(treeClass);
-        String packageModel = commonService.getModelListByDirId((long) 93);
-        System.out.print(packageModel);
+//        String packageModel = commonService.getModelListByDirId((long) 93);
+//        System.out.print(packageModel);
 //
 //        //对压缩数据流进行解析
 //        byte[] unZipByte = modelUtil.unZip(bytes);
 ////        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
 //        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
 
-
+//        String filePath = "D:\\syslink4.zip";
+//        InputStream input = new BufferedInputStream(new FileInputStream(
+//                filePath));
+        try {
+            modelUtil.unZipByte(bytes,"E:\\Test\\syslink-web\\ziptest");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
