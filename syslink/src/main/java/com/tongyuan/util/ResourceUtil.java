@@ -35,6 +35,8 @@ public class ResourceUtil {
     private FileModelService filemodelService;
     @Autowired
     private ResourceUtil resourceUtil;;
+    @Autowired
+    private ModelUtil modelUtil;
 
     public static final String getString(String key) {
         if (key == null || key.equals("") || key.equals("null")) {
@@ -209,6 +211,23 @@ public class ResourceUtil {
         }
         return userName + "/" + renametaskName + "/";
     }
+
+    public String unzipByte(String fileName,String userName ,byte[] data) throws Exception {
+        //压缩文件的路径
+        String filePath = getzipPath() + fileName;
+        String renametaskName = getNowTime();
+        //输出文件的路径
+        String outputDirectory = getunzipPath() + userName + "/"
+                + renametaskName + "/" + fileName;
+        try {
+//            unzip(filePath, outputDirectory);
+            modelUtil.unZipByte(data,outputDirectory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return userName + "/" + renametaskName + "/";
+    }
+
 
     /**
      * xyx
