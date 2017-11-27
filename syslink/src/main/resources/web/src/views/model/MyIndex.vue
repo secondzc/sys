@@ -874,8 +874,9 @@
                 /* treeNode api */
                 if (_this.__currentNode) { // 子分类添加子类
                     _this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === (_this.privateDirId +"")) { // 顶级添加子类
-                    _this.$refs.kzTree.root.doCreateChildren([data])
+                } else if (data.data.parentId === (_this.privateDirId +"")) { // 顶级添加子类
+//                    _this.$refs.kzTree.root.doCreateChildren([data])
+                    _this.loadTreeNode();
 //                    var url = _this.tree.url.R
 //                    _this.fetch(url, {parent_id: _this.privateDirId })
 //                        .then(data => {
@@ -915,6 +916,19 @@
                 }
             })
         },
+
+            /* 加载子分类 */
+            loadTreeNode (treeItem, resolve) {
+                const url = this.tree.url.R ;
+                var para = {parent_id: this.privateDirId};
+                this.$emit("node-click",para);
+                var _this = this ;
+                _this. fetch(url, para)
+                    .then(data => {
+                        _this.$store.dispatch('sendTreeData',data);
+                        resolve(data)
+                    });
+            },
     },
 
 

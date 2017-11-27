@@ -1,8 +1,10 @@
 <template>
+
   <div class="kz-tree__wrapper">
     <!-- <div class="kz-tree__top">
       <el-button size="small" icon="plus" type="primary" @click="treeAdd({ id: 0 })">增加分类</el-button>
     </div> -->
+    <p>{{getTreeData}}</p>
     <el-tree
       ref="kzTree"
       :data ="treeData"
@@ -95,7 +97,24 @@
               b:state =>state.b,
               a:state =>state.a
           }),
-          ...mapGetters(['bmsg','amsg']),
+          ...mapGetters(['bmsg','amsg','treeData']),
+          getTreeData(){
+              console.log(this.$store.state.treeDatas)
+              if(this.$store.state.treeDatas != ""){
+//                  this.treeData = this.$store.state.treeDatas.data;
+//                  this.loadTreeNode(this.$store.state.treeDatas[0]);
+                  const url = this.data.url.R ;
+                  var para = {parent_id: 0};
+                  this.$emit("node-click",para);
+                  this. fetch(url, para)
+                      .then(data => {
+                          console.log(data)
+                          this.treeData = data;
+                          resolve(data)
+                      });
+
+              }
+          }
       },
     methods: {
       /* 加载子分类 */

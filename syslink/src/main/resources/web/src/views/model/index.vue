@@ -855,33 +855,34 @@
           }
         })
       },
-      fetchAddTreeNode () {
-        const url = 'api/directory/add';
-        this.dialog.submiting = true
-        this.fetch(url, this.dialog.form, 'post')
-            .then(data => {
-              /* 隐藏dialog */
-              Object.assign(this.dialog, {
-                submiting: false,
-                dialogVisible: false
-              })
-              this.$refs.dialogForm.resetFields()
-              /* 提示结果 */
-              const message = this.dialog.form.id ? '编辑成功' : '添加成功'
-              this.$message({ message: message, type: 'success' })
+            fetchAddTreeNode () {
+                const url = 'api/directory/add';
+                this.dialog.submiting = true
+                var _this = this;
+                this.fetch(url, this.dialog.form, 'post')
+                    .then(data => {
+                        /* 隐藏dialog */
+                        Object.assign(this.dialog, {
+                            submiting: false,
+                            dialogVisible: false
+                        })
+                        _this.$refs.dialogForm.resetFields()
+                        /* 提示结果 */
+                        const message = this.dialog.form.id ? '编辑成功' : '添加成功'
+                        this.$message({ message: message, type: 'success' })
 
-              if (this.dialog.form.id) { // 编辑
-                this.__currentNode && this.$set(this.__currentNode, 'data', data)
-              } else { // 新增
-                /* treeNode api */
-                if (this.__currentNode) { // 子分类添加子类
-                  this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === "0") { // 顶级添加子类
-                  this.$refs.kzTree.root.doCreateChildren([data])
-                }
-              }
-            })
-      },
+                        if (_this.dialog.form.id) { // 编辑
+                            _this.__currentNode && _this.$set(_this.__currentNode, 'data', data)
+                        } else { // 新增
+                            /* treeNode api */
+                            if (_this.__currentNode) { // 子分类添加子类
+                                _this.__currentNode.doCreateChildren([data])
+                            } else if (data.data.parentId === (_this.publicDirId +"")) { // 顶级添加子类
+                                _this.loadTreeNode();
+                            }
+                        }
+                    })
+            },
        fetch (url, data, type = 'POST') {
             const success = (data, resolve, reject) => {
                 if (data.status === 1) {
@@ -912,6 +913,18 @@
                 }
             })
         },
+            /* 加载子分类 */
+            loadTreeNode (treeItem, resolve) {
+                const url = this.tree.url.R ;
+                var para = {parent_id: this.publicDirId};
+                this.$emit("node-click",para);
+                var _this = this ;
+                _this. fetch(url, para)
+                    .then(data => {
+                        _this.$store.dispatch('sendTreeData',data);
+                        resolve(data)
+                    });
+            },
     },
         mounted() {
       
