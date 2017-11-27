@@ -462,7 +462,7 @@ public class ModelController extends  BaseController {
                     }
                 }else{
                     for (Model model : allModelList) {
-                        if (model.getParentId() == 0 ) {
+                        if (model.getParentId() == 0 && model.getScope() == false ) {
                             searchModel.add(model);
                         }
                     }
@@ -475,7 +475,6 @@ public class ModelController extends  BaseController {
                         }
                     }
                 }
-
             }
             for (int i = 0; i <= oneOfModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();

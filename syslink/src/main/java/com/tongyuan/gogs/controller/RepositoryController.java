@@ -116,10 +116,10 @@ public class RepositoryController extends BaseController{
 
         String  Url = RepositoryController.class.getClassLoader().getResource("lizi").getPath();
         String liziZip = Url.substring(1);
-        resourceUtil.UnZip(liziZip,"C:/Users/Administrator/gogs-repositories/"+name.toLowerCase());
-        File file = new File("C:/Users/Administrator/gogs-repositories/"+name.toLowerCase()+"/lizi.git");
+        resourceUtil.UnZip(liziZip,System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase());
+        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/lizi.git");
         if(!file.exists() || file.isDirectory()){
-            file.renameTo(new File("C:/Users/Administrator/gogs-repositories/"+name.toLowerCase()+"/"+fileName+".git"));
+            file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/"+fileName+".git"));
         }
         return jo;
     }
