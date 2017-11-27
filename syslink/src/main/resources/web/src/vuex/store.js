@@ -12,6 +12,7 @@ export default new vuex.Store({
         modelId : '',
         treeModelId : '',
         // treeRootId : '',
+        treeDatas : '',
         routers:commonRoutes,
         routers1:limitRoutes,
         addRouters:[],
@@ -33,6 +34,9 @@ export default new vuex.Store({
         },
         bmsg(state){
             return state.bmsg
+        },
+        treeData(state){
+            return state.treeDatas
         },
         modelId(state){
             return state.modelId
