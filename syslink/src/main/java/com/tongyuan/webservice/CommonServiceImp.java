@@ -314,7 +314,7 @@ public class CommonServiceImp implements CommonService {
 //			}
 		//获取到model解压缩的路径
 		String modelPath = resourceUtil.getModelPath(modelDir, fileName);
-		modelReposityUrl = modelPath;
+//		modelReposityUrl = modelPath;
 		//遍历文件，对model库进行插入
 		//	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
 		// String parentPath = ResourceUtil.getFileDriectory() + modelDir;
@@ -380,6 +380,7 @@ public class CommonServiceImp implements CommonService {
 		//修改成根据插入的分类id找到对应的package包
 		//  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
 		Model nullModel = modelService.queryByNameAndDir(param);
+		modelReposityUrl = "http://localhost:3000/" + userName.toLowerCase() + "/"+ nullModel.getName() + "\\.get";
 		for (int i = 0; i < subFiles.length; i++) {
             //查看文件的格式
             String [] fileNames = subFiles[i].split("\\.");
