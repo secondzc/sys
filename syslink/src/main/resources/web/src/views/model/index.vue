@@ -474,6 +474,7 @@
             sortableList,
         },
         data() {
+            this.__currentNode = null
             return {
                url: {
               C: '',
@@ -877,7 +878,7 @@
                             /* treeNode api */
                             if (_this.__currentNode) { // 子分类添加子类
                                 _this.__currentNode.doCreateChildren([data])
-                            } else if (data.data.parentId === (_this.publicDirId +"")) { // 顶级添加子类
+                            } else if (data.parentId === (_this.publicDirId +"")) { // 顶级添加子类
                                 _this.loadTreeNode();
                             }
                         }
