@@ -3,6 +3,7 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.domain.LearnResouce;
 import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.LearnService;
@@ -43,6 +44,12 @@ public class LearnController {
     @RequestMapping("")
     public String learn(){
         return "learn-resource";
+    }
+
+    @RequestMapping("/test")
+    @ResponseBody
+    public String test() throws Exception{
+        throw new SqlNumberException("测试数据查询数目异常");
     }
 
     @RequestMapping(value = "/queryLeanList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")

@@ -15,7 +15,7 @@
                     :auto-upload="true"
                     :show-file-list = "false"
             >
-                <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" >上传文件</el-button>
+                <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" >上传文件..</el-button>
                 <!--<p>{{directoryContent}}</p>-->
                 <!--{{bmsg}}-->
                 <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
@@ -59,7 +59,8 @@
             //上传文件
             uploadUrl :function(){
                 var scope = false;
-                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
+                console.log('......START UPLOAD');
+                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg+"&scope="+scope;
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
             submitUpload() {

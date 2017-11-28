@@ -158,4 +158,15 @@ public class ReviewFlowInstanceController extends BaseController {
         ServletUtil.createSuccessResponse(200, jo, response);
     }
 
+    @RequestMapping(value="/getModelIdByInstanceId",method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject getModelIdByInstanceId(HttpServletRequest request){
+        JSONObject jo = new JSONObject();
+        Long instanceId = Long.valueOf(request.getParameter("instanceId"));
+        ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByInstanceId(instanceId);
+        Long modelId = reviewFlowInstance.getModelId();
+        jo.put("flag",true);
+        jo.put("modelId",modelId);
+        return jo;
+    }
 }
