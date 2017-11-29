@@ -509,7 +509,7 @@
                             url: {
                                 C: '/api/directory/add?userName='+ this.$store.state.userInfo.profile.name +"&",
                                 U: '/api/directory/update',
-                                R: 'api/directory/list?scope='+true +"&userName="+ this.$store.state.userInfo.profile.name +"&",
+                                R: 'api/directory/list?scope='+false +"&userName="+ this.$store.state.userInfo.profile.name +"&",
                                 D: '/api/directory/delete'
                             }
                         },
@@ -557,10 +557,10 @@
                     pageIndex: this.pager.pageIndex
                 };
                 if (_this.amsg != null && _this.amsg != "") {
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
                 } else {
                     _this.$store.state.amsg = 0;
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
                 }
                 console.log(url);
                 _this.$http.post(url)
