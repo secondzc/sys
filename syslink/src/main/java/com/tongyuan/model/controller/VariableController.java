@@ -2,6 +2,7 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.gogs.controller.RepositoryController;
 import com.tongyuan.model.domain.Component;
 import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.Model;
@@ -354,49 +355,38 @@ public class VariableController {
     @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public void test(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        FileInputStream fin  = null;
-        try {
-            fin = new FileInputStream("D:\\syslink4.zip");
-        } catch (
-                FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int read;
-        byte[] bytes=new byte[1024];
-        try {
-            while((read = fin.read(bytes)) >0){
-                out.write(bytes, 0, read);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        fin.close();
-
-        bytes = out.toByteArray(); // 这就是全部的字节数组了。
-        out.close();
-        long byteslength = bytes.length;
-
-//        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
-
-//        String treeClass = commonService.getClassTree("xyx");
-//        System.out.print(treeClass);
-//        String packageModel = commonService.getModelListByDirId((long) 93);
-//        System.out.print(packageModel);
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        FileInputStream fin  = null;
+//        try {
+//            fin = new FileInputStream("D:\\syslink4.zip");
+//        } catch (
+//                FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
 //
-//        //对压缩数据流进行解析
-//        byte[] unZipByte = modelUtil.unZip(bytes);
-////        modelUtil.getFile(unZipByte,"E:\\Test\\syslink-web\\ziptest","xx");
-//        resourceUtil.unzip("D:\\syslink4.zip","E:\\Test\\syslink-web\\ziptest");
+//        int read;
+//        byte[] bytes=new byte[1024];
+//        try {
+//            while((read = fin.read(bytes)) >0){
+//                out.write(bytes, 0, read);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        fin.close();
+//
+//        bytes = out.toByteArray(); // 这就是全部的字节数组了。
+//        out.close();
+//        long byteslength = bytes.length;
 
-//        String filePath = "D:\\syslink4.zip";
-//        InputStream input = new BufferedInputStream(new FileInputStream(
-//                filePath));
-        try {
-            modelUtil.unZipByte(bytes,"E:\\Test\\syslink-web\\ziptest");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+//        try {
+//            modelUtil.unZipByte(bytes,"E:\\Test\\syslink-web\\ziptest");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        Boolean result = directoryController.isScope((long) 202);
+//        System.out.print(result+"!!!!!!!!!!!");
+
     }
 }

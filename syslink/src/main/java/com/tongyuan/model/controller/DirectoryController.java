@@ -78,53 +78,6 @@ public class DirectoryController {
     @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public void test(HttpServletRequest request , HttpServletResponse response) throws IOException {
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        String author = request.getParameter("author");
-//        String title = request.getParameter("title");
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        params.put("author", author);
-//        params.put("title", title);
-//        List<LearnResouce> learnList=learnService.queryLearnResouceList(params);
-//        PageInfo<LearnResouce> pageInfo =new PageInfo<LearnResouce>(learnList);
-//
-//        JSONObject jo=new JSONObject();
-//        jo.put("rows", learnList);
-//        jo.put("total", pageInfo.getPages());//总页数
-//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-//        ServletUtil.createSuccessResponse(200, jo, response);
-
-     //   CommonServiceImp CommonServiceImp = new CommonServiceImp();
-
-   //     ResourceUtil resourceUtil = new ResourceUtil();
-
-/*        Integer g[] = new Integer [60];
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        FileInputStream fin  = null;
-        try {
-            fin = new FileInputStream("D:\\syslink.zip");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int read;
-        byte[] bytes=new byte[1024];
-        try {
-            while((read = fin.read(bytes)) >0){
-                out.write(bytes, 0, read);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        fin.close();
-
-        bytes = out.toByteArray(); // 这就是全部的字节数组了。
-        out.close();
-        long byteslength = bytes.length;
-        System.out.println(byteslength);*/
         JSONObject result=new JSONObject();
         //文件解析的数据Map
         Map<String , Object> dataMap = new HashMap<>();
@@ -179,8 +132,6 @@ public class DirectoryController {
          //   String relativePath=currentPath.substring(unzipPath.length(), currentPath.length());
             String currentPath=relativePath.substring(unzipPath.length(), relativePath.length());
             FileModel directory  = new FileModel();
-            //       directory.setId(UUID.randomUUID().toString());
-            //       directory.setParentId(UUID.randomUUID().toString());
             directory.setName(parentF.getName());
             directory.setAbsoluteAddress(currentPath);
             directory.setRelativeAddress(relativePath);
@@ -214,81 +165,6 @@ public class DirectoryController {
         return result;
     }
 
-//    @RequestMapping(value = "/getTreeAsync",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public List<EasyuiTreeNode> getTreeAsync(HttpServletRequest request , HttpServletResponse response){
-//        String name = request.getParameter("name");
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        List<Directory> allDirectoryList = directoryService.findAllDirectory();
-//        List<Directory> rootDirectoryList = directoryService.findRootDirectory();
-//        //公有库的树
-//        List<EasyuiTreeNode> publicTree = new ArrayList<EasyuiTreeNode>();
-//        for (Directory directory : rootDirectoryList) {
-//            publicTree.add(tree(directory,allDirectoryList,true));
-//        }
-//        return publicTree;
-//    }
-//
-//    /**
-//     * 递归
-//     * @param directory
-//     * @param recursive
-//     * @return
-//     */
-//    private EasyuiTreeNode tree(Directory directory,List<Directory> allDirectoryList, boolean recursive) {
-//        EasyuiTreeNode node = new EasyuiTreeNode();
-//        Map<String, Object> attributes = new HashMap<String, Object>();
-//    //    attributes.put("taskId", directory.getTask().getTaskId());
-//        if(directory != null){
-//            node.setId(directory.getRelativeAddress());
-//            node.setText(directory.getName());
-//        }
-//    //    node.setAttributes(attributes);
-//        if (directory != null
-//                && allDirectoryList.size() > 0) {
-//            if (recursive) {
-//                List<Directory> directoryList = new ArrayList<Directory>();
-//                for (Directory  fileDir: allDirectoryList) {
-//                    if(fileDir.getParentId() == directory.getId()){
-//                        directoryList.add(fileDir);
-//                    }
-//                }
-//                //Collections.sort(directoryList, new FilelibraryComparator());
-//                List<EasyuiTreeNode> children = new ArrayList<EasyuiTreeNode>();
-//                for (Directory m : directoryList) {
-//                        node.setState("closed");
-//                        EasyuiTreeNode t = tree(m,allDirectoryList, true);
-//                        children.add(t);
-//
-//                }
-//                node.setChildren(children);
-//            }
-//        }
-//        return node;
-//    }
-//
-//    @RequestMapping(value = "/getDirectoryList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public void  getDirectoryList(HttpServletRequest request , HttpServletResponse response){
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        List<FileModel> rootDirectoryList = fileModelService.findRootDirectoryList(params);
-//        PageInfo<FileModel> pageInfo =new PageInfo<FileModel>(rootDirectoryList);
-//
-//        JSONObject jo=new JSONObject();
-//        jo.put("rows", rootDirectoryList);
-//        jo.put("total", pageInfo.getPages());//总页数
-//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-//        ServletUtil.createSuccessResponse(200, jo, response);
-////        return rootDirectoryList;
-//    }
 
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -881,6 +757,35 @@ public class DirectoryController {
         }
         jo.put("data",publicDir);
         return jo;
+    }
+
+    /**
+     * 输入一个模型目录，判断是否是公有模型
+     * true 公有模型 false 私有模型
+     * @param directoryId
+     * @return
+     */
+    public Boolean isScope(Long directoryId){
+        Boolean result = false;
+        Directory publicDir = new Directory();
+        List<Directory> treeItemList = new ArrayList<>();
+        try{
+            List<Directory> directoryList = directoryService.getPublicDir();
+            publicDir = directoryList.get(0);
+            List<Directory> allDirectory = directoryService.findAllDirectory();
+            //添加节点父类列表
+            addTreeItem(directoryId, treeItemList, allDirectory);
+            for (Directory directory : treeItemList) {
+                if(directory.getId() == publicDir.getId()){
+                    result = true;
+                    return result;
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return  result;
     }
 
 

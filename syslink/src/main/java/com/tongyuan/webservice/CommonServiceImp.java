@@ -2,6 +2,7 @@ package com.tongyuan.webservice;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.gogs.controller.RepositoryController;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.domain.Star;
@@ -10,6 +11,7 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.gogs.service.StarService;
 import com.tongyuan.gogs.service.WatchService;
+import com.tongyuan.model.controller.DirectoryController;
 import com.tongyuan.model.controller.ModelController;
 import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.FileModel;
@@ -71,6 +73,10 @@ public class CommonServiceImp implements CommonService {
 	private StarService starService;
 	@Autowired
 	private FileX fileX;
+	@Autowired
+	private DirectoryController directoryController;
+	@Autowired
+	private RepositoryController repositoryController;
 	private String userName;
 
 	@Override
@@ -289,6 +295,14 @@ public class CommonServiceImp implements CommonService {
 	 */
 	public String uploadModel(String userName,Long classID,String fileName, long beginPos, long length,
 							byte[] data){
+		System.out.println("starting create the repository...");
+		Boolean isScopeDir = directoryController.isScope(classID);
+		if(isScopeDir){
+			repositoryController.addRepository("admin",fileName,isScopeDir);
+		}else{
+			repositoryController.addRepository(userName,fileName,null);
+		}
+		System.out.println("End create the repository...");
 		System.out.println("starting upload the file...");
 		String modelReposityUrl = "";
 		boolean result = false;
@@ -297,10 +311,6 @@ public class CommonServiceImp implements CommonService {
 		System.out.println("filePath==" + filePath);
 		System.out.println("starting writing file...");
 		//TODO:上传到内存中，并在内存中完成解压
-//			resourceUtil.writeFile(filePath, beginPos, length, data);
-
-		// 模型相对路径xieyx/20170620.../
-//			String modelDir = resourceUtil.unzipFile(fileName, userName);
 		String modelDir = "";
 		try {
             modelDir = resourceUtil.unzipByte(fileName, userName,data);
@@ -309,15 +319,9 @@ public class CommonServiceImp implements CommonService {
         }
 		//输出文件的目录（modelDir是解压缩到的目录）
 		System.out.println("modelDir==========" + modelDir + "*************");
-//			if(fileName.endsWith("\\.zip")){
-//				fileName = modelUtil.splitName(fileName);
-//			}
 		//获取到model解压缩的路径
 		String modelPath = resourceUtil.getModelPath(modelDir, fileName);
-//		modelReposityUrl = modelPath;
 		//遍历文件，对model库进行插入
-		//	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
-		// String parentPath = ResourceUtil.getFileDriectory() + modelDir;
 		String parentPath = modelPath;
 		resourceUtil.getSubFile(parentPath.substring(0,
                 parentPath.length()), parentPath.substring(0,
@@ -338,7 +342,6 @@ public class CommonServiceImp implements CommonService {
             directory = directoryList.get(0);
         }else {
             result = false;
-//                return result;
         }
 		//获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
 		//文件所在位置
@@ -349,7 +352,6 @@ public class CommonServiceImp implements CommonService {
 		//对xml进行解析,遍历xml文件下所有文件
 		if(StringUtil.isNull(xmlPath)){
             result = false;
-//                return result;
         }
 		File xmlFilePath = new File(xmlPath);
 		String[] subFiles = xmlFilePath.list();
@@ -363,22 +365,15 @@ public class CommonServiceImp implements CommonService {
 		model.setScope(false);
 		model.setUserId(user.getID());
 		model.setCreateTime(new Date());
-		// model.setUserId(1);
 		model.setDeleted(false);
 		Map<String, Object> param = new HashMap<>();
 		param.put("fileName",subFiles[0].split("\\.")[0]);
 		param.put("directoryId",classID);
-//            if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
 		if(modelService.queryByNameAndDir(param) == null){
-//                modelService.add(model);
-            //by:zhangcy  在这里加入了审签的代码
             Long modelId = modelService.add(model);
-//                reviewFlowInstanceService.startInstance(modelId);
-//                updateOrCreate = false;
         }
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
-		//  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
 		Model nullModel = modelService.queryByNameAndDir(param);
 		modelReposityUrl = "http://localhost:3000/" + userName.toLowerCase() + "/"+ nullModel.getName() + "\\.get";
 		for (int i = 0; i < subFiles.length; i++) {

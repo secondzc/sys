@@ -1,6 +1,7 @@
 package com.tongyuan.gogs.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.gogs.domain.Action;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
@@ -53,75 +54,11 @@ public class RepositoryController extends BaseController{
     @ResponseBody
     public JSONObject add(@RequestParam(value = "name", required = false) String name,
                           @RequestParam(value = "fileName", required = false) String fileName,
+                          @RequestParam(value = "scope", required = false) Boolean scope,
                           HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
-        //查看模型库是否存在
-        File fileExits = new File(System.getProperty("user.home")+"/gogs-repositories/"+ name.toLowerCase()+"/" + fileName+".git");
-        if(fileExits.exists()){
-            System.out.println("file exists");
-            return jo;
-        }
-
-        GUser user = guserService.querListByName(name);
-        user.setNumRepos(user.getNumRepos()+1);
-        boolean UserResult = guserService.update(user);
-        Repository repository = new Repository();
-        repository.setOwnerID(user.getID());
-        repository.setLowerName(fileName.toLowerCase());
-        repository.setName(fileName);
-        repository.setDefaultBranch("master");
-        repository.setSize(0);
-        repository.setNumWatches(1);
-        repository.setNumStars(0);
-        repository.setNumForks(0);
-        repository.setAllowPublicIssues(false);
-        repository.setNumIssues(0);
-        repository.setNumClosedIssues(0);
-        repository.setNumPulls(0);
-        repository.setNumClosedPulls(0);
-        repository.setNumMilestones(0);
-        repository.setNumClosedMilestones(0);
-        repository.setIsPrivate(false);
-        repository.setIsBare(true);
-        repository.setIsMirror(false);
-        repository.setEnableWiki(true);
-        repository.setEnableExternalWiki(false);
-        repository.setAllowPublicWiki(false);
-        repository.setEnableIssues(true);
-        repository.setAllowPublicWiki(false);
-        repository.setEnableExternalTracker(false);
-        repository.setExternalTrackerStyle("numeric");
-        repository.setEnablePulls(true);
-        repository.setIsFork(false);
-        repository.setForkID((long) 0);
-        repository.setCreatedUnix(new Date().getTime() / 1000);
-        boolean result = repositoryService.add(repository);
-        //查找插入的仓库对象
-        Repository repositoryData = repositoryService.queryByName(fileName);
-        Watch watch = new Watch();
-        watch.setRepoID(repositoryData.getID());
-        watch.setUserID(user.getID());
-        boolean watchResult = watchService.add(watch);
-        Action action = new Action();
-        action.setUserID(user.getID());
-        action.setOpType(1);
-        action.setActUserID(user.getID());
-        action.setActUserName(name);
-        action.setRepoID(repositoryData.getID());
-        action.setRepoUserName(name);
-        action.setRepoName(repository.getName());
-        action.setPrivate(false);
-        action.setCreatedUnix(new Date().getTime() / 1000);
-        boolean actionResult = actionService.add(action);
-
-        String  Url = RepositoryController.class.getClassLoader().getResource("lizi").getPath();
-        String liziZip = Url.substring(1);
-        resourceUtil.UnZip(liziZip,System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase());
-        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/lizi.git");
-        if(!file.exists() || file.isDirectory()){
-            file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/"+fileName+".git"));
-        }
-        return jo;
+        jo = this.addRepository(name, fileName,scope);
+        return  jo;
     }
 
 
@@ -189,6 +126,82 @@ public class RepositoryController extends BaseController{
     }
 
 
+    public  JSONObject addRepository(String name,String fileName,Boolean scope){
+        JSONObject jo = new JSONObject();
+        //查看模型库是否存在
+        String userName = "";
+        if(scope != null){
+            userName = "admin";
+        }else {
+            userName = name.toLowerCase();
+        }
+        File fileExits = new File(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + fileName+".git");
+        if(fileExits.exists()){
+            System.out.println("file exists");
+            return jo;
+        }
+
+        GUser user = guserService.querListByName(name);
+        user.setNumRepos(user.getNumRepos()+1);
+        boolean UserResult = guserService.update(user);
+        Repository repository = new Repository();
+        repository.setOwnerID(user.getID());
+        repository.setLowerName(fileName.toLowerCase());
+        repository.setName(fileName);
+        repository.setDefaultBranch("master");
+        repository.setSize(0);
+        repository.setNumWatches(1);
+        repository.setNumStars(0);
+        repository.setNumForks(0);
+        repository.setAllowPublicIssues(false);
+        repository.setNumIssues(0);
+        repository.setNumClosedIssues(0);
+        repository.setNumPulls(0);
+        repository.setNumClosedPulls(0);
+        repository.setNumMilestones(0);
+        repository.setNumClosedMilestones(0);
+        repository.setIsPrivate(false);
+        repository.setIsBare(true);
+        repository.setIsMirror(false);
+        repository.setEnableWiki(true);
+        repository.setEnableExternalWiki(false);
+        repository.setAllowPublicWiki(false);
+        repository.setEnableIssues(true);
+        repository.setAllowPublicWiki(false);
+        repository.setEnableExternalTracker(false);
+        repository.setExternalTrackerStyle("numeric");
+        repository.setEnablePulls(true);
+        repository.setIsFork(false);
+        repository.setForkID((long) 0);
+        repository.setCreatedUnix(new Date().getTime() / 1000);
+        boolean result = repositoryService.add(repository);
+        //查找插入的仓库对象
+        Repository repositoryData = repositoryService.queryByName(fileName);
+        Watch watch = new Watch();
+        watch.setRepoID(repositoryData.getID());
+        watch.setUserID(user.getID());
+        boolean watchResult = watchService.add(watch);
+        Action action = new Action();
+        action.setUserID(user.getID());
+        action.setOpType(1);
+        action.setActUserID(user.getID());
+        action.setActUserName(name);
+        action.setRepoID(repositoryData.getID());
+        action.setRepoUserName(name);
+        action.setRepoName(repository.getName());
+        action.setPrivate(false);
+        action.setCreatedUnix(new Date().getTime() / 1000);
+        boolean actionResult = actionService.add(action);
+
+        String  Url = RepositoryController.class.getClassLoader().getResource("lizi").getPath();
+        String liziZip = Url.substring(1);
+        resourceUtil.UnZip(liziZip,System.getProperty("user.home")+"/gogs-repositories/"+userName);
+        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+userName+"/lizi.git");
+        if(!file.exists() || file.isDirectory()){
+            file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+userName+"/"+fileName+".git"));
+        }
+        return  jo;
+    }
 
 
 
