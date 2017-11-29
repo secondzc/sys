@@ -17,7 +17,7 @@
           <!-- </el-tooltip> -->
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toMySpace"  >工作台</a>
         <a  href="http://gogs.modelica-china.com:8080/login.html#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
-        <a  href="http://gogs.modelica-china.com:3000/" v-show="this.func.isLogin()" >协同</a>
+        <a  href="javascript:void(0)" v-show="this.func.isLogin()" @click="toCorporate" >协同</a>
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
         <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
         <a  href="javascript:void(0)"  v-show="!this.func.isLogin()"  @click="toLogin">登录</a>
@@ -189,7 +189,17 @@ import Cookies from 'js-cookie'
             },
             toCorporate :function () {
                 var _this = this;
-              _this.$router.push({path: '/repository/index'});
+                let host = window.location.host;               
+                let a = host;
+                let b = a.split(':');
+                let c = b[0];
+                let url = c+":3000";
+                window.location.href="http://"+url
+                console.log(b);
+
+                // window.location.href="http://"+url;
+
+              // _this.$router.push({path: '/repository/index'});
             },
             toLogin()
             {

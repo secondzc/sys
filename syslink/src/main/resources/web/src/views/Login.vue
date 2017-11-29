@@ -94,6 +94,8 @@
                         Cookies.set('syslink', _this.ruleForm2.userName,{ expires: 30, path: '' });
 
                       }
+                      
+                       Cookies.set('gogs_awesome', _this.ruleForm2.userName,{ expires: 30, path: '' });
 
                       //存储用户信息
                       // let logined={logined:''};
