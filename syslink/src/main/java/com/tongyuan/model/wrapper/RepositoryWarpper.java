@@ -25,10 +25,13 @@ public class RepositoryWarpper extends BaseControllerWarpper {
         String createDate = map.get("createdUnix").toString();
         String  date = UnixToDate.TimeStamp2Date(createDate);
         map.put("createdUnix",date);
+        if(map.get("updatedUnix")!=null)
+        {
+            String updateDate = map.get("updatedUnix").toString();
+            String  date1 = UnixToDate.TimeStamp2Date(updateDate);
+            map.put("updatedUnix",date);
+        }
 
-        String updateDate = map.get("updatedUnix").toString();
-        String  date1 = UnixToDate.TimeStamp2Date(updateDate);
-        map.put("updatedUnix",date);
 
 
         GUser user = userMapper.queryById(Long.parseLong(map.get("ownerId").toString()));
