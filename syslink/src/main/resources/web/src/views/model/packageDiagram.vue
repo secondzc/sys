@@ -338,7 +338,7 @@
                 }
             },
             goReposity(){
-                location.href = "http://gogs.modelica-china.com:3000" + "/"+this.$data.name +"/"+ this.form.name.split(".",1)[0]
+                location.href = "http://gogs.modelica-china.com:3000" + "/"+ "admin" +"/"+ this.form.name.split(".",1)[0]
             }
         }
     };
