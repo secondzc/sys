@@ -58,7 +58,7 @@
         methods: {
             //上传文件
             uploadUrl :function(){
-                var scope = false;
+                var scope = true;
                 return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
@@ -75,7 +75,7 @@
             },
             beforeUploadFile(file){
                 //检验gogs仓库是否存在，不存在则创建一个仓库
-                var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
+                var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0] + '&scope=' + true
                 this.$http.post(modelUrl)
                     .then(function (response) {
                     })
@@ -181,7 +181,7 @@
                     .catch(_ => {});
             },
             coverModel(){
-                var scope = false;
+                var scope = true;
                 var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
                 this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                 this.isCover = true;

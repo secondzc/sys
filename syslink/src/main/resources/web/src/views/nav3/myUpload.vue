@@ -58,7 +58,7 @@
         methods: {
             //上传文件
             uploadUrl :function(){
-                var scope = true;
+                var scope = false;
                 return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
@@ -181,7 +181,7 @@
                     .catch(_ => {});
             },
             coverModel(){
-                var scope = true;
+                var scope = false;
                 var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
                 this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                 this.isCover = true;
