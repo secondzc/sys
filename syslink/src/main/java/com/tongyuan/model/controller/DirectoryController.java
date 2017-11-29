@@ -170,11 +170,10 @@ public class DirectoryController {
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     @CrossOrigin(origins = "http://gogs.modelica-china.com:8080", maxAge = 3600)
-    public boolean uploadDirectory(@RequestParam(value = "name",required = false)String name,
+    public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
-                                   @RequestParam(value = "scope",required = false)Boolean scope,
+                                @RequestParam(value = "scope",required = false)Boolean scope,
                                 HttpServletRequest request , HttpServletResponse response){
-
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest)request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
          Long fileSize = map.get("file").get(0).getSize();
@@ -184,14 +183,11 @@ public class DirectoryController {
          if(fileNames2.length >=1){
              fileName = fileNames2[0];
          }
-         //判断这个模型是更新模型还是上传新的模型
-        Boolean updateOrCreate = true;
         try {
              bytes =  map.get("file").get(0).getBytes();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         System.out.println("starting upload the file...");
         boolean result = false;
         //获取压缩包 C:/Temp/zip/文件名
@@ -199,7 +195,6 @@ public class DirectoryController {
         System.out.println("filePath==" + filePath);
         System.out.println("starting writing file...");
 //            resourceUtil.writeFile(filePath, 0, fileSize, bytes);
-//
 //            // 模型相对路径xieyx/20170620.../
 //            String modelDir = resourceUtil.unzipFile(fileName, "xieyx");
         String modelDir = "";
@@ -214,7 +209,6 @@ public class DirectoryController {
         String modelPath =  resourceUtil.getModelPath(modelDir, fileName);
         //遍历文件，对model库进行插入
         //	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
-        // String parentPath = ResourceUtil.getFileDriectory() + modelDir;
         String parentPath = modelPath;
         resourceUtil.getSubFile(parentPath.substring(0,
                 parentPath.length()), parentPath.substring(0,
@@ -224,7 +218,6 @@ public class DirectoryController {
         Map<String,Map> xmlAnalysisMap = new HashMap<>();
         //存放解析svg，info文件所在位置的Map
         Map<String,String> svgPath = new HashMap<>();
-//            String name = fileName;
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("name",fileName);
         //查找到项目所在的位置
@@ -235,7 +228,6 @@ public class DirectoryController {
             directory = directoryList.get(0);
         }else {
             result = false;
-//                return result;
         }
         //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
         //文件所在位置
@@ -246,93 +238,26 @@ public class DirectoryController {
         //对xml进行解析,遍历xml文件下所有文件
         if(StringUtil.isNull(xmlPath)){
             result = false;
-//                return result;
         }
         File xmlFilePath = new File(xmlPath);
         String[] subFiles = xmlFilePath.list();
-        GUser user =  gUserService.querListByName(name);
-        Model model = new Model();
-        model.setName(subFiles[0].split("\\.")[0]);
-        model.setFileId(directory.getId());
-        model.setDirectoryId(directoryId);
-        model.setClasses(ModelClasses.Package.getKey());
-        model.setModelFilePath(filePath);
-        model.setScope(scope);
-        model.setUserId(user.getID());
-        model.setCreateTime(new Date());
-        // model.setUserId(1);
-        model.setDeleted(false);
-        Map<String, Object> param = new HashMap<>();
-        param.put("fileName",subFiles[0].split("\\.")[0]);
-        param.put("directoryId",directoryId);
-//            if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
-        if(modelService.queryByNameAndDir(param) == null){
-//                modelService.add(model);
-            //by:zhangcy  在这里加入了审签的代码
-            modelService.add(model);
-            Long modelId = model.getId();
-            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            try{
-                statusChangeService.updateNextStatus(instanceId,"1");
-            }catch(SqlNumberException e){
-                e.printStackTrace();
-            }
-            updateOrCreate = false;
-        }
+        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
+        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
         //查找最外层空的model
         //修改成根据插入的分类id找到对应的package包
-        //  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
         Model nullModel = modelService.queryByNameAndDir(param);
-        for (int i = 0; i < subFiles.length; i++) {
-            //查看文件的格式
-            String [] fileNames = subFiles[i].split("\\.");
-            //文件的类型
-            String filePreType = fileNames[fileNames.length-2];
-            String fileType = fileNames[fileNames.length-1];
-            if(("xml").equals(fileType)){
-                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
-                xmlAnalysisMap.put(subFiles[i],xmlMap);
-                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-            }else if("svg".equals(fileType)){
-                if("icon".equals(filePreType)){
-                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                }else if("diagram".equals(filePreType)){
-                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                }
-            }else if("html".equals(fileType)){
-                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-            }
-            else if("mo".equals(fileType)){
-                //mo文件信息
-                String textAllInfo = fileX.read(xmlFilePath +"/" +subFiles[i]);
-                svgPath.put(subFiles[i],textAllInfo);
-            }
-        }
+       this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
         //遍历xmlMap进行数据的插入
         for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
             //解析xmlmap 把数据存放到数据库
             modelController.insertData(entry,svgPath,nullModel,directory,directoryId);
         }
-
         //更新模型的层次结构
         //获取package下面的所有model
-        List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-        for (Model modelParent: modelList) {
-            for (Model modelChild: modelList) {
-              String childParentName = modelUtil.getParentName(modelChild.getName());
-              if(childParentName != null && !childParentName.equals("")){
-                 if(childParentName.equals(modelParent.getName())){
-                     modelChild.setParentId(modelParent.getId());
-                     modelService.update(modelChild);
-                 }
-              }
-            }
-        }
+       this.updateModelFramwork(nullModel);
         //        this.doCmd(name,fileXmlPath,fileName);
         result = true;
         System.out.println("上传完毕！！！");
-//        return result;
-        return updateOrCreate;
     }
 
     //web端增加模型目录
@@ -789,6 +714,101 @@ public class DirectoryController {
     }
 
 
+    /**
+     * 給不同的模型存入對應的模型svg地址
+     * @param subFiles
+     * @param xmlFilePath
+     * @param xmlMap
+     * @param svgPath
+     * @param xmlAnalysisMap
+     */
+    public void insertSvgPath(String[] subFiles,File xmlFilePath,Map<String, Object> xmlMap,Map<String,String> svgPath,Map<String,Map> xmlAnalysisMap){
+        for (int i = 0; i < subFiles.length; i++) {
+            //查看文件的格式
+            String [] fileNames = subFiles[i].split("\\.");
+            //文件的类型
+            String filePreType = fileNames[fileNames.length-2];
+            String fileType = fileNames[fileNames.length-1];
+            if(("xml").equals(fileType)){
+                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
+                xmlAnalysisMap.put(subFiles[i],xmlMap);
+                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+            }else if("svg".equals(fileType)){
+                if("icon".equals(filePreType)){
+                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+                }else if("diagram".equals(filePreType)){
+                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+                }
+            }else if("html".equals(fileType)){
+                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+            }
+            else if("mo".equals(fileType)){
+                //mo文件信息
+                String textAllInfo = fileX.read(xmlFilePath +"/" +subFiles[i]);
+                svgPath.put(subFiles[i],textAllInfo);
+            }
+        }
+    }
+
+    /**
+     * 把對應的模型庫的目录进行更改
+     * @param nullModel(包)
+     */
+    public void updateModelFramwork(Model nullModel){
+        List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
+        for (Model modelParent: modelList) {
+            for (Model modelChild: modelList) {
+                String childParentName = modelUtil.getParentName(modelChild.getName());
+                if(childParentName != null && !childParentName.equals("")){
+                    if(childParentName.equals(modelParent.getName())){
+                        modelChild.setParentId(modelParent.getId());
+                        modelService.update(modelChild);
+                    }
+                }
+            }
+        }
+    }
+
+    public Model setPackageParam(String name,String[] subFiles,FileModel directory,Long directoryId,Boolean scope,String filePath){
+        GUser user =  gUserService.querListByName(name);
+        Model model = new Model();
+        model.setName(subFiles[0].split("\\.")[0]);
+        model.setFileId(directory.getId());
+        model.setDirectoryId(directoryId);
+        model.setClasses(ModelClasses.Package.getKey());
+        model.setModelFilePath(filePath);
+        model.setScope(scope);
+        model.setUserId(user.getID());
+        model.setCreateTime(new Date());
+        // model.setUserId(1);
+        model.setDeleted(false);
+        return  model;
+    }
+
+    /**
+     * 是否增加模型并申签
+     * @param subFiles
+     * @param directoryId
+     * @param model
+     * @return
+     */
+    public Map<String, Object> isAddModelAndReview(String[] subFiles,Long directoryId,Model model){
+        Map<String, Object> param = new HashMap<>();
+        param.put("fileName",subFiles[0].split("\\.")[0]);
+        param.put("directoryId",directoryId);
+        if(modelService.queryByNameAndDir(param) == null){
+            //by:zhangcy  在这里加入了审签的代码
+            modelService.add(model);
+            Long modelId = model.getId();
+            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+            try{
+                statusChangeService.updateNextStatus(instanceId,"1");
+            }catch(SqlNumberException e){
+                e.printStackTrace();
+            }
+        }
+        return param;
+    }
 }
 
 

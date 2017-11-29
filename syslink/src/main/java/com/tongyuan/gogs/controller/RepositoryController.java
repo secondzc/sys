@@ -130,7 +130,7 @@ public class RepositoryController extends BaseController{
         JSONObject jo = new JSONObject();
         //查看模型库是否存在
         String userName = "";
-        if(scope != null){
+        if(scope == true){
             userName = "admin";
         }else {
             userName = name.toLowerCase();

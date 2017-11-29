@@ -331,7 +331,6 @@ public class CommonServiceImp implements CommonService {
 		Map<String,Map> xmlAnalysisMap = new HashMap<>();
 		//存放解析svg，info文件所在位置的Map
 		Map<String,String> svgPath = new HashMap<>();
-//            String name = fileName;
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("name",fileName);
 		//查找到项目所在的位置
@@ -355,52 +354,13 @@ public class CommonServiceImp implements CommonService {
         }
 		File xmlFilePath = new File(xmlPath);
 		String[] subFiles = xmlFilePath.list();
-		GUser user =  gUserService.querListByName(userName);
-		Model model = new Model();
-		model.setName(subFiles[0].split("\\.")[0]);
-		model.setFileId(directory.getId());
-		model.setDirectoryId(classID);
-		model.setClasses(ModelClasses.Package.getKey());
-		model.setModelFilePath(filePath);
-		model.setScope(false);
-		model.setUserId(user.getID());
-		model.setCreateTime(new Date());
-		model.setDeleted(false);
-		Map<String, Object> param = new HashMap<>();
-		param.put("fileName",subFiles[0].split("\\.")[0]);
-		param.put("directoryId",classID);
-		if(modelService.queryByNameAndDir(param) == null){
-            Long modelId = modelService.add(model);
-        }
+		Model model = directoryController.setPackageParam(userName,subFiles,directory,classID,isScopeDir,filePath);
+		Map<String, Object> param = directoryController.isAddModelAndReview(subFiles,classID,model);
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
 		Model nullModel = modelService.queryByNameAndDir(param);
 		modelReposityUrl = "http://localhost:3000/" + userName.toLowerCase() + "/"+ nullModel.getName() + "\\.get";
-		for (int i = 0; i < subFiles.length; i++) {
-            //查看文件的格式
-            String [] fileNames = subFiles[i].split("\\.");
-            //文件的类型
-            String filePreType = fileNames[fileNames.length-2];
-            String fileType = fileNames[fileNames.length-1];
-            if(("xml").equals(fileType)){
-                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
-                xmlAnalysisMap.put(subFiles[i],xmlMap);
-                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-            }else if("svg".equals(fileType)){
-                if("icon".equals(filePreType)){
-                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                }else if("diagram".equals(filePreType)){
-                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                }
-            }else if("html".equals(fileType)){
-                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-            }
-            else if("mo".equals(fileType)){
-                //mo文件信息
-                String textAllInfo = fileX.read(xmlFilePath +"/" +subFiles[i]);
-                svgPath.put(subFiles[i],textAllInfo);
-            }
-        }
+		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
 		//遍历xmlMap进行数据的插入
 		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
             //解析xmlmap 把数据存放到数据库
@@ -409,24 +369,10 @@ public class CommonServiceImp implements CommonService {
 
 		//更新模型的层次结构
 		//获取package下面的所有model
-		List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-		for (Model modelParent: modelList) {
-            for (Model modelChild: modelList) {
-                String childParentName = modelUtil.getParentName(modelChild.getName());
-                if(childParentName != null && !childParentName.equals("")){
-                    if(childParentName.equals(modelParent.getName())){
-                        modelChild.setParentId(modelParent.getId());
-                        modelService.update(modelChild);
-                    }
-                }
-            }
-        }
-		result = true;
+		directoryController.updateModelFramwork(nullModel);
 		System.out.println("上传完毕！！！");
 		return modelReposityUrl;
 	}
-
-
 
 	public  void uploadFileDate(String filename ,String username,String modelName,String description){
 
@@ -446,8 +392,6 @@ public class CommonServiceImp implements CommonService {
 				parentPath.length() ),description);
 		return ;
 	}
-
-
 	private void insertChild(ComponentTreeObj classTreeRoot,List<Directory> directoryList,String userName){
 		List<ComponentTreeObj> componentTreeObjChild = new ArrayList<>();
 		for (Directory directory: directoryList) {

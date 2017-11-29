@@ -209,7 +209,6 @@ public class ModelUtil {
             if (i < len - 1)
                 str_buff.append(flag);
         }
-
         return str_buff.toString();
     }
 
