@@ -490,12 +490,20 @@ public class UserController extends BaseController {
 
         //  JSONArray jsonArray = JSONArray.parseArray(para);
         JSONArray jsonArray = jsonObject.getJSONArray("directoryIds");
-        Long []directoryIds = new Long[jsonArray.size()];
-
+        List<Map<String,Object>> models = new ArrayList<>();
         for(int i=0;i<jsonArray.size();i++)
         {
-            directoryIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
+            if(jsonArray.getJSONObject(i).get("modelId")!=null)
+            {
+                models.add(jsonArray.getJSONObject(i));
+            }
         }
+//        Long []modeIds = new Long[jsonArray.size()];
+//
+//        for(int i=0;i<jsonArray.size();i++)
+//        {
+//            modeIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
+//        }
 
 
         Long uid = jsonObject.getLongValue("uid");
@@ -503,7 +511,7 @@ public class UserController extends BaseController {
 
         try
         {
-            userService.updateModelAuth(uid,directoryIds);
+            userService.updateModelAuth(uid,models);
         }
         catch (Exception e)
         {

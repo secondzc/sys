@@ -52,6 +52,11 @@ public class ModelServiceImpl implements ModelService{
     }
 
     @Override
+    public List<Map<String,Object>> findAllModelMap() {
+        return this.modelMapper.findAllModelMap();
+    }
+
+    @Override
     public List<Model> findAllModel() {
         return this.modelMapper.findAllModel();
     }

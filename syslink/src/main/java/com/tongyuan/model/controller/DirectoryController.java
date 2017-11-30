@@ -600,7 +600,38 @@ public class DirectoryController {
 
     public void setChidren(Map<String ,Object>map)
     {
+        if(map.get("icon")==null)
+        {
+            map.put("icon","iconfont icon-wenjianjia");
+        }
         List<Map<String,Object>>chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
+        List<Map<String,Object>> allModelList = modelService.findAllModelMap();
+        List<Map<String,Object>> searchModel = new ArrayList<>();
+        List<Map<String,Object>> operation = new ArrayList<>();
+        Map<String,Object> operation1= new HashMap<>();
+        Map<String,Object> operation2= new HashMap<>();
+        operation1.put("name","可读");
+        operation1.put("mode",1);
+        operation2.put("mode",2);
+        operation2.put("name","可写");
+        operation.add(operation1);
+        operation.add(operation2);
+            for (Map<String,Object> model: allModelList) {
+                if(Long.parseLong(model.get("directoryId").toString()) == Long.parseLong(map.get("id").toString())){
+                         if(Long.parseLong(model.get("parentId").toString()) == 0){
+                             operation1.put("modelId",model.get("id"));
+                             operation1.put("nodeId",model.get("id")+"+"+"1");
+                             operation2.put("modelId",model.get("id"));
+                             operation2.put("nodeId",model.get("id")+"+"+"2");
+                            model.put("children",operation);
+                            model.put("icon","iconfont icon-wenjian1");
+                            searchModel.add(model);
+                        }
+
+                }
+            }
+        chidlren.addAll(searchModel);
+
         if(chidlren.size()>0)
         {
             map.put("children",chidlren);

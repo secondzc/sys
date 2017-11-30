@@ -19,6 +19,7 @@ public interface ModelMapper {
     //根据Name和模型分类Id查找非package模型
     public Model queryByNameAndDir(Map<String, Object> params);
     public List<Model> findAllModel();
+    public List<Map<String,Object>> findAllModelMap();
     public List<Model> findRootModel();
     public List<Model> vagueSearchByName(Map<String, Object> params);
     public Model queryModelById(Long id);

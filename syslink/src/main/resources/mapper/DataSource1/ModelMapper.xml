@@ -23,6 +23,28 @@
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="text_info" property="textInfo" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="mapResultMap" type="map">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="classes" property="classes" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
+        <result column="file_id" property="fileId" jdbcType="BIGINT"/>
+        <result column="discription" property="discription" jdbcType="VARCHAR"/>
+        <result column="Import" property="Import" jdbcType="VARCHAR"/>
+        <result column="Extends" property="Extends" jdbcType="VARCHAR"/>
+        <result column="model_file_path" property="modelFilePath" jdbcType="VARCHAR"/>
+        <result column="icon_svg_path" property="iconSvgPath" jdbcType="VARCHAR"/>
+        <result column="diagram_svg_path" property="diagramSvgPath" jdbcType="VARCHAR"/>
+        <result column="info_text_path" property="infoTextPath" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
+        <result column="scope" property="scope" jdbcType="BOOLEAN"/>
+        <result column="text_info" property="textInfo" jdbcType="VARCHAR"/>
+    </resultMap>
 
     <sql id="baseColumnList" >
         id,parent_id,name,classes,type,directory_id,file_id,discription,Import,Extends,model_file_path,icon_svg_path,diagram_svg_path,
@@ -72,6 +94,19 @@
         order by create_time desc
 --         ) m
 --         where  1=1 GROUP BY NAME
+    </select>
+    <select id="findAllModelMap" resultMap="mapResultMap" resultType="map">
+        <!--SELECT-->
+        <!--<include refid="baseColumnList" ></include> FROM-->
+        <!--(-->
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM  model
+        WHERE
+        is_deleted = "0"
+        order by create_time desc
+        --         ) m
+        --         where  1=1 GROUP BY NAME
     </select>
     <select id="findRootModel" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
         SELECT
