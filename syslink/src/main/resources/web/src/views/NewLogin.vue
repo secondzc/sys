@@ -1,31 +1,49 @@
 <template>
 
+<div>
+  <img :src="bg" style="width: 100%;height: 100%;position: absolute;z-index: -1;" />
+  <div style="display: flex;">
+    <img :src="loginLogo1"  style="max-height: 150px;width: 200px;margin: 0 auto;margin-top: 5%;margin-bottom: 5%;" /> 
+  </div>
+  
 
 
 
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="login-container" style="height: 400px;">
-  <!--   <h3 class="title">系统登录</h3> -->
-    <img :src="loginLogo"  style="max-height: 100px;width: 200px;" />
+    <h3 class="title">登录</h3>
+  <!--   <img :src="loginLogo"  style="max-height: 100px;width: 200px;" /> -->
     <el-form-item prop="userName">
       <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="password">
       <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
-    <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember">记住密码</el-checkbox>
-    <el-form-item style="width:100%;">
+    <div style="display:flex;">
+
+      <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember" style="margin-right: 180px;">记住密码</el-checkbox>
+      <div @click="toIndex">
+        <span>首页</span>
+      </div>
+    </div>
+    
+   <!--  <el-form-item style="width:100%;">
       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
-     
-    </el-form-item>
+    </el-form-item> -->
+    <div style="width: 80%;display: flex;margin: 0 auto;">
+       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+
+    </div>
   </el-form>
 
-
+</div>
 </template>
 
 <script>
   import { requestLogin } from '../api/api';
   import Cookies from 'js-cookie'
   import loginLogo from '@/assets/loginLogo.png'
+  import loginLogo1 from '@/assets/loginLogo1.png'
+  import bg from '@/assets/444.png'
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -43,6 +61,8 @@
         };
       return {
         loginLogo: loginLogo + '?' + +new Date(),
+        loginLogo1: loginLogo1 + '?' + +new Date(),
+        bg: bg + '?' + +new Date(),
         logining: false,
         ruleForm2: {
           userName: 'admin',
@@ -62,6 +82,9 @@
       };
     },
     methods: {
+      toIndex(){
+        this.$router.push('/index');
+      },
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },
@@ -173,7 +196,7 @@
 
 <style lang="scss" scoped>
   .login-container {
-    max-height: 350px;
+    max-height: 0px;
     /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
     -webkit-border-radius: 5px;
     border-radius: 5px;
@@ -183,19 +206,19 @@
    /* margin-left: 50%;
     margin-right: 50%;
     margin-top: 10%; */  
-    margin:5% auto; 
-    width: 350px;
-    padding: 35px 35px 15px 35px;
+    margin:0 auto; 
+    width: 300px;
+    /*padding: 35px 35px 15px 35px;*/
     background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
+  /*  border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;*/
     .title {
       margin: 0px auto 40px auto;
       text-align: center;
       color: #505458;
     }
     .remember {
-      margin: 0px 0px 35px 0px;
+      margin: 0px 0px 10px 0px;
     }
   }
 </style>

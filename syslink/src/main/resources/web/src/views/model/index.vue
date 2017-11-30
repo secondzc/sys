@@ -47,15 +47,15 @@
                   <div style="position: absolute;right: 50px;">
                              <el-button-group  >
                                  <el-tooltip class="item" effect="dark" content="列表视图" placement="top-start">
-                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"></el-button>
+                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"  :class="{buttonFocus:listStatus}"></el-button>
                 </el-tooltip>
                  <el-tooltip class="item" effect="dark" content="卡片视图" placement="top-start">
-                    <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"></el-button>
+                    <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false" :class="{buttonFocus:!listStatus}"></el-button>
                 </el-tooltip>
 
                 </el-button-group>
                  <el-tooltip class="item" effect="dark" content="详细信息" placement="top-start">
-                <el-button icon="el-icon-info"    size ="small"
+                <el-button icon="el-icon-info"    size ="small"  :class="{buttonFocus:info}"
                            @click="info=!info" ></el-button>
                        </el-tooltip>
                   </div>
@@ -184,11 +184,11 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary" 
                                      size="small"
-                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)"  v-show="func.modelJudge(scope.row.parentId+'+1')" ></el-button>
                                     </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" icon="el-icon-delete"   @click="handleDeleted(scope.$index, scope.row)"></el-button>
+                                  <el-button   size="small" type="danger" icon="el-icon-delete"   @click="handleDeleted(scope.$index, scope.row)"  v-show="func.modelJudge(scope.row.parentId+'+2')"></el-button>
                                     </el-tooltip>
                                      </el-button-group>
                                     </template>
@@ -225,7 +225,7 @@
             <el-main class="card-main" v-show="!listStatus">
                 <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 30px;">
                     <!--<span>排序</span>-->
-                    <div style="display: inline-block;line-height: 30px;"><p>排序：</p></div>
+                    <div style="display: inline-block;line-height: 30px;margin-left: 20px;"><p>排序：</p></div>
                     <div id="appp" style="display: inline-block;">
 
                         <sortable-list
@@ -257,10 +257,13 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
+                                     <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
+                                   <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="func.modelJudge(o.parentId+'+1')"> </i>
+                                 </el-tooltip>
     
                                  </div>
                              
-                                        <div :index="o.index" v-on:dblclick="modelVar(o)" @click="modelVariable(o)" >
+                                        <div :index="o.index"  @click="modelVariable(o)" >
                                             <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
                                                 <img v-bind:src="o.imageUrl" style="height: 160px;width: 200px;margin-bottom: 10px;">
                                             </div>
@@ -951,7 +954,7 @@
     }
     .bottom-header{
         max-height:  50px;
-        border-top: solid 1px #cfdbe5;
+      /*  border-top: solid 1px #cfdbe5;*/
     }
     .main-footer{
         max-height: 30px;
@@ -1069,6 +1072,10 @@
   .card-column-content
   {
      margin-bottom: 5px;
+  }
+
+   .buttonFocus{
+    background-color: #e6e6e6;
   }
 
 

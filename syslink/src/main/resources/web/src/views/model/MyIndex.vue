@@ -48,16 +48,16 @@
                   <div style="position: absolute;right: 50px;">
                              <el-button-group  >
                                  <el-tooltip class="item" effect="dark" content="列表视图" placement="top-start">
-                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"></el-button>
+                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true" :class="{buttonFocus:listStatus}"></el-button>
                 </el-tooltip>
                  <el-tooltip class="item" effect="dark" content="卡片视图" placement="top-start">
-                    <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"></el-button>
+                    <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false" :class="{buttonFocus:!listStatus}"></el-button>
                 </el-tooltip>
 
                 </el-button-group>
                  <el-tooltip class="item" effect="dark" content="详细信息" placement="top-start">
                 <el-button icon="el-icon-info"    size ="small"
-                           @click="info=!info" ></el-button>
+                           @click="info=!info" :class="{buttonFocus:info}"></el-button>
                        </el-tooltip>
                   </div>
          
@@ -226,7 +226,7 @@
             <el-main class="card-main" v-show="!listStatus">
                 <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 30px;">
                     <!--<span>排序</span>-->
-                    <div style="display: inline-block;line-height: 30px;"><p>排序：</p></div>
+                    <div style="display: inline-block;line-height: 30px;margin-left: 20px;"><p>排序：</p></div>
                     <div id="appp" style="display: inline-block;">
 
                         <sortable-list
@@ -956,7 +956,7 @@
     }
     .bottom-header{
         max-height:  50px;
-        border-top: solid 1px #cfdbe5;
+       /* border-top: solid 1px #cfdbe5;*/
     }
     .main-footer{
         max-height: 30px;
@@ -1074,6 +1074,9 @@
   .card-column-content
   {
      margin-bottom: 5px;
+  }
+  .buttonFocus{
+    background-color: #e6e6e6;
   }
 
 
