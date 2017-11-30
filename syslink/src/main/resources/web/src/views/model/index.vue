@@ -184,11 +184,11 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary" 
                                      size="small"
-                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)"  v-show="func.modelJudge(scope.row.parentId+'+1')" ></el-button>
+                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)"  :disabled="func.modelJudge(scope.row.parentId+'+1')" ></el-button>
                                     </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" icon="el-icon-delete"   @click="handleDeleted(scope.$index, scope.row)"  v-show="func.modelJudge(scope.row.parentId+'+2')"></el-button>
+                                  <el-button   size="small" type="danger" icon="el-icon-delete"   @click="handleDeleted(scope.$index, scope.row)"  :disabled="func.modelJudge(scope.row.parentId+'+2')"></el-button>
                                     </el-tooltip>
                                      </el-button-group>
                                     </template>
