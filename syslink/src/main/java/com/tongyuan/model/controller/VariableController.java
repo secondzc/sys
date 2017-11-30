@@ -378,10 +378,10 @@ public class VariableController {
 //        bytes = out.toByteArray(); // 这就是全部的字节数组了。
 //        out.close();
 //        long byteslength = bytes.length;
-
-
+//
+//
 //        try {
-//            modelUtil.unZipByte(bytes,"E:\\Test\\syslink-web\\ziptest");
+//            modelUtil.unZipByte(bytes,"E:\\Test\\syslink-web\\ziptest\\111\\222");
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }

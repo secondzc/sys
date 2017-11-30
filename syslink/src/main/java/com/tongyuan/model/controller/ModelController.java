@@ -462,7 +462,7 @@ public class ModelController extends  BaseController {
                     }
                 }else{
                     for (Model model : allModelList) {
-                        if (model.getParentId() == 0 && model.getScope() == false ) {
+                        if (model.getParentId() == 0 && model.getScope() == true ) {
                             searchModel.add(model);
                         }
                     }

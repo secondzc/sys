@@ -120,6 +120,10 @@ public class ModelUtil {
 
         // System.setProperty("sun.zip.encoding",
         // System.getProperty("sun.jnu.encoding"));
+        File outFile = new File(targetFileDir);
+        if (!outFile.exists()) {
+            outFile.mkdirs();
+        }
         ByteArrayInputStream bis = new ByteArrayInputStream(datas);
         ZipInputStream zis = new ZipInputStream(bis);
         ZipEntry entry = null;

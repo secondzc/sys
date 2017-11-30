@@ -130,10 +130,10 @@ public class RepositoryController extends BaseController{
         JSONObject jo = new JSONObject();
         //查看模型库是否存在
         String userName = "";
-        if(scope == true){
-            userName = "admin";
-        }else {
+        if(scope == null){
             userName = name.toLowerCase();
+        }else {
+            userName = "admin";
         }
         File fileExits = new File(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + fileName+".git");
         if(fileExits.exists()){
