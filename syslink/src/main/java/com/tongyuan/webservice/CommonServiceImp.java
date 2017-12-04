@@ -190,7 +190,7 @@ public class CommonServiceImp implements CommonService {
 		model.setModelFilePath(filePath);
 		model.setScope(false);
 		model.setUserId(user.getID());
-		model.setCreateTime(new Date());
+		model.setCreateTime(DateUtil.getTimestamp());
 		// model.setUserId(1);
 		model.setDeleted(false);
 		if (modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null) {
