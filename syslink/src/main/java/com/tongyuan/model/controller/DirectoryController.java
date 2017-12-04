@@ -14,6 +14,7 @@ import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.DirectoryModel;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
+import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.FileX;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
@@ -779,7 +780,7 @@ public class DirectoryController {
         model.setModelFilePath(filePath);
         model.setScope(scope);
         model.setUserId(user.getID());
-        model.setCreateTime(new Date());
+        model.setCreateTime(DateUtil.getTimestamp());
         // model.setUserId(1);
         model.setDeleted(false);
         return  model;

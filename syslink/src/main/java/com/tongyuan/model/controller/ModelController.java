@@ -45,8 +45,6 @@ import java.util.*;
 public class ModelController extends  BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private Date nowDate = new Date();
-
     @Autowired
     private ModelService modelService;
     @Autowired
@@ -85,7 +83,7 @@ public class ModelController extends  BaseController {
         model.setParentId(nullModel.getId());
         model.setUserId(nullModel.getUserId());
         model.setScope(nullModel.getScope());
-        model.setCreateTime(nowDate);
+        model.setCreateTime(nullModel.getCreateTime());
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
         // 修改
@@ -97,7 +95,7 @@ public class ModelController extends  BaseController {
         if( validateModel == null){
             modelService.add(model);
         }else{
-            model.setLastUpdateTime(nowDate);
+            model.setLastUpdateTime(DateUtil.getTimestamp());
             model.setId(validateModel.getId());
             modelService.update(model);
         }
@@ -492,9 +490,9 @@ public class ModelController extends  BaseController {
                     modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
                 modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
-                modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+                modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
                 if(oneOfModel.get(i).getLastUpdateTime() != null){
-                    modelWeb.setUpdateTime(DateUtil.format(oneOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+                    modelWeb.setUpdateTime(DateUtil.format(oneOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd HH:mm:ss"));
                 }
                 modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
                 modelWeb.setType(oneOfModel.get(i).getType());
@@ -785,7 +783,7 @@ public class ModelController extends  BaseController {
         if(xmlData.get("IsVariable").equals("False")){
                Component component = new Component();
                component.setCurrentModelId(model.getId());
-               component.setCreateTime(nowDate);
+               component.setCreateTime(new Date());
                doComponentSet(xmlData,component);
                int componentResult = componentService.add(component);
                long index_last_id = component.getId();
