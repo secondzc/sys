@@ -1,10 +1,7 @@
 package com.tongyuan.model.wrapper;
 
 import com.tongyuan.model.dao.*;
-import com.tongyuan.model.domain.Auth;
-import com.tongyuan.model.domain.DirectoryAuth;
-import com.tongyuan.model.domain.UserAuth;
-import com.tongyuan.model.domain.UserDepart;
+import com.tongyuan.model.domain.*;
 import com.tongyuan.util.SpringContextHolder;
 import com.tongyuan.util.UnixToDate;
 
@@ -57,14 +54,16 @@ public class GUserWarpper extends BaseControllerWarpper {
           map.put("departName",depart.get("name"));
 
       }
-        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
-        List<Map<String,Object>> modelAuths = new ArrayList<>();
-        for(DirectoryAuth directoryAuth:directoryAuths)
-        {
-            Map<String,Object> directory = directoryMapper.queryMapById(directoryAuth.getDirectoryId());
-            modelAuths.add(directory);
-        }
-
+//        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
+//        List<Map<String,Object>> modelAuths = new ArrayList<>();
+//        for(DirectoryAuth directoryAuth:directoryAuths)
+//        {
+//            Map<String,Object> directory = directoryMapper.queryMapById(directoryAuth.getDirectoryId());
+//            modelAuths.add(directory);
+//        }
+//
+//        map.put("modelAuth",modelAuths);
+        List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
         map.put("modelAuth",modelAuths);
 
 

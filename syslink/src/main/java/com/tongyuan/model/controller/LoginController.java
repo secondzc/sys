@@ -136,7 +136,7 @@ public class LoginController extends BaseController {
                 //return "redirect:/model/getMyIndex";
                 map.put("result","1");
                 map.put("userInfo",loginedUser);
-                map.put("errormsg","登陆成功！");
+                map.put("errormsg","登录成功！");
             }else{
                 request.setAttribute("loginFlag",1);
                 //             return "login";
@@ -147,7 +147,7 @@ public class LoginController extends BaseController {
             request.setAttribute("loginFlag", -1);
             //  return "login";
             map.put("result","0");
-            map.put("errormsg","登陆失败，请输入正确的用户！");
+            map.put("errormsg","登录失败，请输入正确的用户！");
         }
 
 

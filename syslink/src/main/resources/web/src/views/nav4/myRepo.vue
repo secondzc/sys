@@ -42,8 +42,8 @@
     <el-table :data="repos" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;min-height: 250px;"  @selection-change="selsChange" >
       <!-- <el-table-column type="selection" min-width="100">
       </el-table-column> -->
-      <el-table-column type="index" min-width="120">
-      </el-table-column>
+     <!--  <el-table-column type="index" min-width="120">
+      </el-table-column> -->
       <el-table-column prop="name" label="仓库名" min-width="120" >
       </el-table-column>
         <el-table-column prop="Collaboration" label="是否协同" min-width="120" >
@@ -52,7 +52,7 @@
          <i v-else class="el-icon-close"></i>
       </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述" min-width="120" >
+      <el-table-column prop="description" label="描述" min-width="200" >
        </el-table-column>
       <el-table-column prop="createdUnix" label="创建时间" min-width="160" >
        </el-table-column>

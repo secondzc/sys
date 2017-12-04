@@ -38,6 +38,19 @@ export default {
     }
     }
     ,
+    modelJudge  (authCode) {
+     let userInfo = store.getters.userInfo; 
+     const modelAuths = userInfo.modelAuths;
+    if(modelAuths.includes(authCode))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+    }
+    ,
 	changeDate (){
   	console.log('123');
     } , 

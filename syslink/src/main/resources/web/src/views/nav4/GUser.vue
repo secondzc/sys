@@ -21,7 +21,7 @@
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" size="small" @click="handleAdd"  >新增</el-button>
+          <el-button type="primary" size="small" @click="handleAdd"   >新增</el-button>
         </el-form-item>
 
       </el-form>
@@ -65,7 +65,7 @@
       <el-table-column type="selection" width="55">
       </el-table-column>
           
-      <el-table-column type="expand">
+     <!--  <el-table-column type="expand">
     
       <template slot-scope="props">
       
@@ -105,7 +105,7 @@
       
       </template>
 
-    </el-table-column>
+    </el-table-column> -->
       
       <el-table-column prop="id" label="ID" width="80" sortable>
       </el-table-column>
@@ -151,7 +151,7 @@
   </el-button>
   <el-dropdown-menu slot="dropdown">
     <el-dropdown-item >  <el-button  type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button></el-dropdown-item>
-    <el-dropdown-item >  <el-button  type="text" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button></el-dropdown-item>
+    <el-dropdown-item  >  <el-button  type="text" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button></el-dropdown-item>
     <el-dropdown-item >  <el-button  type="text" size="small" @click="handleRole(scope.$index, scope.row)">分配角色</el-button></el-dropdown-item>
     <el-dropdown-item >  <el-button  type="text" size="small" @click="handleAuth(scope.$index, scope.row)">分配权限</el-button></el-dropdown-item>
      <el-dropdown-item >  <el-button  type="text" size="small" @click="modelAuth(scope.$index, scope.row)">模型访问控制</el-button></el-dropdown-item>  
@@ -186,7 +186,7 @@
     
 
     <!--编辑界面-->
-    <el-dialog title="编辑用户信息" :visible="editFormVisible" :close-on-click-modal="false"  >
+    <el-dialog title="编辑用户信息" :visible.sync="editFormVisible" :close-on-click-modal="false"  >
         <el-form :model="editForm" label-width="100px" :rules="addFormRules" ref="editForm"    >
         <el-form-item label="用户名" prop="name"   >
           {{editForm.name}}
@@ -208,29 +208,29 @@
             <el-input v-model="editForm.passwd" auto-complete="off"></el-input>
             </el-tooltip>
         </el-form-item>
-        <el-form-item label="个人网站" prop="website"   >
+      <!--   <el-form-item label="个人网站" prop="website"   >
             <el-input v-model="editForm.website" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="所在地区" prop="location"   >
             <el-input v-model="editForm.location" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label-width="150px" label="允许创建最大库数量" prop="maxRepoCreation">
+        </el-form-item> -->
+        <!-- <el-form-item label-width="150px" label="允许创建最大库数量" prop="maxRepoCreation">
              <el-input-number v-model="editForm.maxRepoCreation"  :min="-1" ></el-input-number>
              <label>  （设置为 -1 表示使用全局默认值）</label>
-        </el-form-item>
-        <el-form-item  label-width="20px"  prop="isActive">
+        </el-form-item> -->
+       <!--  <el-form-item  label-width="20px"  prop="isActive">
          <el-checkbox v-model="editForm.isActive">该用户已被激活</el-checkbox>
         
-        </el-form-item>
-         <el-form-item  label-width="20px"  prop="prohibitLogin">
+        </el-form-item> -->
+         <el-form-item  label-width="20px"  prop="prohibitLogin" style="margin-left: 20px;">
           <el-checkbox v-model="editForm.prohibitLogin">该账户被禁止登录</el-checkbox>
         </el-form-item>
-         <el-form-item  label-width="20px" prop="isAdmin">
+       <!--   <el-form-item  label-width="20px" prop="isAdmin">
           <el-checkbox v-model="editForm.isAdmin">该用户具有管理员权限</el-checkbox>
         </el-form-item>
          <el-form-item label-width="20px"  prop="allowGitHook">
           <el-checkbox v-model="editForm.allowGitHook">该用户具有创建Git钩子的权限</el-checkbox>
-        </el-form-item>
+        </el-form-item> -->
          
 
       </el-form>
@@ -241,7 +241,7 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" :visible="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false"   >
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm"   >
         <el-form-item label="用户名" prop="name"  :rules="[{required:true,message:'请输入用户名',trigger:'blur'}]">
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -266,7 +266,7 @@
         <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="分配角色" :visible="roleVisble" :close-on-click-modal="false" width="60%"
+    <el-dialog title="分配角色" :visible.sync="roleVisble" :close-on-click-modal="false" width="60%"
     >
 
 
@@ -282,7 +282,8 @@
     </el-dialog>
 
      <!--分配权限界面-->
-    <el-dialog title="分配权限" :visible="permissionVisible"  v-if="permissionVisible"   >
+    <el-dialog title="分配权限" :visible.sync="permissionVisible"  
+    :close-on-click-modal="false" v-if="permissionVisible" >
 
         <div>
       <el-form :model="permission" label-width="100px"  ref="permission"    >
@@ -308,14 +309,14 @@
 
 
 
-    <el-dialog title="模型访问控制" :visible="modelVisible" v-if="modelVisible"   >
+    <el-dialog title="模型访问控制" :visible.sync="modelVisible" v-if="modelVisible"   >
 
  <!--    <div slot="title">    -->
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
 
-    <el-tree :data="data3" show-checkbox  node-key="id"  
+    <el-tree :data="data3" show-checkbox  node-key="nodeId"  
     ref="tree1"  highlight-current :props="defaultProps1"  
-    :default-checked-keys="modelTree"   :default-expand-all="true">
+    :default-checked-keys="modelTree"   :default-expand-all="true"   :render-content="nodeRender">
     </el-tree>
 
     </el-form>
@@ -493,6 +494,33 @@
       }
     },
     methods: {
+
+      nodeRender (h, { _self, node, data }) {
+        // @todo: 使用jsx插件更好理解
+        const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
+          h('i', {
+                'class': data.icon,
+              
+              }),
+          h('span', data.name),
+          h('span',
+            {
+              'class': 'kz-tree-bar'
+            },
+
+          )
+        ]
+        return h(
+          'div',
+          {
+            'class': 'el-tree-node__label',
+            prop: {
+              children: '-'
+            }
+          },
+          childrenNodes
+        )
+      },
 
       handleChange(value) {
         console.log(value);
@@ -722,7 +750,7 @@
 
             let temp =  [];
 
-         row.modelAuth.forEach(x=>temp.push(x.id));
+         row.modelAuth.forEach(x=>temp.push(x.nodeId));
          console.log(temp);
          this.modelTree=temp;
 

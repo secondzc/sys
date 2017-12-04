@@ -57,7 +57,7 @@ public interface GUserService {
 
     public boolean updateAuth(Long uid, Integer[] authId);
 
-    public boolean updateModelAuth(Long uid,Long[] directoryIds);
+    public boolean updateModelAuth(Long uid,List<Map<String,Object>> models);
 
 
 
