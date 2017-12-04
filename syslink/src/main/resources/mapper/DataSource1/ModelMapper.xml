@@ -18,8 +18,8 @@
         <result column="info_text_path" property="infoTextPath" jdbcType="VARCHAR"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
         <result column="user_id" property="userId" jdbcType="BIGINT"/>
-        <result column="create_time" property="createTime" jdbcType="DATE"/>
-        <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="text_info" property="textInfo" jdbcType="VARCHAR"/>
     </resultMap>
