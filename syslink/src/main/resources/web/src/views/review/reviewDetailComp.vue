@@ -20,16 +20,9 @@
         </ul>
  -->
         <!--步骤条的审签状态-->
-    <!-- <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
-    <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 3"  title="审核成功" :description="item.user.name" :status="test"></el-step>
-    <el-step v-for="(item,index) in this.detailPages" v-if="item.status==4" title="审核失败" :description="item.user.name" status="error"></el-step>
-    <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 2" title="正在审核" status="process" :description="item.user.name"></el-step>
-    <el-step title="未进行" v-for="(item,index) in this.detailPages" v-if="item.status ==1" status="wait" :description="item.user.name"></el-step>
-
-    </el-steps> -->
-    <!-- <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
-    	<el-step v-for="(item,index) in this.detailPages" 
-    </el-steps> -->
+    <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
+    	<el-step v-for="(item,index) in this.detailPages" :title="reviewTitle[index]" :description="item.user.name" :status="reviewStatus[index]"></el-step> 
+    </el-steps>
     <model-info></model-info>
 </section>
 
@@ -43,7 +36,8 @@
 		},
 		data(){
 			return {
-				status:[],
+				reviewTitle: [],
+				reviewStatus:[],
 				instanceId: 0,
 				detailPages:[],
 				sequence:0,
@@ -64,6 +58,21 @@
 				this.func.ajaxPost(url,params,res=>{
 					this.detailPages = res.data.records;
 					this.sequence = res.data.sequence;
+					for(var i=0;i<this.detailPages.length;i++){
+						if(this.detailPages[i].status===3){
+							this.reviewTitle.push('审核成功');
+							this.reviewStatus.push('success')
+						}else if(this.detailPages[i].status===4){
+							this.reviewTitle.push('审核失败');
+							this.reviewStatus.push('error')
+						}else if(this.detailPages[i].status ===2){
+							this.reviewTitle.push('审核中');
+							this.reviewStatus.push('process');
+						}else if(this.detailPages[i].status === 1){
+							this.reviewTitle.push('未进行');
+							this.reviewStatus.push('wait');
+						}
+					};
 					this.stepLoading = false;
 				})
 			},
