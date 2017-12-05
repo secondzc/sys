@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="baseColumnList">
-        instance_id,create_time,description,instance_name,last_update_time,model_id,status,template_id
+        instance_id,review_flow_instance.create_time,description,instance_name,review_flow_instance.last_update_time,model_id,status,template_id
     </sql>
 
     <insert id="add" parameterType="com.tongyuan.model.domain.ReviewNodeInstance" useGeneratedKeys="true" keyProperty="instanceId">
@@ -47,13 +47,17 @@
         SELECT
          <include refid="baseColumnList"/>
         FROM review_flow_instance
+        LEFT JOIN model
+        ON review_flow_instance.model_id = model.id
         WHERE 1=1
         <if test="instanceName!=null and instanceName!=''">
             AND instance_name LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
         </if>
-        <if test="status!=null and status!=''">
-            AND status=#{status}
-        </if>
+        AND review_flow_instance.status IN
+        <foreach collection="status" open="(" close=")" separator="," item="statusItem">
+            #{statusItem}
+        </foreach>
+        AND #{userId} = model.user_id
     </select>
 
     <update id="updateTime" parameterType="java.util.Map">

@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.domain.ReviewFlowTemplate;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface ReviewFlowTemplateService {
     ReviewFlowTemplate queryById(Long templateId);
     int delete(String[] templateIds);
     int updateTime(Map<String, Object> map);
-    ReviewFlowTemplate getTemplateByDefault();
+    ReviewFlowTemplate getTemplateByDefault() throws SqlNumberException;
 
     Long checkDefault() throws Exception;
     int setDefaultTrue(Long templateId);

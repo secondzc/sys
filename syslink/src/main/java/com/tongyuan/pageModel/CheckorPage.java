@@ -12,6 +12,7 @@ import java.sql.Timestamp;
  */
 @Component
 public class CheckorPage {
+    //表示reviewNodeInstance的id
     private Long id;
     private String instanceName;
     private String modelName;

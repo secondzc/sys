@@ -48,12 +48,13 @@
 		},
 		methods: {
 			toDetail(index,row){ 
+				console.log("AAAAAAA");
                 //转到详情页 
                 sessionStorage.setItem('instanceId',row.reviewNodeInstance.instanceId); 
                 sessionStorage.setItem('id',row.id);
                 this.$router.push({path:'/checkorDetail'});
                 //将包id放入vuex中
-                this.$store.dispatch('sendModelId', row.model.id);
+                //this.$store.dispatch('sendModelId', row.model.id);
              }, 
 			// details(index,row){ 
    //            //转到详情页 

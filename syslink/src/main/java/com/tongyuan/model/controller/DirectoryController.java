@@ -293,7 +293,7 @@ public class DirectoryController {
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    @CrossOrigin(origins = "http://gogs.modelica-china.com:8080", maxAge = 3600)
+    @CrossOrigin(origins = "http://gogs.modelica-china.com", maxAge = 3600)
     public boolean uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                    @RequestParam(value = "scope",required = false)Boolean scope,
@@ -390,17 +390,18 @@ public class DirectoryController {
                 //by:zhangcy  在这里加入了审签的代码
                 modelService.add(model);
                 Long modelId = model.getId();
-                Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                 try{
+                    //下面两行都有异常要抛出
+                    Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                     statusChangeService.updateNextStatus(instanceId,"1");
                 }catch(SqlNumberException e){
                     e.printStackTrace();
                 }
                 updateOrCreate = false;
             }
-            //查找最外层空的model
-            //修改成根据插入的分类id找到对应的package包
-          //  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
+            //查的找最外层空的model
+            //修改成根据插入的分类id找到对应package包
+            //  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
             Model nullModel = modelService.queryByNameAndDir(param);
             for (int i = 0; i < subFiles.length; i++) {
                 //查看文件的格式

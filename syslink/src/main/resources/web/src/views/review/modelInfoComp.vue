@@ -1,9 +1,9 @@
 <template>
 	<section> 
-    <h5>模型信息：</h5> 
+    <h3>模型信息</h3> 
     <div style="display:flex">
-    	<div style="margin-left:20px;margin-top:10px;width:500px;">
-    	<div style="width:300px;">
+    	<div style="margin-left:20px;margin-top:10px;">
+    	<div style="width:660px;">
     		<div class="modelInfo">
     			<div style="display:inline-block"><p>模型名字:</p></div>
     		    <div style="display:inline-block">{{this.reviewModel.name}}</div>
@@ -22,6 +22,7 @@
     			  <div style="display:inline-block"><p>创建时间:</p></div>
     		      <div style="display:inline-block">{{this.reviewModel.createTime}}</div>
     		</div>
+            
     	</div>
     </div>
     <!-- <div style="width:300px;">
@@ -34,11 +35,7 @@
 </template>
 
 <script>
-	import modelTree from '../model/modelTree.vue';
 	export default{
-		components:{
-			modelTree,
-		},
 		data(){
 			return {
 				reviewModel:{

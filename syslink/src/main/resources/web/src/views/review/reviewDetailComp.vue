@@ -20,11 +20,16 @@
         </ul>
  -->
         <!--步骤条的审签状态-->
-    <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
-    <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 3||item.status == 4" title="审核完成"></el-step>
-    <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 2" title="正在审核"></el-step>
-    <el-step title="未进行" v-for="(item,index) in this.detailPages" v-if="item.status ==1"></el-step>
-    </el-steps>
+    <!-- <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
+    <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 3"  title="审核成功" :description="item.user.name" :status="test"></el-step>
+    <el-step v-for="(item,index) in this.detailPages" v-if="item.status==4" title="审核失败" :description="item.user.name" status="error"></el-step>
+    <el-step v-for="(item,index) in this.detailPages" v-if="item.status == 2" title="正在审核" status="process" :description="item.user.name"></el-step>
+    <el-step title="未进行" v-for="(item,index) in this.detailPages" v-if="item.status ==1" status="wait" :description="item.user.name"></el-step>
+
+    </el-steps> -->
+    <!-- <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading">
+    	<el-step v-for="(item,index) in this.detailPages" 
+    </el-steps> -->
     <model-info></model-info>
 </section>
 
@@ -38,6 +43,7 @@
 		},
 		data(){
 			return {
+				status:[],
 				instanceId: 0,
 				detailPages:[],
 				sequence:0,

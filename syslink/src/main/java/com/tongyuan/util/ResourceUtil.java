@@ -1,8 +1,12 @@
 package com.tongyuan.util;
 
+import com.tongyuan.exception.ParseCaeException;
 import com.tongyuan.model.controller.DirectoryController;
-import com.tongyuan.model.service.DirectoryService;
-import com.tongyuan.model.service.FileModelService;
+import com.tongyuan.model.domain.CAE.CaeComponent;
+import com.tongyuan.model.domain.CAE.CaeFile;
+import com.tongyuan.model.domain.CAE.CaeVariable;
+import com.tongyuan.tools.XmlHelper;
+import com.tongyuan.model.service.*;
 import com.tongyuan.tools.StringUtil;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -35,6 +39,12 @@ public class ResourceUtil {
     private FileModelService filemodelService;
     @Autowired
     private ResourceUtil resourceUtil;;
+    @Autowired
+    private CaeComponentService caeComponentService;
+    @Autowired
+    private CaeFileService caeFileService;
+    @Autowired
+    private CaeVariableService caeVariableService;
 
     public static final String getString(String key) {
         if (key == null || key.equals("") || key.equals("null")) {
@@ -294,7 +304,7 @@ public class ResourceUtil {
     }
 
     //解析xml
-    public Map<String,Object> analysisXmlPath(String xmlFilePath) {
+    public static Map<String,Object> analysisXmlPath(String xmlFilePath) {
         Map<String, Object> xmlMap = new HashMap<String, Object>();
         //查看这个根目录文件啊是否存在
         File xmlFile = new File(xmlFilePath);
@@ -441,6 +451,119 @@ public class ResourceUtil {
 //            }
         }
         return parentName;
+    }
+
+
+//    public static void main(String[] args) throws ParseCaeException {
+//        Document document = Dom4jUtil.load("/Users/zhangcy/Documents/test/ansys(1).xmlwrapper");
+//        Element root = document.getRootElement();
+//        parseCAE(root);
+//    }
+    /**
+     * 以下是CAE的解析过程
+     */
+    public void parseCAE(Element root) throws ParseCaeException{
+        List<Element> generalInfoList = root.elements("GeneralInfo");
+        if(generalInfoList.isEmpty()||generalInfoList.size()>1){
+            throw new ParseCaeException();
+        }
+        Element generalInfo = generalInfoList.get(0);
+        Element eleName = generalInfo.element("Name");
+        Element eleAuthor = generalInfo.element("Author");
+        Element eleDescription = generalInfo.element("Description");
+        Element eleRequirements = generalInfo.element("Requirements");
+        Element eleVersion = generalInfo.element("Version");
+        Element eleRunOs = generalInfo.element("RunOS");
+        Element eleIconFile = generalInfo.element("IconFile");
+        if(eleName==null
+            ||eleAuthor==null
+            ||eleDescription==null
+            ||eleIconFile==null
+            ||eleRequirements==null
+            ||eleVersion==null
+            ||eleRunOs==null){
+            throw new ParseCaeException();
+        }
+        CaeComponent caeComponent = new CaeComponent();
+        caeComponent.setName(eleName.getTextTrim());
+        caeComponent.setAuthor(eleAuthor.getTextTrim());
+        caeComponent.setDescription(eleDescription.getTextTrim());
+        caeComponent.setIconFile(eleIconFile.getTextTrim());
+        caeComponent.setRunOS(eleRunOs.getTextTrim());
+        caeComponent.setRequirements(eleRequirements.getTextTrim());
+        //插入caeComponent，将得到的id传给File
+        caeComponentService.add(caeComponent);
+        Long caeComponentId = caeComponent.getId();
+        parseFile(caeComponentId,root);
+    }
+
+    /**
+     * 解析File
+     */
+    public  void parseFile(Long caeComponentId , Element root) throws ParseCaeException{
+        //Files元素一定存在,Files下的File元素的个数可能为0，1，2
+        List<Element> files = root.element("Files").elements("File");
+        if(files.isEmpty()){
+            return ;
+        }
+        if(files.size()>2){
+            throw new ParseCaeException();
+        }
+        //File元素为1或2的情况
+        for(int i=0;i<files.size();i++){
+            Element file = files.get(i);
+            //将file插入到数据库中得到id，利用这个id来提供给variables和caeComponent
+            String templateFileName = file.attribute("TemplateFileName").getValue();
+            String fileName = file.attribute("FileName").getValue();
+            String delimitersType = file.attribute("DelimitersType").getValue();
+            String format = file.attribute("Format").getValue();
+            String type = file.attribute("Type").getValue();
+            CaeFile caeFile = new CaeFile();
+            caeFile.setDelimitersType(templateFileName);
+            caeFile.setFileName(fileName);
+            caeFile.setDelimitersType(delimitersType);
+            caeFile.setFormat(format);
+            caeFile.setType(type);
+            caeFile.setCaeComponentId(caeComponentId);
+            caeFileService.add(caeFile);
+            Long caeFileId = caeFile.getId();
+            parseVariable(caeFileId,file);
+        }
+    }
+
+    /**
+     * 解析variables
+     * @param id  variable所在File的id
+     * @param file  表示File的Element
+     */
+    public  void parseVariable(Long id,Element file){
+        //File元素存在，则Variables元素一定存在
+        List<Element> variables = file.element("Variables").elements("Variable");
+        if(variables.isEmpty()){
+            return ;
+        }
+        for(int i=0;i<variables.size();i++){
+            Element variable = variables.get(i);
+            CaeVariable caeVariable = new CaeVariable();
+//            caeVariable.setName(variable.attribute("Name").getValue());
+//            caeVariable.setCaeFileId(id);
+//            caeVariable.setDelimiters(variable.attribute("Delimiters").getValue());
+//            caeVariable.setDescription(variable.attribute("Description").getValue());
+//            caeVariable.setEnumAliases(variable.attribute("EnumAliases").getValue());
+//            caeVariable.setFormat(variable.attribute("Format").getValue());
+//            caeVariable.setEnumValues(variable.attribute("EnumValues").getValue());
+//            caeVariable.setFortranFormat(variable.attribute("FortranFormat").getValue());
+//            caeVariable.setMax(variable.attribute("Max").getValue());
+//            caeVariable.setMin(variable.attribute("Min").getValue());
+//            caeVariable.setStartBookmark(variable.attribute("StartBookmark").getValue());
+//            caeVariable.setType(variable.attribute("Type").getValue());
+//            caeVariable.setUnits(variable.attribute("Units").getValue());
+//            caeVariable.setValue(variable.attribute("Value").getValue());
+//            caeVariable.setValueType(variable.attribute("ValueType").getValue());
+            XmlHelper.xml2Object(caeVariable,variable);
+            caeVariable.setCaeFileId(id);
+            caeVariableService.add(caeVariable);
+        }
     }
 }
 
