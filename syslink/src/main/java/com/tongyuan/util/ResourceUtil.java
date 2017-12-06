@@ -61,6 +61,10 @@ public class ResourceUtil {
         return getString("zipPath");
     }
 
+    public static final String getGogsHttpPort(){
+        return  getString("gogsHostPath");
+    }
+
 
     /**
      * 获取文件仓目录
@@ -83,6 +87,16 @@ public class ResourceUtil {
         }
         return ResourceUtil.getTempFileDriectory();
     }
+
+
+    public String getGogsPath(){
+        String path = ResourceUtil.getGogsHttpPort();
+        if(StringUtil.isNull(path)){
+            path = "";
+        }
+        return  path;
+    }
+
 
     /**
      * 接收文件，将其写入zip文件临时地址

@@ -359,7 +359,7 @@ public class CommonServiceImp implements CommonService {
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
 		Model nullModel = modelService.queryByNameAndDir(param);
-		modelReposityUrl = "http://localhost:3000/" + userName.toLowerCase() + "/"+ nullModel.getName() + "\\.get";
+		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";
 		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
 		//遍历xmlMap进行数据的插入
 		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
@@ -489,7 +489,7 @@ public class CommonServiceImp implements CommonService {
 				modelWeb.setClasses(oneOfModel.get(i).getClasses());
 				modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
 				if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
-					modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
+					modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
 				}
 				modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
 				modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));

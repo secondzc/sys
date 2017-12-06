@@ -19,6 +19,8 @@ public interface DepartMapper {
 
     public  List<Map<String,Object>> query();
 
+    public  List<Map<String,Object>> queryAllDeparts();
+
     public  List<Map<String,Object>> queryByPid(Integer parentId);
 
     public  Map<String,Object> queryById(Integer id);

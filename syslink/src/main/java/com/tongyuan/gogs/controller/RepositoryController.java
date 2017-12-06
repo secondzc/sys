@@ -74,10 +74,7 @@ public class RepositoryController extends BaseController{
         List<Map<String,Object>> repos = new ArrayList<>();
         List<Map<String,Object>> cRepos = new ArrayList<>();
         List<Map<String,Object>> allRepos = new ArrayList<>();
-//        JSONObject jsonObject = JSON.parseObject(para);
-//        Map<String,Object> map = new HashMap<String ,Object>();
-//        map.put("pageIndex",jsonObject.getIntValue("pageIndex"));
-//        map.put("pageSize",jsonObject.getIntValue("pageSize"));
+
 
 
         try

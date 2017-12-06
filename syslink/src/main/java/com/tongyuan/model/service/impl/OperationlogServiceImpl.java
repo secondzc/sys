@@ -27,6 +27,12 @@ public class OperationlogServiceImpl implements OperationlogService{
     public boolean add(Operationlog operationlog){
         return  this.operationlogMapper.add(operationlog);
     }
+    @Override
+    public boolean delete(long id)
+    {
+        return this.operationlogMapper.delete(id);
+    }
+
 
     @Override
     public boolean addLog(String title,String content,HttpServletRequest request){

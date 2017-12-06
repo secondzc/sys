@@ -131,4 +131,37 @@ public class DepartController {
         jo.put("msg","删除部门成功");
         return (JSONObject) JSONObject.toJSON(jo);
     }
+
+    @RequestMapping(value = "/nameExist",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject nameExist(@RequestBody String para, HttpServletRequest request)
+    {
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        String name = jsonObject.getString("name");
+        List<Map<String,Object>> departs = new ArrayList<>();
+        boolean exist = false;
+
+        try
+        {
+             departs=departService.queryAllDeparts();
+             for(Map<String,Object>depart:departs)
+             {
+                 if(depart.get("name").toString().equalsIgnoreCase(name))
+                 {
+                     exist=true;
+                 }
+             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","");
+            return jo;
+        }
+        jo.put("flag",exist);
+        jo.put("msg","");
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
 }
