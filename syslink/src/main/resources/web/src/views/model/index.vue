@@ -769,9 +769,6 @@
             });
         },
         handleDeleted(index, row){
-           this.$confirm('确认删除该用户吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
             console.log(index, row);
             var _this = this;
             var url = '/api/model/deleted?modelId=' + row.parentId;
@@ -795,9 +792,7 @@
                 }).catch(function (error) {
                 console.log(error);
             });
-                 }).catch(() => {
 
-        });
         },
         addStar(item){
             if (item.alreadyStar == false) {
