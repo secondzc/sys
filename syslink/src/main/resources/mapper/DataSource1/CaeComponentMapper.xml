@@ -5,7 +5,7 @@
         id,author,description,iconFile,name,requirements,runOS
     </sql>
 
-    <insert id="add" parameterType="com.tongyuan.model.domain.CAE.CaeComponent">
+    <insert id="add" parameterType="com.tongyuan.model.domain.CAE.CaeComponent" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
         cae_component
         (author,description,icon_file,name,requirements,runos)
