@@ -224,8 +224,7 @@
           .then((res) => {
             this.listLoading = false;
             //NProgress.done();
-           
-           
+ 
             this.getLogs();
           });
         }).catch(() => {

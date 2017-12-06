@@ -27,7 +27,7 @@
       :tree-type="true"
       :is-fold="false"
       :expand-type="false"
-      :selection-type="true"
+      :selection-type="false"
       >
        <template slot="operation" slot-scope="scope">
      <el-button size="small"   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -38,9 +38,9 @@
 
 
     <!--编辑部门界面-->
-    <el-dialog title="编辑部门" :visible.sync="editFormVisible" :close-on-click-modal="false">
-        <el-form :model="editForm" label-width="80px" ref="editForm"    >
-        <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入部门名称',trigger:'blur'}]"  >
+    <el-dialog title="编辑部门" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false">
+        <el-form :model="editForm" label-width="80px" ref="editForm"   :rules="editFormRules"  >
+        <el-form-item label="名称" prop="name"    >
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -62,14 +62,14 @@
   
 
     <!--新增部门界面-->
-    <el-dialog title="新建部门" :visible.sync="addFormVisible" :close-on-click-modal="false"  >
-      <el-form :model="addForm" label-width="80px"  ref="addForm"    >
-        <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入部门名称',trigger:'blur'}]"  >
+    <el-dialog title="新建部门" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"  >
+      <el-form :model="addForm" label-width="80px"  ref="addForm"  :rules="addFormRules"   >
+        <el-form-item label="名称" prop="name"   >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
             
          <el-form-item label="父级部门" prop="parentId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.parentId"   change-on-select   :show-all-levels="false">
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.parentId"   change-on-select   :show-all-levels="false" expand-trigger="hover">
         </el-cascader>
         </el-form-item>
 
@@ -89,8 +89,121 @@
 
 <script>
   export default {
+
     data() {
+      //新建部门时名称验证，只允许中文，英文，以及数字且名称唯一
+       var validateName = (rule, value, callback) => {
+        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入部门名称'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+             
+             let para = {name:''};
+              para.name=value;
+            
+              this.$http({
+                url:'/api/depart/nameExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('部门名称重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+          
+
+               
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、字母、数字'));
+          }
+        }
+      };
+      //编辑部门时名称验证，同上
+        var validateName1 = (rule, value, callback) => {
+        console.log(this.editForm.name);
+        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入部门名称'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+
+            if(value==this.departName)
+            {
+              callback();
+            }
+            else
+            {
+               let para = {name:''};
+              para.name=value;
+            
+              this.$http({
+                url:'/api/depart/nameExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('部门名称重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+          
+            }
+             
+            
+
+               
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、字母、数字'));
+          }
+        }
+      };
       return {
+
+        departName:'',
+        addFormRules:{
+          name:[
+            {validator:validateName,trigger:'blur'}
+          ]
+        },
+         editFormRules:{
+          name:[
+            {validator:validateName1,trigger:'blur'}
+          ]
+        },
      //   data:[],
         props:{value:'id',label:'name',children:'children'},
         departs:[],
@@ -149,6 +262,7 @@
       handleEdit(index,row) {
         this.editFormVisible = true;
         console.log(row);
+        this.departName=row.name;
         this.editForm = Object.assign({}, row);
         let a = this.$refs.table.getCheckedProp('id');
         console.log(a);
@@ -171,7 +285,16 @@
               //NProgress.start();
             
               let para = Object.assign({}, this.addForm);
-              para.parentId=para.parentId[para.parentId.length-1];
+              console.log(this.addForm.parentId);
+              if(this.addForm.parentId>0)
+              {
+                  para.parentId=para.parentId[para.parentId.length-1];
+              }
+              else
+              {
+                 para.parentId=0;
+              }
+            
               this.$http({method:'post',
                 url:'api/depart/add',
                 data:para}).then((res)=>{
@@ -277,7 +400,36 @@
           .catch(function (error) {
               console.log(error);
           });
-      }
+      },
+       nameExist(value) {
+
+  
+              this.editLoading = true;
+              let para = {name:''};
+              para.name=value;
+            
+              this.$http({
+                url:'/api/depart/nameExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  return true;
+                }
+                else
+                {
+                  return false;
+                }
+                
+              });
+          
+         
+        
+      },
 
      
 

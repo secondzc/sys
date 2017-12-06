@@ -27,6 +27,12 @@
         FROM depart
         WHERE parent_id =0
     </select>
+    <select id="queryAllDeparts" resultMap="mapResultMap" resultType="map" >
+        SELECT
+        <include refid="baseColumnList" />
+        FROM depart
+        WHERE 1=1
+    </select>
     <select id="queryById" resultMap="mapResultMap"  parameterType="INTEGER" >
         SELECT
         <include refid="baseColumnList" />

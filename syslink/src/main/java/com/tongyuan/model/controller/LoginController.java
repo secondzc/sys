@@ -73,78 +73,88 @@ public class LoginController extends BaseController {
         GUser user = userService.querListByName(username);
         if(user!=null)
         {
-            String passwdCheck = EncodePasswd.getEncryptedPassword(password,user.getSalt(),10000,50);
-            if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
-            {
 
-                if(rememberMe != null && "1".equals(rememberMe)){
-                    Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
-                    int seconds=60*60;
-                    userCookie.setMaxAge(seconds);
-                    response.addCookie(userCookie);
-                }else{
-                    Cookie[] cookies = request.getCookies();
-                    if(cookies != null&&cookies.length>0){
-                        for(Cookie cookie : cookies){
-                            String cookieName = cookie.getName();
-                            if("syslinkUser".equals(cookieName)){
-                                Cookie new_cookie = new Cookie(cookieName, null);
-                                new_cookie.setMaxAge(0);
-                                response.addCookie(new_cookie);
+            if(user.getProhibitLogin())
+            {
+                map.put("result","0");
+                map.put("errormsg","该用户被禁止登录！");
+            }
+            else
+            {
+                String passwdCheck = EncodePasswd.getEncryptedPassword(password,user.getSalt(),10000,50);
+                if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
+                {
+
+                    if(rememberMe != null && "1".equals(rememberMe)){
+                        Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
+                        int seconds=60*60;
+                        userCookie.setMaxAge(seconds);
+                        response.addCookie(userCookie);
+                    }else{
+                        Cookie[] cookies = request.getCookies();
+                        if(cookies != null&&cookies.length>0){
+                            for(Cookie cookie : cookies){
+                                String cookieName = cookie.getName();
+                                if("syslinkUser".equals(cookieName)){
+                                    Cookie new_cookie = new Cookie(cookieName, null);
+                                    new_cookie.setMaxAge(0);
+                                    response.addCookie(new_cookie);
+                                }
                             }
                         }
                     }
-                }
-                HttpSession session = request.getSession();
+                    HttpSession session = request.getSession();
 
 
-                session.setAttribute("user", user);
-                session.setAttribute("uid",user.getID());
-                session.setAttribute("uname",user.getName());
-                //session.setAttribute("user", user);
-                //   session.setAttribute("base_path", request.getContextPath());
-                String lginIp = IpUtil.getIpAddr(request);
-                Date loginDate = DateUtil.getTimestamp();
+                    session.setAttribute("user", user);
+                    session.setAttribute("uid",user.getID());
+                    session.setAttribute("uname",user.getName());
+                    //session.setAttribute("user", user);
+                    //   session.setAttribute("base_path", request.getContextPath());
+                    String lginIp = IpUtil.getIpAddr(request);
+                    Date loginDate = DateUtil.getTimestamp();
 //                userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
 
-                LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
-                setSessionUser(request,loginedUser);
+                    LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
+                    setSessionUser(request,loginedUser);
 
-                operationlogService.addLog("登录","登录系统",request);
-
-
-
-                Cookie c = new Cookie("gogs_awesome",username);
-                c.setDomain(".modelica-china.com");
-                c.setMaxAge(-1);
-                c.setPath("/");
-                response.addCookie(c);
+                    operationlogService.addLog("登录","登录系统",request);
 
 
-                Cookie[] cookies = request.getCookies();
-                for (int i =0;i<cookies.length;i++)
-                {
-                    System.out.println(cookies[i].getName());
-                    System.out.println(cookies[i].getValue());
+
+                    Cookie c = new Cookie("gogs_awesome",username);
+                    c.setDomain(".modelica-china.com");
+                    c.setMaxAge(-1);
+                    c.setPath("/");
+                    response.addCookie(c);
+
+
+                    Cookie[] cookies = request.getCookies();
+                    for (int i =0;i<cookies.length;i++)
+                    {
+                        System.out.println(cookies[i].getName());
+                        System.out.println(cookies[i].getValue());
+                    }
+                    System.out.println(session.getAttribute("uid"));
+                    System.out.println(session.getAttribute("uname"));
+
+
+
+                    //return "redirect:/model/getMyIndex";
+                    map.put("result","1");
+                    map.put("userInfo",loginedUser);
+                    map.put("errormsg","登录成功！");
+                }else{
+//                    request.setAttribute("loginFlag",1);
+                    //             return "login";
+                    map.put("result","0");
+                    map.put("errormsg","用户名/密码错误！");
                 }
-                System.out.println(session.getAttribute("uid"));
-                System.out.println(session.getAttribute("uname"));
-
-
-
-                //return "redirect:/model/getMyIndex";
-                map.put("result","1");
-                map.put("userInfo",loginedUser);
-                map.put("errormsg","登录成功！");
-            }else{
-                request.setAttribute("loginFlag",1);
-                //             return "login";
-                map.put("result","0");
-                map.put("errormsg","用户名/密码错误！");
             }
+
         }else{
-            request.setAttribute("loginFlag", -1);
+//            request.setAttribute("loginFlag", -1);
             //  return "login";
             map.put("result","0");
             map.put("errormsg","登录失败，请输入正确的用户！");

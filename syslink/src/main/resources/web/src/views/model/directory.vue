@@ -385,4 +385,16 @@
    text-overflow: ellipsis;
     overflow: hidden;
   }
+
+   .el-tree-node__label:hover
+  {
+    min-width: 200px;
+    /*width: 5000px;*/
+    position: relative;
+    z-index: 1000;
+    overflow-x: hidden;
+  /*  white-space: nowrap;
+   text-overflow: ellipsis;
+    overflow: hidden;*/
+  }
 </style>

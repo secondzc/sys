@@ -5,8 +5,8 @@
       <el-form :inline="true" >
         <el-form-item>
           <el-button size="small" type="primary" @click="handleAdd"  >新建</el-button>
-          <el-button size="small"  @click="handleEdit">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel">删除</el-button>
+          <el-button size="small"  @click="handleEdit"  :disabled="this.currentRow===null">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDel" :disabled="this.currentRow===null">删除</el-button>
         </el-form-item>
       </el-form>
        
@@ -14,9 +14,9 @@
     <hr/>
 
     <!--列表-->
-    <el-table :data="roles" highlight-current-row    @selection-change="selsChange"    style="width: 100%;">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
+    <el-table :data="roles" highlight-current-row        style="width: 100%;"  @current-change="handleCurrentChange">
+    <!--   <el-table-column type="selection" width="55">
+      </el-table-column> -->
 
       <el-table-column type="index" width="60">
       </el-table-column>
@@ -36,9 +36,10 @@
    
 
     <!--编辑角色界面-->
-    <el-dialog title="编辑角色" :visible.sync="editFormVisible" :close-on-click-modal="false" >
-        <el-form :model="editForm" label-width="80px" ref="editForm"    >
-        <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入角色名称',trigger:'blur'}]"  >
+    <el-dialog title="编辑角色" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false" 
+       >
+        <el-form :model="editForm" label-width="80px" ref="editForm"   :rules="editFormRules"   >
+        <el-form-item label="名称" prop="name"  >
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
         </el-form-item>
          <el-form-item label="描述" prop="description"   >
@@ -54,9 +55,9 @@
   
 
     <!--新增角色界面-->
-    <el-dialog title="新建角色" :visible.sync="addFormVisible" :close-on-click-modal="false"  >
-      <el-form :model="addForm" label-width="80px"  ref="addForm"    >
-        <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入角色名称',trigger:'blur'}]"  >
+    <el-dialog title="新建角色" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
+      <el-form :model="addForm" label-width="80px"  ref="addForm"  :rules="addFormRules"  >
+        <el-form-item label="名称" prop="name"   >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
          <el-form-item label="描述" prop="description" >
@@ -72,15 +73,14 @@
 
 
 
-     <!--分配权限界面-->
+    
    <el-dialog title="分配权限" :visible.sync="permissionVisible" v-if="permissionVisible" ref="permissionDialog" :close-on-click-modal="false" :show-close="false" >
    <el-form :model="permission" label-width="80px"  ref="permissionForm"    >
- <!--    <div slot="title">
-      <span>分配权限</span> -->
+
        <el-tree :data="data2" show-checkbox  node-key="authId"  ref="tree"  highlight-current :props="defaultProps"  :default-checked-keys="roleTree">
     </el-tree>
 
-<!--     </div> -->
+
    
       </el-form>
     <div slot="footer" class="dialog-footer">
@@ -98,8 +98,117 @@
   //import NProgress from 'nprogress'
   export default {
     data() {
-       
+        var validateName = (rule, value, callback) => {
+        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入角色名称'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+             
+             let para = {name:''};
+              para.name=value;
+            
+              this.$http({
+                url:'/api/role/nameExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('角色名称重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+          
+
+               
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、字母、数字'));
+          }
+        }
+      };
+        var validateName1 = (rule, value, callback) => {
+        console.log(this.editForm.name);
+        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入角色名称'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+
+            if(value==this.roleName)
+            {
+              callback();
+            }
+            else
+            {
+               let para = {name:''};
+              para.name=value;
+            
+              this.$http({
+                url:'/api/role/nameExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('角色名称重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+          
+            }
+             
+            
+
+               
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、字母、数字'));
+          }
+        }
+      };
       return {
+        currentRow:null,
+        roleName:'',
+        addFormRules:{
+          name:[
+            {validator:validateName,trigger:'blur'}
+          ]
+        },
+         editFormRules:{
+          name:[
+            {validator:validateName1,trigger:'blur'}
+          ]
+        },
 
         data2:[],
            defaultProps: {
@@ -164,9 +273,17 @@
       }
     },
     methods: {
+
+      ttttt()
+      {
+        this.$refs['editForm'].resetFields();
+      },
         selsChange: function (sels) {
         this.sels = sels;
         console.log(sels);
+      },
+        handleCurrentChange(val) {
+        this.currentRow = val;
       },
 
       getCheckedNodes() {
@@ -211,10 +328,10 @@
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let  a = this.sels;
-          let b = a.length;
+          // let  a = this.sels;
+          // let b = a.length;
       //    console.log(b);
-          let para = { id: a[b-1].id};
+          let para = { id: this.currentRow.id};
           this.$http({
             url:'/api/role/delete',
             method:'post',
@@ -247,13 +364,9 @@
       //显示编辑界面
       handleEdit: function () {
         this.editFormVisible = true;
-        let a = this.sels;
-        let b = a.length;
-        console.log(this.sels);
+        this.roleName = this.currentRow.name;
+        this.editForm = Object.assign({}, this.currentRow);
 
-        this.editForm = Object.assign({}, this.sels[this.sels.length-1]);
-     //   console.log(this.sels);
-       // console.log(this.editForm);
       
       },
     
@@ -272,10 +385,7 @@
 
          this.ids.roleId=row.id;
          this.permissionVisible=true;
-          // console.log( this.$refs.tree);
-          // this.$refs.tree.setCheckedNodes(row.permissions);
-
-
+        
             let temp =  [];
 
          row.permissions.forEach(x=>temp.push(x.authId));
@@ -288,7 +398,7 @@
       editSubmit: function () {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+
               this.editLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
@@ -320,7 +430,6 @@
                 this.editFormVisible = false;
                 this.getRoles();
               });
-            });
           }
         });
       },
@@ -370,7 +479,7 @@
       addSubmit: function () {
         this.$refs.addForm.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+          
               this.addLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.addForm);
@@ -399,7 +508,7 @@
                 this.addFormVisible = false;
                 this.getRoles();
               });
-            });
+
           }
         });
       }
@@ -408,9 +517,7 @@
     },
     mounted() {
       this.getRoles();
-   //   this.getCheckBox();
       this.getGroups();
-      console.log(this.$refs.permissionDialog);
   
     }
   }

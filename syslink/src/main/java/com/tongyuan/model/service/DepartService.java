@@ -16,5 +16,9 @@ public interface DepartService {
 
     public List<Map<String,Object>> query();
 
+    public List<Map<String,Object>> queryAllDeparts();
+
+    public List<Map<String,Object>> queryByPid(Integer parentId);
+
 
 }

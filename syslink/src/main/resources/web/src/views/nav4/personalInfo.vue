@@ -55,11 +55,19 @@
           callback(new Error('请输入新密码'));
          } 
         
-         callback();
+         // callback();
         }
         else
-        {
-          callback();
+        { 
+          if(value.length<6)
+          {
+           callback(new Error('密码长度不得小于6位'));
+          }
+          else
+          {
+            callback();
+          }
+          
         }
      
       };

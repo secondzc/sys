@@ -49,6 +49,7 @@ public class GUserWarpper extends BaseControllerWarpper {
           List<Integer>path = new DepartWarpper(depart).getDepartPath(depart);
           Collections.reverse(path);
           path.add(Integer.parseInt(depart.get("id").toString()));
+          path.remove(0);
 
           map.put("departId",path);
           map.put("departName",depart.get("name"));

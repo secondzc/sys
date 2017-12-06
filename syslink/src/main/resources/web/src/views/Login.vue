@@ -7,14 +7,17 @@
   <!--   <h3 class="title">系统登录</h3> -->
     <img :src="loginLogo"  style="max-height: 100px;width: 200px;" />
     <el-form-item prop="userName">
-      <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"></el-input>
+      <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"
+   ></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"></el-input>
+      <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码" 
+     ></el-input>
     </el-form-item>
     <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" 
+       :loading="logining">登录</el-button>
      
     </el-form-item>
   </el-form>
@@ -62,6 +65,7 @@
       };
     },
     methods: {
+      
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },

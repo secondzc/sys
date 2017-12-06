@@ -250,7 +250,7 @@ public class DirectoryController {
        this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
         //遍历xmlMap进行数据的插入
         for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-            //解析xmlmap 把数据存放到数据库
+            //解析xmlmap 把数据存放到数据
             modelController.insertData(entry,svgPath,nullModel,directory,directoryId);
         }
         //更新模型的层次结构

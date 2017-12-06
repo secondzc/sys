@@ -13,6 +13,7 @@ import java.util.Map;
 public interface OperationlogService {
     public boolean add(Operationlog operationlog);
     public boolean addLog(String title,String content,HttpServletRequest request);
+    public boolean delete(long id);
     public List<Operationlog> findAllLog();
 
    public List<Operationlog> query(Map<String,Object> map) ;

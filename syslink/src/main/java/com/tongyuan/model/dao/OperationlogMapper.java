@@ -13,6 +13,7 @@ import java.util.Map;
 public interface OperationlogMapper {
 
     public boolean add(Operationlog operationlog);
+    public boolean delete(long id);
 
     public List<Operationlog>findAllLog();
 

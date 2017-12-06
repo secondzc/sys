@@ -47,7 +47,11 @@ public class DepartWarpper extends BaseControllerWarpper {
         map.put("parentId",departPath);
 
         List<Map<String,Object>>children = departMapper.queryByPid(Integer.parseInt(map.get("id").toString()));
-       map.put("children",children);
+        if(children.size()>0)
+        {
+            map.put("children",children);
+        }
+
        if(children!=null)
        {
            Iterator<Map<String,Object>>it  =  children.iterator();
