@@ -39,12 +39,11 @@
 
 //  上传文件
   import { mapState,mapGetters} from 'vuex'
-
+  import '../../assets/iconCss/iconfont.css'
   export default {
     name: 'kz-tree',
     props: {
       data: {
-
         type: Object,
         required: true,
         default () {
@@ -69,7 +68,14 @@
     },
     data () {
       // 声明保存当前操作分类node对象
-      this.__currentNode = null
+      this.__currentNode = null;
+        var validateName = (rule, value, callback) => {
+                if (value.trim() == '') {
+                    callback(new Error('不能全为空格和空值'));
+                }else {
+                    callback();
+                }
+        };
       return {
         treeData: [],
         /* 弹框 */
@@ -84,10 +90,17 @@
           },
           rules: {
             name: {
-              required: true,
-              message: '请输入分类名称',
-              trigger: 'blur'
-            }
+                  required: true,
+                  validator : validateName,
+//                  message: '请输入分类名称',
+                  trigger: 'blur'
+              }
+//              name: {
+//                  required: true,
+//                  validator : validateName,
+////                  message: '请输入分类名称',
+//                  trigger: 'blur'
+//              }
           }
         },
       }
@@ -151,6 +164,9 @@
       nodeRender (h, { _self, node, data }) {
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
+            h('i', {
+                'class': 'iconfont icon-File',}
+            ),
           h('span', data.name),
           h('span',
             {
@@ -163,7 +179,11 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                    typeof _self.treeEdit === 'function' && _self.treeEdit(data, event, node)
+                      if(data.name == _self.$store.state.privateDirId.data.name || data.name == _self.$store.state.publicDirId.data.name){
+                          _self.$message({ message: '该模型分类不允许修改', type: 'warning',duration: 2000 })
+                      }else {
+                          typeof _self.treeEdit === 'function' && _self.treeEdit(data, event, node)
+                      }
                   }
                 }
               }),
@@ -186,8 +206,8 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                      if(data.name == "我的模型" || data.name == "公有模型"){
-                          _self.$message({ message: '该模型不允许删除', type: 'warning',duration: 2000 })
+                      if(data.name == _self.$store.state.privateDirId.data.name || data.name == _self.$store.state.publicDirId.data.name){
+                          _self.$message({ message: '该模型分类不允许删除', type: 'warning',duration: 2000 })
                       }else{
                           typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)
                       }
@@ -300,7 +320,32 @@
       submitForm () {
         this.$refs.dialogForm.validate((valid) => {
           if (valid) { // 验证通过
-            this.fetchAddTreeNode()
+              if(this.$refs.dialogForm.model.parent_id == null){
+                  this.$refs.dialogForm.model.parent_id = -1;
+              }
+              var checkDirNameUrl = '/api/directory/checkDirName?parentId=' + this.__currentNode.data.parentId +'&dirName='+ this.$refs.dialogForm.model.name +'&dirId='+ this.$refs.dialogForm.model.id
+                  +'&dirParentId='+ this.$refs.dialogForm.model.parent_id +'&userName='+ this.$store.state.userInfo.profile.name
+              var _this = this;
+              _this.$http.post(checkDirNameUrl)
+                  .then(function (response) {
+                      if(response.data.state == 1){
+                          _this.fetchAddTreeNode()
+                      }else{
+                          _this.$message({
+                              message: '请重新输入模型分类名称！',
+                              type: 'warning',
+                              duration: 2000
+                          });
+                      }
+                  })
+                  .catch(function (error) {
+                      console.log(error)
+                      _this.$message({
+                          message: '请重新输入模型分类名称！',
+                          type: 'warning',
+                          duration: 2000
+                      });
+                  })
           } else {
             return false
           }
@@ -384,5 +429,11 @@
     white-space: nowrap;
    text-overflow: ellipsis;
     overflow: hidden;
+  }
+
+  .iconfont{
+    font-family:"iconfont";
+    font-size:24px;
+    font-style:normal;
   }
 </style>
