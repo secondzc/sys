@@ -74,8 +74,7 @@
         display: inline-block;
         background: url("../../assets/root.png") no-repeat center/100% auto;
     }
-
-    /*.el-tree-node>.el-tree-node__children {*/
-        /*overflow-x: scroll;*/
-    /*}*/
+    .el-tree-node__label{
+        width: 298px;
+    }
 </style>

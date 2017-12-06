@@ -6,23 +6,36 @@
         <id column="id" property="id" jdbcType="BIGINT"  />
         <result column="uid" property="uid" jdbcType="BIGINT"/>
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
+        <result column="mode" property="mode" jdbcType="TINYINT"/>
+        <result column="node_id" property="nodeId" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <sql id="baseColumnList" >
-        id,uid,role_id
+        id,uid,model_id,mode,node_id
     </sql>
-    <insert id="add"  parameterType="com.tongyuan.model.domain.UserRole"  >
-        INSERT INTO user_role (uid, role_id) VALUES
-        (#{uid}, #{roleId})
+    <insert id="add"  parameterType="com.tongyuan.model.domain.ModelAuth"  >
+        INSERT INTO model_auth (uid, model_id,mode,node_id) VALUES
+        (#{uid}, #{modelId},#{mode},#{nodeId})
     </insert>
-
-    <select id="query" resultMap="baseResultMap"    parameterType="com.tongyuan.model.domain.UserRole" >
+    <select id="queryByUid" resultMap="baseResultMap" resultType="map" parameterType="long">
         SELECT
         <include refid="baseColumnList" />
-        FROM user_role
-        WHERE  uid=#{uid}
+        FROM model_auth
+        WHERE uid = #{uid}
     </select>
-    <delete id="delete" parameterType="long">
-        delete from user_role where uid=#{uid}
+    <select id="queryByModelId" resultMap="baseResultMap" resultType="map" parameterType="long">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM model_auth
+        WHERE model_id=#{modelId}
+    </select>
+    <delete id="deleteByUid" parameterType="long">
+        delete from model_auth where uid=#{uid}
     </delete>
+    <delete id="deleteByModelId" parameterType="long">
+        delete from model_auth where model_id=#{modelId}
+    </delete>
+
+
 </mapper>

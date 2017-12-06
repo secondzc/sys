@@ -21,7 +21,21 @@
                       <div style="position: absolute;left: 20px;display: inline-flex;
                       min-width: 200px;">
                          <!--<upload-file ></upload-file>-->
-                          <myUpload></myUpload>
+                          <!--<myUpload></myUpload>-->
+                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件</el-button>
+
+                          <el-dialog
+                                  title="上传压缩文件"
+                                  :visible.sync="file.dialogVisible"
+                                  width="30%"
+                                  :before-close="handleClose">
+                              <!--<span>这是一段信息</span>-->
+                              <myUpload @refreshMyModel="getModel" style="text-align: center;" ></myUpload>
+                              <!--<span slot="footer" class="dialog-footer">-->
+                              <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
+                              <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
+                              <!--</span>-->
+                          </el-dialog>
 
                       </div>
 
@@ -467,7 +481,14 @@
             sortableList,
         },
         data() {
-            this.__currentNode = null
+            this.__currentNode = null;
+            var validateName = (rule, value, callback) => {
+                if (value.trim() == '') {
+                    callback(new Error('不能全为空格和空值'));
+                }else {
+                    callback();
+                }
+            };
             return {
 
                        url: {
@@ -509,7 +530,7 @@
                             url: {
                                 C: '/api/directory/add?userName='+ this.$store.state.userInfo.profile.name +"&",
                                 U: '/api/directory/update',
-                                R: 'api/directory/list?scope='+true +"&userName="+ this.$store.state.userInfo.profile.name +"&",
+                                R: 'api/directory/list?scope='+false +"&userName="+ this.$store.state.userInfo.profile.name +"&",
                                 D: '/api/directory/delete'
                             }
                         },
@@ -535,10 +556,14 @@
                   rules: {
                     name: {
                       required: true,
-                      message: '请输入分类名称',
+                        validator : validateName,
+//                      message: '请输入分类名称',
                       trigger: 'blur'
                     }
                   }
+                },
+                file:{
+                    dialogVisible: false,
                 },
                 name : this.$store.state.userInfo.profile.name,
                 privateDirId : this.$store.getters.privateDirId.data.id,
@@ -557,10 +582,10 @@
                     pageIndex: this.pager.pageIndex
                 };
                 if (_this.amsg != null && _this.amsg != "") {
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
                 } else {
                     _this.$store.state.amsg = 0;
-                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + true + "&userId=" + _this.$store.state.userInfo.profile.iD
+                    var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
                 }
                 console.log(url);
                 _this.$http.post(url)
@@ -764,6 +789,9 @@
         handleDeleted(index, row){
             console.log(index, row);
             var _this = this;
+            this.$confirm('确认删除该模型吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
             var url = '/api/model/deleted?modelId=' + row.parentId;
             _this.$http.post(url)
                 .then(function (response) {
@@ -784,6 +812,8 @@
                     }
                 }).catch(function (error) {
                 console.log(error);
+            });
+            }).catch(() => {
             });
         },
         addStar(item){
@@ -846,7 +876,30 @@
       submitForm () {
         this.$refs.dialogForm.validate((valid) => {
           if (valid) { // 验证通过
-            this.fetchAddTreeNode()
+              var checkDirNameUrl = '/api/directory/checkRootDir?dirParentId='+ this.$refs.dialogForm.model.parent_id +'&dirName='+ this.$refs.dialogForm.model.name
+                  +'&userName='+ this.$store.state.userInfo.profile.name
+              var _this = this;
+              _this.$http.post(checkDirNameUrl)
+                  .then(function (response) {
+                      if(response.data.state == 1){
+                          _this.fetchAddTreeNode()
+                      }else{
+                          _this.$message({
+                              message: '请重新输入模型分类名称！',
+                              type: 'warning',
+                              duration: 2000
+                          });
+                      }
+                  })
+                  .catch(function (error) {
+                      console.log(error)
+                      _this.$message({
+                          message: '请重新输入模型分类名称！',
+                          type: 'warning',
+                          duration: 2000
+                      });
+                  })
+//            this.fetchAddTreeNode()
           } else {
             return false
           }
@@ -874,8 +927,9 @@
                 /* treeNode api */
                 if (_this.__currentNode) { // 子分类添加子类
                     _this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === (_this.privateDirId +"")) { // 顶级添加子类
-                    _this.$refs.kzTree.root.doCreateChildren([data])
+                } else if (data.data.parentId === (_this.privateDirId +"")) { // 顶级添加子类
+//                    _this.$refs.kzTree.root.doCreateChildren([data])
+                    _this.loadTreeNode();
 //                    var url = _this.tree.url.R
 //                    _this.fetch(url, {parent_id: _this.privateDirId })
 //                        .then(data => {
@@ -915,11 +969,43 @@
                 }
             })
         },
+
+            /* 加载子分类 */
+            loadTreeNode (treeItem, resolve) {
+                const url = this.tree.url.R ;
+                var para = {parent_id: this.privateDirId};
+                this.$emit("node-click",para);
+                var _this = this ;
+                _this. fetch(url, para)
+                    .then(data => {
+                        _this.$store.dispatch('sendTreeData',data);
+                        resolve(data)
+                    });
+            },
+            isSelectModel(){
+                if(this.$store.state.bmsg >= 0){
+                    this.file.dialogVisible = true;
+                }else{
+                    this.$message({
+                        message: '请选择模型目录！',
+                        type: 'warning',
+                        duration: 2000
+                    });
+                }
+
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            }
+
     },
 
 
         mounted() {
-      
         }
     };
 

@@ -1,7 +1,7 @@
 <template>
     <div class="modelContent">
       <!--<div class="left">-->
-          <div><p>模型变量视图：</p></div>
+          <!--<div><p>模型变量视图：</p></div>-->
           <variabletree  ></variabletree>
       <!--</div>-->
 

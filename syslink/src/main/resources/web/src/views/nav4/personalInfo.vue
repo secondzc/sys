@@ -2,28 +2,39 @@
   <section>
    
   
-  <el-form :model="editForm" label-width="100px" :rules="addFormRules" ref="editForm"  style=" width: 50%;margin-top: 5%;margin-left: 10%;" >
+  <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm"  style=" width: 50%;margin-top: 5%;margin-left: 10%;" >
        
         
-     <!--    <el-form-item label="自定义名称" prop="fullName"   >
-            <el-input v-model="editForm.fullName" auto-complete="off"></el-input>
-        </el-form-item>
-          <el-form-item label="邮箱" prop="email"  :rules="[ { required:'true',type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' } ]"  >
-          <el-input v-model="editForm.email" auto-complete="off" ></el-input>
-        </el-form-item> -->
+    
          <el-form-item  label="真实姓名" prop="fullName"   >
-         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+       
             <el-input v-model="editForm.fullName" auto-complete="off"></el-input>
-            </el-tooltip>
+        
         </el-form-item>
           <el-form-item label="邮箱" prop="email"   >
-         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+        
             <el-input v-model="editForm.email" auto-complete="off"></el-input>
+            
+        </el-form-item>
+
+         <el-form-item  label="原始密码" prop="oldPassWd"   >
+         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+            <el-input type="password"  v-model="editForm.oldPassWd" auto-complete="off"></el-input>
+            </el-tooltip>
+        </el-form-item>
+          <el-form-item label="新密码" prop="newPassWd"   >
+         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+            <el-input type="password"  v-model="editForm.newPassWd" auto-complete="off"></el-input>
+            </el-tooltip>
+        </el-form-item>
+         <el-form-item label="确认密码" prop="newCheckPassWd"   >
+         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+            <el-input type="password"  v-model="editForm.newCheckPassWd" auto-complete="off"></el-input>
             </el-tooltip>
         </el-form-item>
        
         <div style="float: right;">
-         <el-button @click.native="editFormVisible = false">取消</el-button>
+         <el-button @click.native="cancel">取消</el-button>
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
         </div>
       </el-form>
@@ -34,12 +45,63 @@
 <script>
   export default {
     data() {
+
+
+     
+      var validatePass2 = (rule, value, callback) => {
+        if(this.editForm.oldPassWd!='')
+        {
+          if (value === '') {
+          callback(new Error('请输入新密码'));
+         } 
+        
+         callback();
+        }
+        else
+        {
+          callback();
+        }
+     
+      };
+       var validatePass3 = (rule, value, callback) => {
+
+        if(this.editForm.newPassWd!='')
+        {
+           if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.editForm.newPassWd) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+        }
+        else
+        {
+          callback();
+        }
+
+       
+      };
       return {
         editForm:{
           email:'',
-          fullName:''
+          fullName:'',
+          oldPassWd:'',
+          newPassWd:'',
+          newCheckPassWd:''
 
-        }
+        },
+        editLoading:false,
+         editFormRules: {
+      
+          newPassWd: [
+            {  validator: validatePass2, trigger: 'blur' }
+          ],
+          newCheckPassWd: [
+            { validator: validatePass3, trigger: 'blur' }
+          ]
+          
+        },
        
       
     }
@@ -47,6 +109,7 @@
     methods: {
 
      editSubmit: function () {
+      console.log(this.$refs.editForm.validate());
         this.$refs.editForm.validate((valid) => {
           if (valid) {
          
@@ -74,13 +137,18 @@
                 else
                 {
                    this.$message({
-                  message: '编辑失败',
+                  message: res.data.msg,
                   type: 'error'
                 });
                 }               
                 this.$refs['editForm'].resetFields();
                 this.editFormVisible = false;
+                this.$store.dispatch('GetUserInfo').then(()=>{
+                 
+
                 this.setPersonalInfo();
+                })
+              
               });
             
           }
@@ -91,6 +159,11 @@
       {
         this.editForm.fullName=this.$store.state.userInfo.profile.fullName;
         this.editForm.email=this.$store.state.userInfo.profile.email;
+      },
+      cancel()
+      {
+        this.$refs['editForm'].resetFields();
+        this.setPersonalInfo();
       }
 
      

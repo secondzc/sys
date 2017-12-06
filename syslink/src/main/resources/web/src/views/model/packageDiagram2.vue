@@ -131,12 +131,12 @@ export default {
                     .then(function (response) {
                         _this.form = response.data.form;
                         if(response.data.form.diagramSvgPath == null){
-                            _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.svgUrl = response.data.form.diagramSvgPath;
                         }
                         if(response.data.form.iconSvgPath == null){
-                            _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.iconUrl = response.data.form.iconSvgPath;
                         }

@@ -13,7 +13,7 @@
                     :file-list="fileList"
                     :before-upload="beforeUploadFile"
                     :auto-upload="true"
-                    :show-file-list = "false"
+                    :show-file-list = "true"
             >
                 <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" >上传文件..</el-button>
                 <!--<p>{{directoryContent}}</p>-->
@@ -58,8 +58,8 @@
         methods: {
             //上传文件
             uploadUrl :function(){
-                var scope = true;
-                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
+                var scope = false;
+                return "http://syslink.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
             submitUpload() {
@@ -150,7 +150,7 @@
                                     }else{
                                         resolve(true);
                                     }
-                                    reject(false)
+//                                    reject(false)
                                 }else {
                                     resolve(true);
                                 }
@@ -168,10 +168,11 @@
                 this.$message({
                     message: '上传成功！',
                     type: 'success',
-                    duration: 1000
+                    duration: 3000
                 });
                 this.isCover = false;
                 this.$refs.vueFileUploader.clearFiles();
+                this.$emit("refreshMyModel");
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -181,8 +182,8 @@
                     .catch(_ => {});
             },
             coverModel(){
-                var scope = true;
-                var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
+                var scope = false;
+                var realUrl =   "http://syslink.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
                 this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                 this.isCover = true;
                 this.dialogVisible = false;

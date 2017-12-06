@@ -42,7 +42,7 @@
                         .then(function (response) {
                             _this.form = response.data.form;
                             if(response.data.form.diagramSvgPath == null){
-                                _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.svgUrl = response.data.form.diagramSvgPath;
                             }

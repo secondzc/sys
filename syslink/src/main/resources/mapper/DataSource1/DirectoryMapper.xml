@@ -23,6 +23,7 @@
         <result column="absolute_address" property="absoluteAddress" jdbcType="VARCHAR"/>
         <result column="relative_address" property="relativeAddress" jdbcType="VARCHAR"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="baseColumnList" >

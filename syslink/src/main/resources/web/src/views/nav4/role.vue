@@ -14,7 +14,7 @@
     <hr/>
 
     <!--列表-->
-    <el-table :data="roles" highlight-current-row       style="width: 100%;">
+    <el-table :data="roles" highlight-current-row    @selection-change="selsChange"    style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
 
@@ -36,7 +36,7 @@
    
 
     <!--编辑角色界面-->
-    <el-dialog title="编辑角色" :visible="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑角色" :visible.sync="editFormVisible" :close-on-click-modal="false" >
         <el-form :model="editForm" label-width="80px" ref="editForm"    >
         <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入角色名称',trigger:'blur'}]"  >
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
@@ -54,7 +54,7 @@
   
 
     <!--新增角色界面-->
-    <el-dialog title="新建角色" :visible="addFormVisible" :close-on-click-modal="false"  >
+    <el-dialog title="新建角色" :visible.sync="addFormVisible" :close-on-click-modal="false"  >
       <el-form :model="addForm" label-width="80px"  ref="addForm"    >
         <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入角色名称',trigger:'blur'}]"  >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -73,7 +73,7 @@
 
 
      <!--分配权限界面-->
-   <el-dialog title="分配权限" :visible="permissionVisible" ref="permissionDialog" :close-on-click-modal="false" :show-close="false" >
+   <el-dialog title="分配权限" :visible.sync="permissionVisible" v-if="permissionVisible" ref="permissionDialog" :close-on-click-modal="false" :show-close="false" >
    <el-form :model="permission" label-width="80px"  ref="permissionForm"    >
  <!--    <div slot="title">
       <span>分配权限</span> -->
@@ -164,6 +164,10 @@
       }
     },
     methods: {
+        selsChange: function (sels) {
+        this.sels = sels;
+        console.log(sels);
+      },
 
       getCheckedNodes() {
         return this.$refs.tree.getCheckedNodes();
@@ -245,6 +249,7 @@
         this.editFormVisible = true;
         let a = this.sels;
         let b = a.length;
+        console.log(this.sels);
 
         this.editForm = Object.assign({}, this.sels[this.sels.length-1]);
      //   console.log(this.sels);
@@ -273,9 +278,9 @@
 
             let temp =  [];
 
-         row.auths.forEach(x=>temp.push(x.authId));
+         row.permissions.forEach(x=>temp.push(x.authId));
          console.log(temp);
-         this.authTree=temp;
+         this.roleTree=temp;
       //   this.setCheckedNodes(row.permissions);
        
       },

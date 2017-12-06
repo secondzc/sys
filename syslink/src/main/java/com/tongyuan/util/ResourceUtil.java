@@ -2,11 +2,9 @@ package com.tongyuan.util;
 
 import com.tongyuan.exception.ParseCaeException;
 import com.tongyuan.model.controller.DirectoryController;
-import com.tongyuan.model.domain.CAE.CaeComponent;
-import com.tongyuan.model.domain.CAE.CaeFile;
-import com.tongyuan.model.domain.CAE.CaeVariable;
-import com.tongyuan.tools.XmlHelper;
-import com.tongyuan.model.service.*;
+import com.tongyuan.model.domain.Directory;
+import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.FileModelService;
 import com.tongyuan.tools.StringUtil;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -38,7 +36,9 @@ public class ResourceUtil {
     @Autowired
     private FileModelService filemodelService;
     @Autowired
-    private ResourceUtil resourceUtil;
+    private ResourceUtil resourceUtil;;
+    @Autowired
+    private ModelUtil modelUtil;
 
     public static final String getString(String key) {
         if (key == null || key.equals("") || key.equals("null")) {
@@ -60,6 +60,10 @@ public class ResourceUtil {
     public static final String getTempFileDriectory()
     {
         return getString("zipPath");
+    }
+
+    public static final String getGogsHttpPort(){
+        return  getString("gogsHostPath");
     }
 
 
@@ -84,6 +88,16 @@ public class ResourceUtil {
         }
         return ResourceUtil.getTempFileDriectory();
     }
+
+
+    public String getGogsPath(){
+        String path = ResourceUtil.getGogsHttpPort();
+        if(StringUtil.isNull(path)){
+            path = "";
+        }
+        return  path;
+    }
+
 
     /**
      * 接收文件，将其写入zip文件临时地址
@@ -214,6 +228,23 @@ public class ResourceUtil {
         return userName + "/" + renametaskName + "/";
     }
 
+    public String unzipByte(String fileName,String userName ,byte[] data) throws Exception {
+        //压缩文件的路径
+        String filePath = getzipPath() + fileName;
+        String renametaskName = getNowTime();
+        //输出文件的路径
+        String outputDirectory = getunzipPath() + userName + "/"
+                + renametaskName + "/" + fileName;
+        try {
+//            unzip(filePath, outputDirectory);
+            modelUtil.unZipByte(data,outputDirectory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return userName + "/" + renametaskName + "/";
+    }
+
+
     /**
      * xyx
      * 解压文件
@@ -313,7 +344,6 @@ public class ResourceUtil {
             }
             Element root = doc.getRootElement();
             xmlMap = (Map<String, Object>) xml2map(root);
-   //         String string = JSONObject.fromObject(xmlMap).toString();
         }
         return xmlMap;
     }
@@ -348,10 +378,6 @@ public class ResourceUtil {
                 for (int i = 0; i < elements.get(0).attributeCount(); i++) {
                     templateMap.put(elements.get(0).attribute(i).getName(), elements.get(0).attribute(i).getValue());
                 }
-                //                      if(elements2.get(j).getParent().attributeCount() >0){
-                // templateMap.put("parentName",elements2.get(j).getParent().attribute(0).getValue()+";"+elements2.get(j).attribute(0).getValue());
-
-                //                  }
                 String parentName = "";
                 if(elements.get(0).attribute(0) != null){
                     parentName = elements.get(0).attribute(0).getValue();
@@ -377,7 +403,6 @@ public class ResourceUtil {
                 // 如果同名的数目大于1则表示要构建list
                 if (elements2.size() > 1) {
                     List<Object> list = new ArrayList<Object>();
-//                    for (Element ele : elements2) {
                     for(int j=0 ; j< elements2.size();j++){
                         //多层次的Component参数展示
                         //存储组件参数信息的map
@@ -386,10 +411,6 @@ public class ResourceUtil {
                             for (int i = 0; i < elements2.get(j).attributeCount(); i++) {
                                 templateMap.put(elements2.get(j).attribute(i).getName(), elements2.get(j).attribute(i).getValue());
                             }
-      //                      if(elements2.get(j).getParent().attributeCount() >0){
-                               // templateMap.put("parentName",elements2.get(j).getParent().attribute(0).getValue()+";"+elements2.get(j).attribute(0).getValue());
-
-          //                  }
                             String parentName = "";
                             parentName = getParentName(elements2.get(j),parentName);
                             templateMap.put("parentName",parentName);
@@ -436,16 +457,12 @@ public class ResourceUtil {
     //求element的父类名称
     public static String getParentName(Element element,String parentName){
         if(element.getParent().attributeCount() >0 ){
-//            if(parentName == ""){
-//                parentName = element.getParent().attribute(0).getValue()+";" + element.attribute(0).getValue();
-//                getParentName(element.getParent(),parentName);
-//            }else{
                 parentName = element.getParent().attribute(0).getValue()+";" + parentName;
                parentName = getParentName(element.getParent(),parentName);
-//            }
         }
         return parentName;
     }
+
 
 }
 

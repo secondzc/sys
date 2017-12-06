@@ -38,7 +38,7 @@
 
 
     <!--编辑部门界面-->
-    <el-dialog title="编辑部门" :visible="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑部门" :visible.sync="editFormVisible" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="80px" ref="editForm"    >
         <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入部门名称',trigger:'blur'}]"  >
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
@@ -62,7 +62,7 @@
   
 
     <!--新增部门界面-->
-    <el-dialog title="新建部门" :visible="addFormVisible" :close-on-click-modal="false"  >
+    <el-dialog title="新建部门" :visible.sync="addFormVisible" :close-on-click-modal="false"  >
       <el-form :model="addForm" label-width="80px"  ref="addForm"    >
         <el-form-item label="名称" prop="name"  :rules="[{required:true,message:'请输入部门名称',trigger:'blur'}]"  >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>

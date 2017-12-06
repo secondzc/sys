@@ -29,17 +29,17 @@
                 <el-input disabled="disabled" v-model="form.discription"></el-input>
             </el-form-item>
             <!--<el-form-item label="视图:" label-width="100px">-->
-                <!--&lt;!&ndash;<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="http://syslink.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
                 <!--<a  href="javascript:void(0)"   @click="svgUrl" >视图</a>-->
                 <!--&lt;!&ndash;form.diagramSvgPath&ndash;&gt;-->
             <!--</el-form-item>-->
             <!--<el-form-item label="图片:" >-->
-                <!--&lt;!&ndash;<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="http://syslink.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
                 <!--<a  href="javascript:void(0)"   @click="iconUrl" >图片</a>-->
                 <!--&lt;!&ndash;form.diagramSvgPath&ndash;&gt;-->
             <!--</el-form-item>-->
             <!--<el-form-item label="Info:" >-->
-                <!--&lt;!&ndash;<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="http://syslink.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>&ndash;&gt;-->
                 <!--<a  href="javascript:void(0)"   @click="infoUrl" >info信息</a>-->
                 <!--&lt;!&ndash;form.diagramSvgPath&ndash;&gt;-->
             <!--</el-form-item>-->
@@ -112,12 +112,12 @@
                         .then(function (response) {
                             _this.form = response.data.form;
                             if(response.data.form.diagramSvgPath == null){
-                                _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.svgUrl = response.data.form.diagramSvgPath;
                             }
                             if(response.data.form.iconSvgPath == null){
-                                _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.iconUrl = response.data.form.iconSvgPath;
                             }

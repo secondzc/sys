@@ -4,6 +4,7 @@ package com.tongyuan.model.domainmodel;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.OrgUser;
 import com.tongyuan.model.domain.Loginstate;
+import com.tongyuan.model.domain.ModelAuth;
 
 import java.util.*;
 
@@ -27,6 +28,8 @@ public class LoginedUserModel {
     private List<Map<String,Object>> user_team = new ArrayList<>();
 
     private List<OrgUser> user_org = new ArrayList<OrgUser>();
+
+    private List<String>modelAuths = new ArrayList<>();
 
 
     // 登录情况
@@ -98,5 +101,13 @@ public class LoginedUserModel {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public List<String> getModelAuths() {
+		return modelAuths;
+	}
+
+	public void setModelAuths(List<String> modelAuths) {
+		this.modelAuths = modelAuths;
 	}
 }

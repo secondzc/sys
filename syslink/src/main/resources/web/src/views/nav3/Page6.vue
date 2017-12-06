@@ -13,9 +13,9 @@
                     :file-list="fileList"
                     :before-upload="beforeUploadFile"
                     :auto-upload="true"
-                    :show-file-list = "false"
+                    :show-file-list = "true"
             >
-                <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" >上传文件..</el-button>
+                <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" >选取文件</el-button>
                 <!--<p>{{directoryContent}}</p>-->
                 <!--{{bmsg}}-->
                 <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
@@ -58,9 +58,8 @@
         methods: {
             //上传文件
             uploadUrl :function(){
-                var scope = false;
-                console.log('......START UPLOAD');
-                return "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg+"&scope="+scope;
+                var scope = true;
+                return "http://syslink.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
             submitUpload() {
@@ -76,7 +75,7 @@
             },
             beforeUploadFile(file){
                 //检验gogs仓库是否存在，不存在则创建一个仓库
-                var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
+                var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0] + '&scope=' + true
                 this.$http.post(modelUrl)
                     .then(function (response) {
                     })
@@ -169,10 +168,11 @@
                 this.$message({
                     message: '上传成功！',
                     type: 'success',
-                    duration: 1000
+                    duration: 3000
                 });
                 this.isCover = false;
                 this.$refs.vueFileUploader.clearFiles();
+                this.$emit("refreshModel");
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -182,8 +182,8 @@
                     .catch(_ => {});
             },
             coverModel(){
-                var scope = false;
-                var realUrl =   "http://gogs.modelica-china.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
+                var scope = true;
+                var realUrl =   "http://syslink.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
                 this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                 this.isCover = true;
                 this.dialogVisible = false;

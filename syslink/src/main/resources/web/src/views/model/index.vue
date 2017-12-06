@@ -20,7 +20,27 @@
 
                       <div style="position: absolute;left: 20px;display: inline-flex;
                       min-width: 200px;">
-                         <upload-file ></upload-file>
+                         <!--<upload-file ></upload-file>-->
+
+                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件</el-button>
+
+                          <el-dialog
+                                  title="上传压缩文件"
+                                  :visible.sync="file.dialogVisible"
+                                  width="30%"
+                                  :before-close="handleClose">
+                              <!--<span>这是一段信息</span>-->
+                              <upload-file @refreshModel="getModel" style="text-align: center;" ></upload-file>
+                              <!--<span slot="footer" class="dialog-footer">-->
+                                <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
+                                <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
+                              <!--</span>-->
+                          </el-dialog>
+
+
+
+
+
 
                       </div>
 
@@ -188,7 +208,7 @@
                                     </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" icon="el-icon-delete"   @click="handleDeleted(scope.$index, scope.row)"></el-button>
+                                  <el-button   size="small" type="danger" icon="el-icon-delete"  @click="handleDeleted(scope.$index, scope.row)" ></el-button>
                                     </el-tooltip>
                                      </el-button-group>
                                     </template>
@@ -474,6 +494,14 @@
             sortableList,
         },
         data() {
+            this.__currentNode = null;
+            var validateName = (rule, value, callback) => {
+                if (value.trim() == '') {
+                    callback(new Error('不能全为空格和空值'));
+                }else {
+                    callback();
+                }
+            };
             return {
                url: {
               C: '',
@@ -540,11 +568,16 @@
                       rules: {
                         name: {
                           required: true,
-                          message: '请输入分类名称',
+                            validator : validateName,
+//                          message: '请输入分类名称',
                           trigger: 'blur'
                         }
                       }
                     },
+                file:{
+                    dialogVisible: false,
+                }
+                ,
                 publicDirId : this.$store.getters.publicDirId.data.id,
             };
         },
@@ -766,28 +799,36 @@
         },
         handleDeleted(index, row){
             console.log(index, row);
-            var _this = this;
-            var url = '/api/model/deleted?modelId=' + row.parentId;
-            _this.$http.post(url)
-                .then(function (response) {
-                    if (response.data.msg == "ok") {
-                        _this.$message({
-                            message: '删除成功！',
-                            type: 'warning',
-                            duration: 2000
-                        });
-                        _this.getModel();
-                    }
-                    else {
-                        _this.$message({
-                            message: '删除失败！',
-                            type: 'warning',
-                            duration: 2000
-                        });
-                    }
-                }).catch(function (error) {
-                console.log(error);
+            this.$confirm('确认删除该模型吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                var _this = this;
+                var url = '/api/model/deleted?modelId=' + row.parentId;
+                _this.$http.post(url)
+                    .then(function (response) {
+                        if (response.data.msg == "ok") {
+                            _this.$message({
+                                message: '删除成功！',
+                                type: 'warning',
+                                duration: 2000
+                            });
+                            _this.getModel();
+                        }
+                        else {
+                            _this.$message({
+                                message: '删除失败！',
+                                type: 'warning',
+                                duration: 2000
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            }).catch(() => {
             });
+
+
+
         },
         addStar(item){
             if (item.alreadyStar == false) {
@@ -849,39 +890,63 @@
       submitForm () {
         this.$refs.dialogForm.validate((valid) => {
           if (valid) { // 验证通过
-            this.fetchAddTreeNode()
+              var checkDirNameUrl = '/api/directory/checkRootDir?dirParentId='+ this.$refs.dialogForm.model.parent_id +'&dirName='+ this.$refs.dialogForm.model.name
+                  +'&userName='+ this.$store.state.userInfo.profile.name
+              var _this = this;
+              _this.$http.post(checkDirNameUrl)
+                  .then(function (response) {
+                      if(response.data.state == 1){
+                          _this.fetchAddTreeNode()
+                      }else{
+                          _this.$message({
+                              message: '请重新输入模型分类名称！',
+                              type: 'warning',
+                              duration: 2000
+                          });
+                      }
+                  })
+                  .catch(function (error) {
+                      console.log(error)
+                      _this.$message({
+                          message: '请重新输入模型分类名称！',
+                          type: 'warning',
+                          duration: 2000
+                      });
+                  })
+//            this.fetchAddTreeNode()
           } else {
             return false
           }
         })
       },
-      fetchAddTreeNode () {
-        const url = 'api/directory/add';
-        this.dialog.submiting = true
-        this.fetch(url, this.dialog.form, 'post')
-            .then(data => {
-              /* 隐藏dialog */
-              Object.assign(this.dialog, {
-                submiting: false,
-                dialogVisible: false
-              })
-              this.$refs.dialogForm.resetFields()
-              /* 提示结果 */
-              const message = this.dialog.form.id ? '编辑成功' : '添加成功'
-              this.$message({ message: message, type: 'success' })
+            fetchAddTreeNode () {
+                const url = 'api/directory/add';
+                this.dialog.submiting = true
+                var _this = this;
+                this.fetch(url, this.dialog.form, 'post')
+                    .then(data => {
+                        /* 隐藏dialog */
+                        Object.assign(this.dialog, {
+                            submiting: false,
+                            dialogVisible: false
+                        })
+                        _this.$refs.dialogForm.resetFields()
+                        /* 提示结果 */
+                        const message = this.dialog.form.id ? '编辑成功' : '添加成功'
+                        this.$message({ message: message, type: 'success' })
 
-              if (this.dialog.form.id) { // 编辑
-                this.__currentNode && this.$set(this.__currentNode, 'data', data)
-              } else { // 新增
-                /* treeNode api */
-                if (this.__currentNode) { // 子分类添加子类
-                  this.__currentNode.doCreateChildren([data])
-                } else if (data.parentId === "0") { // 顶级添加子类
-                  this.$refs.kzTree.root.doCreateChildren([data])
-                }
-              }
-            })
-      },
+                        if (_this.dialog.form.id) { // 编辑
+                            _this.__currentNode && _this.$set(_this.__currentNode, 'data', data)
+                        } else { // 新增
+                            /* treeNode api */
+                            if (_this.__currentNode) { // 子分类添加子类
+                                _this.__currentNode.doCreateChildren([data])
+                            } else if (data.parentId === (_this.publicDirId +"")) { // 顶级添加子类
+                                _this.loadTreeNode();
+                            }
+                        }
+                    })
+            },
        fetch (url, data, type = 'POST') {
             const success = (data, resolve, reject) => {
                 if (data.status === 1) {
@@ -912,9 +977,40 @@
                 }
             })
         },
+            /* 加载子分类 */
+            loadTreeNode (treeItem, resolve) {
+                const url = this.tree.url.R ;
+                var para = {parent_id: this.publicDirId};
+                this.$emit("node-click",para);
+                var _this = this ;
+                _this. fetch(url, para)
+                    .then(data => {
+                        _this.$store.dispatch('sendTreeData',data);
+                        resolve(data)
+                    });
+            },
+            isSelectModel(){
+                if(this.$store.state.bmsg >= 0){
+                    this.file.dialogVisible = true;
+                }else{
+                    this.$message({
+                        message: '请选择模型目录！',
+                        type: 'warning',
+                        duration: 2000
+                    });
+                }
+
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+
     },
         mounted() {
-      
         }
     };
 

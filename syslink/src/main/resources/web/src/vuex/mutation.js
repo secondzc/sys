@@ -7,6 +7,9 @@ export default{
     [types.SEND_B](state,bData){
         state.bmsg=bData;
     },
+    [types.Send_TreeData](state,data){
+        state.treeDatas=data;
+    },
     [types.Send_ModelId](state,mdoelIdData){
         state.modelId = mdoelIdData;
     },

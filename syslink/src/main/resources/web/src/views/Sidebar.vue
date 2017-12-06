@@ -1,5 +1,5 @@
 <template>
-    <el-menu mode="vertical"  class="el-menu-vertical-demo"  :default-active="$route.path" :collapse="!opened">
+    <el-menu mode="vertical"  class="el-menu-vertical-demo"  :default-active="$route.path" :collapse="!opened" :unique-opened=true>
      <div >
     <template v-for="item in routers">
 

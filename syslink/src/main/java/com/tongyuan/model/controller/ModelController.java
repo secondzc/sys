@@ -45,8 +45,6 @@ import java.util.*;
 public class ModelController extends  BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private Date nowDate = new Date();
-
     @Autowired
     private ModelService modelService;
     @Autowired
@@ -85,7 +83,7 @@ public class ModelController extends  BaseController {
         model.setParentId(nullModel.getId());
         model.setUserId(nullModel.getUserId());
         model.setScope(nullModel.getScope());
-        model.setCreateTime(nowDate);
+        model.setCreateTime(nullModel.getCreateTime());
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
         // 修改
@@ -97,7 +95,7 @@ public class ModelController extends  BaseController {
         if( validateModel == null){
             modelService.add(model);
         }else{
-            model.setLastUpdateTime(nowDate);
+            model.setLastUpdateTime(DateUtil.getTimestamp());
             model.setId(validateModel.getId());
             modelService.update(model);
         }
@@ -462,7 +460,7 @@ public class ModelController extends  BaseController {
                     }
                 }else{
                     for (Model model : allModelList) {
-                        if (model.getParentId() == 0 && model.getScope() == false ) {
+                        if (model.getParentId() == 0 && model.getScope() == true ) {
                             searchModel.add(model);
                         }
                     }
@@ -489,7 +487,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setClasses(oneOfModel.get(i).getClasses());
                 modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
                 if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
-                    modelWeb.setImageUrl("http://gogs.modelica-china.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
+                    modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
                 }
                 modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
                 modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
@@ -570,7 +568,7 @@ public class ModelController extends  BaseController {
             List<Directory> directoryList = directoryService.queryListById(model.getDirectoryId());
             modelWeb.setDirectoryParentId(directoryList.get(0).getParentId());
             modelWeb.setIndex(Long.parseLong(modelId));
-            modelWeb.setName(model.getName());
+            modelWeb.setName(modelUtil.splitName(model.getName()));
             modelWeb.setType(model.getType());
             modelWeb.setRepositoryName(model.getName().split("\\.")[0]);
             modelWeb.setClasses(model.getClasses());
@@ -587,13 +585,13 @@ public class ModelController extends  BaseController {
             }
 
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
-                modelWeb.setDiagramSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
+                modelWeb.setDiagramSvgPath("http://syslink.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
             }
             if(model.getIconSvgPath() != null && model.getIconSvgPath() != ""){
-                modelWeb.setIconSvgPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getIconSvgPath().substring(7));
+                modelWeb.setIconSvgPath("http://syslink.com:8080/FileLibrarys"+model.getIconSvgPath().substring(7));
             }
             if(model.getInfoTextPath() != null && model.getInfoTextPath() != ""){
-                modelWeb.setInfoTextPath("http://gogs.modelica-china.com:8080/FileLibrarys"+model.getInfoTextPath().substring(7));
+                modelWeb.setInfoTextPath("http://syslink.com:8080/FileLibrarys"+model.getInfoTextPath().substring(7));
             }
             for (Repository repository: allRepository) {
                 if(modelWeb.getRepositoryName().equals(repository.getName())){
@@ -785,7 +783,7 @@ public class ModelController extends  BaseController {
         if(xmlData.get("IsVariable").equals("False")){
                Component component = new Component();
                component.setCurrentModelId(model.getId());
-               component.setCreateTime(nowDate);
+               component.setCreateTime(new Date());
                doComponentSet(xmlData,component);
                int componentResult = componentService.add(component);
                long index_last_id = component.getId();
@@ -946,7 +944,7 @@ public class ModelController extends  BaseController {
             FileUtils.copyFileCover(model.getInfoTextPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".info.html",true);
             FileUtils.copyFileCover(model.getIconSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".icon.svg",true);
             FileUtils.zipFiles("C:\\Temp\\FileLibrary\\","C:\\Temp\\FileLibrary\\" +name,"C:\\Temp\\FileLibrary\\"+name+"Model");
-             realUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/"+name+"Model";
+             realUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/"+name+"Model";
             }catch(Exception e) {
                 e.printStackTrace();
                 jo.put("status","1");

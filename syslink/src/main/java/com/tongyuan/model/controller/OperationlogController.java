@@ -1,6 +1,7 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.tongyuan.model.domain.Operationlog;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -100,6 +103,47 @@ public class OperationlogController extends BaseController{
 
         return (JSONObject) JSONObject.toJSON(jo);
     }
+
+
+
+
+
+    @RequestMapping(value = "/deleteLogs",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject deleteLogs(HttpServletRequest request, HttpServletResponse response, @RequestBody String para)
+    {
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        JSONArray logs = jsonObject.getJSONArray("ids");
+
+
+
+        try
+        {
+            for(int i=0;i<logs.size();i++)
+            {
+                operationlogService.delete(logs.getIntValue(i));
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","删除失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","删除成功");
+
+
+
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+
+
+
 
 
 

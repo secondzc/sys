@@ -55,8 +55,6 @@
         delete from auth where auth_id=#{id}
     </delete>
     <delete id="deleteByPid" parameterType="INTEGER">
-        delete from auth where parend_id=#{parentId}
+        delete from auth where parent_id=#{parentId}
     </delete>
-
-
 </mapper>

@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -82,11 +83,11 @@ public class Model {
 
     @Column
     //创建时间
-    private Date createTime;
+    private Timestamp createTime;
 
     @Column
     //最后修改时间
-    private Date lastUpdateTime;
+    private Timestamp lastUpdateTime;
 
     @Column( nullable = false)
     //是否为公共的模型 0；非公共的
@@ -216,22 +217,6 @@ public class Model {
         this.userId = userId;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getLastUpdateTime() {
-        return lastUpdateTime;
-    }
-
-    public void setLastUpdateTime(Date lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
-    }
-
     public Boolean getScope() {
         return scope;
     }
@@ -254,5 +239,21 @@ public class Model {
 
     public void setTextInfo(String textInfo) {
         this.textInfo = textInfo;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public Timestamp getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(Timestamp lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
     }
 }

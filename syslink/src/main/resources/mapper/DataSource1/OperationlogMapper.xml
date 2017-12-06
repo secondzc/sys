@@ -44,5 +44,9 @@
         ORDER BY create_date desc
     </select>
 
+    <delete id="delete" parameterType="long">
+        delete from operationlog where id=#{id}
+    </delete>
+
 
 </mapper>

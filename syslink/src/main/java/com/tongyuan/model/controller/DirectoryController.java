@@ -14,6 +14,7 @@ import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.DirectoryModel;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
+import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.FileX;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
@@ -78,53 +79,6 @@ public class DirectoryController {
     @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public void test(HttpServletRequest request , HttpServletResponse response) throws IOException {
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        String author = request.getParameter("author");
-//        String title = request.getParameter("title");
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        params.put("author", author);
-//        params.put("title", title);
-//        List<LearnResouce> learnList=learnService.queryLearnResouceList(params);
-//        PageInfo<LearnResouce> pageInfo =new PageInfo<LearnResouce>(learnList);
-//
-//        JSONObject jo=new JSONObject();
-//        jo.put("rows", learnList);
-//        jo.put("total", pageInfo.getPages());//总页数
-//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-//        ServletUtil.createSuccessResponse(200, jo, response);
-
-     //   CommonServiceImp CommonServiceImp = new CommonServiceImp();
-
-   //     ResourceUtil resourceUtil = new ResourceUtil();
-
-/*        Integer g[] = new Integer [60];
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        FileInputStream fin  = null;
-        try {
-            fin = new FileInputStream("D:\\syslink.zip");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int read;
-        byte[] bytes=new byte[1024];
-        try {
-            while((read = fin.read(bytes)) >0){
-                out.write(bytes, 0, read);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        fin.close();
-
-        bytes = out.toByteArray(); // 这就是全部的字节数组了。
-        out.close();
-        long byteslength = bytes.length;
-        System.out.println(byteslength);*/
         JSONObject result=new JSONObject();
         //文件解析的数据Map
         Map<String , Object> dataMap = new HashMap<>();
@@ -179,8 +133,6 @@ public class DirectoryController {
          //   String relativePath=currentPath.substring(unzipPath.length(), currentPath.length());
             String currentPath=relativePath.substring(unzipPath.length(), relativePath.length());
             FileModel directory  = new FileModel();
-            //       directory.setId(UUID.randomUUID().toString());
-            //       directory.setParentId(UUID.randomUUID().toString());
             directory.setName(parentF.getName());
             directory.setAbsoluteAddress(currentPath);
             directory.setRelativeAddress(relativePath);
@@ -214,91 +166,15 @@ public class DirectoryController {
         return result;
     }
 
-//    @RequestMapping(value = "/getTreeAsync",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public List<EasyuiTreeNode> getTreeAsync(HttpServletRequest request , HttpServletResponse response){
-//        String name = request.getParameter("name");
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        List<Directory> allDirectoryList = directoryService.findAllDirectory();
-//        List<Directory> rootDirectoryList = directoryService.findRootDirectory();
-//        //公有库的树
-//        List<EasyuiTreeNode> publicTree = new ArrayList<EasyuiTreeNode>();
-//        for (Directory directory : rootDirectoryList) {
-//            publicTree.add(tree(directory,allDirectoryList,true));
-//        }
-//        return publicTree;
-//    }
-//
-//    /**
-//     * 递归
-//     * @param directory
-//     * @param recursive
-//     * @return
-//     */
-//    private EasyuiTreeNode tree(Directory directory,List<Directory> allDirectoryList, boolean recursive) {
-//        EasyuiTreeNode node = new EasyuiTreeNode();
-//        Map<String, Object> attributes = new HashMap<String, Object>();
-//    //    attributes.put("taskId", directory.getTask().getTaskId());
-//        if(directory != null){
-//            node.setId(directory.getRelativeAddress());
-//            node.setText(directory.getName());
-//        }
-//    //    node.setAttributes(attributes);
-//        if (directory != null
-//                && allDirectoryList.size() > 0) {
-//            if (recursive) {
-//                List<Directory> directoryList = new ArrayList<Directory>();
-//                for (Directory  fileDir: allDirectoryList) {
-//                    if(fileDir.getParentId() == directory.getId()){
-//                        directoryList.add(fileDir);
-//                    }
-//                }
-//                //Collections.sort(directoryList, new FilelibraryComparator());
-//                List<EasyuiTreeNode> children = new ArrayList<EasyuiTreeNode>();
-//                for (Directory m : directoryList) {
-//                        node.setState("closed");
-//                        EasyuiTreeNode t = tree(m,allDirectoryList, true);
-//                        children.add(t);
-//
-//                }
-//                node.setChildren(children);
-//            }
-//        }
-//        return node;
-//    }
-//
-//    @RequestMapping(value = "/getDirectoryList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public void  getDirectoryList(HttpServletRequest request , HttpServletResponse response){
-//        String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
-//        String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
-//        Map<String,Object> params = new HashMap<String,Object>();
-//        params.put("page", page);
-//        params.put("rows", rows);
-//        List<FileModel> rootDirectoryList = fileModelService.findRootDirectoryList(params);
-//        PageInfo<FileModel> pageInfo =new PageInfo<FileModel>(rootDirectoryList);
-//
-//        JSONObject jo=new JSONObject();
-//        jo.put("rows", rootDirectoryList);
-//        jo.put("total", pageInfo.getPages());//总页数
-//        jo.put("records",pageInfo.getTotal());//查询出的总记录数
-//        ServletUtil.createSuccessResponse(200, jo, response);
-////        return rootDirectoryList;
-//    }
 
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    @CrossOrigin(origins = "http://gogs.modelica-china.com", maxAge = 3600)
-    public boolean uploadDirectory(@RequestParam(value = "name",required = false)String name,
+    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+    public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
-                                   @RequestParam(value = "scope",required = false)Boolean scope,
+                                @RequestParam(value = "scope",required = false)Boolean scope,
                                 HttpServletRequest request , HttpServletResponse response){
-
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest)request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
          Long fileSize = map.get("file").get(0).getSize();
@@ -308,156 +184,82 @@ public class DirectoryController {
          if(fileNames2.length >=1){
              fileName = fileNames2[0];
          }
-         //判断这个模型是更新模型还是上传新的模型
-        Boolean updateOrCreate = true;
         try {
              bytes =  map.get("file").get(0).getBytes();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         System.out.println("starting upload the file...");
         boolean result = false;
         //获取压缩包 C:/Temp/zip/文件名
         String filePath = resourceUtil.getzipPath() + fileName;
         System.out.println("filePath==" + filePath);
+        System.out.println("starting writing file...");
+//            resourceUtil.writeFile(filePath, 0, fileSize, bytes);
+//            // 模型相对路径xieyx/20170620.../
+//            String modelDir = resourceUtil.unzipFile(fileName, "xieyx");
+        String modelDir = "";
         try {
-            System.out.println("starting writing file...");
-            resourceUtil.writeFile(filePath, 0, fileSize, bytes);
-
-            // 模型相对路径xieyx/20170620.../
-            String modelDir = resourceUtil.unzipFile(fileName, "xieyx");
-            //输出文件的目录（modelDir是解压缩到的目录）
-            System.out.println("modelDir==========" + modelDir + "*************");
-            //获取到model解压缩的路径
-            String modelPath =  resourceUtil.getModelPath(modelDir, fileName);
-            //遍历文件，对model库进行插入
-            //	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
-            // String parentPath = ResourceUtil.getFileDriectory() + modelDir;
-            String parentPath = modelPath;
-            resourceUtil.getSubFile(parentPath.substring(0,
-                    parentPath.length()), parentPath.substring(0,
-                    parentPath.length()), "");
-            Map<String, Object> xmlMap = new HashMap<String, Object>();
-            //存放解析的所有xmlMap
-            Map<String,Map> xmlAnalysisMap = new HashMap<>();
-            //存放解析svg，info文件所在位置的Map
-            Map<String,String> svgPath = new HashMap<>();
-//            String name = fileName;
-            Map<String,Object> params = new HashMap<String,Object>();
-            params.put("name",fileName);
-            //查找到项目所在的位置
-            List<FileModel> directoryList = fileModelService.queryListByName(params);
-            //选取最近push的一个directory对象
-            FileModel directory = new FileModel();
-            if(!directoryList.isEmpty()){
-                directory = directoryList.get(0);
-            }else {
-                result = false;
-//                return result;
-            }
-            //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
-            //文件所在位置
-            String fileXmlPath = directory.getRelativeAddress();
-            //获取到xml所在的文件位置
-            String xmlPath = "";
-            xmlPath= resourceUtil.getXmlPath(fileXmlPath,xmlPath);
-            //对xml进行解析,遍历xml文件下所有文件
-            if(StringUtil.isNull(xmlPath)){
-                result = false;
-//                return result;
-            }
-            File xmlFilePath = new File(xmlPath);
-            String[] subFiles = xmlFilePath.list();
-            GUser user =  gUserService.querListByName(name);
-            Model model = new Model();
-            model.setName(subFiles[0].split("\\.")[0]);
-            model.setFileId(directory.getId());
-            model.setDirectoryId(directoryId);
-            model.setClasses(ModelClasses.Package.getKey());
-            model.setModelFilePath(filePath);
-            model.setScope(scope);
-            model.setUserId(user.getID());
-            model.setCreateTime(new Date());
-           // model.setUserId(1);
-            model.setDeleted(false);
-            Map<String, Object> param = new HashMap<>();
-            param.put("fileName",subFiles[0].split("\\.")[0]);
-            param.put("directoryId",directoryId);
-//            if(modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null){
-            if(modelService.queryByNameAndDir(param) == null){
-//                modelService.add(model);
-                //by:zhangcy  在这里加入了审签的代码
-                modelService.add(model);
-                Long modelId = model.getId();
-                try{
-                    //下面两行都有异常要抛出
-                    Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                    statusChangeService.updateNextStatus(instanceId,"1");
-                }catch(SqlNumberException e){
-                    e.printStackTrace();
-                }
-                updateOrCreate = false;
-            }
-            //查的找最外层空的model
-            //修改成根据插入的分类id找到对应package包
-            //  Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
-            Model nullModel = modelService.queryByNameAndDir(param);
-            for (int i = 0; i < subFiles.length; i++) {
-                //查看文件的格式
-                String [] fileNames = subFiles[i].split("\\.");
-                //文件的类型
-                String filePreType = fileNames[fileNames.length-2];
-                String fileType = fileNames[fileNames.length-1];
-                if(("xml").equals(fileType)){
-                    xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
-                    xmlAnalysisMap.put(subFiles[i],xmlMap);
-                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                }else if("svg".equals(fileType)){
-                    if("icon".equals(filePreType)){
-                        svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                    }else if("diagram".equals(filePreType)){
-                        svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                    }
-                }else if("html".equals(fileType)){
-                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
-                }
-                else if("mo".equals(fileType)){
-                    //mo文件信息
-                    String textAllInfo = fileX.read(xmlFilePath +"/" +subFiles[i]);
-                    svgPath.put(subFiles[i],textAllInfo);
-                }
-            }
-            //遍历xmlMap进行数据的插入
-            for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-                //解析xmlmap 把数据存放到数据库
-                modelController.insertData(entry,svgPath,nullModel,directory,directoryId);
-            }
-
-            //更新模型的层次结构
-            //获取package下面的所有model
-            List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-            for (Model modelParent: modelList) {
-                for (Model modelChild: modelList) {
-                  String childParentName = modelUtil.getParentName(modelChild.getName());
-                  if(childParentName != null && !childParentName.equals("")){
-                     if(childParentName.equals(modelParent.getName())){
-                         modelChild.setParentId(modelParent.getId());
-                         modelService.update(modelChild);
-                     }
-                  }
-                }
-            }
-    //        this.doCmd(name,fileXmlPath,fileName);
-            result = true;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+            modelDir = resourceUtil.unzipByte(fileName, name,bytes);
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        //输出文件的目录（modelDir是解压缩到的目录）
+        System.out.println("modelDir==========" + modelDir + "*************");
+        //获取到model解压缩的路径
+        String modelPath =  resourceUtil.getModelPath(modelDir, fileName);
+        //遍历文件，对model库进行插入
+        //	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
+        String parentPath = modelPath;
+        resourceUtil.getSubFile(parentPath.substring(0,
+                parentPath.length()), parentPath.substring(0,
+                parentPath.length()), "");
+        Map<String, Object> xmlMap = new HashMap<String, Object>();
+        //存放解析的所有xmlMap
+        Map<String,Map> xmlAnalysisMap = new HashMap<>();
+        //存放解析svg，info文件所在位置的Map
+        Map<String,String> svgPath = new HashMap<>();
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("name",fileName);
+        //查找到项目所在的位置
+        List<FileModel> directoryList = fileModelService.queryListByName(params);
+        //选取最近push的一个directory对象
+        FileModel directory = new FileModel();
+        if(!directoryList.isEmpty()){
+            directory = directoryList.get(0);
+        }else {
             result = false;
         }
+        //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
+        //文件所在位置
+        String fileXmlPath = directory.getRelativeAddress();
+        //获取到xml所在的文件位置
+        String xmlPath = "";
+        xmlPath= resourceUtil.getXmlPath(fileXmlPath,xmlPath);
+        //对xml进行解析,遍历xml文件下所有文件
+        if(StringUtil.isNull(xmlPath)){
+            result = false;
+        }
+        File xmlFilePath = new File(xmlPath);
+        String[] subFiles = xmlFilePath.list();
+        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
+        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
+        //查找最外层空的model
+        //修改成根据插入的分类id找到对应的package包
+        Model nullModel = modelService.queryByNameAndDir(param);
+        String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";
+       this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
+        //遍历xmlMap进行数据的插入
+        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+            //解析xmlmap 把数据存放到数据
+            modelController.insertData(entry,svgPath,nullModel,directory,directoryId);
+        }
+        //更新模型的层次结构
+        //获取package下面的所有model
+       this.updateModelFramwork(nullModel);
+        //        this.doCmd(name,fileXmlPath,fileName);
+        result = true;
         System.out.println("上传完毕！！！");
-//        return result;
-        return updateOrCreate;
     }
 
     //web端增加模型目录
@@ -800,7 +602,38 @@ public class DirectoryController {
 
     public void setChidren(Map<String ,Object>map)
     {
+        if(map.get("icon")==null)
+        {
+            map.put("icon","iconfont icon-wenjianjia");
+        }
         List<Map<String,Object>>chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
+        List<Map<String,Object>> allModelList = modelService.findAllModelMap();
+        List<Map<String,Object>> searchModel = new ArrayList<>();
+        List<Map<String,Object>> operation = new ArrayList<>();
+        Map<String,Object> operation1= new HashMap<>();
+        Map<String,Object> operation2= new HashMap<>();
+        operation1.put("name","可读");
+        operation1.put("mode",1);
+        operation2.put("mode",2);
+        operation2.put("name","可写");
+        operation.add(operation1);
+        operation.add(operation2);
+            for (Map<String,Object> model: allModelList) {
+                if(Long.parseLong(model.get("directoryId").toString()) == Long.parseLong(map.get("id").toString())){
+                         if(Long.parseLong(model.get("parentId").toString()) == 0){
+                             operation1.put("modelId",model.get("id"));
+                             operation1.put("nodeId",model.get("id")+"+"+"1");
+                             operation2.put("modelId",model.get("id"));
+                             operation2.put("nodeId",model.get("id")+"+"+"2");
+                            model.put("children",operation);
+                            model.put("icon","iconfont icon-wenjian1");
+                            searchModel.add(model);
+                        }
+
+                }
+            }
+        chidlren.addAll(searchModel);
+
         if(chidlren.size()>0)
         {
             map.put("children",chidlren);
@@ -884,7 +717,235 @@ public class DirectoryController {
         return jo;
     }
 
+    /**
+     * 输入一个模型目录，判断是否是公有模型
+     * true 公有模型 false 私有模型
+     * @param directoryId
+     * @return
+     */
+    public Boolean isScope(Long directoryId){
+        Boolean result = false;
+        Directory publicDir = new Directory();
+        List<Directory> treeItemList = new ArrayList<>();
+        try{
+            List<Directory> directoryList = directoryService.getPublicDir();
+            publicDir = directoryList.get(0);
+            List<Directory> allDirectory = directoryService.findAllDirectory();
+            //添加节点父类列表
+            addTreeItem(directoryId, treeItemList, allDirectory);
+            for (Directory directory : treeItemList) {
+                if(directory.getId() == publicDir.getId()){
+                    result = true;
+                    return result;
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return  result;
+    }
 
+
+    /**
+     * 給不同的模型存入對應的模型svg地址
+     * @param subFiles
+     * @param xmlFilePath
+     * @param xmlMap
+     * @param svgPath
+     * @param xmlAnalysisMap
+     */
+    public void insertSvgPath(String[] subFiles,File xmlFilePath,Map<String, Object> xmlMap,Map<String,String> svgPath,Map<String,Map> xmlAnalysisMap){
+        for (int i = 0; i < subFiles.length; i++) {
+            //查看文件的格式
+            String [] fileNames = subFiles[i].split("\\.");
+            //文件的类型
+            String filePreType = fileNames[fileNames.length-2];
+            String fileType = fileNames[fileNames.length-1];
+            if(("xml").equals(fileType)){
+                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
+                xmlAnalysisMap.put(subFiles[i],xmlMap);
+                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+            }else if("svg".equals(fileType)){
+                if("icon".equals(filePreType)){
+                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+                }else if("diagram".equals(filePreType)){
+                    svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+                }
+            }else if("html".equals(fileType)){
+                svgPath.put(subFiles[i],xmlFilePath +"/" +subFiles[i]);
+            }
+            else if("mo".equals(fileType)){
+                //mo文件信息
+                String textAllInfo = fileX.read(xmlFilePath +"/" +subFiles[i]);
+                svgPath.put(subFiles[i],textAllInfo);
+            }
+        }
+    }
+
+    /**
+     * 把對應的模型庫的目录进行更改
+     * @param nullModel(包)
+     */
+    public void updateModelFramwork(Model nullModel){
+        List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
+        for (Model modelParent: modelList) {
+            for (Model modelChild: modelList) {
+                String childParentName = modelUtil.getParentName(modelChild.getName());
+                if(childParentName != null && !childParentName.equals("")){
+                    if(childParentName.equals(modelParent.getName())){
+                        modelChild.setParentId(modelParent.getId());
+                        modelService.update(modelChild);
+                    }
+                }
+            }
+        }
+    }
+
+    public Model setPackageParam(String name,String[] subFiles,FileModel directory,Long directoryId,Boolean scope,String filePath){
+        GUser user =  gUserService.querListByName(name);
+        Model model = new Model();
+        model.setName(subFiles[0].split("\\.")[0]);
+        model.setFileId(directory.getId());
+        model.setDirectoryId(directoryId);
+        model.setClasses(ModelClasses.Package.getKey());
+        model.setModelFilePath(filePath);
+        model.setScope(scope);
+        model.setUserId(user.getID());
+        model.setCreateTime(DateUtil.getTimestamp());
+        // model.setUserId(1);
+        model.setDeleted(false);
+        return  model;
+    }
+
+    /**
+     * 是否增加模型并申签
+     * @param subFiles
+     * @param directoryId
+     * @param model
+     * @return
+     */
+    public Map<String, Object> isAddModelAndReview(String[] subFiles,Long directoryId,Model model){
+        Map<String, Object> param = new HashMap<>();
+        param.put("fileName",subFiles[0].split("\\.")[0]);
+        param.put("directoryId",directoryId);
+        if(modelService.queryByNameAndDir(param) == null){
+            //by:zhangcy  在这里加入了审签的代码
+            modelService.add(model);
+            Long modelId = model.getId();
+            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+            try{
+                statusChangeService.updateNextStatus(instanceId,"1");
+            }catch(SqlNumberException e){
+                e.printStackTrace();
+            }
+        }
+        return param;
+    }
+
+    @RequestMapping(value = "/checkDirName",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject checkDirName(@RequestParam(value = "parentId",required = false)String parentId,
+                                   @RequestParam(value = "dirName",required = false)String dirName,
+                                   @RequestParam(value = "dirId",required = false)Long dirId,
+                                   @RequestParam(value = "dirParentId",required = false)Long dirParentId,
+                                   @RequestParam(value = "userName",required = false)String userName,
+                                   HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        List<Directory> allDirectory = directoryService.findAllDirectory();
+        List<Directory> privateDir = directoryService.getPrivateDir();
+        //同级分类目录列表
+        List<Directory> levelDirList = new ArrayList<>();
+        try{
+           if("".equals(dirId) || dirId == null){
+               //找出同级分类目录
+               for (Directory levelDir :allDirectory) {
+                   if(dirParentId == privateDir.get(0).getId()){
+                       if(levelDir.getParentId() == dirParentId && userName.equals(levelDir.getUserName())){
+                           levelDirList.add(levelDir);
+                       }
+                   }else{
+                       if(levelDir.getParentId() == dirParentId ){
+                           levelDirList.add(levelDir);
+                       }
+                   }
+
+               }
+           }else{
+               for (Directory levelDir :allDirectory) {
+                   if(Long.parseLong(parentId)== privateDir.get(0).getId()){
+                       if(levelDir.getParentId() == Long.parseLong(parentId) && userName.equals(levelDir.getUserName()) ){
+                           levelDirList.add(levelDir);
+                       }
+                   }else{
+                       if(levelDir.getParentId() == Long.parseLong(parentId)){
+                           levelDirList.add(levelDir);
+                       }
+                   }
+
+               }
+           }
+           if(levelDirList.size() >0){
+               for (Directory directory:
+               levelDirList) {
+                   if(directory.getName().equals(dirName)){
+                       jo.put("state",0);
+                       return jo;
+                   }
+               }
+           }
+        }catch (Exception e){
+            e.printStackTrace();
+            jo.put("state",0);
+            return jo;
+        }
+        jo.put("state",1);
+        return jo;
+    }
+
+
+    @RequestMapping(value = "/checkRootDir",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject checkRootDir(@RequestParam(value = "dirName",required = false)String dirName,
+                                   @RequestParam(value = "dirParentId",required = false)Long dirParentId,
+                                   @RequestParam(value = "userName",required = false)String userName,
+                                   HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        List<Directory> allDirectory = directoryService.findAllDirectory();
+        List<Directory> privateDir = directoryService.getPrivateDir();
+        //同级分类目录列表
+        List<Directory> levelDirList = new ArrayList<>();
+        try{
+            if(dirParentId == privateDir.get(0).getId()){
+                for (Directory levelDir:allDirectory) {
+                    if (levelDir.getParentId() == dirParentId && userName.equals(levelDir.getUserName())){
+                        levelDirList.add(levelDir);
+                    }
+                }
+                }else{
+                for (Directory levelDir:allDirectory) {
+                    if (levelDir.getParentId() == dirParentId ){
+                        levelDirList.add(levelDir);
+                    }
+                }
+            }
+            if(levelDirList.size() >0){
+                for (Directory directory:
+                        levelDirList) {
+                    if(directory.getName().equals(dirName)){
+                        jo.put("state",0);
+                        return jo;
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            jo.put("state",0);
+            return jo;
+        }
+        jo.put("state",1);
+        return jo;
+    }
 }
 
 

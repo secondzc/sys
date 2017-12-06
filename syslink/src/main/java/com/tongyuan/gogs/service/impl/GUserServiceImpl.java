@@ -46,6 +46,8 @@ public class GUserServiceImpl implements GUserService {
     @Autowired
     DirectoryAuthMapper directoryAuthMapper;
     @Autowired
+    ModelAuthMapper modelAuthMapper;
+    @Autowired
     AuthService authService;
     @Autowired
     RoleService roleService;
@@ -108,6 +110,14 @@ public class GUserServiceImpl implements GUserService {
             auths.add(auth.getAuthCode());
         }
 
+        List<String>modeAuths = new ArrayList<>();
+        List<ModelAuth> modelAuthList = modelAuthMapper.queryByUid(user.getID());
+        for(ModelAuth modelAuth :modelAuthList)
+        {
+            modeAuths.add(modelAuth.getNodeId());
+        }
+
+
 
 
         Loginstate loginstate = loginstateMapper.queryLoginstateById(user.getID());
@@ -115,6 +125,7 @@ public class GUserServiceImpl implements GUserService {
         LoginedUserModel loginedUserModel = new LoginedUserModel();
         loginedUserModel.setProfile(user);
         loginedUserModel.setAuths(auths);
+        loginedUserModel.setModelAuths(modeAuths);
         //      loginedUserModel.setRoles(roles);
         //      loginedUserModel.setPermissions(permissions);
         loginedUserModel.setLoginState(loginstate);
@@ -484,16 +495,18 @@ public class GUserServiceImpl implements GUserService {
 
 
     @Override
-    public boolean updateModelAuth(Long uid,Long[] directoryIds)
+    public boolean updateModelAuth(Long uid,List<Map<String,Object>> models)
     {
-        boolean a = directoryAuthMapper.deleteByUid(uid);
+        boolean a = modelAuthMapper.deleteByUid(uid);
         boolean b =true;
-        for(int i=0;i<directoryIds.length;i++)
+        for(Map<String,Object>map:models)
         {
-            DirectoryAuth directoryAuth = new DirectoryAuth();
-            directoryAuth.setUid(uid);
-            directoryAuth.setDirectoryId(directoryIds[i]);
-            b = b&directoryAuthMapper.add(directoryAuth);
+            ModelAuth modelAuth = new ModelAuth();
+            modelAuth.setMode(Short.parseShort(map.get("mode").toString()));
+            modelAuth.setModelId(Long.parseLong(map.get("modelId").toString()));
+            modelAuth.setUid(uid);
+            modelAuth.setNodeId(map.get("modelId").toString()+"+"+map.get("mode").toString());
+            b=b&modelAuthMapper.add(modelAuth);
         }
         return a&b;
 

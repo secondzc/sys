@@ -2,8 +2,8 @@
 
     <el-container   style="height: 100%;">
         <el-header class="top-header">
-            <span style="font-size: 20px;position: relative;top: 8px;">模型：{{form.name}}</span>
-            <div style="display: inline-block;margin-left: 95px">
+            <span style="font-size: 20px;position: relative;top: 8px;left: -20px;">模型：{{form.name}}</span>
+            <div style="display: inline-block;position: relative;left: 136px;top: 7px;">
 
                 <a class="ui basic button" @click="addWatch(form)">
                     <span>关注</span>
@@ -12,7 +12,7 @@
                     {{form.numberWatch}}
                 </a>
             </div>
-            <div style="display:inline-block;margin-top: 18px">
+            <div style="display:inline-block;margin-top: 18px;position: relative;left: 163px;top: 7px;">
 
                 <a class="ui basic button" @click="addStar(form)">
                     <span>点赞</span>
@@ -21,7 +21,7 @@
                     {{form.numberStar}}
                 </a>
             </div>
-            <div style="display:inline-block;margin-top: 8px;position: absolute;right: 60px;">
+            <div style="display:inline-block;margin-top: 6px;position: absolute;right: 60px;">
                 <el-button type="warning" plain   @click="goReposity">转到仓库</el-button>
             </div>
         </el-header>
@@ -36,11 +36,11 @@
                         <!--@check-change="handleCheckChange"  style="margin-top: 20px;overflow: inherit;">-->
                 <!--</el-tree>-->
                 <div style="height: 50%">
-                    <span>模型浏览器：</span>
+                    <span>模型浏览器</span>
                     <modeltree style="height: 100%;overflow-y: auto"></modeltree>
                 </div>
                 <div style="margin-top: 30px;height: 50%;overflow: auto">
-                    <span>组件浏览器：</span>
+                    <span>组件浏览器</span>
                     <modeltreeContAndVar style="overflow-y: auto"> </modeltreeContAndVar>
                 </div>
             </el-aside>
@@ -73,8 +73,8 @@
                     </el-tab-pane>
                     <el-tab-pane style="height: 100%">
                         <span slot="label"><i class="el-icon-document"></i> 说明</span>
-                        <div style="height: 100%;">
-                            <iframe :src=infoUrl  style="width: 100%;height: 100%;overflow: auto;" ></iframe>
+                        <div style="height: 95%;">
+                            <iframe :src=infoUrl  style="width: 100%;height: 100%;" ></iframe>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane style="height: 100%">
@@ -153,12 +153,12 @@
                         _this.form = response.data.form;
                         _this.textInfo= response.data.form.textInfo;
                         if(response.data.form.diagramSvgPath == null){
-                            _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.svgUrl = response.data.form.diagramSvgPath;
                         }
                         if(response.data.form.iconSvgPath == null){
-                            _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.iconUrl = response.data.form.iconSvgPath;
                         }
@@ -188,12 +188,12 @@
                         _this.form = response.data.form;
                         _this.textInfo= response.data.form.textInfo
                         if(response.data.form.diagramSvgPath == null){
-                            _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.svgUrl = response.data.form.diagramSvgPath;
                         }
                         if(response.data.form.iconSvgPath == null){
-                            _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.iconUrl = response.data.form.iconSvgPath;
                         }
@@ -316,12 +316,12 @@
                             _this.form = response.data.form;
                             _this.textInfo= response.data.form.textInfo
                             if(response.data.form.diagramSvgPath == null){
-                                _this.svgUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.svgUrl = response.data.form.diagramSvgPath;
                             }
                             if(response.data.form.iconSvgPath == null){
-                                _this.iconUrl = "http://gogs.modelica-china.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.iconUrl = response.data.form.iconSvgPath;
                             }
@@ -338,7 +338,7 @@
                 }
             },
             goReposity(){
-                location.href = "http://gogs.modelica-china.com:3000" + "/"+this.$data.name +"/"+ this.form.name.split(".",1)[0]
+                location.href = "http://syslink.com:3000" + "/"+ "admin" +"/"+ this.form.name.split(".",1)[0]
             }
         }
     };

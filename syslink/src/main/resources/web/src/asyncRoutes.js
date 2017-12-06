@@ -61,6 +61,12 @@ import personalInfo from './views/nav4/personalInfo.vue'
 import NewIndex from  './views/NewIndex.vue'
 import NewDetails from './views/NewDetails.vue'
 import LoginHeader from './views/LoginHeader.vue'
+import LogOut from './views/LogOut.vue'
+import NewHeader from './views/NewHeader.vue'
+import NewLogin from './views/NewLogin.vue'
+import NewHeader1 from './views/NewHeader1.vue'
+import NewHeader2 from './views/NewHeader2.vue'
+
 
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -115,7 +121,7 @@ export let  commonRoutes = [
      //  }, 
     {
         path: '',
-        component: corporate,
+        component: NewHeader,
         iconCls: 'el-icon-document',
         name: '我的流程',
         children: [
@@ -128,22 +134,32 @@ export let  commonRoutes = [
               { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true }, 
               { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true }, 
               {path:'/checkorDetail',component:checkorDetail,name:'审核详情',hidden:true}, 
+          ] 
+      }, 
+    {
+        path: '',
+        component: NewLogin,
+        name: '',
+        hidden: true,
+        children: [
+            // { path: '/main', component: Main, name: '项目', hidden: true },
+            {path:'/login',component:NewLogin,name:'登录'}
         ]
     },
 
     {
         path: '',
-        component: ModelHeader,
+        component: LogOut,
         name: '',
         hidden: true,
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
-            {path:'/login',component:Login,name:'登录'}
+            {path:'/logout',component:LogOut,name:'登出'}
         ]
     },
       {
         path: '',
-        component: corporate,
+        component: NewHeader,
         name: '个人设置',
         hidden: true,
         children: [
@@ -153,7 +169,7 @@ export let  commonRoutes = [
     },
       {
         path: '',
-        component: corporate,
+        component: NewHeader,
         name: '个人设置',
         hidden: true,
         children: [
@@ -170,7 +186,7 @@ export let  commonRoutes = [
     },
     {
         path: '',
-        component: corporate,
+        component: NewHeader,
         name: '欢迎',
         hidden: true,
         children: [
@@ -211,7 +227,7 @@ export let  commonRoutes = [
     // },
     {
         path: '',
-        component: ModelHeader,
+        component: NewHeader1,
         name: '模型',
         iconCls: 'iconfont icon-moxing',
         leaf: true,//只有一个节点
@@ -235,7 +251,7 @@ export let  commonRoutes = [
     },
      {
         path: '',
-        component: ModelHeader,
+        component: NewHeader1,
         name: '模型',
         iconCls: 'iconfont icon-moxing',
         leaf: true,//只有一个节点
@@ -260,7 +276,7 @@ export let  commonRoutes = [
     },
    {
         path: '',
-        component: corporate,
+        component: NewHeader,
         name: '仿真',
         iconCls: 'iconfont icon-guize',
         leaf: true,//只有一个节点
@@ -272,7 +288,7 @@ export let  commonRoutes = [
     },
     {
         path: '',
-        component: corporate,
+        component: NewHeader,
         name: '仓库',
         iconCls: 'iconfont icon-cangku',
         leaf: true,//只有一个节点
@@ -328,7 +344,7 @@ export let  commonRoutes = [
     //         { path: '/Myorg/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
     //     ]
     // },
-    { path: '/', component: corporate, hidden: true,
+    { path: '/', component: NewHeader2, hidden: true,
       children: [
             { path: '/index', component: error401, name: '首页'}
           
@@ -343,7 +359,7 @@ export let  commonRoutes = [
 export let limitRoutes=[
      {
         path: '',
-        component: corporate,
+        component: NewHeader,
         name: '系统管理',
         iconCls: 'iconfont icon-shezhi',//图标样式class
         children: [

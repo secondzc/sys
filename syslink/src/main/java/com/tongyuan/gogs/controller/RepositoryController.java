@@ -1,6 +1,7 @@
 package com.tongyuan.gogs.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.gogs.domain.Action;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
@@ -53,10 +54,85 @@ public class RepositoryController extends BaseController{
     @ResponseBody
     public JSONObject add(@RequestParam(value = "name", required = false) String name,
                           @RequestParam(value = "fileName", required = false) String fileName,
+                          @RequestParam(value = "scope", required = false) Boolean scope,
                           HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
+        jo = this.addRepository(name, fileName,scope);
+        return  jo;
+    }
+
+
+
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject queryRepo(HttpServletRequest request,HttpServletResponse response)
+    {
+        JSONObject jo = new JSONObject();
+        long uid = getUserId();
+        List<Map<String,Object>> repos = new ArrayList<>();
+        List<Map<String,Object>> cRepos = new ArrayList<>();
+        List<Map<String,Object>> allRepos = new ArrayList<>();
+
+
+
+        try
+        {
+//            List <Operationlog>operationlogs = operationlogService.query(map);
+            repos=repositoryService.queryByUid(uid);
+            cRepos = repositoryService.getCollaboration(uid);
+            allRepos.addAll(repos);
+            allRepos.addAll(cRepos);
+            new RepositoryWarpper(allRepos).warp();
+            for(Map<String,Object> map1 :allRepos)
+            {
+                if(Long.parseLong(map1.get("ownerId").toString())==uid)
+                {
+                    map1.put("Collaboration",0);
+                }
+                else
+                {
+                    map1.put("Collaboration",1);
+                }
+            }
+
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取列表失败");
+            return jo;
+        }
+
+        jo.put("flag",true);
+        jo.put("msg","获取列表成功");
+        jo.put("allRepos",allRepos);
+//        jo.put("repos",new RepositoryWarpper(repositories).warp());
+//        jo.put("cRepos",new RepositoryWarpper(cRepos).warp());
+
+
+//        PageInfo<Operationlog> pageInfo =new PageInfo<Operationlog>(operationlogList);
+//        jo.put("logs",page);
+//        jo.put("total",page.getTotal());
+
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+    public  JSONObject addRepository(String name,String fileName,Boolean scope){
+        JSONObject jo = new JSONObject();
         //查看模型库是否存在
-        File fileExits = new File(System.getProperty("user.home")+"/gogs-repositories/"+ name.toLowerCase()+"/" + fileName+".git");
+        String userName = "";
+        if(scope == null){
+            userName = name.toLowerCase();
+        }else {
+            userName = "admin";
+        }
+        File fileExits = new File(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + fileName+".git");
         if(fileExits.exists()){
             System.out.println("file exists");
             return jo;
@@ -116,81 +192,13 @@ public class RepositoryController extends BaseController{
 
         String  Url = RepositoryController.class.getClassLoader().getResource("lizi").getPath();
         String liziZip = Url.substring(1);
-        System.out.println(System.getProperty("user.home"));
-        resourceUtil.UnZip("/"+liziZip,System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase());
-        System.out.println(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/lizi.git");
-        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/lizi.git");
+        resourceUtil.UnZip(liziZip,System.getProperty("user.home")+"/gogs-repositories/"+userName);
+        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+userName+"/lizi.git");
         if(!file.exists() || file.isDirectory()){
-            file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+name.toLowerCase()+"/"+fileName+".git"));
+            file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+userName+"/"+fileName+".git"));
         }
-        return jo;
+        return  jo;
     }
-
-
-
-
-
-    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject queryRepo(HttpServletRequest request,HttpServletResponse response)
-    {
-        JSONObject jo = new JSONObject();
-        long uid = getUserId();
-        List<Map<String,Object>> repos = new ArrayList<>();
-        List<Map<String,Object>> cRepos = new ArrayList<>();
-        List<Map<String,Object>> allRepos = new ArrayList<>();
-//        JSONObject jsonObject = JSON.parseObject(para);
-//        Map<String,Object> map = new HashMap<String ,Object>();
-//        map.put("pageIndex",jsonObject.getIntValue("pageIndex"));
-//        map.put("pageSize",jsonObject.getIntValue("pageSize"));
-
-
-        try
-        {
-//            List <Operationlog>operationlogs = operationlogService.query(map);
-            repos=repositoryService.queryByUid(uid);
-            cRepos = repositoryService.getCollaboration(uid);
-            allRepos.addAll(repos);
-            allRepos.addAll(cRepos);
-            new RepositoryWarpper(allRepos).warp();
-            for(Map<String,Object> map1 :allRepos)
-            {
-                if(Long.parseLong(map1.get("ownerId").toString())==uid)
-                {
-                    map1.put("Collaboration",0);
-                }
-                else
-                {
-                    map1.put("Collaboration",1);
-                }
-            }
-
-
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","获取列表失败");
-            return jo;
-        }
-
-        jo.put("flag",true);
-        jo.put("msg","获取列表成功");
-        jo.put("allRepos",allRepos);
-//        jo.put("repos",new RepositoryWarpper(repositories).warp());
-//        jo.put("cRepos",new RepositoryWarpper(cRepos).warp());
-
-
-//        PageInfo<Operationlog> pageInfo =new PageInfo<Operationlog>(operationlogList);
-//        jo.put("logs",page);
-//        jo.put("total",page.getTotal());
-
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-
 
 
 

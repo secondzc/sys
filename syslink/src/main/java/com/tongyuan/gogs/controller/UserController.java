@@ -193,18 +193,6 @@ public class UserController extends BaseController {
     public JSONObject addGUser(@RequestBody Map<String,Object> map,HttpServletRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException {
         JSONObject jo = new JSONObject();
 
-        if(userService.nameExist(map))
-        {
-            jo.put("flag",false);
-            jo.put("msg","该用户名已存在");
-            return jo;
-        }
-        else if (userService.emailExist(map))
-        {
-            jo.put("flag",false);
-            jo.put("msg","该邮箱已存在");
-            return jo;
-        }
 
 
         String a = UUID.randomUUID().toString().replaceAll("-","");
@@ -490,12 +478,20 @@ public class UserController extends BaseController {
 
         //  JSONArray jsonArray = JSONArray.parseArray(para);
         JSONArray jsonArray = jsonObject.getJSONArray("directoryIds");
-        Long []directoryIds = new Long[jsonArray.size()];
-
+        List<Map<String,Object>> models = new ArrayList<>();
         for(int i=0;i<jsonArray.size();i++)
         {
-            directoryIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
+            if(jsonArray.getJSONObject(i).get("modelId")!=null)
+            {
+                models.add(jsonArray.getJSONObject(i));
+            }
         }
+//        Long []modeIds = new Long[jsonArray.size()];
+//
+//        for(int i=0;i<jsonArray.size();i++)
+//        {
+//            modeIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
+//        }
 
 
         Long uid = jsonObject.getLongValue("uid");
@@ -503,7 +499,7 @@ public class UserController extends BaseController {
 
         try
         {
-            userService.updateModelAuth(uid,directoryIds);
+            userService.updateModelAuth(uid,models);
         }
         catch (Exception e)
         {
@@ -619,7 +615,7 @@ public class UserController extends BaseController {
             String passwdCheck = EncodePasswd.getEncryptedPassword(jsonObject.getString("oldPassWd"),user.getSalt(),10000,50);
             if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
             {
-                update.put("passwd",jsonObject.getString("newPassWd"));
+                update.put("passwd",EncodePasswd.getEncryptedPassword(jsonObject.getString("newPassWd"),user.getSalt(),10000,50));
 
                 try
                 {
@@ -648,4 +644,62 @@ public class UserController extends BaseController {
 
 
     }
+
+
+
+    @RequestMapping(value = "/nameExist",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject nameExist(HttpServletRequest request, HttpServletResponse response,@RequestBody String para)
+    {
+
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        boolean exist = false;
+
+        try {
+           exist= userService.nameExist(jsonObject);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","");
+            return jo;
+        }
+        jo.put("flag",exist);
+        jo.put("msg","");
+
+
+
+
+
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
+    @RequestMapping(value = "/emailExist",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject emailExist(HttpServletRequest request, HttpServletResponse response,@RequestBody String para)
+    {
+
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        boolean exist = false;
+
+        try {
+            exist= userService.emailExist(jsonObject);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","");
+            return jo;
+        }
+        jo.put("flag",exist);
+        jo.put("msg","");
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
 }

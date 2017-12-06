@@ -76,6 +76,9 @@ export default{
     sendB({commit},bData){
         commit(types.SEND_B,bData);
     },
+    sendTreeData({commit},data){
+        commit(types.Send_TreeData,data);
+    },
     sendModelId({commit},mdoelIdData){
         commit(types.Send_ModelId,mdoelIdData);
     },

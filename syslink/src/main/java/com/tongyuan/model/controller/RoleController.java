@@ -171,5 +171,38 @@ public class RoleController {
     }
 
 
+    @RequestMapping(value = "/nameExist",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject nameExist(HttpServletRequest request,@RequestBody String para)
+    {
+        JSONObject jo = new JSONObject();
+        JSONObject jsonObject = JSON.parseObject(para);
+        String name = jsonObject.getString("name");
+        List<Map<String,Object>>roles = new ArrayList<>();
+        boolean exist = false;
+        try
+        {
+            roles=roleService.query();
+            for(Map<String,Object>map:roles)
+            {
+                if(name.equalsIgnoreCase(map.get("name").toString()))
+                {
+                    exist=true;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","");
+            return jo;
+        }
+        jo.put("flag",exist);
+        jo.put("msg","");
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+
 
 }
