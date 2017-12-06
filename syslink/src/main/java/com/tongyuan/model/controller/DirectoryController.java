@@ -247,6 +247,7 @@ public class DirectoryController {
         //查找最外层空的model
         //修改成根据插入的分类id找到对应的package包
         Model nullModel = modelService.queryByNameAndDir(param);
+        String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";
        this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
         //遍历xmlMap进行数据的插入
         for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
@@ -840,6 +841,110 @@ public class DirectoryController {
             }
         }
         return param;
+    }
+
+    @RequestMapping(value = "/checkDirName",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject checkDirName(@RequestParam(value = "parentId",required = false)String parentId,
+                                   @RequestParam(value = "dirName",required = false)String dirName,
+                                   @RequestParam(value = "dirId",required = false)Long dirId,
+                                   @RequestParam(value = "dirParentId",required = false)Long dirParentId,
+                                   @RequestParam(value = "userName",required = false)String userName,
+                                   HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        List<Directory> allDirectory = directoryService.findAllDirectory();
+        List<Directory> privateDir = directoryService.getPrivateDir();
+        //同级分类目录列表
+        List<Directory> levelDirList = new ArrayList<>();
+        try{
+           if("".equals(dirId) || dirId == null){
+               //找出同级分类目录
+               for (Directory levelDir :allDirectory) {
+                   if(dirParentId == privateDir.get(0).getId()){
+                       if(levelDir.getParentId() == dirParentId && userName.equals(levelDir.getUserName())){
+                           levelDirList.add(levelDir);
+                       }
+                   }else{
+                       if(levelDir.getParentId() == dirParentId ){
+                           levelDirList.add(levelDir);
+                       }
+                   }
+
+               }
+           }else{
+               for (Directory levelDir :allDirectory) {
+                   if(Long.parseLong(parentId)== privateDir.get(0).getId()){
+                       if(levelDir.getParentId() == Long.parseLong(parentId) && userName.equals(levelDir.getUserName()) ){
+                           levelDirList.add(levelDir);
+                       }
+                   }else{
+                       if(levelDir.getParentId() == Long.parseLong(parentId)){
+                           levelDirList.add(levelDir);
+                       }
+                   }
+
+               }
+           }
+           if(levelDirList.size() >0){
+               for (Directory directory:
+               levelDirList) {
+                   if(directory.getName().equals(dirName)){
+                       jo.put("state",0);
+                       return jo;
+                   }
+               }
+           }
+        }catch (Exception e){
+            e.printStackTrace();
+            jo.put("state",0);
+            return jo;
+        }
+        jo.put("state",1);
+        return jo;
+    }
+
+
+    @RequestMapping(value = "/checkRootDir",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject checkRootDir(@RequestParam(value = "dirName",required = false)String dirName,
+                                   @RequestParam(value = "dirParentId",required = false)Long dirParentId,
+                                   @RequestParam(value = "userName",required = false)String userName,
+                                   HttpServletRequest request , HttpServletResponse response){
+        JSONObject jo=new JSONObject();
+        List<Directory> allDirectory = directoryService.findAllDirectory();
+        List<Directory> privateDir = directoryService.getPrivateDir();
+        //同级分类目录列表
+        List<Directory> levelDirList = new ArrayList<>();
+        try{
+            if(dirParentId == privateDir.get(0).getId()){
+                for (Directory levelDir:allDirectory) {
+                    if (levelDir.getParentId() == dirParentId && userName.equals(levelDir.getUserName())){
+                        levelDirList.add(levelDir);
+                    }
+                }
+                }else{
+                for (Directory levelDir:allDirectory) {
+                    if (levelDir.getParentId() == dirParentId ){
+                        levelDirList.add(levelDir);
+                    }
+                }
+            }
+            if(levelDirList.size() >0){
+                for (Directory directory:
+                        levelDirList) {
+                    if(directory.getName().equals(dirName)){
+                        jo.put("state",0);
+                        return jo;
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            jo.put("state",0);
+            return jo;
+        }
+        jo.put("state",1);
+        return jo;
     }
 }
 
