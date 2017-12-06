@@ -9,6 +9,7 @@ import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.UserDepart;
+import com.tongyuan.model.domain.UserRole;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
@@ -20,6 +21,7 @@ import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,8 @@ public class UserController extends BaseController {
     private OperationlogService operationlogService;
     @Autowired
     private RoleService roleService;
+    @Value("${defaultPassWord}")
+    private String defaultPassWord;
 
 
 
@@ -199,7 +203,21 @@ public class UserController extends BaseController {
         String b = UUID.randomUUID().toString().replaceAll("-","");
         map.put("rands",a.substring(0,10));
         map.put("salt",b.substring(0,10));
-        String passwd = map.get("passwd").toString();
+        UserRole userRole = new UserRole();
+        userRole.setRoleId(Integer.parseInt(map.get("roleId").toString()));
+
+
+
+        String passwd ="";
+        if(map.get("passwd")==null)
+        {
+            passwd = defaultPassWord;
+        }
+        else
+        {
+             passwd = map.get("passwd").toString();
+        }
+
         String newPasswd = EncodePasswd.getEncryptedPassword(passwd,b.substring(0,10),10000,50);
         map.put("passwd",newPasswd);
 
@@ -208,6 +226,9 @@ public class UserController extends BaseController {
         {
 
             userService.addGUser(map);
+            userRole.setUid(Long.parseLong(map.get("id").toString()));
+            roleService.addUserRole(userRole);
+
 
 
         }
