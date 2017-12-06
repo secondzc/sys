@@ -91,11 +91,11 @@
                     selectionType: false,
                 },
                 columns: [{
-                    minWidth: 300,
+                    minWidth: 200,
                     label: '名称',
                     prop: 'name'
                 }, {
-                    minWidth: 100,
+                    minWidth: 300,
                     label: '变量类型',
                     prop: 'type'
                 }, {
@@ -106,15 +106,17 @@
                     minWidth: 100,
                     label: '变量单位',
                     prop: 'units'
-                }, {
-                    minWidth: 100,
-                    label: '变量下界',
-                    prop: 'lowerBound'
-                },{
-                    minWidth: 100,
-                    label: '变量上界',
-                    prop: 'upperBound'
-                },{
+                },
+                //  {
+                //     minWidth: 100,
+                //     label: '变量下界',
+                //     prop: 'lowerBound'
+                // },{
+                //     minWidth: 100,
+                //     label: '变量上界',
+                //     prop: 'upperBound'
+                // },
+                {
                     minWidth: 100,
                     label: '是否参数变量',
                     prop: 'isParam'
