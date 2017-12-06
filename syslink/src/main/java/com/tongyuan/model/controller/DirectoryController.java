@@ -833,8 +833,9 @@ public class DirectoryController {
             //by:zhangcy  在这里加入了审签的代码
             modelService.add(model);
             Long modelId = model.getId();
-            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+            //下面两行都有异常要抛出
             try{
+                Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                 statusChangeService.updateNextStatus(instanceId,"1");
             }catch(SqlNumberException e){
                 e.printStackTrace();
