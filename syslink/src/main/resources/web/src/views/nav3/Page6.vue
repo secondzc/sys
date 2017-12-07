@@ -150,7 +150,7 @@
                                     }else{
                                         resolve(true);
                                     }
-                                    reject(false)
+//                                    reject(false)
                                 }else {
                                     resolve(true);
                                 }
