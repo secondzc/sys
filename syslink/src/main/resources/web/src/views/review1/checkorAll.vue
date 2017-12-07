@@ -5,11 +5,11 @@
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
 			<el-table-column type="index" width="60" >
 			</el-table-column>
+			<el-table-column prop="instanceName" label="流程名" width="150" >
+			</el-table-column>
 			<el-table-column prop="model.name" label="模型名" width="100" >
 			</el-table-column>
 			<el-table-column prop="template.templateName" label="模板名" width="100" >
-			</el-table-column>
-			<el-table-column prop="instanceName" label="审签实例名" width="150" >
 			</el-table-column>
 
 			<el-table-column prop="reviewNodeInstance.status" label="审签状态" width="150" :formatter="format">
