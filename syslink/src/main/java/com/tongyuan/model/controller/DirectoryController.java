@@ -799,6 +799,14 @@ public class DirectoryController {
         if(packageList.size() == 1){
             packageList.get(0).setParentId(0);
             modelService.update(packageList.get(0));
+            Long modelId = packageList.get(0).getId();
+            //下面两行都有异常要抛出
+            try{
+                Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                statusChangeService.updateNextStatus(instanceId,"1");
+            }catch(SqlNumberException e){
+                e.printStackTrace();
+            }
         }
         else if(packageList.size() <= 0){
             return;
@@ -808,6 +816,14 @@ public class DirectoryController {
                 if (model.getName().split("\\.").length == 1) {
                     model.setParentId(0);
                     modelService.update(model);
+                    Long modelId = packageList.get(0).getId();
+                    //下面两行都有异常要抛出
+                    try{
+                        Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                        statusChangeService.updateNextStatus(instanceId,"1");
+                    }catch(SqlNumberException e){
+                        e.printStackTrace();
+                    }
                 }
             }
             for (Model modelParent : packageList) {
