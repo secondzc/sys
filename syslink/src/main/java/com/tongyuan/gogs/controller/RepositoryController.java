@@ -138,7 +138,7 @@ public class RepositoryController extends BaseController{
             return jo;
         }
 
-        GUser user = guserService.querListByName(name);
+        GUser user = guserService.querListByName(userName);
         user.setNumRepos(user.getNumRepos()+1);
         boolean UserResult = guserService.update(user);
         Repository repository = new Repository();
@@ -182,9 +182,9 @@ public class RepositoryController extends BaseController{
         action.setUserID(user.getID());
         action.setOpType(1);
         action.setActUserID(user.getID());
-        action.setActUserName(name);
+        action.setActUserName(userName);
         action.setRepoID(repositoryData.getID());
-        action.setRepoUserName(name);
+        action.setRepoUserName(userName);
         action.setRepoName(repository.getName());
         action.setPrivate(false);
         action.setCreatedUnix(new Date().getTime() / 1000);
