@@ -18,19 +18,19 @@
         </el-form-item>
 
          <el-form-item  label="原始密码" prop="oldPassWd"   >
-         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
-            <el-input type="password"  v-model="editForm.oldPassWd" auto-complete="off"></el-input>
-            </el-tooltip>
+ 
+            <el-input type="password"  v-model="editForm.oldPassWd" auto-complete="off" placeholder="将值留空使其保持不变"></el-input>
+         
         </el-form-item>
           <el-form-item label="新密码" prop="newPassWd"   >
-         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+        
             <el-input type="password"  v-model="editForm.newPassWd" auto-complete="off"></el-input>
-            </el-tooltip>
+        
         </el-form-item>
          <el-form-item label="确认密码" prop="newCheckPassWd"   >
-         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
+         
             <el-input type="password"  v-model="editForm.newCheckPassWd" auto-complete="off"></el-input>
-            </el-tooltip>
+           
         </el-form-item>
        
         <div style="float: right;">
@@ -53,13 +53,26 @@
         {
           if (value === '') {
           callback(new Error('请输入新密码'));
-         } 
+          } 
+          else
+          {
+
+            if(value.length<6)
+          {
+           callback(new Error('密码长度不得小于6位'));
+          }
+          else
+          {
+            callback();
+          }
+          }
         
-         callback();
+         // callback();
         }
         else
-        {
+        { 
           callback();
+          
         }
      
       };

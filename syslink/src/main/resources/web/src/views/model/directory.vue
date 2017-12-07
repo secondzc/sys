@@ -165,7 +165,7 @@
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
             h('i', {
-                'class': 'iconfont icon-File',}
+                'class': 'iconfont icon-wenjianjia2',}
             ),
           h('span', data.name),
           h('span',
