@@ -150,11 +150,56 @@
     选项<i class="el-icon-caret-bottom el-icon--right"></i>
   </el-button>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item >  <el-button  type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button></el-dropdown-item>
-    <el-dropdown-item  >  <el-button  type="text" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button></el-dropdown-item>
+
+
+
+    <el-dropdown-item style="width: inherit;" > 
+  
+      <div @click="handleEdit(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+          编辑
+        </span>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" > 
+  
+      <div @click="handleDel(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+          删除
+        </span>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" > 
+  
+      <div @click="handleRole(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+          分配角色
+        </span>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" > 
+  
+      <div @click="handleAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+          分配权限
+        </span>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" > 
+  
+      <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+          模型访问控制
+        </span>
+      </div>
+       </el-dropdown-item>
+
+   <!--    <el-button  type="text"  @click="handleEdit(scope.$index, scope.row)"
+      style="width: inherit;">编辑</el-button> -->
+   <!--  <el-dropdown-item  >  <el-button  type="text" size="small" @click="handleDel(scope.$index, scope.row)" >删除</el-button></el-dropdown-item>
     <el-dropdown-item >  <el-button  type="text" size="small" @click="handleRole(scope.$index, scope.row)">分配角色</el-button></el-dropdown-item>
     <el-dropdown-item >  <el-button  type="text" size="small" @click="handleAuth(scope.$index, scope.row)">分配权限</el-button></el-dropdown-item>
-     <el-dropdown-item >  <el-button  type="text" size="small" @click="modelAuth(scope.$index, scope.row)">模型访问控制</el-button></el-dropdown-item>  
+     <el-dropdown-item >  <el-button  type="text" size="small" @click="modelAuth(scope.$index, scope.row)">模型访问控制</el-button></el-dropdown-item>   -->
   </el-dropdown-menu>
   </el-dropdown>
 
@@ -186,27 +231,26 @@
     
 
     <!--编辑界面-->
-    <el-dialog title="编辑用户信息" :visible.sync="editFormVisible" :close-on-click-modal="false"  >
-        <el-form :model="editForm" label-width="100px" :rules="addFormRules" ref="editForm"    >
+    <el-dialog title="编辑用户信息" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false"  ref="editDialog" >
+   
+        <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm"    >
         <el-form-item label="用户名" prop="name"   >
           {{editForm.name}}
         </el-form-item>
 
          <el-form-item label="部门" prop="departId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.departId"   change-on-select   :show-all-levels="false">
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.departId"   change-on-select   :show-all-levels="false" expand-trigger="hover">
         </el-cascader>
         </el-form-item>
         
         <el-form-item label="自定义名称" prop="fullName"   >
             <el-input v-model="editForm.fullName" auto-complete="off"></el-input>
         </el-form-item>
-          <el-form-item label="邮箱" prop="email"  :rules="[ { required:'true',type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' } ]"  >
+          <el-form-item label="邮箱" prop="email"   >
           <el-input v-model="editForm.email" auto-complete="off" ></el-input>
         </el-form-item>
-         <el-form-item label="密码" prop="fullName"   >
-         <el-tooltip content="将值留空使其保持不变。" placement="top" effect="light">
-            <el-input v-model="editForm.passwd" auto-complete="off"></el-input>
-            </el-tooltip>
+         <el-form-item label="密码" prop="passwd"   >
+            <el-input v-model="editForm.passwd" auto-complete="off" placeholder="将值留空使其保持不变"></el-input>
         </el-form-item>
       <!--   <el-form-item label="个人网站" prop="website"   >
             <el-input v-model="editForm.website" auto-complete="off"></el-input>
@@ -241,23 +285,30 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog title="新增" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm"   >
-        <el-form-item label="用户名" prop="name"  :rules="[{required:true,message:'请输入用户名',trigger:'blur'}]">
+        <el-form-item label="用户名" prop="name"  >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
          <el-form-item label="密码" prop="passwd">
-      <el-input type="password" v-model="addForm.passwd" auto-complete="off"  ></el-input>
+      <el-input type="password" v-model="addForm.passwd" auto-complete="off"  placeholder="为空则使用默认密码"></el-input>
      </el-form-item>
      <el-form-item label="确认密码" prop="checkPass">
      <el-input type="password" v-model="addForm.checkPass" auto-complete="off" ></el-input>
      </el-form-item>
-      <el-form-item label="邮箱" prop="email"    :rules="[ { required:true, type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }]"  >
+      <el-form-item label="邮箱" prop="email"    >
         <el-input v-model="addForm.email" auto-complete="off" ></el-input>
         </el-form-item>
        <el-form-item label="部门" prop="departId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.departId"   change-on-select   :show-all-levels="false">
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.departId"   change-on-select   :show-all-levels="false"  expand-trigger="hover">
         </el-cascader>
+        </el-form-item>
+        <el-form-item label="角色" prop="roleId"   >
+        <el-select v-model="addForm.roleId"  placeholder="请选择(可多选)">
+         <el-option
+         v-for="item in roles1" :key="item.id" :label="item.name" :value="item.id">
+        </el-option>
+         </el-select>
         </el-form-item>
 
       </el-form>
@@ -314,7 +365,7 @@
  <!--    <div slot="title">    -->
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
 
-    <el-tree :data="data3" show-checkbox  node-key="nodeId"  
+    <el-tree :data="data3" show-checkbox  node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"  
     :default-checked-keys="modelTree"   :default-expand-all="true"   :render-content="nodeRender">
     </el-tree>
@@ -341,27 +392,213 @@
 
   export default {
     data() {
+
+      //新建用户时名称验证，只允许中文，英文，以及数字且名称唯一
+       var validateName = (rule, value, callback) => {
+        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入用户名'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+             
+             let para = {name:''};
+              para.name=value;
+            
+              this.$http({
+                url:'/api/user/nameExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('用户名重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+          
+
+               
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、字母、数字'));
+          }
+        }
+      };
+
+       var validateEmail = (rule, value, callback) => {
+        let re = new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入邮箱地址'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+             
+             let para = {email:''};
+              para.email=value;
+            
+              this.$http({
+                url:'/api/user/emailExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('邮箱地址重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+ 
+          } 
+          else
+          {
+              callback(new Error('请输入正确的邮箱地址'));
+          }
+        }
+      };
+
+       var validateEmail1 = (rule, value, callback) => {
+        let re = new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入邮箱地址'));
+        }
+        else
+        {
+          if (re.test(value))
+          {    
+
+
+             if(value==this.oldEmail)
+             {
+              callback()
+             }
+             else
+             {
+               let para = {email:''};
+              para.email=value;
+            
+              this.$http({
+                url:'/api/user/emailExist',
+                method:'post',
+                data:para
+              })
+               .then((res) => {
+                this.editLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  callback(new Error('邮箱地址重复'));
+                }
+                else
+                {
+                   callback();
+                }
+                
+              });
+             }
+             
+            
+ 
+          } 
+          else
+          {
+              callback(new Error('请输入正确的邮箱地址'));
+          }
+        }
+      };
+       
        
        var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          if (this.addForm.checkPass !== '') {
+        if (!value) {
+
+          callback();
+        } 
+        else {
+          if(value.length<6)
+          {
+             callback(new Error('密码长度不得小于6位'));
+          }
+          else
+          {
+            if (this.addForm.checkPass !== '') {
             this.$refs.addForm.validateField('checkPass');
           }
           callback();
+          }
+          
         }
       };
       var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.addForm.passwd) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
+        console.log(this.addForm.passwd);
+        if(this.addForm.passwd)
+        {
+          if(!value)
+          {
+             callback(new Error('请再次输入密码'));
+          }
+          else
+          {
+             if(value!=this.addForm.passwd)
+             {
+               callback(new Error('两次输入密码不一致'));
+             }
+             else
+             {
+              callback();
+             }
+          }
+        }
+        else
+        {
           callback();
         }
       };
+      var validatePass3 = (rule, value, callback) => {
+       if(!value)
+       {
+        callback();
+       }
+       else{
+        if(value.length<6)
+        {
+           callback(new Error('密码长度不得小于6位'));
+        }
+        else
+        {
+          callback();
+        }
+       }
+      };
       return {
+        oldEmail:'',
         props:{value:'id',label:'name',children:'children'},
         options:[],
         columns: [
@@ -374,7 +611,6 @@
         ],
         departs:[],
         data4:[],
-       
         data2:[],
         defaultProps: {
         children: 'children',
@@ -430,11 +666,7 @@
        
         editFormVisible: false,//编辑界面是否显示
         editLoading: false,
-        editFormRules: {
-          name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' }
-          ]
-        },
+       
         //编辑界面数据
         editForm: {
          fullName:'',
@@ -466,19 +698,46 @@
         roleVisble:false,
         roleLoading:false,
         roles:[],
+        roles1:[],
         userRole:{
            assigned:[],
            uid:''
         }
         ,
         addFormRules: {
+          name:[
+          { required:true,validator:validateName,trigger:'blur'}
+          ],
+          email:[
+          { required:true,validator:validateEmail,trigger:'blur'}
+          ],
       
           passwd: [
             { required: true, validator: validatePass, trigger: 'blur' }
           ],
           checkPass: [
             {  required: true,validator: validatePass2, trigger: 'blur' }
+          ],
+          departId:[
+            { required:true,message:'部门不能为空'}
           ]
+
+        },
+        editFormRules: {
+         
+          email:[
+          { required:true,validator:validateEmail1,trigger:'blur'}
+          ],
+      
+              passwd:[
+          { validator:validatePass3,trigger:'blur'}
+          ],
+          departId:[
+            { required:true,message:'部门不能为空'}
+          ],
+
+      
+
           
         },
         directory:{},
@@ -524,6 +783,7 @@
 
       handleChange(value) {
         console.log(value);
+        console.log(this.$refs.editDialog);
       },
 
       getCheckedNodes() {
@@ -555,7 +815,7 @@
           _this.$http.post('/api/role/list')
               .then(function (response) {
                 let a = response.data.role;
-
+                _this.roles1 = response.data.role;
                 for(let i = 0;i<a.length;i++)
                 {
 
@@ -619,6 +879,7 @@
       query() {
          var _this = this;
          let para = Object.assign({},_this.filters,_this.pager);
+         console.log(this.filters);
           _this.$http({method:'post',
             url:'/api/user/query',
             data:para})
@@ -653,8 +914,8 @@
               .then(function (response) {
                   _this.users = response.data.users;
                   _this.pager.total=response.data.total;
-                  console.log(_this.users);
-                  console.log(_this.pager.total);
+                  // console.log(_this.users);
+                  // console.log(_this.pager.total);
 
 
           })
@@ -750,7 +1011,7 @@
 
             let temp =  [];
 
-         row.modelAuth.forEach(x=>temp.push(x.nodeId));
+         row.directoryAuth.forEach(x=>temp.push(x.directoryId));
          console.log(temp);
          this.modelTree=temp;
 
@@ -769,7 +1030,9 @@
       },
        handleEdit: function (index, row) {
         this.editFormVisible = true;
+
         this.editForm = Object.assign({}, row);
+        this.oldEmail=row.email;
       },
       //编辑
       editSubmit: function () {
@@ -1065,6 +1328,7 @@
       this.getGroups();
       this.getDeparts();
       this.getDirectoryTree();
+      console.log(this.$refs.editDialog);
     //  this.func.changeDate();
 
   //    this.permissonJudge();

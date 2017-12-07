@@ -73,17 +73,20 @@ public class ModelController extends  BaseController {
     @Autowired
     private VariableController variableController;
 
-    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Model nullModel,FileModel directory,Long directoryId){
+    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
         //验证model
      //   Model validateModel = new Model();
         model.setFileId(directory.getId());
         model.setDirectoryId(directoryId);
-        model.setParentId(nullModel.getId());
-        model.setUserId(nullModel.getUserId());
+        model.setParentId(-1);
+/*        model.setUserId(nullModel.getUserId());
         model.setScope(nullModel.getScope());
-        model.setCreateTime(nullModel.getCreateTime());
+        model.setCreateTime(nullModel.getCreateTime());*/
+        model.setUserId(user.getID());
+        model.setScope(scope);
+        model.setCreateTime(DateUtil.getTimestamp());
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
         // 修改
@@ -313,14 +316,7 @@ public class ModelController extends  BaseController {
         //模型实例化组件的模型名称
         String modelCompName = currModel.getName().split("\\.")[0];
         for (int i = 0; i< componentList.size(); i++){
-            for (Model modelComp : allModel) {
-                if(modelComp.getName().equals(modelCompName+"."+componentList.get(i).getType())){
-                    componentList.get(i).setModelId(modelComp.getId());
-                }
-                else{
-                    componentList.get(i).setModelId(-1);
-                }
-            }
+
             for(int j = 0; j< componentList.size(); j++){
                 //用来判断第二层组件父类
                 //定义需要比较的parentName
@@ -329,18 +325,36 @@ public class ModelController extends  BaseController {
                 for(int m= 0;m< parentNameArr.length; m++){
                     parentName += parentNameArr[m]+";";
                 }
-                if(parentName != null && parentName != "") {
+                if(parentName != null && parentName != "" && parentName != ";") {
                     if (parentNameArr.length == 1) {
-                        if (parentName.substring(0, parentName.length() - 1).equals(componentList.get(j).getName())) {
+                        if (parentName.substring(0, parentName.length() - 1).equals(componentList.get(j).getName()) && componentList.get(i).getModelId() == 0 && componentList.get(j).getModelId() == 0  ) {
                             componentList.get(i).setParentId(componentList.get(j).getId());
                         }
                     }
                 }
              //   if(parentName != null && parentName != ""){
                 if(parentNameArr.length >= 2){
-                    if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName()+componentList.get(j).getName())){
+                    if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName()+componentList.get(j).getName()) && componentList.get(i).getModelId() == 0 && componentList.get(j).getModelId() == 0){
                         componentList.get(i).setParentId(componentList.get(j).getId());
                     }
+                }
+            }
+//            for (Model modelComp : allModel) {
+//                if(modelComp.getName().equals(modelCompName+"."+componentList.get(i).getType())){
+//                    componentList.get(i).setModelId(modelComp.getId());
+//                }
+//                else{
+//                    componentList.get(i).setModelId(-1);
+//                }
+//            }
+//            boolean componentResult = componentService.update(componentList.get(i));
+        }
+        for (int i = 0; i< componentList.size(); i++) {
+            for (Model modelComp : allModel) {
+                if (modelComp.getName().equals(modelCompName + "." + componentList.get(i).getType())) {
+                    componentList.get(i).setModelId(modelComp.getId());
+                } else {
+                    componentList.get(i).setModelId(-1);
                 }
             }
             boolean componentResult = componentService.update(componentList.get(i));
@@ -398,7 +412,7 @@ public class ModelController extends  BaseController {
         //过滤后的modelList
         List<Model> searchModel = new ArrayList<>();
         //查询过滤后模型库内的一个组件
-        List<Model> oneOfModel = new ArrayList<>();
+//        List<Model> oneOfModel = new ArrayList<>();
         //查询所有direactory
         List<Directory> allDirectory = directoryService.findAllDirectory();
         //查询所有的repository
@@ -441,14 +455,14 @@ public class ModelController extends  BaseController {
                         }
                     }
                 }
-                for(int  j= 0; j<= searchModel.size() -1; j++){
-                    for (Model model: allModelList) {
-                        if(model.getParentId() == searchModel.get(j).getId()){
-                            oneOfModel.add(model);
-                            break;
-                        }
-                    }
-                }
+//                for(int  j= 0; j<= searchModel.size() -1; j++){
+//                    for (Model model: allModelList) {
+//                        if(model.getParentId() == searchModel.get(j).getId()){
+//                            oneOfModel.add(model);
+//                            break;
+//                        }
+//                    }
+//                }
             }
       //      if(parent_id != null  && rootDirectoryList.size() >0){
             if(parent_id == 0){
@@ -465,41 +479,43 @@ public class ModelController extends  BaseController {
                         }
                     }
                 }
-                for(int  j= 0; j<= searchModel.size() -1; j++){
-                    for (Model model: allModelList) {
-                        if(model.getParentId() == searchModel.get(j).getId()){
-                            oneOfModel.add(model);
-                            break;
-                        }
-                    }
-                }
+//                for(int  j= 0; j<= searchModel.size() -1; j++){
+//                    for (Model model: allModelList) {
+//                        if(model.getParentId() == searchModel.get(j).getId()){
+//                            oneOfModel.add(model);
+//                            break;
+//                        }
+//                    }
+//                }
             }
-            for (int i = 0; i <= oneOfModel.size() -1; i++) {
+            for (int i = 0; i <= searchModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
-                GUser user = gUserService.queryById(oneOfModel.get(i).getUserId());
-                modelWeb.setIndex(oneOfModel.get(i).getId());
-                modelWeb.setTotal(oneOfModel.size());
-                modelWeb.setName(modelUtil.splitName(oneOfModel.get(i).getName()));
-                modelWeb.setRepositoryName(oneOfModel.get(i).getName().split("\\.")[0]);
-                modelWeb.setParentId(oneOfModel.get(i).getParentId());
+                GUser user = gUserService.queryById(searchModel.get(i).getUserId());
+                modelWeb.setIndex(searchModel.get(i).getId());
+                modelWeb.setTotal(searchModel.size());
+                modelWeb.setName(modelUtil.splitName(searchModel.get(i).getName()));
+                modelWeb.setRepositoryName(searchModel.get(i).getName().split("\\.")[0]);
+                modelWeb.setParentId(searchModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
                 modelWeb.setUserId(user.getID());
-                modelWeb.setClasses(oneOfModel.get(i).getClasses());
-                modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
-                if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
-                    modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
+                modelWeb.setClasses(searchModel.get(i).getClasses());
+                modelWeb.setTextInfo(searchModel.get(i).getTextInfo());
+                modelWeb.setDirectoryId(searchModel.get(i).getDirectoryId());
+                if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
+                    modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
                 }
-                modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
-                modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
-                if(oneOfModel.get(i).getLastUpdateTime() != null){
-                    modelWeb.setUpdateTime(DateUtil.format(oneOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+                modelWeb.setUploadTime(searchModel.get(i).getCreateTime().getTime());
+                modelWeb.setCreateTime(DateUtil.format(searchModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+                if(searchModel.get(i).getLastUpdateTime() != null){
+                    modelWeb.setUpdateTime(DateUtil.format(searchModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
                 }
-                modelWeb.setDiscription(oneOfModel.get(i).getDiscription());
-                modelWeb.setType(oneOfModel.get(i).getType());
+                modelWeb.setDiscription(searchModel.get(i).getDiscription());
+                modelWeb.setType(searchModel.get(i).getType());
                 modelWeb.setNumberStar(0);
                 modelWeb.setNumberWatch(0);
                 modelWeb.setAlreadyStar(false);
                 modelWeb.setAlreadyWatch(false);
+
                 repositoryModelList.add(modelWeb );
             }
             for (ModelWeb modelWeb : repositoryModelList) {

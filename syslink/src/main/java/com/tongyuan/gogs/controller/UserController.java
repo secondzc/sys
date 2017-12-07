@@ -494,25 +494,30 @@ public class UserController extends BaseController {
     public JSONObject modelAuth(@RequestBody String para, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-        // JSONObject jsonObject = JSON.parseObject(para);
+
         JSONObject jsonObject = JSONObject.parseObject(para);
 
-        //  JSONArray jsonArray = JSONArray.parseArray(para);
+
         JSONArray jsonArray = jsonObject.getJSONArray("directoryIds");
-        List<Map<String,Object>> models = new ArrayList<>();
-        for(int i=0;i<jsonArray.size();i++)
-        {
-            if(jsonArray.getJSONObject(i).get("modelId")!=null)
-            {
-                models.add(jsonArray.getJSONObject(i));
-            }
-        }
-//        Long []modeIds = new Long[jsonArray.size()];
-//
+//        以模型为单位的访问控制
+//        List<Map<String,Object>> models = new ArrayList<>();
 //        for(int i=0;i<jsonArray.size();i++)
 //        {
-//            modeIds[i]=jsonArray.getJSONObject(i).getLongValue("id");
+//            if(jsonArray.getJSONObject(i).get("modelId")!=null)
+//            {
+//                models.add(jsonArray.getJSONObject(i));
+//            }
 //        }
+
+         List<Map<String,Object>> directories = new ArrayList<>();
+        for(int i=0;i<jsonArray.size();i++)
+        {
+            if(jsonArray.getJSONObject(i)!=null)
+            {
+                directories.add(jsonArray.getJSONObject(i));
+            }
+        }
+
 
 
         Long uid = jsonObject.getLongValue("uid");
@@ -520,7 +525,7 @@ public class UserController extends BaseController {
 
         try
         {
-            userService.updateModelAuth(uid,models);
+            userService.updateModelAuth1(uid,directories);
         }
         catch (Exception e)
         {

@@ -59,6 +59,8 @@ public interface GUserService {
 
     public boolean updateModelAuth(Long uid,List<Map<String,Object>> models);
 
+    public boolean updateModelAuth1(Long uid,List<Map<String,Object>> directories);
+
 
 
     //这个没有分页 by：zhangcy

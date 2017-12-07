@@ -70,11 +70,29 @@
       // 声明保存当前操作分类node对象
       this.__currentNode = null;
         var validateName = (rule, value, callback) => {
-                if (value.trim() == '') {
-                    callback(new Error('不能全为空格和空值'));
-                }else {
+//                if (value.trim() == '') {
+//                    callback(new Error('不能全为空格和空值'));
+//                }else {
+//                    callback();
+//                }
+            let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+            console.log(value);
+
+            if(!value)
+            {
+                callback(new Error('请输入分类目录名称'));
+            }
+            else
+            {
+                if (re.test(value))
+                {
                     callback();
                 }
+                else
+                {
+                    callback(new Error('只允许输入中文、字母、数字'));
+                }
+            }
         };
       return {
         treeData: [],
@@ -165,7 +183,7 @@
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
             h('i', {
-                'class': 'iconfont icon-File',}
+                'class': 'iconfont icon-wenjianjia2',}
             ),
           h('span', data.name),
           h('span',

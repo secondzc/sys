@@ -30,6 +30,7 @@ public class ModelWeb {
     private Long userId;
     //directoryparentId
     private  Long directoryParentId;
+    private  Long directoryId;
     private String createTime;
     private String updateTime;
     private Long uploadTime;
@@ -253,5 +254,13 @@ public class ModelWeb {
 
     public void setTextInfo(String textInfo) {
         this.textInfo = textInfo;
+    }
+
+    public Long getDirectoryId() {
+        return directoryId;
+    }
+
+    public void setDirectoryId(Long directoryId) {
+        this.directoryId = directoryId;
     }
 }

@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.tongyuan.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="CommonService" targetNamespace="http://webservice.tongyuan.com/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.tongyuan.com/" elementFormDefault="unqualified" targetNamespace="http://webservice.tongyuan.com/" version="1.0">
+
+  <xs:element name="UploadFile" type="tns:UploadFile"/>
+
+  <xs:element name="UploadFileResponse" type="tns:UploadFileResponse"/>
+
+  <xs:element name="getClassTree" type="tns:getClassTree"/>
+
+  <xs:element name="getClassTreeResponse" type="tns:getClassTreeResponse"/>
+
+  <xs:element name="getModelListByDirId" type="tns:getModelListByDirId"/>
+
+  <xs:element name="getModelListByDirIdResponse" type="tns:getModelListByDirIdResponse"/>
+
+  <xs:element name="sayHello" type="tns:sayHello"/>
+
+  <xs:element name="sayHelloResponse" type="tns:sayHelloResponse"/>
+
+  <xs:element name="uploadModel" type="tns:uploadModel"/>
+
+  <xs:element name="uploadModelResponse" type="tns:uploadModelResponse"/>
+
+  <xs:element name="validateUser" type="tns:validateUser"/>
+
+  <xs:element name="validateUserResponse" type="tns:validateUserResponse"/>
+
+  <xs:complexType name="UploadFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fileName" type="xs:string"/>
+      <xs:element name="beginPos" type="xs:long"/>
+      <xs:element name="length" type="xs:long"/>
+      <xs:element minOccurs="0" name="data" type="xs:base64Binary"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UploadFileResponse">
+    <xs:sequence>
+      <xs:element name="String" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="sayHello">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="sayHelloResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="String" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="validateUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="passWord" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="validateUserResponse">
+    <xs:sequence>
+      <xs:element name="String" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="uploadModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="classID" type="xs:long"/>
+      <xs:element minOccurs="0" name="fileName" type="xs:string"/>
+      <xs:element name="beginPos" type="xs:long"/>
+      <xs:element name="length" type="xs:long"/>
+      <xs:element minOccurs="0" name="data" type="xs:base64Binary"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="uploadModelResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="String" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getModelListByDirId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dirId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getModelListByDirIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="String" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getClassTree">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getClassTreeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="String" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="uploadModelResponse">
+    <wsdl:part element="tns:uploadModelResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UploadFile">
+    <wsdl:part element="tns:UploadFile" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHello">
+    <wsdl:part element="tns:sayHello" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="validateUser">
+    <wsdl:part element="tns:validateUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uploadModel">
+    <wsdl:part element="tns:uploadModel" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UploadFileResponse">
+    <wsdl:part element="tns:UploadFileResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getModelListByDirId">
+    <wsdl:part element="tns:getModelListByDirId" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getModelListByDirIdResponse">
+    <wsdl:part element="tns:getModelListByDirIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getClassTreeResponse">
+    <wsdl:part element="tns:getClassTreeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHelloResponse">
+    <wsdl:part element="tns:sayHelloResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getClassTree">
+    <wsdl:part element="tns:getClassTree" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="validateUserResponse">
+    <wsdl:part element="tns:validateUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CommonService">
+    <wsdl:operation name="UploadFile">
+      <wsdl:input message="tns:UploadFile" name="UploadFile">
+    </wsdl:input>
+      <wsdl:output message="tns:UploadFileResponse" name="UploadFileResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHello">
+      <wsdl:input message="tns:sayHello" name="sayHello">
+    </wsdl:input>
+      <wsdl:output message="tns:sayHelloResponse" name="sayHelloResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="validateUser">
+      <wsdl:input message="tns:validateUser" name="validateUser">
+    </wsdl:input>
+      <wsdl:output message="tns:validateUserResponse" name="validateUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="uploadModel">
+      <wsdl:input message="tns:uploadModel" name="uploadModel">
+    </wsdl:input>
+      <wsdl:output message="tns:uploadModelResponse" name="uploadModelResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getModelListByDirId">
+      <wsdl:input message="tns:getModelListByDirId" name="getModelListByDirId">
+    </wsdl:input>
+      <wsdl:output message="tns:getModelListByDirIdResponse" name="getModelListByDirIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getClassTree">
+      <wsdl:input message="tns:getClassTree" name="getClassTree">
+    </wsdl:input>
+      <wsdl:output message="tns:getClassTreeResponse" name="getClassTreeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CommonServiceSoapBinding" type="tns:CommonService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="UploadFile">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="UploadFile">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="UploadFileResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHello">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="sayHello">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sayHelloResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="validateUser">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="validateUser">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="validateUserResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="uploadModel">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="uploadModel">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="uploadModelResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getModelListByDirId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getModelListByDirId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getModelListByDirIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getClassTree">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getClassTree">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getClassTreeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CommonService">
+    <wsdl:port binding="tns:CommonServiceSoapBinding" name="CommonServiceImpPort">
+      <soap:address location="http://localhost:8080/services/sysplorerService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

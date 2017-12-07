@@ -66,15 +66,20 @@
         where  1=1 GROUP BY NAME
     </select>
     <select id="findAllDirectory" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory" >
+        <!--SELECT-->
+        <!--<include refid="baseColumnList" ></include> FROM-->
+        <!--(SELECT-->
+        <!--<include refid="baseColumnList" ></include>-->
+        <!--FROM  directory-->
+        <!--WHERE-->
+         <!--is_deleted = "0"-->
+        <!--order by create_time desc) m-->
+        <!--where  1=1 GROUP BY NAME-->
         SELECT
-        <include refid="baseColumnList" ></include> FROM
-        (SELECT
         <include refid="baseColumnList" ></include>
         FROM  directory
         WHERE
-         is_deleted = "0"
-        order by create_time desc) m
-        where  1=1 GROUP BY NAME
+        is_deleted = "0"
     </select>
     <select id="findRootDirectory" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
         SELECT

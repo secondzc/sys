@@ -23,9 +23,9 @@ public interface CommonService {
 	@WebResult(name = "String",targetNamespace = "")
 	public boolean validateUser(@WebParam(name = "userName") String userName,@WebParam(name = "passWord") String passWord);
 
-	@WebMethod
-	@WebResult(name = "String",targetNamespace = "")
-	public boolean UploadFile(@WebParam(name = "fileName") String fileName,@WebParam(name = "beginPos") long beginPos,@WebParam(name = "length") long length,@WebParam(name = "data") byte[] data);
+//	@WebMethod
+//	@WebResult(name = "String",targetNamespace = "")
+//	public boolean UploadFile(@WebParam(name = "fileName") String fileName,@WebParam(name = "beginPos") long beginPos,@WebParam(name = "length") long length,@WebParam(name = "data") byte[] data);
 
 	@WebMethod
 	@WebResult(name = "String",targetNamespace = "")

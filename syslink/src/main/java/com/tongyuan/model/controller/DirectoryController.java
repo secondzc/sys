@@ -76,49 +76,49 @@ public class DirectoryController {
         return "directory";
     }
 
-    @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public void test(HttpServletRequest request , HttpServletResponse response) throws IOException {
-        JSONObject result=new JSONObject();
-        //文件解析的数据Map
-        Map<String , Object> dataMap = new HashMap<>();
-        dataMap = fileX.readZip("D:\\syslink.zip");
-        boolean  uploadResult = CommonServiceImp.UploadFile("syslink", 0,(Long)dataMap.get("byteslength"),
-                (byte[])dataMap.get("bytes"));
-        if(!uploadResult){
-            result.put("message","文件上传失败!");
-            result.put("flag",false);
-            ServletUtil.createSuccessResponse(200, result, response);
-            return;
-        }
-        // 模型相对路径xieyx/20170620.../
-        String modelDir = resourceUtil.unzipFile("syslink", "xieyx");
-        //输出文件的目录（modelDir是解压缩到的目录）
-        System.out.println("modelDir==========" + modelDir + "*************");
-        //获取到model解压缩的路径
-        String modelPath =  resourceUtil.getModelPath(modelDir, "syslink");
-        //遍历文件，对model库进行插入
-        //	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
-       // String parentPath = ResourceUtil.getFileDriectory() + modelDir;
-        String parentPath = modelPath;
-        try {
-            //遍历项目的文件
-            resourceUtil.getSubFile(parentPath.substring(0,
-                    parentPath.length()), parentPath.substring(0,
-                    parentPath.length()), "这是syslink项目");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            result.put("message","模型上传失败!");
-            result.put("flag",false);
-            ServletUtil.createSuccessResponse(200, result, response);
-            return;
-        }
-        result.put("message","模型上传成功!");
-        result.put("flag",true);
-        ServletUtil.createSuccessResponse(200, result, response);
-        return;
-    }
+//    @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public void test(HttpServletRequest request , HttpServletResponse response) throws IOException {
+//        JSONObject result=new JSONObject();
+//        //文件解析的数据Map
+//        Map<String , Object> dataMap = new HashMap<>();
+//        dataMap = fileX.readZip("D:\\syslink.zip");
+//        boolean  uploadResult = CommonServiceImp.UploadFile("syslink", 0,(Long)dataMap.get("byteslength"),
+//                (byte[])dataMap.get("bytes"));
+//        if(!uploadResult){
+//            result.put("message","文件上传失败!");
+//            result.put("flag",false);
+//            ServletUtil.createSuccessResponse(200, result, response);
+//            return;
+//        }
+//        // 模型相对路径xieyx/20170620.../
+//        String modelDir = resourceUtil.unzipFile("syslink", "xieyx");
+//        //输出文件的目录（modelDir是解压缩到的目录）
+//        System.out.println("modelDir==========" + modelDir + "*************");
+//        //获取到model解压缩的路径
+//        String modelPath =  resourceUtil.getModelPath(modelDir, "syslink");
+//        //遍历文件，对model库进行插入
+//        //	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
+//       // String parentPath = ResourceUtil.getFileDriectory() + modelDir;
+//        String parentPath = modelPath;
+//        try {
+//            //遍历项目的文件
+//            resourceUtil.getSubFile(parentPath.substring(0,
+//                    parentPath.length()), parentPath.substring(0,
+//                    parentPath.length()), "这是syslink项目");
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            result.put("message","模型上传失败!");
+//            result.put("flag",false);
+//            ServletUtil.createSuccessResponse(200, result, response);
+//            return;
+//        }
+//        result.put("message","模型上传成功!");
+//        result.put("flag",true);
+//        ServletUtil.createSuccessResponse(200, result, response);
+//        return;
+//    }
 
     //把项目在数据库中仿真，描述整个模型的层次结构
     public boolean createModel(File parentF, String filePath, String rootPath, String description){
@@ -242,21 +242,26 @@ public class DirectoryController {
         }
         File xmlFilePath = new File(xmlPath);
         String[] subFiles = xmlFilePath.list();
-        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
-        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
+
+
+/*        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
+        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);*/
         //查找最外层空的model
         //修改成根据插入的分类id找到对应的package包
-        Model nullModel = modelService.queryByNameAndDir(param);
-        String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";
+/*        Model nullModel = modelService.queryByNameAndDir(param);*/
+/*        String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";*/
+
+
+        GUser user =  gUserService.querListByName(name);
        this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
         //遍历xmlMap进行数据的插入
         for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
             //解析xmlmap 把数据存放到数据
-            modelController.insertData(entry,svgPath,nullModel,directory,directoryId);
+            modelController.insertData(entry,svgPath,scope,user,directory,directoryId);
         }
         //更新模型的层次结构
         //获取package下面的所有model
-       this.updateModelFramwork(nullModel);
+       this.updateModelFramwork();
         //        this.doCmd(name,fileXmlPath,fileName);
         result = true;
         System.out.println("上传完毕！！！");
@@ -607,32 +612,33 @@ public class DirectoryController {
             map.put("icon","iconfont icon-wenjianjia");
         }
         List<Map<String,Object>>chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
-        List<Map<String,Object>> allModelList = modelService.findAllModelMap();
-        List<Map<String,Object>> searchModel = new ArrayList<>();
-        List<Map<String,Object>> operation = new ArrayList<>();
-        Map<String,Object> operation1= new HashMap<>();
-        Map<String,Object> operation2= new HashMap<>();
-        operation1.put("name","可读");
-        operation1.put("mode",1);
-        operation2.put("mode",2);
-        operation2.put("name","可写");
-        operation.add(operation1);
-        operation.add(operation2);
-            for (Map<String,Object> model: allModelList) {
-                if(Long.parseLong(model.get("directoryId").toString()) == Long.parseLong(map.get("id").toString())){
-                         if(Long.parseLong(model.get("parentId").toString()) == 0){
-                             operation1.put("modelId",model.get("id"));
-                             operation1.put("nodeId",model.get("id")+"+"+"1");
-                             operation2.put("modelId",model.get("id"));
-                             operation2.put("nodeId",model.get("id")+"+"+"2");
-                            model.put("children",operation);
-                            model.put("icon","iconfont icon-wenjian1");
-                            searchModel.add(model);
-                        }
-
-                }
-            }
-        chidlren.addAll(searchModel);
+        //精确到模型的访问控制，现有瑕疵，暂时弃用
+//        List<Map<String,Object>> allModelList = modelService.findAllModelMap();
+//        List<Map<String,Object>> searchModel = new ArrayList<>();
+//        List<Map<String,Object>> operation = new ArrayList<>();
+//        Map<String,Object> operation1= new HashMap<>();
+//        Map<String,Object> operation2= new HashMap<>();
+//        operation1.put("name","可读");
+//        operation1.put("mode",1);
+//        operation2.put("mode",2);
+//        operation2.put("name","可写");
+//        operation.add(operation1);
+//        operation.add(operation2);
+//            for (Map<String,Object> model: allModelList) {
+//                if(Long.parseLong(model.get("directoryId").toString()) == Long.parseLong(map.get("id").toString())){
+//                         if(Long.parseLong(model.get("parentId").toString()) == 0){
+//                             operation1.put("modelId",model.get("id"));
+//                             operation1.put("nodeId",model.get("id")+"+"+"1");
+//                             operation2.put("modelId",model.get("id"));
+//                             operation2.put("nodeId",model.get("id")+"+"+"2");
+//                            model.put("children",operation);
+//                            model.put("icon","iconfont icon-wenjian1");
+//                            searchModel.add(model);
+//                        }
+//
+//                }
+//            }
+//        chidlren.addAll(searchModel);
 
         if(chidlren.size()>0)
         {
@@ -785,17 +791,49 @@ public class DirectoryController {
 
     /**
      * 把對應的模型庫的目录进行更改
-     * @param nullModel(包)
      */
-    public void updateModelFramwork(Model nullModel){
-        List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-        for (Model modelParent: modelList) {
-            for (Model modelChild: modelList) {
-                String childParentName = modelUtil.getParentName(modelChild.getName());
-                if(childParentName != null && !childParentName.equals("")){
-                    if(childParentName.equals(modelParent.getName())){
-                        modelChild.setParentId(modelParent.getId());
-                        modelService.update(modelChild);
+    public void updateModelFramwork(){
+        /*List<Model> modelList = modelService.queryModelByParId(nullModel.getId());*/
+        //查询刚插入的model
+        List<Model> packageList = modelService.getNullParId();
+        if(packageList.size() == 1){
+            packageList.get(0).setParentId(0);
+            modelService.update(packageList.get(0));
+            Long modelId = packageList.get(0).getId();
+            //下面两行都有异常要抛出
+            try{
+                Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                statusChangeService.updateNextStatus(instanceId,"1");
+            }catch(SqlNumberException e){
+                e.printStackTrace();
+            }
+        }
+        else if(packageList.size() <= 0){
+            return;
+        }
+        else {
+            for (Model model : packageList) {
+                if (model.getName().split("\\.").length == 1) {
+                    model.setParentId(0);
+                    modelService.update(model);
+                    Long modelId = packageList.get(0).getId();
+                    //下面两行都有异常要抛出
+                    try{
+                        Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                        statusChangeService.updateNextStatus(instanceId,"1");
+                    }catch(SqlNumberException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            for (Model modelParent : packageList) {
+                for (Model modelChild : packageList) {
+                    String childParentName = modelUtil.getParentName(modelChild.getName());
+                    if (childParentName != null && !childParentName.equals("")) {
+                        if (childParentName.equals(modelParent.getName())) {
+                            modelChild.setParentId(modelParent.getId());
+                            modelService.update(modelChild);
+                        }
                     }
                 }
             }

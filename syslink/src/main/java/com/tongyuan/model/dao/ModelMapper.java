@@ -26,4 +26,5 @@ public interface ModelMapper {
     List<Model> queryModelByParId(Long id);
     //查询模型分类下是否存在这个模型
     public Model queryByNameAndDirId(Map<String, Object> params);
+    public List<Model> getNullParId();
 }

@@ -51,6 +51,19 @@ export default {
     }
     }
     ,
+      directoryJudge  (authCode) {
+     let userInfo = store.getters.userInfo; 
+     const directoryAuths = userInfo.directoryAuths;
+    if(directoryAuths.includes(authCode))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+    }
+    ,
 	changeDate (){
   	console.log('123');
     } , 

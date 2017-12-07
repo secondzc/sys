@@ -28,7 +28,7 @@
                                   title="上传压缩文件"
                                   :visible.sync="file.dialogVisible"
                                   width="30%"
-                                  :before-close="handleClose">
+                                  >
                               <!--<span>这是一段信息</span>-->
                               <myUpload @refreshMyModel="getModel" style="text-align: center;" ></myUpload>
                               <!--<span slot="footer" class="dialog-footer">-->
@@ -50,7 +50,7 @@
                     
                     <div style="position: absolute;left: 270px;display: inline-flex;
                     min-width: 300px;line-height: 30px">
-                        <span> 当前分类:</span>
+                        <span> <b>当前分类:</b></span>
                           <breadcrumb ></breadcrumb>
                     </div>
                   
@@ -62,18 +62,18 @@
                   <div style="position: absolute;right: 50px;">
                              <el-button-group  >
                                  <el-tooltip class="item" effect="dark" content="列表视图" placement="top-start">
-                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true" 
-                    :class="{buttonFocus:listStatus}"></el-button>
+                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"
+                     :class="{buttonFocus:listStatus}"></el-button>
                 </el-tooltip>
                  <el-tooltip class="item" effect="dark" content="卡片视图" placement="top-start">
                     <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
-                    :class="{buttonFocus:!listStatus}"></el-button>
+                     :class="{buttonFocus:!listStatus}"></el-button>
                 </el-tooltip>
 
                 </el-button-group>
                  <el-tooltip class="item" effect="dark" content="详细信息" placement="top-start">
-                <el-button icon="el-icon-info"  :class="{buttonFocus:info}"  size ="small"
-                           @click="info=!info" ></el-button>
+                <el-button icon="el-icon-info"    size ="small"
+                           @click="info=!info" :class="{buttonFocus:info}"></el-button>
                        </el-tooltip>
                   </div>
          
@@ -274,10 +274,11 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
+                                    <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" > </i>
     
                                  </div>
                              
-                                        <div :index="o.index" v-on:dblclick="modelVar(o)" @click="modelVariable(o)" >
+                                        <div :index="o.index"  @click="modelVariable(o)" >
                                             <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
                                                 <img v-bind:src="o.imageUrl" style="height: 160px;width: 200px;margin-bottom: 10px;">
                                             </div>
@@ -720,7 +721,7 @@
             this.isBusy = false
         },
         modelVar: function (item) {
-            this.$store.dispatch('sendModelId', item.parentId);
+            this.$store.dispatch('sendModelId', item.index);
             this.$store.dispatch('sendTreeModelId', item.index);
             this.$router.push({path: '/model/myPackageDiagram'});
         },
@@ -773,7 +774,7 @@
         },
         handleEdit(index, row) {
             console.log(index, row);
-            this.$store.dispatch('sendModelId', row.parentId);
+            this.$store.dispatch('sendModelId', row.index);
             this.$store.dispatch('sendTreeModelId', row.index);
             this.$router.push({path: '/model/myPackageDiagram'});
         },
@@ -794,7 +795,7 @@
             this.$confirm('确认删除该模型吗?', '提示', {
                 type: 'warning'
             }).then(() => {
-            var url = '/api/model/deleted?modelId=' + row.parentId;
+            var url = '/api/model/deleted?modelId=' + row.index;
             _this.$http.post(url)
                 .then(function (response) {
                     if (response.data.msg == "ok") {
@@ -996,18 +997,19 @@
                 }
 
             },
-            handleClose(done) {
-                this.$confirm('确认关闭？')
-                    .then(_ => {
-                        done();
-                    })
-                    .catch(_ => {});
-            }
+//            handleClose(done) {
+//                this.$confirm('确认关闭？')
+//                    .then(_ => {
+//                        done();
+//                    })
+//                    .catch(_ => {});
+//            }
 
     },
 
 
         mounted() {
+            this.$store.dispatch('sendA',this.$store.getters.privateDirId.data.id);
         }
     };
 
@@ -1030,7 +1032,7 @@
     }
     .bottom-header{
         max-height:  50px;
-     /*   border-top: solid 1px #cfdbe5;*/
+       /* border-top: solid 1px #cfdbe5;*/
     }
     .main-footer{
         max-height: 30px;
@@ -1124,6 +1126,9 @@
     {
       background-color: #e6e6e6;
     }
+    .buttonFocus{
+     background-color: #e6e6e6;
+    }
 
      .clearfix:before,
   .clearfix:after {
@@ -1148,9 +1153,6 @@
   .card-column-content
   {
      margin-bottom: 5px;
-  }
-  .buttonFocus{
-    background-color: #e6e6e6;
   }
 
 
