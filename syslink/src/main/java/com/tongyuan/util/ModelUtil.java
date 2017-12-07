@@ -35,8 +35,9 @@ public class ModelUtil {
             for (int i= 0; i<childModelArr.length -1; i++){
                     parentName += childModelArr[i] + ".";
             }
+            return parentName.substring(0,parentName.length()-1);
         }
-        return parentName.substring(0,parentName.length()-1);
+        return parentName;
     }
 
 
