@@ -5,13 +5,8 @@
 	<groupId>com.tongyuan</groupId>
 	<artifactId>syslink</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-<<<<<<< HEAD
 	<!--<packaging>jar</packaging>-->
 		<packaging>war</packaging>
-=======
-	<packaging>war</packaging>
-	<!--	<packaging>war</packaging>-->
->>>>>>> 640ab773e0cda1d73e28f791e5d00c353754f689
 	<name>syslink</name>
 	<description>Syslink project for Spring Boot</description>
 
