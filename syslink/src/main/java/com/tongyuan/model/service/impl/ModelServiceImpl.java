@@ -87,6 +87,11 @@ public class ModelServiceImpl implements ModelService{
         return this.modelMapper.queryByNameAndDirId(params);
     }
 
+    @Override
+    public List<Model> getNullParId() {
+        return this.modelMapper.getNullParId();
+    }
+
 
 
 

@@ -69,8 +69,20 @@ public class VariableController {
             List<Component> allComp = componentService.findAllComp();
             //查询到所有的变量
             List<Variable> allVariable = variableService.findAllVariable();
-            //获取列表model
-            getSearchModel(modelId,allModel,modelTreeList,modelList);
+            for (Model model: allModel) {
+                if(model.getId() == modelId && model.getParentId() == 0 && model.getName().split("\\.").length >1){
+                    VariableTreeObj treeObj = new VariableTreeObj();
+                    treeObj.setId(model.getId());
+                    treeObj.setName(splitName(model.getName()));
+                    List<VariableTreeObj> childVar = new ArrayList<>();
+                    treeObj.setChildren(childVar);
+                    modelList.add(treeObj);
+                }
+            }
+            if(modelList.size() == 0){
+                //获取列表model
+                getSearchModel(modelId,allModel,modelTreeList,modelList);
+            }
             if(modelList.size() >0){
                 //生成组件树（含变量）= 变量树
                 for (VariableTreeObj varibaleTreeObj: modelList) {
