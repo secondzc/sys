@@ -1,8 +1,9 @@
 <template>
 	<section> 
-    <h5>模型信息：</h5> 
-    <div style="margin-left:20px;margin-top:10px" >
-    	<div>
+    <h3>模型信息</h3> 
+    <div style="display:flex">
+    	<div style="margin-left:20px;margin-top:10px;">
+    	<div style="width:660px;">
     		<div class="modelInfo">
     			<div style="display:inline-block"><p>模型名字:</p></div>
     		    <div style="display:inline-block">{{this.reviewModel.name}}</div>
@@ -12,8 +13,7 @@
     		    <div style="display:inline-block">{{this.reviewModel.type}}</div>
     		</div>
 
-    	</div>
-    	<div>
+    	
     		<div class="modelInfo">
     			 <div style="display:inline-block"><p>模型描述:</p></div>
     		     <div style="display:inline-block">{{this.reviewModel.discription}}</div>
@@ -22,8 +22,15 @@
     			  <div style="display:inline-block"><p>创建时间:</p></div>
     		      <div style="display:inline-block">{{this.reviewModel.createTime}}</div>
     		</div>
+            
     	</div>
     </div>
+    <!-- <div style="width:300px;">
+    	<h5>模型浏览器</h5>
+        <model-tree></model-tree>
+    </div> -->
+    </div>
+
   </section> 
 </template>
 

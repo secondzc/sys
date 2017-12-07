@@ -128,8 +128,8 @@ export let  commonRoutes = [
             // { path: '/main', component: Main, name: '项目', hidden: true },
               //{path:'/template',component:template,name:'模板管理'}, 
               {path:'/brief',component:brief,name:'我的流程'}, 
-              {path:'/checkorAll',component:checkorAll,name:'我的审核'}, 
-              {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交'}, 
+              {path:'/checkorAll',component:checkorAll,name:'审核历史'}, 
+              {path:'/mySubmitAll',component:mySubmitAll,name:'提交历史'}, 
 
               { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true }, 
               { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true }, 

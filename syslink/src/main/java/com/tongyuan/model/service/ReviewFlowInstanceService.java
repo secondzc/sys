@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.domain.ReviewFlowInstance;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface ReviewFlowInstanceService {
     List<ReviewFlowInstance> queryByNameAndStatus(Map<String, Object> map);
     int updateTime(Map<String, Object> map);
 
-    Long startInstance(Long modelId);
+    Long startInstance(Long modelId) throws SqlNumberException;
 }

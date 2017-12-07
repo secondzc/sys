@@ -3,12 +3,19 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.exception.ParseCaeException;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.domain.LearnResouce;
+import com.tongyuan.model.service.CaeParserService;
 import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.LearnService;
 //import com.tongyuan.rabbit.Sender;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
+import com.tongyuan.util.Dom4jUtil;
+import com.tongyuan.util.ResourceUtil;
+import org.dom4j.Document;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +41,36 @@ public class LearnController {
 
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private CaeParserService caeParserService;
 
 //    @Autowired
 //    private Sender sender;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+    @RequestMapping("/testCAE")
+    @ResponseBody
+    public void test1() throws ParseCaeException {
+        Document document = Dom4jUtil.load("/Users/zhangcy/Documents/test/ansys(1).xmlwrapper");
+        Element root = document.getRootElement();
+        caeParserService.parseCAE(root);
+    }
+
+
+
+
+
     @RequestMapping("")
     public String learn(){
         return "learn-resource";
+    }
+
+    @RequestMapping("/test")
+    @ResponseBody
+    public String test() throws Exception{
+        throw new SqlNumberException("测试数据查询数目异常");
     }
 
     @RequestMapping(value = "/queryLeanList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")

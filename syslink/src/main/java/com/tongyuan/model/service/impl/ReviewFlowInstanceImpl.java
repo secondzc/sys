@@ -1,6 +1,7 @@
 package com.tongyuan.model.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.dao.ReviewFlowInstanceMapper;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.service.*;
@@ -70,7 +71,7 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
      * @param modelId
      */
     @Override
-    public Long startInstance(Long modelId){
+    public Long startInstance(Long modelId) throws SqlNumberException{
         Long instanceId = fillInstance(modelId);
         CompleteNodeInstance(instanceId);
         return instanceId;
@@ -81,7 +82,7 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
      * @param modelId
      * @return
      */
-    public Long  fillInstance(Long modelId){
+    public Long  fillInstance(Long modelId) throws SqlNumberException{
         //得到默认模板的templateId
         ReviewFlowTemplate reviewFlowTemplate = reviewFlowTemplateService.getTemplateByDefault();
         Long templateId = reviewFlowTemplate.getTemplateId();
@@ -107,7 +108,7 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
     /**
      * 填充节点实例表
      */
-    public void CompleteNodeInstance(Long iinstanceId){
+    public void CompleteNodeInstance(Long iinstanceId) throws SqlNumberException{
         Long instanceId = iinstanceId;
         //得到默认模板的templateId
         ReviewFlowTemplate reviewFlowTemplate = reviewFlowTemplateService.getTemplateByDefault();

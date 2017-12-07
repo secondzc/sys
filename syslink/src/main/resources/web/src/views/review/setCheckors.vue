@@ -21,7 +21,7 @@
 			</el-table-column>
 			<el-table-column type="index" label="节点次序" width="100">
 			</el-table-column>
-			<el-table-column prop="reviewNodeName" label="节点名字" width="120" >
+			<el-table-column prop="reviewNodeName" label="节点名" width="120" >
 			</el-table-column>
 			<el-table-column prop="description" label="节点描述" width="120" >
 			</el-table-column>
@@ -38,13 +38,13 @@
 		<!--新增界面-->
 		<el-dialog title="配置人员" :visible.sync="addItemsDialogVisible" v-model="addItemsDialogVisible" :close-on-click-modal="false">
 			<el-form :model="addItemsDialog" label-width="80px" >
-				<el-form-item label="节点名字" prop="reviewNodeName">
+				<el-form-item label="节点名" prop="reviewNodeName">
 					<el-input v-model="addItemsDialog.reviewNodeName" ></el-input>
 				</el-form-item>
 				<el-form-item label="节点描述" prop="description">
 				     <el-input v-model="addItemsDialog.description"></el-input>
 				</el-form-item>
-				<el-form-item label="审核者" prop="userName">
+				<el-form-item label="审核者" prop="userName" :rules="[{required:true,message:'请 选择审核者',trigger:'blur'}]">
 				     <el-input v-model="addItemsDialog.userName" :disabled="true" style="width:80%"></el-input>
 				     <el-button type="primary" @click.native="chooseName">选择审核者</el-button>
 				</el-form-item>
@@ -161,7 +161,13 @@
 
 			},
 			submitAll(){
-				this.$confirm('确认提交吗？','提示',{}).then(()=>{
+				if(this.items.length===0){
+					this.$message({
+						type:'info',
+						message:'未配置不能提交',
+					})
+				}else{
+				  this.$confirm('确认提交吗？','提示',{}).then(()=>{
 					this.submitAllLoading = true;
 					let url = '/api/reviewNode/batchAdd';
 					let nodeName = [];
@@ -187,7 +193,8 @@
 						    this.redirect();
 						}
 					})
-				})
+				  })					
+				}
 			},
 			redirect() {
 				sessionStorage.removeItem('templateId');
@@ -246,8 +253,10 @@
 				}
 			},
 			remove(row){
-				let sequence = this.items.indexOf(row);
-				this.items.splice(sequence,1);
+				this.$confirm('确认要删除吗？','提示').then(()=>{
+				    let sequence = this.items.indexOf(row);
+				    this.items.splice(sequence,1);
+				});
 			},
 			getNodes(){
 				this.nodesLoading=true;

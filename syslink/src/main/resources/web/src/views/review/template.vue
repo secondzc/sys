@@ -53,9 +53,9 @@
 
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible"  :visible.sync="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addTemplate" label-width="80px" >
-				<el-form-item label="模板名" prop="templateName">
-					<el-input v-model="addTemplate.templateName" ></el-input>
+			<el-form :model="addTemplate" label-width="120px" >
+				<el-form-item label="模板名" prop="templateName" :rules="[{required:true,message:'请输入模板名',trigger:'blur'}]">
+					<el-input v-model="addTemplate.templateName"></el-input>
 				</el-form-item>
 				<el-form-item label="模板描述" prop="description">
 				     <el-input v-model="addTemplate.description"></el-input>
@@ -176,39 +176,62 @@
 				this.getTemplates();
 			},
 			addSubmit: function(){
-				this.addLoading = true;
 				let param = Object.assign({},this.addTemplate);
-				param.assure = "no";
-				let url = '/api/reviewFlowTemplate/addReviewFlowTemplate';
-				this.func.ajaxPost(url,param,res =>{
-					if(res.data.code ==200){
-						if(!res.data.changeDefault){
-							this.addLoading = false;
-							this.addFormVisible = false;
-							this.$message({
-								message: '提交成功！',
-								type: 'success',
-							})
-							this.getTemplates();
-						}else{
-							this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
-								param.assure = "yes";
-								this.func.ajaxPost(url,param,res =>{
-									if(res.data.code === 200 && !res.data.changeDefault){
-										this.addLoading = false;
-										this.addFormVisible = false;
-										this.$message({
-											message: '提交成功！',
-											type: 'success',
-										})
-										this.getTemplates();
-									}
-								})
-							})
-						}
+				if(this.func.isNull(param.templateName)){
+					this.$message({
+						message:'模板名不能为空',
+					})
+				}else if(this.isRepeatedTemplate(param)){
+					this.$message({
+						message:'模板名不能重复',
+					})
+				}else{
+					this.addLoading = true;
+			        let url = '/api/reviewFlowTemplate/addReviewFlowTemplate';
+			        param.assure = "no";
+			        this.func.ajaxPost(url,param,res =>{
+			        	if(res.data.code ==200){
+			        		if(!res.data.changeDefault){
+			        			this.addLoading = false;
+			        			this.addFormVisible = false;
+			        			this.$message({
+			        				message: '提交成功！',
+			        				type: 'success',
+			        			})
+			        			this.getTemplates();
+			        		}else{
+			        			this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
+			        				param.assure = "yes";
+			        				this.func.ajaxPost(url,param,res =>{
+			        					if(res.data.code === 200 && !res.data.changeDefault){
+			        						this.addLoading = false;
+			        						this.addFormVisible = false;
+			        						this.$message({
+			        							message: '提交成功！',
+			        							type: 'success',
+			        						})
+			        						this.getTemplates();
+			        					}
+			        				})
+			        			})
+			        			.catch(()=>{
+			        				this.addLoading = false;
+			        			})
+			        		}
 
+			        	}
+			        })
+				}	
+			},
+			isRepeatedTemplate(param){
+				var flag=false;
+				for(var name of this.templates){
+					if(name.templateName === param.templateName){
+						flag=true;
+						break;
 					}
-				})
+				}
+				return flag;
 			},
 			remove: function(index,row){
 				this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{

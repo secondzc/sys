@@ -1,5 +1,6 @@
 package com.tongyuan.util;
 
+import com.tongyuan.exception.ParseCaeException;
 import com.tongyuan.model.controller.DirectoryController;
 import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.service.DirectoryService;
@@ -330,7 +331,7 @@ public class ResourceUtil {
     }
 
     //解析xml
-    public Map<String,Object> analysisXmlPath(String xmlFilePath) {
+    public static Map<String,Object> analysisXmlPath(String xmlFilePath) {
         Map<String, Object> xmlMap = new HashMap<String, Object>();
         //查看这个根目录文件啊是否存在
         File xmlFile = new File(xmlFilePath);

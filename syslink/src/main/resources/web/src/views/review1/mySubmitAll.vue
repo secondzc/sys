@@ -1,6 +1,7 @@
 <template>
+
 	<section>
-        
+        <h3>其他提交流程记录</h3> 
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             
@@ -10,7 +11,7 @@
         </el-radio-group> -->
 
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="模板名"></el-input>
+					<el-input v-model="filters.name" placeholder="模型名"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getInstance">查询</el-button>
@@ -32,10 +33,10 @@
 			</el-table-column>
 			<el-table-column prop="lastUpdateTime" label="最后修改时间" width="180" >
 			</el-table-column>
-			<el-table-column label="操作" width="300">
+			<el-table-column label="操作" width="300" >
 				<template scope="scope">
-					<el-button size="small" @click="detail(scope.$index,scope.row)">查看详情</el-button>
-                    <el-button size="small" @click="cancel(scope.$index,scope.row)">撤销流程</el-button>
+					<el-button size="small" @click="detail(scope.$index,scope.row)" :disabled="scope.row.status==4">查看详情</el-button>
+                    <el-button size="small" @click="cancel(scope.$index,scope.row)" :disabled="scope.row.status==4">撤销流程</el-button>
 					<el-button type="danger" size="small" @click="remove(scope.row)">删除记录</el-button>
 				</template>
 			</el-table-column>
@@ -90,13 +91,14 @@
                 });
             },
     		getInstance(){
-                //查询的是所有的流程，包括审签中的和拒绝、通过的
+                //查询的除了审签中的之外所有状态的视图
                 //这时flowInstanceStatus为空，查询所有的
     			this.listLoading = true;
     			let params = {
     				flowInstanceName: this.filters.name,
     				page: this.page,
     				rows: this.pageSize,
+                    flowInstanceStatus: '2,3,4',
     			}
     			let url="/api/reviewFlowInstance/queryByNameAndStatus";
     			this.func.ajaxPost(url,params,res=>{

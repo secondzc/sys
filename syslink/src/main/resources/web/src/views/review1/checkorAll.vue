@@ -1,8 +1,6 @@
 <template>
 	<section>
-		<p>待审批流程列表</p>
-		<checkor></checkor>
-		<p>其他审批流程记录</p>
+		 <h3>其他审批流程记录</h3>
 		<!--除了正在审签之外的列表-->
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
 			<el-table-column type="index" width="60" >
@@ -29,11 +27,8 @@
 </template>
 
 <script>
-	import checkor from '../review/checkor'
 	export default{
-		components:{
-			checkor,
-		},
+
 		data(){
 			return {
 				total: 0,

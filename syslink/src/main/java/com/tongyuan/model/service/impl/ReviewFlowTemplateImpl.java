@@ -48,8 +48,12 @@ public class ReviewFlowTemplateImpl implements ReviewFlowTemplateService {
     }
 
     @Override
-    public ReviewFlowTemplate getTemplateByDefault(){
-        return reviewFlowTemplateMapper.getTemplateByDefault();
+    public ReviewFlowTemplate getTemplateByDefault() throws SqlNumberException{
+        List<ReviewFlowTemplate> reviewFlowTemplates = reviewFlowTemplateMapper.getTemplateByDefault();
+        if(reviewFlowTemplates.isEmpty()|| reviewFlowTemplates.size()>1){
+            throw new SqlNumberException("默认模板数目应该有且仅有一个");
+        }
+        return reviewFlowTemplates.get(0);
     }
 
     @Override

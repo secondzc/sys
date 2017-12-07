@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div style="width:40%" id="comment" v-if="isCheckor">
-			<h3>协同</h3>
+		<h3 v-if="isCheckor">协同</h3>
+		<div style="width:500px" id="comment" v-if="isCheckor">
 			<el-form>
 			<el-form-item label="是否通过:">
 				<el-radio-group v-model="isAgree">
@@ -17,8 +17,9 @@
 			</el-form-item>
 		    </el-form>
 		</div>
-		<div style="width:60%">
-			<h3>处理人意见区</h3>
+					<h3>处理人意见区</h3>
+		<div style="width:520px">
+
 			<div style="border: 1px solid #9E9E9E;margin-left:20px" v-for="(commentPage,index) in commentPages">
 				<div style="width:20%;float:left">审核者：{{commentPage.checkorName}}</div>
 				<div style="width:40%;float:left">审核结果：{{commentPage.showStatus}}</div>

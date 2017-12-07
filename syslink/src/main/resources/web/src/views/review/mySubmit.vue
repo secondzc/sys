@@ -4,7 +4,7 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="模板名"></el-input>
+					<el-input v-model="filters.name" placeholder="模型名"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getInstance">查询</el-button>
@@ -64,8 +64,20 @@
     			sels: [],
     			page: 1,
     			rows: 10,
+                packageId:-1,
+                redirectFlag:false,
     		}
     	},
+        watch: {
+            redirectFlag() {
+                if(this.redirectFlag){
+                    this.$store.dispatch('sendModelId', this.packageId);
+                    console.log('已经获得packageid'+this.packageId);
+                    this.$router.push({path:'/mySubmitDetail'});   
+                }
+
+            },
+        },
     	methods: {
     		getInstance(){
                 //这里是brief的组件，只查询提交的审签中的流程，即status为1 
@@ -106,8 +118,17 @@
     			return msg;
     		},
     		detail(index,row){
-				sessionStorage.setItem('instanceId',row.instanceId);
-				this.$router.push({path:'/mySubmitDetail'});
+                sessionStorage.setItem('instanceId',row.instanceId);
+                //由instanceId得到modelId，存入vuex供modelTree使用
+                var url = 'api/reviewFlowInstance/getModelIdByInstanceId';
+                this.func.ajaxPost(url,{instanceId:row.instanceId},res=>{
+                    if(res.data.flag===true){
+                        this.packageId=res.data.modelId;
+                        console.log('提交成功...');
+                        this.redirectFlag = true;
+                    }
+                });
+                //当异步获取的结果返回之后才能存入packageId            
     		},
     		remove(row){
 

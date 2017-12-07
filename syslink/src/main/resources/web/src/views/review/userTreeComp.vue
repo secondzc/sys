@@ -7,9 +7,10 @@
 	node-key="label"
 	ref="tree"
 	highlight-current
-	:props="defaultProps">
+	:props="defaultProps"
+	@check-change="check">
 </el-tree>
-    <el-button type="primary" @click="affirm" >确认</el-button>
+    <el-button type="primary" @click="affirm" :disabled="this.namesNum!==1">确定</el-button>
 	</section>
 	
 
@@ -27,9 +28,22 @@ export default{
 			treeLoading:false,
 			checkedNodes:[],
 			names:[],
+			namesNum:0,
 		};
 	},
 	methods: {
+		//参数表示节点本身，节点是否被选中，节点的子树种是否有被选中的节点
+		check(var1,var2,var3){
+			console.log(this.namesNum);
+			console.log(var1);
+			if(var2 && var1.leaf){
+				this.namesNum++;
+				console.log(this.namesNum);
+			}else if((!var2) && var1.leaf){
+				this.namesNum--;
+				console.log(this.namesNum);
+			}
+		},
 		affirm(){
 			//每次点击确认后，清空数组
 			this.names=[];
@@ -39,14 +53,7 @@ export default{
 					this.names.push(this.checkedNodes[i].label);
 				}
 			};
-			if(this.names.length===1){
-				//console.log(this.names[0]);
-               this.$emit('affirmName',this.names[0]);
-			}else{
-				this.$message({
-					message:'选择人员数目应该唯一',
-				});
-			}
+            this.$emit('affirmName',this.names[0]);
 		},
 		getData2(){
 			var url='/api/userTree/query';

@@ -91,6 +91,7 @@ public class ReviewFlowInstanceController extends BaseController {
 
     /**
      * 按照实例名字和实例状态查询，返回实例对象list 的json数据
+     * 通过名字和状态查询 提交的流程（只能查询自己提交的）
      * @param request
      * @param response
      * @return
@@ -100,16 +101,15 @@ public class ReviewFlowInstanceController extends BaseController {
         String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
         String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
         String name = request.getParameter("flowInstanceName");
-        String tempStaus = request.getParameter("flowInstanceStatus");
-        Byte status = null;
-        if(tempStaus!=null && !(tempStaus.equals(""))){
-            status = Byte.valueOf(tempStaus);
-        }
+        String status = request.getParameter("flowInstanceStatus");
+        String[] statusArray = status.split(",");
+        Long userId = getUserId();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("page", page);
         map.put("rows", rows);
         map.put("instanceName", name);
-        map.put("status", status);
+        map.put("status", statusArray);
+        map.put("userId",userId);
 
         List<ReviewFlowInstance> reviewFlowInstances = reviewFlowInstanceService.queryByNameAndStatus(map);
         PageInfo<ReviewFlowInstance> pageInfo = new PageInfo<ReviewFlowInstance>(reviewFlowInstances);
@@ -158,4 +158,15 @@ public class ReviewFlowInstanceController extends BaseController {
         ServletUtil.createSuccessResponse(200, jo, response);
     }
 
+    @RequestMapping(value="/getModelIdByInstanceId",method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject getModelIdByInstanceId(HttpServletRequest request){
+        JSONObject jo = new JSONObject();
+        Long instanceId = Long.valueOf(request.getParameter("instanceId"));
+        ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByInstanceId(instanceId);
+        Long modelId = reviewFlowInstance.getModelId();
+        jo.put("flag",true);
+        jo.put("modelId",modelId);
+        return jo;
+    }
 }
