@@ -50,7 +50,7 @@
                     
                     <div style="position: absolute;left: 270px;display: inline-flex;
                     min-width: 300px;line-height: 30px">
-                        <span> 当前分类:</span>
+                        <span> <b>当前分类:</b></span>
                           <breadcrumb ></breadcrumb>
                     </div>
                   
