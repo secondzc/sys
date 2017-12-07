@@ -1009,6 +1009,7 @@
 
 
         mounted() {
+            this.$store.dispatch('sendA',this.$store.getters.privateDirId.data.id);
         }
     };
 

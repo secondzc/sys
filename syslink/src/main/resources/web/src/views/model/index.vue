@@ -1014,6 +1014,7 @@
 
     },
         mounted() {
+            this.$store.dispatch('sendA',this.$store.getters.publicDirId.data.id);
         }
     };
 
