@@ -721,7 +721,7 @@
             this.isBusy = false
         },
         modelVar: function (item) {
-            this.$store.dispatch('sendModelId', item.parentId);
+            this.$store.dispatch('sendModelId', item.index);
             this.$store.dispatch('sendTreeModelId', item.index);
             this.$router.push({path: '/model/myPackageDiagram'});
         },
@@ -795,7 +795,7 @@
             this.$confirm('确认删除该模型吗?', '提示', {
                 type: 'warning'
             }).then(() => {
-            var url = '/api/model/deleted?modelId=' + row.parentId;
+            var url = '/api/model/deleted?modelId=' + row.index;
             _this.$http.post(url)
                 .then(function (response) {
                     if (response.data.msg == "ok") {
