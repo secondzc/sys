@@ -119,23 +119,23 @@ export let  commonRoutes = [
               
      //      ] 
      //  }, 
-    {
+      {
         path: '',
         component: NewHeader,
-        iconCls: 'el-icon-document',
+        iconCls: 'iconfont icon-liucheng1',
         name: '我的流程',
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
               //{path:'/template',component:template,name:'模板管理'}, 
-              {path:'/brief',component:brief,name:'我的流程'}, 
-              {path:'/checkorAll',component:checkorAll,name:'审核历史'}, 
-              {path:'/mySubmitAll',component:mySubmitAll,name:'提交历史'}, 
+              {path:'/brief',component:brief,name:'我的流程',iconCls: 'iconfont icon-liucheng1'}, 
+              {path:'/checkorAll',component:checkorAll,name:'我的审核',iconCls: 'iconfont icon-page1'}, 
+              {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交',iconCls: 'iconfont icon-tijiao'}, 
 
               { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true }, 
               { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true }, 
               {path:'/checkorDetail',component:checkorDetail,name:'审核详情',hidden:true}, 
           ] 
-      }, 
+      },
     {
         path: '',
         component: NewLogin,
@@ -375,7 +375,7 @@ export let limitRoutes=[
             { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{role:['management_log_list']}},
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
-            {path:'/template',component:template,name:'模板管理'}, 
+            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban'}, 
         ]
     },
     {
