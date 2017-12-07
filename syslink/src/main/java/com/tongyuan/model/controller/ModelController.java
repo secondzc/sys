@@ -514,6 +514,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setNumberWatch(0);
                 modelWeb.setAlreadyStar(false);
                 modelWeb.setAlreadyWatch(false);
+
                 repositoryModelList.add(modelWeb );
             }
             for (ModelWeb modelWeb : repositoryModelList) {

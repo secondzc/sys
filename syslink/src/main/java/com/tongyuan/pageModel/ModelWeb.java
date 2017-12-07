@@ -30,6 +30,7 @@ public class ModelWeb {
     private Long userId;
     //directoryparentId
     private  Long directoryParentId;
+    private  Long directoryId;
     private String createTime;
     private String updateTime;
     private Long uploadTime;
