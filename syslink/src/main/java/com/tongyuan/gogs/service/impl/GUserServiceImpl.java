@@ -111,10 +111,16 @@ public class GUserServiceImpl implements GUserService {
         }
 
         List<String>modeAuths = new ArrayList<>();
-        List<ModelAuth> modelAuthList = modelAuthMapper.queryByUid(user.getID());
-        for(ModelAuth modelAuth :modelAuthList)
+//        List<ModelAuth> modelAuthList = modelAuthMapper.queryByUid(user.getID());
+//        for(ModelAuth modelAuth :modelAuthList)
+//        {
+//            modeAuths.add(modelAuth.getNodeId());
+//        }
+        List<Long> directoryAuths = new ArrayList<>();
+        List<DirectoryAuth> directoryAuthList = directoryAuthMapper.queryByUid(user.getID());
+        for(DirectoryAuth directoryAuth :directoryAuthList)
         {
-            modeAuths.add(modelAuth.getNodeId());
+            directoryAuths.add(directoryAuth.getDirectoryId());
         }
 
 
@@ -126,6 +132,7 @@ public class GUserServiceImpl implements GUserService {
         loginedUserModel.setProfile(user);
         loginedUserModel.setAuths(auths);
         loginedUserModel.setModelAuths(modeAuths);
+        loginedUserModel.setDirectoryAuths(directoryAuths);
         //      loginedUserModel.setRoles(roles);
         //      loginedUserModel.setPermissions(permissions);
         loginedUserModel.setLoginState(loginstate);
@@ -507,6 +514,22 @@ public class GUserServiceImpl implements GUserService {
             modelAuth.setUid(uid);
             modelAuth.setNodeId(map.get("modelId").toString()+"+"+map.get("mode").toString());
             b=b&modelAuthMapper.add(modelAuth);
+        }
+        return a&b;
+
+    }
+
+    @Override
+    public boolean updateModelAuth1(Long uid,List<Map<String,Object>> directories)
+    {
+        boolean a = directoryAuthMapper.deleteByUid(uid);
+        boolean b =true;
+        for(Map<String,Object>map:directories)
+        {
+            DirectoryAuth directoryAuth = new DirectoryAuth();
+            directoryAuth.setDirectoryId(Long.parseLong(map.get("id").toString()));
+            directoryAuth.setUid(uid);
+            b=b&directoryAuthMapper.add(directoryAuth);
         }
         return a&b;
 

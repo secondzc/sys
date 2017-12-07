@@ -255,4 +255,12 @@ public class ModelWeb {
     public void setTextInfo(String textInfo) {
         this.textInfo = textInfo;
     }
+
+    public Long getDirectoryId() {
+        return directoryId;
+    }
+
+    public void setDirectoryId(Long directoryId) {
+        this.directoryId = directoryId;
+    }
 }

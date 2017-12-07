@@ -66,6 +66,8 @@ public class GUserWarpper extends BaseControllerWarpper {
 //        map.put("modelAuth",modelAuths);
         List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
         map.put("modelAuth",modelAuths);
+        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
+        map.put("directoryAuth",directoryAuths);
 
 
 //      map.remove("");
