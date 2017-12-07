@@ -31,6 +31,8 @@ public class LoginedUserModel {
 
     private List<String>modelAuths = new ArrayList<>();
 
+    private List<Long> directoryAuths = new ArrayList<>();
+
 
     // 登录情况
     private Loginstate loginState;
@@ -109,5 +111,14 @@ public class LoginedUserModel {
 
 	public void setModelAuths(List<String> modelAuths) {
 		this.modelAuths = modelAuths;
+	}
+
+
+	public List<Long> getDirectoryAuths() {
+		return directoryAuths;
+	}
+
+	public void setDirectoryAuths(List<Long> directoryAuths) {
+		this.directoryAuths = directoryAuths;
 	}
 }

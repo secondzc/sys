@@ -500,6 +500,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setUserId(user.getID());
                 modelWeb.setClasses(searchModel.get(i).getClasses());
                 modelWeb.setTextInfo(searchModel.get(i).getTextInfo());
+                modelWeb.setDirectoryId(searchModel.get(i).getDirectoryId());
                 if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
                 }

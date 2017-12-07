@@ -365,7 +365,7 @@
  <!--    <div slot="title">    -->
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
 
-    <el-tree :data="data3" show-checkbox  node-key="nodeId"  
+    <el-tree :data="data3" show-checkbox  node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"  
     :default-checked-keys="modelTree"   :default-expand-all="true"   :render-content="nodeRender">
     </el-tree>
@@ -1011,7 +1011,7 @@
 
             let temp =  [];
 
-         row.modelAuth.forEach(x=>temp.push(x.nodeId));
+         row.directoryAuth.forEach(x=>temp.push(x.directoryId));
          console.log(temp);
          this.modelTree=temp;
 

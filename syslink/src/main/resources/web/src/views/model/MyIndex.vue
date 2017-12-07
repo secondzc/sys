@@ -274,10 +274,11 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
+                                    <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" > </i>
     
                                  </div>
                              
-                                        <div :index="o.index" v-on:dblclick="modelVar(o)" @click="modelVariable(o)" >
+                                        <div :index="o.index"  @click="modelVariable(o)" >
                                             <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
                                                 <img v-bind:src="o.imageUrl" style="height: 160px;width: 200px;margin-bottom: 10px;">
                                             </div>
