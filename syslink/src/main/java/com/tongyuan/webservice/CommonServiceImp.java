@@ -113,138 +113,138 @@ public class CommonServiceImp implements CommonService {
 		return result;
 	}
 
-	/* 上传任务压缩文件,fileName为**.zip
-    */
-	public boolean UploadFile(String fileName, long beginPos, long length,
-							  byte[] data) {
-		System.out.println("starting upload the file...");
-		boolean result = false;
-		//获取压缩包 C:/Temp/zip/文件名
-		String filePath = resourceUtil.getzipPath() + fileName;
-		System.out.println("filePath==" + filePath);
-		System.out.println("starting writing file...");
-		//TODO:上传到内存中，并在内存中完成解压
-//			resourceUtil.writeFile(filePath, beginPos, length, data);
-
-		// 模型相对路径xieyx/20170620.../
-//			String modelDir = resourceUtil.unzipFile(fileName, "xieyx");
-		String modelDir = "";
-		try {
-            modelDir = resourceUtil.unzipByte(fileName, userName,data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		//输出文件的目录（modelDir是解压缩到的目录）
-		System.out.println("modelDir==========" + modelDir + "*************");
-//			if(fileName.endsWith("\\.zip")){
-//				fileName = modelUtil.splitName(fileName);
-//			}
-		//获取到model解压缩的路径
-		String modelPath = resourceUtil.getModelPath(modelDir, fileName);
-		//遍历文件，对model库进行插入
-		//	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
-		// String parentPath = ResourceUtil.getFileDriectory() + modelDir;
-		String parentPath = modelPath;
-		resourceUtil.getSubFile(parentPath.substring(0,
-                parentPath.length()), parentPath.substring(0,
-                parentPath.length()), "");
-		Map<String, Object> xmlMap = new HashMap<String, Object>();
-		//存放解析的所有xmlMap
-		Map<String, Map> xmlAnalysisMap = new HashMap<>();
-		//存放解析svg，info文件所在位置的Map
-		Map<String, String> svgPath = new HashMap<>();
-//            String name = fileName;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("name", fileName);
-		//查找到项目所在的位置
-		List<FileModel> directoryList = fileModelService.queryListByName(params);
-		//选取最近push的一个directory对象
-		FileModel directory = new FileModel();
-		if (!directoryList.isEmpty()) {
-            directory = directoryList.get(0);
-        } else {
-            result = false;
-//                return result;
-        }
-		//获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
-		//文件所在位置
-		String fileXmlPath = directory.getRelativeAddress();
-		//获取到xml所在的文件位置
-		String xmlPath = "";
-		xmlPath = resourceUtil.getXmlPath(fileXmlPath, xmlPath);
-		//对xml进行解析,遍历xml文件下所有文件
-		if (StringUtil.isNull(xmlPath)) {
-            result = false;
-//                return result;
-        }
-		File xmlFilePath = new File(xmlPath);
-		String[] subFiles = xmlFilePath.list();
-		GUser user = userService.querListByName("xyx");
-		Model model = new Model();
-		model.setName(subFiles[0].split("\\.")[0]);
-		model.setFileId(directory.getId());
-		//目录id，默认modelica
-//			model.setDirectoryId(directoryId);
-		model.setDirectoryId(93);
-		model.setClasses(ModelClasses.Package.getKey());
-		model.setModelFilePath(filePath);
-		model.setScope(false);
-		model.setUserId(user.getID());
-		model.setCreateTime(DateUtil.getTimestamp());
-		// model.setUserId(1);
-		model.setDeleted(false);
-		if (modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null) {
-            modelService.add(model);
-        }
-		//查找最外层空的model
-		Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
-		for (int i = 0; i < subFiles.length; i++) {
-            //查看文件的格式
-            String[] fileNames = subFiles[i].split("\\.");
-            //文件的类型
-            String filePreType = fileNames[fileNames.length - 2];
-            String fileType = fileNames[fileNames.length - 1];
-            if (("xml").equals(fileType)) {
-                xmlMap = resourceUtil.analysisXmlPath(xmlFilePath + "/" + subFiles[i]);
-                xmlAnalysisMap.put(subFiles[i], xmlMap);
-                svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
-            } else if ("svg".equals(fileType)) {
-                if ("icon".equals(filePreType)) {
-                    svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
-                } else if ("diagram".equals(filePreType)) {
-                    svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
-                }
-            } else if ("html".equals(fileType)) {
-                svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
-            }
-        }
-		//遍历xmlMap进行数据的插入
-		for (Map.Entry<String, Map> entry : xmlAnalysisMap.entrySet()) {
-            //解析xmlmap 把数据存放到数据库
-            modelController.insertData(entry, svgPath, nullModel, directory, (long) 93);
-        }
-
-		//更新模型的层次结构
-		//获取package下面的所有model
-		List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
-		for (Model modelParent: modelList) {
-            for (Model modelChild: modelList) {
-                int modelChildLen = modelChild.getName().split("\\.").length;
-                //匹配model名称是否有父子关系
-                int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
-                if( modelChildLen> 1){
-                    if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
-                        modelParent.setParentId(modelChild.getId());
-                        modelService.update(modelParent);
-                    }
-                }
-            }
-        }
-//			        this.doCmd(name,fileXmlPath,fileName);
-		result = true;
-		System.out.println("上传完毕！！！");
-        return result;
-	}
+//	/* 上传任务压缩文件,fileName为**.zip
+//    */
+//	public boolean UploadFile(String fileName, long beginPos, long length,
+//							  byte[] data) {
+//		System.out.println("starting upload the file...");
+//		boolean result = false;
+//		//获取压缩包 C:/Temp/zip/文件名
+//		String filePath = resourceUtil.getzipPath() + fileName;
+//		System.out.println("filePath==" + filePath);
+//		System.out.println("starting writing file...");
+//		//TODO:上传到内存中，并在内存中完成解压
+////			resourceUtil.writeFile(filePath, beginPos, length, data);
+//
+//		// 模型相对路径xieyx/20170620.../
+////			String modelDir = resourceUtil.unzipFile(fileName, "xieyx");
+//		String modelDir = "";
+//		try {
+//            modelDir = resourceUtil.unzipByte(fileName, userName,data);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//		//输出文件的目录（modelDir是解压缩到的目录）
+//		System.out.println("modelDir==========" + modelDir + "*************");
+////			if(fileName.endsWith("\\.zip")){
+////				fileName = modelUtil.splitName(fileName);
+////			}
+//		//获取到model解压缩的路径
+//		String modelPath = resourceUtil.getModelPath(modelDir, fileName);
+//		//遍历文件，对model库进行插入
+//		//	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
+//		// String parentPath = ResourceUtil.getFileDriectory() + modelDir;
+//		String parentPath = modelPath;
+//		resourceUtil.getSubFile(parentPath.substring(0,
+//                parentPath.length()), parentPath.substring(0,
+//                parentPath.length()), "");
+//		Map<String, Object> xmlMap = new HashMap<String, Object>();
+//		//存放解析的所有xmlMap
+//		Map<String, Map> xmlAnalysisMap = new HashMap<>();
+//		//存放解析svg，info文件所在位置的Map
+//		Map<String, String> svgPath = new HashMap<>();
+////            String name = fileName;
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("name", fileName);
+//		//查找到项目所在的位置
+//		List<FileModel> directoryList = fileModelService.queryListByName(params);
+//		//选取最近push的一个directory对象
+//		FileModel directory = new FileModel();
+//		if (!directoryList.isEmpty()) {
+//            directory = directoryList.get(0);
+//        } else {
+//            result = false;
+////                return result;
+//        }
+//		//获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
+//		//文件所在位置
+//		String fileXmlPath = directory.getRelativeAddress();
+//		//获取到xml所在的文件位置
+//		String xmlPath = "";
+//		xmlPath = resourceUtil.getXmlPath(fileXmlPath, xmlPath);
+//		//对xml进行解析,遍历xml文件下所有文件
+//		if (StringUtil.isNull(xmlPath)) {
+//            result = false;
+////                return result;
+//        }
+//		File xmlFilePath = new File(xmlPath);
+//		String[] subFiles = xmlFilePath.list();
+//		GUser user = userService.querListByName("xyx");
+//		Model model = new Model();
+//		model.setName(subFiles[0].split("\\.")[0]);
+//		model.setFileId(directory.getId());
+//		//目录id，默认modelica
+////			model.setDirectoryId(directoryId);
+//		model.setDirectoryId(93);
+//		model.setClasses(ModelClasses.Package.getKey());
+//		model.setModelFilePath(filePath);
+//		model.setScope(false);
+//		model.setUserId(user.getID());
+//		model.setCreateTime(DateUtil.getTimestamp());
+//		// model.setUserId(1);
+//		model.setDeleted(false);
+//		if (modelService.queryModelByName(subFiles[0].split("\\.")[0]) == null) {
+//            modelService.add(model);
+//        }
+//		//查找最外层空的model
+//		Model nullModel = modelService.queryModelByName(subFiles[0].split("\\.")[0]);
+//		for (int i = 0; i < subFiles.length; i++) {
+//            //查看文件的格式
+//            String[] fileNames = subFiles[i].split("\\.");
+//            //文件的类型
+//            String filePreType = fileNames[fileNames.length - 2];
+//            String fileType = fileNames[fileNames.length - 1];
+//            if (("xml").equals(fileType)) {
+//                xmlMap = resourceUtil.analysisXmlPath(xmlFilePath + "/" + subFiles[i]);
+//                xmlAnalysisMap.put(subFiles[i], xmlMap);
+//                svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
+//            } else if ("svg".equals(fileType)) {
+//                if ("icon".equals(filePreType)) {
+//                    svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
+//                } else if ("diagram".equals(filePreType)) {
+//                    svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
+//                }
+//            } else if ("html".equals(fileType)) {
+//                svgPath.put(subFiles[i], xmlFilePath + "/" + subFiles[i]);
+//            }
+//        }
+//		//遍历xmlMap进行数据的插入
+//		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+//			//解析xmlmap 把数据存放到数据
+//			modelController.insertData(entry,svgPath,scope,user,directory,directoryId);
+//		}
+//
+//		//更新模型的层次结构
+//		//获取package下面的所有model
+//		List<Model> modelList = modelService.queryModelByParId(nullModel.getId());
+//		for (Model modelParent: modelList) {
+//            for (Model modelChild: modelList) {
+//                int modelChildLen = modelChild.getName().split("\\.").length;
+//                //匹配model名称是否有父子关系
+//                int modelNameLen = modelChild.getName().split("\\.")[modelChildLen-1].length();
+//                if( modelChildLen> 1){
+//                    if(modelParent.getName().equals(modelChild.getName().substring(0,modelChild.getName().length()- modelNameLen-1))){
+//                        modelParent.setParentId(modelChild.getId());
+//                        modelService.update(modelParent);
+//                    }
+//                }
+//            }
+//        }
+////			        this.doCmd(name,fileXmlPath,fileName);
+//		result = true;
+//		System.out.println("上传完毕！！！");
+//        return result;
+//	}
 
 	/**
 	 * 模型分类树
@@ -354,22 +354,22 @@ public class CommonServiceImp implements CommonService {
         }
 		File xmlFilePath = new File(xmlPath);
 		String[] subFiles = xmlFilePath.list();
-		Model model = directoryController.setPackageParam(userName,subFiles,directory,classID,isScopeDir,filePath);
+/*		Model model = directoryController.setPackageParam(userName,subFiles,directory,classID,isScopeDir,filePath);
 		Map<String, Object> param = directoryController.isAddModelAndReview(subFiles,classID,model);
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
-		Model nullModel = modelService.queryByNameAndDir(param);
-		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";
+		Model nullModel = modelService.queryByNameAndDir(param);*/
+		GUser user =  gUserService.querListByName(userName);
+		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ subFiles[0].split("\\.")[0] + "\\/.git";
 		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
 		//遍历xmlMap进行数据的插入
 		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-            //解析xmlmap 把数据存放到数据库
-            modelController.insertData(entry,svgPath,nullModel,directory,classID);
-        }
-
+			//解析xmlmap 把数据存放到数据
+			modelController.insertData(entry,svgPath,isScopeDir,user,directory,classID);
+		}
 		//更新模型的层次结构
 		//获取package下面的所有model
-		directoryController.updateModelFramwork(nullModel);
+		directoryController.updateModelFramwork();
 		System.out.println("上传完毕！！！");
 		return modelReposityUrl;
 	}
