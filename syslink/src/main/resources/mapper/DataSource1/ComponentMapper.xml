@@ -52,7 +52,7 @@
         (SELECT <include refid="baseColumnList" ></include>
         from  component  AS A
         where (name in (SELECT `name`
-        from  component  AS B WHERE A.id != B.id and A.parent_name != B.parent_name and A.create_time >= B.create_time)) ORDER BY create_time DESC)m
+        from  component  AS B WHERE A.id != B.id  and A.create_time >= B.create_time)) ORDER BY create_time DESC)m
         where 1=1
         UNION
         SELECT <include refid="baseColumnList" ></include>

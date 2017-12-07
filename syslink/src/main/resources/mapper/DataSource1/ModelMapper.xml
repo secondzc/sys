@@ -160,4 +160,10 @@
         FROM  model
         where name = #{fileName} and directory_id = #{directoryId}  and is_deleted = "0"
     </select>
+    <select id="getNullParId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        SELECT
+        <include refid="baseColumnList" ></include>
+        FROM  model
+        where parent_id = -1 and is_deleted = "0"
+    </select>
 </mapper>
