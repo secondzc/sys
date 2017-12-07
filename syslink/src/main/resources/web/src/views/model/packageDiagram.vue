@@ -74,7 +74,7 @@
                     <el-tab-pane style="height: 100%">
                         <span slot="label"><i class="el-icon-document"></i> 说明</span>
                         <div style="height: 95%;">
-                            <iframe :src=infoUrl  style="width: 100%;height: 100%;border-width: 0px" ></iframe>
+                            <iframe :src=infoUrl  style="width: 100%;height: 100%;" ></iframe>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane style="height: 100%">
