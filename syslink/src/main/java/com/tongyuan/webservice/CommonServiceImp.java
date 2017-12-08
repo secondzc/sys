@@ -363,7 +363,7 @@ public class CommonServiceImp implements CommonService {
 		Model nullModel = modelService.queryByNameAndDir(param);*/
 		GUser user =  gUserService.querListByName(userName);
 		String repository = subFiles[0].split("\\.")[0];
-		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository.substring(0,repository.length()-1) + "\\/.git";
+		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + "/.git";
 		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
 		//遍历xmlMap进行数据的插入
 		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
