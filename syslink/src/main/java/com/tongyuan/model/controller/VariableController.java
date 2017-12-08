@@ -400,5 +400,36 @@ public class VariableController {
 //        Boolean result = directoryController.isScope((long) 202);
 //        System.out.print(result+"!!!!!!!!!!!");
 
+        try {
+            // create a string and a byte array
+            String s = "Hello world";
+
+
+            // create a new RandomAccessFile with filename test
+            RandomAccessFile raf = new RandomAccessFile("c:/test.txt", "rw");
+
+            // write something in the file
+            raf.writeUTF(s);
+
+            // set the file pointer at 0 position
+            raf.seek(0);
+
+            // create an array equal to the length of raf
+            byte[] arr = new byte[10];
+
+            // read the file
+            raf.readFully(arr, 3, 7);
+
+            // create a new string based on arr
+            String s2 = new String(arr);
+
+            // print it
+            System.out.println("" + s2);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
     }
+
 }
