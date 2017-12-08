@@ -20,7 +20,7 @@ public class LoginedUserModel {
 	private GUser profile;
 
     // 用户角色
-    private List<Long> roles=new ArrayList<>();
+    private List<Integer> roles=new ArrayList<>();
 
     //用户权限
     private Set<String> auths  = new HashSet<>();
@@ -57,11 +57,11 @@ public class LoginedUserModel {
 		this.profile = profile;
 	}
 
-	public List<Long> getRoles() {
+	public List<Integer> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Long> roles) {
+	public void setRoles(List<Integer> roles) {
 		this.roles = roles;
 	}
 

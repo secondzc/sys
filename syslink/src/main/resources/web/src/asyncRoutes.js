@@ -366,16 +366,16 @@ export let limitRoutes=[
             // { path: '/main', component: Main, name: '项目', hidden: true },
             // { path: '/test2', component: test2, name: '项目管理' },
             // { path: '/tree', component: tree, name: '组织管理' ,meta:{role:['management_org_list']}},
-            { path: '/depart', component: depart, name: '组织管理' ,iconCls:'iconfont icon-zuzhijiagoujiekou', meta:{role:['management_org_list']}},
+            { path: '/depart', component: depart, name: '组织管理' ,iconCls:'iconfont icon-zuzhijiagoujiekou', meta:{auth:['management_org_list'],role:[1]}},
           //  { path: 'TreeGrid', component: TreeGrid, name: '用户管理' ,meta:{role:['management_user_list']}},
-            { path: '/GUser', component: GUser, name: '用户管理' ,iconCls:'iconfont icon-hezuoguanxi', meta:{role:['management_user_list']}},
-            { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{role:['management_role_list']}},
-            { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{role:['management_auth_list']} },
+            { path: '/GUser', component: GUser, name: '用户管理' ,iconCls:'iconfont icon-hezuoguanxi', meta:{auth:['management_user_list'],role:[1]}},
+            { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{auth:['management_role_list'],role:[1]}},
+            { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]} },
          //   { path: 'user', component: user, name: '应用监控' },
-            { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{role:['management_log_list']}},
+            { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{auth:['management_log_list'],role:[1]}},
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
-            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban'}, 
+            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban',meta:{auth:['management_template_list'],role:[1]}}, 
         ]
     },
     {

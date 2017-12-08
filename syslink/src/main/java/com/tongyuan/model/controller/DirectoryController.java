@@ -578,6 +578,7 @@ public class DirectoryController {
             directoryTree = directoryService.queryMapListByParentId(Long.valueOf(0));
             if(directoryTree.size()>0)
             {
+                directoryTree.remove(directoryTree.size()-1);
                 for(Map<String,Object>map:directoryTree)
                 {
                     setChidren(map);
