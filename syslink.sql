@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50555
 File Encoding         : 65001
 
-Date: 2017-12-08 11:39:39
+Date: 2017-12-08 16:30:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -71,6 +71,8 @@ INSERT INTO `auth` VALUES ('40', null, 'management_repo', '仓库管理', '2017-
 INSERT INTO `auth` VALUES ('41', '40', 'management_repo_add', '新建仓库', '2017-11-01 08:57:22', null, null);
 INSERT INTO `auth` VALUES ('42', null, 'management_model', '模型管理', '2017-11-22 16:06:54', '对模型的上传和下载等进行管理', null);
 INSERT INTO `auth` VALUES ('44', '42', 'management_model_delete', '删除模型', '2017-12-07 13:14:29', null, null);
+INSERT INTO `auth` VALUES ('45', null, 'management_template', '模板管理', '2017-12-07 13:14:29', null, null);
+INSERT INTO `auth` VALUES ('46', '45', 'management_template_list', '模板列表', '2017-12-07 13:14:29', null, null);
 
 -- ----------------------------
 -- Table structure for cae_component
@@ -193,14 +195,7 @@ CREATE TABLE `depart_copy` (
 -- ----------------------------
 -- Records of depart_copy
 -- ----------------------------
-INSERT INTO `depart_copy` VALUES ('1', '2017-10-25 10:57:21', '根部门', '航天X院', '0');
-INSERT INTO `depart_copy` VALUES ('31', '2017-11-22 14:32:28', null, '科研计划处', '37');
-INSERT INTO `depart_copy` VALUES ('37', '2017-11-24 14:11:05', null, '102所', '1');
-INSERT INTO `depart_copy` VALUES ('39', '2017-11-24 14:16:00', null, '1', '37');
-INSERT INTO `depart_copy` VALUES ('41', '2017-11-24 14:16:59', null, '1', '40');
-INSERT INTO `depart_copy` VALUES ('42', '2017-11-27 10:13:27', '1', '1', '1');
-INSERT INTO `depart_copy` VALUES ('43', '2017-11-28 09:07:37', null, '测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试', '31');
-INSERT INTO `depart_copy` VALUES ('44', '2017-11-28 09:07:53', null, '测试', '43');
+
 
 -- ----------------------------
 -- Table structure for directory
@@ -223,8 +218,8 @@ CREATE TABLE `directory` (
 -- ----------------------------
 -- Records of directory
 -- ----------------------------
-INSERT INTO `directory` VALUES ('33', null, null, null, '\0', null, '公有模型', '0', null, null);
-INSERT INTO `directory` VALUES ('34', null, null, null, '\0', null, '我的模型', '0', null, null);
+INSERT INTO `directory` VALUES ('1', null, null, null, '\0', null, '公有模型', '0', null, null);
+INSERT INTO `directory` VALUES ('2', null, null, null, '\0', null, '我的模型', '0', null, null);
 
 -- ----------------------------
 -- Table structure for directory_auth
@@ -674,6 +669,8 @@ INSERT INTO `role_auth` VALUES ('534', '40', '1');
 INSERT INTO `role_auth` VALUES ('535', '41', '1');
 INSERT INTO `role_auth` VALUES ('536', '42', '1');
 INSERT INTO `role_auth` VALUES ('537', '44', '1');
+INSERT INTO `role_auth` VALUES ('538', '45', '1');
+INSERT INTO `role_auth` VALUES ('539', '46', '1');
 
 -- ----------------------------
 -- Table structure for simulation
@@ -765,6 +762,8 @@ INSERT INTO `user_auth` VALUES ('729', '40', '1');
 INSERT INTO `user_auth` VALUES ('730', '41', '1');
 INSERT INTO `user_auth` VALUES ('731', '42', '1');
 INSERT INTO `user_auth` VALUES ('732', '44', '1');
+INSERT INTO `user_auth` VALUES ('733', '45', '1');
+INSERT INTO `user_auth` VALUES ('734', '46', '1');
 
 -- ----------------------------
 -- Table structure for user_depart

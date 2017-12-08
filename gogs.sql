@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50555
 File Encoding         : 65001
 
-Date: 2017-12-08 09:11:05
+Date: 2017-12-08 16:30:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -71,11 +71,12 @@ CREATE TABLE `action` (
   `created_unix` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_action_repo_id` (`repo_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=126 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of action
 -- ----------------------------
+
 
 -- ----------------------------
 -- Table structure for attachment
@@ -256,6 +257,7 @@ CREATE TABLE `issue` (
 -- ----------------------------
 -- Records of issue
 -- ----------------------------
+
 
 -- ----------------------------
 -- Table structure for issue_label
@@ -576,7 +578,7 @@ CREATE TABLE `repository` (
   UNIQUE KEY `UQE_repository_s` (`owner_id`,`lower_name`),
   KEY `IDX_repository_lower_name` (`lower_name`),
   KEY `IDX_repository_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of repository
@@ -749,12 +751,12 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQE_user_lower_name` (`lower_name`),
   UNIQUE KEY `UQE_user_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2147 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2150 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'admin', 'admin', '系统管理员', 'admin@gogs.com', 'aace46bcca2b444af122a758bc1e915e0b8f32ae156b0c1e15f05c57b1fc099d1b162f1239d6a0f2058f9a8dccebfbdf6236', '0', '0', '', '0', '', '', '8ed1a804b4', '95f6340fc1', '1510907991', '1512614745', '1', '1000', '1', '1', '1', '0', '0', '8e563312d903fdcf61973e528f277811', 'admin@gog.com', '1', '0', '0', '2', '25', '', '1', '1', '0');
+INSERT INTO `user` VALUES ('1', 'admin', 'admin', '系统管理员', 'admin@syslink.com', 'aace46bcca2b444af122a758bc1e915e0b8f32ae156b0c1e15f05c57b1fc099d1b162f1239d6a0f2058f9a8dccebfbdf6236', '0', '0', '', '0', '', '', '8ed1a804b4', '95f6340fc1', '1510907991', '1512614745', '1', '1000', '1', '0', '1', '0', '0', '8e563312d903fdcf61973e528f277811', 'admin@gog.com', '1', '0', '0', '2', '2', '', '1', '1', '0');
 
 -- ----------------------------
 -- Table structure for version
@@ -781,7 +783,7 @@ CREATE TABLE `watch` (
   `repo_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQE_watch_watch` (`user_id`,`repo_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of watch
