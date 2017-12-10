@@ -30,11 +30,13 @@
                                   width="30%"
                                   >
                               <!--<span>这是一段信息</span>-->
-                              <upload-file @refreshModel="getModel" style="text-align: center;" ></upload-file>
+                              <upload-file @refreshModel="getModel" style="text-align: center;"@allowToReview="allowToReview" ></upload-file>
                               <!--<span slot="footer" class="dialog-footer">-->
                                 <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                                 <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
+                              <div v-if="allowToReviewFlag">是否跳转到详情页?</div>
+                              <el-button @click="toReview" v-if="allowToReviewFlag">跳转</el-button>
                           </el-dialog>
 
 
@@ -506,6 +508,7 @@
                 }
             };
             return {
+              allowToReviewFlag:false,
                url: {
               C: '',
               U: '',
@@ -674,6 +677,9 @@
 
                     resolve(data);
                 }, 500);
+            },
+            allowToReview(){
+              this.allowToReviewFlag=true;
             },
         
 

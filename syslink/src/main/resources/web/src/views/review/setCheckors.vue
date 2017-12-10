@@ -25,7 +25,7 @@
 			</el-table-column>
 			<el-table-column prop="description" label="节点描述" width="120" >
 			</el-table-column>
-			<el-table-column prop="userName" label="审核者名字" width="120" >
+			<el-table-column prop="userName" label="审核者" width="120" >
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
