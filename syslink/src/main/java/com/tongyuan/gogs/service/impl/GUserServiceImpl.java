@@ -123,6 +123,10 @@ public class GUserServiceImpl implements GUserService {
             directoryAuths.add(directoryAuth.getDirectoryId());
         }
 
+        List<Integer> roles = new ArrayList<>();
+        roles=roleService.queryUserRoleByUid(user.getID());
+
+
 
 
 
@@ -133,6 +137,7 @@ public class GUserServiceImpl implements GUserService {
         loginedUserModel.setAuths(auths);
         loginedUserModel.setModelAuths(modeAuths);
         loginedUserModel.setDirectoryAuths(directoryAuths);
+        loginedUserModel.setRoles(roles);
         //      loginedUserModel.setRoles(roles);
         //      loginedUserModel.setPermissions(permissions);
         loginedUserModel.setLoginState(loginstate);

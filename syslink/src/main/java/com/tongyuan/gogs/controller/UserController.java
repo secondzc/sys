@@ -203,8 +203,9 @@ public class UserController extends BaseController {
         String b = UUID.randomUUID().toString().replaceAll("-","");
         map.put("rands",a.substring(0,10));
         map.put("salt",b.substring(0,10));
-        UserRole userRole = new UserRole();
-        userRole.setRoleId(Integer.parseInt(map.get("roleId").toString()));
+
+
+
 
 
 
@@ -226,8 +227,14 @@ public class UserController extends BaseController {
         {
 
             userService.addGUser(map);
-            userRole.setUid(Long.parseLong(map.get("id").toString()));
-            roleService.addUserRole(userRole);
+            UserRole userRole = new UserRole();
+            if(map.get("roleId")!=null)
+            {
+                userRole.setRoleId(Integer.parseInt(map.get("roleId").toString()));
+                userRole.setUid(Long.parseLong(map.get("id").toString()));
+                roleService.addUserRole(userRole);
+            }
+
 
 
 

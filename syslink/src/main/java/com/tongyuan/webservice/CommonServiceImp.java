@@ -78,6 +78,8 @@ public class CommonServiceImp implements CommonService {
 	@Autowired
 	private RepositoryController repositoryController;
 	private String userName;
+	//判断分批上传文件是否上传完整
+	private  static  byte[] isAllByte;
 
 	@Override
 	public String sayHello(String name) {
@@ -294,7 +296,7 @@ public class CommonServiceImp implements CommonService {
 	 * @return
 	 */
 	public String uploadModel(String userName,Long classID,String fileName, long beginPos, long length,
-							byte[] data){
+		byte[] data){
 		System.out.println("starting create the repository...");
 		Boolean isScopeDir = directoryController.isScope(classID);
 		if(isScopeDir){
@@ -360,7 +362,8 @@ public class CommonServiceImp implements CommonService {
 		//修改成根据插入的分类id找到对应的package包
 		Model nullModel = modelService.queryByNameAndDir(param);*/
 		GUser user =  gUserService.querListByName(userName);
-		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ subFiles[0].split("\\.")[0] + "\\/.git";
+		String repository = subFiles[0].split("\\.")[0];
+		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + ".git";
 		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
 		//遍历xmlMap进行数据的插入
 		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
@@ -488,7 +491,7 @@ public class CommonServiceImp implements CommonService {
 				modelWeb.setUserId(user.getID());
 				modelWeb.setClasses(oneOfModel.get(i).getClasses());
 				modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
-				if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
+				if(oneOfModel.get(i).getIconSvgPath() != null && oneOfModel.get(i).getIconSvgPath() != ""){
 					modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
 				}
 				modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());

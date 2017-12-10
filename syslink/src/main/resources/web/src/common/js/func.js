@@ -28,7 +28,8 @@ export default {
   //   let userInfo = JSON.parse( sessionStorage.getItem('userInfo'));
      let userInfo = store.getters.userInfo; 
      const auth = userInfo.auths;
-    if(auth.includes(authCode))
+     const role = userInfo.roles;
+    if(auth.includes(authCode)||role.includes(1))
     {
   	  return true;
     }
@@ -41,7 +42,8 @@ export default {
     modelJudge  (authCode) {
      let userInfo = store.getters.userInfo; 
      const modelAuths = userInfo.modelAuths;
-    if(modelAuths.includes(authCode))
+      const role = userInfo.roles;
+    if(modelAuths.includes(authCode)||role.includes(1))
     {
       return true;
     }
@@ -54,7 +56,8 @@ export default {
       directoryJudge  (authCode) {
      let userInfo = store.getters.userInfo; 
      const directoryAuths = userInfo.directoryAuths;
-    if(directoryAuths.includes(authCode))
+       const role = userInfo.roles;
+    if(directoryAuths.includes(authCode)||role.includes(1))
     {
       return true;
     }
