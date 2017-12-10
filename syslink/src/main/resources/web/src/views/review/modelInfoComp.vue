@@ -30,7 +30,8 @@
         <model-tree></model-tree>
     </div> -->
     </div>
-
+    <h3>详情查看</h3>
+    <el-button @click="toTree">转到模型树</el-button>
   </section> 
 </template>
 
@@ -39,6 +40,7 @@
 		data(){
 			return {
 				reviewModel:{
+					id:0,
 					name:'',
 					type:'',
 					discription:'',
@@ -66,6 +68,12 @@
 					}
 				})
 				console.log(this.reviewModel);
+			},
+			toTree(){
+				console.log('12.10'+this.reviewModel.id);
+				this.$store.dispatch('sendModelId',this.reviewModel.id);
+				this.$store.dispatch('sendTreeModelId',this.reviewModel.id);
+				this.$router.push({path:'/model/packageDiagram'});
 			},
 		},
 		mounted(){

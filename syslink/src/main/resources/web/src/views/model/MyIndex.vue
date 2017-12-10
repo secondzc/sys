@@ -35,8 +35,8 @@
                               <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                               <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
-                              <div v-if="allowToReviewFlag">是否跳转到详情页?</div>
-                              <el-button @click="allowToReview" v-if="allowToReviewFlag">跳转</el-button>
+                              <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
+                              <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button>
                           </el-dialog>
 
                       </div>
@@ -669,6 +669,9 @@
         
          allowToReview(){
           this.allowToReviewFlag = true;
+         },
+         toReview(){
+          this.$router.push({path:'/brief'});
          },
 
         hanldeNodeClick (data) {
