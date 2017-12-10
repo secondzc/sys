@@ -536,6 +536,7 @@ CREATE TABLE `review_flow_template` (
 -- ----------------------------
 -- Records of review_flow_template
 -- ----------------------------
+INSERT INTO `review_flow_template` VALUES ('1', b'1', '2017-11-28 15:49:56', b'1', '模板a', '2017-12-10 16:51:12', '模板a', '2');
 
 -- ----------------------------
 -- Table structure for review_model
@@ -570,7 +571,7 @@ CREATE TABLE `review_msg` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for review_node
+--  Table structure for `review_node`
 -- ----------------------------
 DROP TABLE IF EXISTS `review_node`;
 CREATE TABLE `review_node` (
@@ -581,11 +582,12 @@ CREATE TABLE `review_node` (
   `template_id` bigint(20) DEFAULT NULL,
   `user_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`node_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of review_node
+--  Records of `review_node`
 -- ----------------------------
+INSERT INTO `review_node` VALUES ('1', '审核1', '审核者1', '1', '1', '2'), ('2', '节点2', '节点2', '2', '1', '1'), ('3', '节点3', '审核3', '3', '1', '2');
 
 -- ----------------------------
 -- Table structure for review_node_instance
