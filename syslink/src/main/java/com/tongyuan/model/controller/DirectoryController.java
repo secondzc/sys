@@ -585,6 +585,7 @@ public class DirectoryController {
             directoryTree = directoryService.queryMapListByParentId(Long.valueOf(0));
             if(directoryTree.size()>0)
             {
+                directoryTree.remove(directoryTree.size()-1);
                 for(Map<String,Object>map:directoryTree)
                 {
                     setChidren(map);
@@ -807,8 +808,7 @@ public class DirectoryController {
             packageList.get(0).setParentId(0);
             modelService.update(packageList.get(0));
             Long modelId = packageList.get(0).getId();
-
-
+            addModelUnion(userName,fileName,modelId);
 
             //下面两行都有异常要抛出
             try{
@@ -827,19 +827,7 @@ public class DirectoryController {
                     model.setParentId(0);
                     modelService.update(model);
                     Long modelId = packageList.get(0).getId();
-
-                    //获取mworks传来的gogsUrl
-                    String gogsUrl = "http://localhost:3000/xyx/MyPkg.git";
-                    //获取仓库的名字
-                    Map<String,Object> param = new HashMap<>();
-                    GUser gUser = (GUser) gUserService.queryUserByName(userName);
-                    param.put("userId",gUser.getID());
-                    param.put("repositoryName",fileName);
-                    Repository repository = repositoryService.queryByNameAndUserId(param);
-                    ModelUnion modelUnion = new ModelUnion();
-                    modelUnion.setModelId(modelId);
-                    modelUnion.setRepositoryId(repository.getID());
-                    modelUnionService.add(modelUnion);
+                    addModelUnion(userName,fileName,modelId);
 
                     //下面两行都有异常要抛出
                     try{
@@ -1008,6 +996,21 @@ public class DirectoryController {
         }
         jo.put("state",1);
         return jo;
+    }
+
+    public void addModelUnion(String userName,String fileName,Long modelId){
+        //获取mworks传来的gogsUrl
+        String gogsUrl = "http://localhost:3000/xyx/MyPkg.git";
+        //获取仓库的名字
+        Map<String,Object> param = new HashMap<>();
+        GUser gUser = (GUser) gUserService.queryUserByName(userName);
+        param.put("userId",gUser.getID());
+        param.put("repositoryName",fileName);
+        Repository repository = repositoryService.queryByNameAndUserId(param);
+        ModelUnion modelUnion = new ModelUnion();
+        modelUnion.setModelId(modelId);
+        modelUnion.setRepositoryId(repository.getID());
+        modelUnionService.add(modelUnion);
     }
 }
 
