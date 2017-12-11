@@ -6,6 +6,8 @@ import com.tongyuan.model.service.ModelUnionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * Created by Administrator on 2017-12-10.
  */
@@ -28,5 +30,10 @@ public class ModelUnionServiceImpl implements ModelUnionService{
     @Override
     public int deleteByIds(String[] ids) {
         return this.deleteByIds(ids);
+    }
+
+    @Override
+    public ModelUnion queryUnion(Map<String, Object> param) {
+        return this.modelUnionMapper.queryUnion(param);
     }
 }

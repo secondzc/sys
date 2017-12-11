@@ -31,8 +31,6 @@ public class StatusChangeServiceImpl implements StatusChangeService{
     private ReviewFlowInstanceService reviewFlowInstanceService;
     @Autowired
     private ModelService modelService;
-    @Autowired
-    private ReviewSuccessService reviewSuccessService;
 
     @Override
     public void agree(Long id) throws SqlNumberException{
@@ -126,8 +124,8 @@ public class StatusChangeServiceImpl implements StatusChangeService{
             reviewFlowInstanceService.setStatus(map);
         }
         //======将package的id加入到成功入库列表中
-        Long packageId = reviewFlowInstance.getModelId();
-        reviewSuccessService.add(packageId);
+//        Long packageId = reviewFlowInstance.getModelId();
+//        reviewSuccessService.add(packageId);
         //======
     }
 }

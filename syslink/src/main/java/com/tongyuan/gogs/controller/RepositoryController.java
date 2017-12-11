@@ -1,6 +1,7 @@
 package com.tongyuan.gogs.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.gogs.domain.Action;
 import com.tongyuan.gogs.domain.GUser;
@@ -17,18 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-9-18.
@@ -65,39 +60,18 @@ public class RepositoryController extends BaseController{
 
 
 
-    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/myRepo",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject queryRepo(HttpServletRequest request,HttpServletResponse response)
+    public JSONObject myRepo(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String,Object> map)
     {
         JSONObject jo = new JSONObject();
         long uid = getUserId();
-        List<Map<String,Object>> repos = new ArrayList<>();
-        List<Map<String,Object>> cRepos = new ArrayList<>();
-        List<Map<String,Object>> allRepos = new ArrayList<>();
-
-
+        Page<Map<String,Object>> repos = new Page<>();
 
         try
         {
-//            List <Operationlog>operationlogs = operationlogService.query(map);
-            repos=repositoryService.queryByUid(uid);
-            cRepos = repositoryService.getCollaboration(uid);
-            allRepos.addAll(repos);
-            allRepos.addAll(cRepos);
-            new RepositoryWarpper(allRepos).warp();
-            for(Map<String,Object> map1 :allRepos)
-            {
-                if(Long.parseLong(map1.get("ownerId").toString())==uid)
-                {
-                    map1.put("Collaboration",0);
-                }
-                else
-                {
-                    map1.put("Collaboration",1);
-                }
-            }
 
-
+            repos=repositoryService.queryByUid(map);
 
         }
         catch (Exception e)
@@ -110,14 +84,42 @@ public class RepositoryController extends BaseController{
 
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-        jo.put("allRepos",allRepos);
-//        jo.put("repos",new RepositoryWarpper(repositories).warp());
-//        jo.put("cRepos",new RepositoryWarpper(cRepos).warp());
+        jo.put("myRepo",new RepositoryWarpper(repos).warp());
+        jo.put("total",repos.getTotal());
 
 
-//        PageInfo<Operationlog> pageInfo =new PageInfo<Operationlog>(operationlogList);
-//        jo.put("logs",page);
-//        jo.put("total",page.getTotal());
+        return (JSONObject) JSONObject.toJSON(jo);
+    }
+
+    @RequestMapping(value = "/cRepo",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject cRepo(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String,Object> map)
+    {
+        JSONObject jo = new JSONObject();
+        long uid = getUserId();
+        Page<Map<String,Object>> cRepos = new Page<>();
+
+
+
+
+        try
+        {
+            cRepos=repositoryService.getCollaboration(map);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取列表失败");
+            return jo;
+        }
+
+        jo.put("flag",true);
+        jo.put("msg","获取列表成功");
+        jo.put("cRepos",new RepositoryWarpper(cRepos).warp());
+        jo.put("total",cRepos.getTotal());
+
 
         return (JSONObject) JSONObject.toJSON(jo);
     }

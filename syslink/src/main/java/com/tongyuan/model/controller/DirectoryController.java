@@ -1003,14 +1003,20 @@ public class DirectoryController {
         String gogsUrl = "http://localhost:3000/xyx/MyPkg.git";
         //获取仓库的名字
         Map<String,Object> param = new HashMap<>();
-        GUser gUser = (GUser) gUserService.queryUserByName(userName);
+        Map<String,Object> unionParam = new HashMap<>();
+        GUser gUser = gUserService.querListByName(userName);
         param.put("userId",gUser.getID());
-        param.put("repositoryName",fileName);
+        param.put("repositoryName",fileName.toLowerCase());
         Repository repository = repositoryService.queryByNameAndUserId(param);
-        ModelUnion modelUnion = new ModelUnion();
-        modelUnion.setModelId(modelId);
-        modelUnion.setRepositoryId(repository.getID());
-        modelUnionService.add(modelUnion);
+        unionParam.put("model_id",modelId);
+        unionParam.put("repository_id",repository.getID());
+        ModelUnion modelUnion = modelUnionService.queryUnion(unionParam);
+        if(modelUnion == null){
+            ModelUnion Union = new ModelUnion();
+            modelUnion.setModelId(modelId);
+            modelUnion.setRepositoryId(repository.getID());
+            modelUnionService.add(Union);
+        }
     }
 }
 

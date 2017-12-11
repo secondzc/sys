@@ -114,10 +114,13 @@
       where 1=1
     </select>
 
-  <select id="queryByUid" resultMap="mapResultMap" parameterType="long">
-    SELECT  <include refid="baseColumnList" ></include>
-    FROM repository
-    where owner_id = #{uid}
+  <select id="queryMyRepo" resultMap="mapResultMap" parameterType="map">
+      SELECT  <include refid="baseColumnList" ></include>
+      FROM repository
+      where owner_id = #{uid}
+      <if test="name != null and name != ''">
+          and name like CONCAT('%',#{name},'%')
+      </if>
   </select>
 
   <select id="queryById" resultMap="mapResultMap" parameterType="long">
@@ -125,11 +128,42 @@
     FROM repository
     where id = #{id}
   </select>
-    <select id="queryByNameAndUserId" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
-      SELECT   <include refid="baseColumnList" ></include>
+    <select id="queryByNameAndUserId" resultMap="mapResultMap" resultType="com.tongyuan.gogs.domain.Repository">
+      SELECT   <include refid="baseColumnList" ></include> FROM
       FROM repository
-      where owner_id = #{userId,jdbcType=BIGINT} and lower_name = #{repositoryName,jdbcType=VARCHAR}
+      where userId=#{owner_id,jdbcType=BIGINT} and repositoryName = #{lower_name,jdbcType=VARCHAR}
     </select>
 
+  <select id="getc" resultMap="mapResultMap" parameterType="map">
+      <!--SELECT-->
+      <!--<include refid="baseColumnList" />-->
+      <!--FROM collaboration-->
+      <!--WHERE user_id = #{uid};-->
+      SELECT
+      d.id,d.owner_id,d. lower_name,d.name,d.description,d.website,d.default_branch,d.size,d.num_watches,d.num_stars,d.num_forks,d.
+      num_issues,d.num_closed_issues,d.num_pulls,d.num_closed_pulls,d.num_milestones,d.num_closed_milestones,d.is_private,d.
+      is_bare,d.is_mirror,d.enable_wiki,d.allow_public_wiki,d.enable_external_wiki,d.external_wiki_url,d.enable_issues,d.
+      allow_public_issues,d.enable_external_tracker,d.external_tracker_url,d.external_tracker_format,d.external_tracker_style,d.
+      enable_pulls,d.is_fork,d.fork_id,d.created_unix,d.updated_unix,
+      l.repo_id
+      --         l.repo_id as repo_id
+      FROM
+      repository as d
+      INNER JOIN collaboration as l
+      ON d.id=l.repo_id
+      AND l.user_id=#{uid}
+      WHERE 1=1
+      <if test="name != null and name != ''">
+          and d.name like CONCAT('%',#{name},'%')
+      </if>
+
+
+  </select>
+
+  <select id="queryByNameAndUserId" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
+    SELECT   <include refid="baseColumnList" ></include>
+    FROM repository
+    where owner_id = #{userId,jdbcType=BIGINT} and lower_name = #{repositoryName,jdbcType=VARCHAR}
+  </select>
 
 </mapper>

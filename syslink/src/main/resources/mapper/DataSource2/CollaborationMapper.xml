@@ -9,19 +9,17 @@
         <id column="mode" property="mode" jdbcType="INTEGER"  />
     </resultMap>
 
+
     <sql id="baseColumnList" >
         id,repo_id,user_id,mode
     </sql>
 
 
-
-
-
-    <select id="queryByUid" resultMap="baseResultMap" >
+    <select id="queryByRepoId" resultMap="baseResultMap" >
         SELECT
         <include refid="baseColumnList" />
         FROM collaboration
-        WHERE user_id = #{uid};
+        WHERE repo_id = #{repoId};
     </select>
 
 

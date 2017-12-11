@@ -1,5 +1,7 @@
 package com.tongyuan.gogs.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.tongyuan.gogs.dao.CollaborationMapper;
 import com.tongyuan.gogs.dao.RepositoryMapper;
 import com.tongyuan.gogs.domain.Collaboration;
@@ -38,26 +40,24 @@ public class RepositoryServiceImpl implements RepositoryService{
         return this.repositoryMapper.findAllRepository();
     }
     @Override
-    public List<Map<String,Object>> queryByUid(long uid)
+    public Page<Map<String,Object>> queryByUid(Map<String,Object> map)
     {
-        return this.repositoryMapper.queryByUid(uid);
+        Page<Map<String,Object>>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+        List<Map<String,Object>> repos = repositoryMapper.queryMyRepo(map);
+        return page;
     }
     @Override
     public Map<String,Object> queryById(long id)
     {
         return this.repositoryMapper.queryById(id);
     }
+
     @Override
-    public List<Map<String,Object>> getCollaboration(long uid)
+    public Page<Map<String,Object>> getCollaboration(Map<String,Object>map)
     {
-        List<Map<String,Object>>cRepos = new ArrayList<>();
-        List<Collaboration>collaborations = collaborationMapper.queryByUid(uid);
-        for(Collaboration collaboration : collaborations)
-        {
-            Map<String,Object> repo = repositoryMapper.queryById(collaboration.getRepoId());
-            cRepos.add(repo);
-        }
-        return cRepos;
+        Page<Map<String,Object>>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+        List<Map<String,Object>>cRepos = repositoryMapper.getc(map);
+        return page;
     }
 
     @Override
