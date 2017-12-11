@@ -125,10 +125,10 @@
     FROM repository
     where id = #{id}
   </select>
-    <select id="queryByNameAndUserId" resultMap="mapResultMap" resultType="com.tongyuan.gogs.domain.Repository">
-      SELECT   <include refid="baseColumnList" ></include> FROM
+    <select id="queryByNameAndUserId" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
+      SELECT   <include refid="baseColumnList" ></include>
       FROM repository
-      where userId=#{owner_id,jdbcType=BIGINT} and repositoryName = #{lower_name,jdbcType=VARCHAR}
+      where owner_id = #{userId,jdbcType=BIGINT} and lower_name = #{repositoryName,jdbcType=VARCHAR}
     </select>
 
 
