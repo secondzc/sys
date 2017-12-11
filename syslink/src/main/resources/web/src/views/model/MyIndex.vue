@@ -130,7 +130,7 @@
                                         width="150" >
                                     <template scope="scope">
                                        
-                                            <img v-bind:src="scope.row.imageUrl" style="width: 150px;height: 100px;"/>
+                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;"/>
                                         
                                         
                                     </template>

@@ -180,6 +180,7 @@
       },
       /* 构建分类title及工具 */
       nodeRender (h, { _self, node, data }) {
+        
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
             h('i', {
@@ -235,7 +236,22 @@
             ]
           )
         ]
-        return h(
+           const childrenNodes1 = data.id === 0 ? [h('span', data.name)] : [
+            h('i', {
+                'class': 'iconfont icon-wenjianjia2',}
+            ),
+          h('span', data.name),
+          h('span',
+            {
+              'class': 'kz-tree-bar'
+            },
+      
+          )
+        ]
+        
+       if(this.func.authJudge('management_model_directory'))
+       {
+         return h(
           'div',
           {
             'class': 'el-tree-node__label',
@@ -245,6 +261,22 @@
           },
           childrenNodes
         )
+       }
+       else
+       {
+        return h(
+          'div',
+          {
+            'class': 'el-tree-node__label',
+            prop: {
+              children: '-'
+            }
+          },
+          childrenNodes1
+        )
+       }
+
+       
       },
       /* 添加 */
       treeAdd (treeItem, event, node) {

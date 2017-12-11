@@ -181,7 +181,7 @@ public class GUserServiceImpl implements GUserService {
     {
 
         map.put("lowerName",map.get("name").toString().toLowerCase());
-        map.put("fullName","");
+//        map.put("fullName","");
 
         //  map.put("email","");
         //  map.put("passwd","");
@@ -218,6 +218,14 @@ public class GUserServiceImpl implements GUserService {
         userDepart.setUid(Long.parseLong(map.get("id").toString()));
         userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
         boolean b = this.userDepartMapper.add(userDepart);
+        UserRole userRole = new UserRole();
+        boolean c =false;
+        if(map.get("roleId")!=null)
+        {
+            userRole.setRoleId(Integer.parseInt(map.get("roleId").toString()));
+            userRole.setUid(Long.parseLong(map.get("id").toString()));
+           c = roleService.addUserRole(userRole);
+        }
 
 
 
@@ -268,7 +276,7 @@ public class GUserServiceImpl implements GUserService {
 //            userDepart1.setDepartId(Integer.parseInt(map.get("departId").toString()));
 //            userDepartMapper.add(userDepart1);
 //        }
-        return  a&b;
+        return  a&b&c;
 
 
 

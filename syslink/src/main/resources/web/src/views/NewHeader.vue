@@ -16,7 +16,7 @@
         <i class="iconfont icon-weibiaoti26" @click="collapse" v-show="this.func.isLogin()&&!this.func.isOpened()" style="font-size: 20px;"></i>
       </el-tooltip>
     </div>
-    <div>
+    <div @click="toMySpace">
          <img :src="SysLogo"  style="height: 40px;margin-top: 5px;" />
    <img :src="SylTitle"  style="height: 40px;margin-top: 5px;" />
     </div>
@@ -35,7 +35,7 @@
   <el-menu-item index="1"  @click="toMySpace" v-bind:style="styleObject1">工作台</el-menu-item>
   <el-menu-item index="2" @click="toCorporate" v-bind:style="styleObject1">协同</el-menu-item>
   <el-menu-item index="3"  @click="toModel" v-bind:style="styleObject1">模型</el-menu-item>
-  <el-menu-item index="4" @click="toCorporate" v-bind:style="styleObject1">仿真</el-menu-item>
+  <!-- <el-menu-item index="4" @click="toCorporate" v-bind:style="styleObject1">仿真</el-menu-item> -->
  <!--  <el-color-picker v-model="bgColor"     @active-change="colorChange" show-alpha></el-color-picker>
 
    <el-color-picker v-model="fontColor"     @active-change="fontChange" show-alpha></el-color-picker> -->

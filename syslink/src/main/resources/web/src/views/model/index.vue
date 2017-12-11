@@ -45,7 +45,7 @@
                       </div>
 
                       <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
-                          <el-button size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+                          <el-button size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 30px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
                       </div>
 
                      
@@ -135,7 +135,7 @@
                                         width="150" >
                                     <template scope="scope">
                                        
-                                            <img v-bind:src="scope.row.imageUrl" style="width: 150px;height: 100px;"/>
+                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;"/>
                                         
                                         
                                     </template>
@@ -206,7 +206,7 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary" 
                                      size="small"
-                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!func.directoryJudge(scope.row.directoryId)"></el-button>
+                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!func.directoryJudge(scope.row.directoryId,scope.row.userId)"></el-button>
                                     </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">

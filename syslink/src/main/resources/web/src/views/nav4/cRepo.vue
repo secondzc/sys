@@ -39,14 +39,13 @@
     <!-- </el-col> -->
    
        <!--列表-->
-    <el-table :data="repos" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;min-height: 250px;"  @selection-change="selsChange" >
+    <el-table :data="cRepos" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;min-height: 250px;"  @selection-change="selsChange" >
       <!-- <el-table-column type="selection" min-width="100">
       </el-table-column> -->
      <!--  <el-table-column type="index" min-width="120">
       </el-table-column> -->
       <el-table-column prop="name" label="仓库名" min-width="120" >
       </el-table-column>
-     
       <el-table-column prop="description" label="描述" min-width="200" >
        </el-table-column>
       <el-table-column prop="createdUnix" label="创建时间" min-width="160" >
@@ -63,7 +62,9 @@
     </el-table>
     
    
-  
+
+
+
     <!--工具条-->
     <el-col :span="24" class="toolbar">
      
@@ -71,7 +72,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pager.pageIndex"
-      :page-sizes="[10, 30, 50, 100]"
+      :page-sizes="[30, 50, 100, 300]"
       :page-size="pager.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pager.total">
@@ -136,7 +137,7 @@
           this.$refs.multipleTable.clearSelection();
         }
       },
- 
+
      
       formatDate:function(row,column){
         if(row.createDate!=null)
@@ -149,7 +150,7 @@
       handleCurrentChange(val) {
          this.pager.pageIndex = val;
          this.getRepos();
-     
+   
       },
       handleSizeChange(val){
          this.pager.pageSize = val;
@@ -171,13 +172,15 @@
               name: this.filters.name,
               pageSize : this.pager.pageSize,
               pageIndex : this.pager.pageIndex,
-              uid:this.$store.state.userInfo.profile.iD
+              uid: this.$store.state.userInfo.profile.iD
           };
-           this.$http.post('/api/repository/myRepo',para).then((response)=>{
+           this.$http.post('/api/repository/cRepo',para).then((response)=>{
 
-            this.repos =  response.data.myRepo;
-            this.pager.total = response.data.total;
 
+         
+            this.cRepos = response.data.cRepos;
+
+             this.pager.total = response.data.total;
 
 
            })

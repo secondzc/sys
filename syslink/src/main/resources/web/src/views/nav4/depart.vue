@@ -45,7 +45,7 @@
         </el-form-item>
 
          <el-form-item label="父级部门" prop="parentId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.parentId"   change-on-select   :show-all-levels="false">
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.parentId"   change-on-select   :show-all-levels="false"  expand-trigger="hover">
         </el-cascader>
         </el-form-item>
 
@@ -286,7 +286,7 @@
             
               let para = Object.assign({}, this.addForm);
               console.log(this.addForm.parentId);
-              if(this.addForm.parentId>0)
+              if(this.addForm.parentId.length>0)
               {
                   para.parentId=para.parentId[para.parentId.length-1];
               }

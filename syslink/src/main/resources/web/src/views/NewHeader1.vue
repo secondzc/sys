@@ -17,9 +17,9 @@
      <div style="line-height: 50px;width: 150px;">
       
     </div>
-    <div>
-   <img :src="SysLogo"  style="height: 40px;margin-top: 5px;" />
-   <img :src="SylTitle"  style="height: 40px;margin-top: 5px;" />
+    <div  @click="toMySpace" >
+   <img :src="SysLogo"  @click="toMySpace" style="height: 40px;margin-top: 5px;" />
+   <img :src="SylTitle"  @click="toMySpace" style="height: 40px;margin-top: 5px;" />
     </div>
  
    </div>
@@ -37,7 +37,7 @@
   <el-menu-item index="1"  @click="toMySpace" v-bind:style="styleObject1">工作台</el-menu-item>
   <el-menu-item index="2" @click="toCorporate" v-bind:style="styleObject1">协同</el-menu-item>
   <el-menu-item index="3"  @click="toModel" v-bind:style="styleObject1">模型</el-menu-item>
-  <el-menu-item index="4" @click="toCorporate" v-bind:style="styleObject1">仿真</el-menu-item>
+ <!--  <el-menu-item index="4" @click="toCorporate" v-bind:style="styleObject1">仿真</el-menu-item> -->
 
   </el-menu>
 
