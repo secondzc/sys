@@ -1,7 +1,7 @@
 <template>
 
 <div>
-  <img :src="bg" style="width: 100%;height: 100%;position: absolute;z-index: -1;  " />
+  <img :src="bg" style="width: 100%;height: 100%;position: absolute;z-index: -1;" />
   <div style="display: flex;">
     <img :src="loginLogo1"  style="max-height: 150px;width: 200px;margin: 0 auto;margin-top: 5%;margin-bottom: 5%;" /> 
   </div>
@@ -13,26 +13,24 @@
     <h3 class="title">登录</h3>
   <!--   <img :src="loginLogo"  style="max-height: 100px;width: 200px;" /> -->
     <el-form-item prop="userName">
-      <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"
-       @keyup.enter.native="handleSubmit2" ref="inputName"></el-input>
+      <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"
-      @keyup.enter.native="handleSubmit2"></el-input>
+      <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
     <div style="display:flex;">
 
-    <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember" style="margin-right: 180px;">记住密码</el-checkbox>
-      <!-- <div @click="toIndex">
+      <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember" style="margin-right: 180px;">记住密码</el-checkbox>
+      <div @click="toIndex">
         <span>首页</span>
-      </div> -->
+      </div>
     </div>
     
    <!--  <el-form-item style="width:100%;">
       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
     </el-form-item> -->
     <div style="width: 80%;display: flex;margin: 0 auto;">
-       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining" >登录</el-button>
+       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
 
     </div>
   </el-form>
@@ -45,7 +43,7 @@
   import Cookies from 'js-cookie'
   import loginLogo from '@/assets/loginLogo.png'
   import loginLogo1 from '@/assets/loginLogo1.png'
-  import bg from '@/assets/666.jpg'
+  import bg from '@/assets/444.png'
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -191,9 +189,6 @@
           }
         });*/
       }
-    },
-    mounted(){
-      this.$refs.inputName.focus();
     }
   }
 

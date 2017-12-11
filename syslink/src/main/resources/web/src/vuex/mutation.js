@@ -22,7 +22,8 @@ export default{
      SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = state.routers.concat(routers)
-
+        console.log(state.addRouters)
+        console.log(state.routers)
     },
     SET_PERMISSION: (state, permission) => {
       state.permission = permission

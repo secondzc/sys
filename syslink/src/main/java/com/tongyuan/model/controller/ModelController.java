@@ -87,6 +87,7 @@ public class ModelController extends  BaseController {
         model.setUserId(user.getID());
         model.setScope(scope);
         model.setCreateTime(DateUtil.getTimestamp());
+        model.setLastUpdateTime(DateUtil.getTimestamp());
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
         // 修改
@@ -501,6 +502,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setClasses(searchModel.get(i).getClasses());
                 modelWeb.setTextInfo(searchModel.get(i).getTextInfo());
                 modelWeb.setDirectoryId(searchModel.get(i).getDirectoryId());
+                modelWeb.setType(searchModel.get(i).getType());
                 if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
                     modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
                 }

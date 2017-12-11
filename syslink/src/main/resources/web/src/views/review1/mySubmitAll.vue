@@ -11,7 +11,7 @@
         </el-radio-group> -->
 
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="流程名"></el-input>
+					<el-input v-model="filters.name" placeholder="模型名"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getInstance">查询</el-button>

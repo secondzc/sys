@@ -17,4 +17,5 @@ public interface RepositoryMapper {
     List<Map<String,Object>> queryByUid(long uid);
     Map<String,Object> queryById(long id);
     boolean update(Repository repository);
+    Repository queryByNameAndUserId(Map<String,Object> param);
 }

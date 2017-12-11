@@ -299,11 +299,13 @@ public class CommonServiceImp implements CommonService {
 		byte[] data){
 		System.out.println("starting create the repository...");
 		Boolean isScopeDir = directoryController.isScope(classID);
-		if(isScopeDir){
+/*		if(isScopeDir){
 			repositoryController.addRepository("admin",fileName,isScopeDir);
 		}else{
 			repositoryController.addRepository(userName,fileName,null);
-		}
+		}*/
+
+
 		System.out.println("End create the repository...");
 		System.out.println("starting upload the file...");
 		String modelReposityUrl = "";
@@ -314,11 +316,27 @@ public class CommonServiceImp implements CommonService {
 		System.out.println("starting writing file...");
 		//TODO:上传到内存中，并在内存中完成解压
 		String modelDir = "";
+
+/*		if(data.length < length){
+			isAllByte = modelUtil.unitByteArray(isAllByte,data);
+			if(isAllByte.length <length){
+				return "";
+			}
+		}*/
+
+
 		try {
             modelDir = resourceUtil.unzipByte(fileName, userName,data);
+/*			byte[] realByte = new byte[isAllByte.length];
+			System.arraycopy(isAllByte, (int)beginPos, realByte, 0, (int)length);
+			modelDir = resourceUtil.unzipByte(fileName, userName,realByte);
+			isAllByte = new byte[1024];*/
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
 		//输出文件的目录（modelDir是解压缩到的目录）
 		System.out.println("modelDir==========" + modelDir + "*************");
 		//获取到model解压缩的路径
@@ -372,7 +390,7 @@ public class CommonServiceImp implements CommonService {
 		}
 		//更新模型的层次结构
 		//获取package下面的所有model
-		directoryController.updateModelFramwork();
+		directoryController.updateModelFramwork(userName,fileName);
 		System.out.println("上传完毕！！！");
 		return modelReposityUrl;
 	}
@@ -491,6 +509,8 @@ public class CommonServiceImp implements CommonService {
 				modelWeb.setUserId(user.getID());
 				modelWeb.setClasses(oneOfModel.get(i).getClasses());
 				modelWeb.setTextInfo(oneOfModel.get(i).getTextInfo());
+				modelWeb.setType(searchModel.get(i).getType());
+//				if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
 				if(oneOfModel.get(i).getIconSvgPath() != null && oneOfModel.get(i).getIconSvgPath() != ""){
 					modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
 				}

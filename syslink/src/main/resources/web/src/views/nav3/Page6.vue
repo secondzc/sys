@@ -173,7 +173,6 @@
                 this.isCover = false;
                 this.$refs.vueFileUploader.clearFiles();
                 this.$emit("refreshModel");
-                this.$emit("allowToReview");
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')

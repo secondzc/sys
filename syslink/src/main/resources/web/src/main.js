@@ -93,8 +93,7 @@ router.beforeEach((to, from, next) => {
            
               
               const auths = store.getters.userInfo.auths
-              const roles = store.getters.userInfo.roles
-              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
+              store.dispatch('GenerateRoutes',auths).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -108,13 +107,8 @@ router.beforeEach((to, from, next) => {
 
 
               store.dispatch('GetUserInfo').then(res =>{
-              // const auths = res.data.userInfo.auths
-              // const roles = res.data.userInfo.roles
-              let token = {auths:'',roles:''}
-              token.auths = res.data.userInfo.auths
-              token.roles = res.data.userInfo.roles
-              console.log(token)
-              store.dispatch('GenerateRoutes',token).then(()=>{
+              const auths = res.data.userInfo.auths
+              store.dispatch('GenerateRoutes',auths).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })
@@ -171,8 +165,7 @@ router.beforeEach((to, from, next) => {
            
               
               const auths = store.getters.userInfo.auths
-              const roles = store.getters.userInfo.roles
-              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
+              store.dispatch('GenerateRoutes',auths).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -187,8 +180,7 @@ router.beforeEach((to, from, next) => {
 
               store.dispatch('GetUserInfoFirst',userName).then(res =>{
               const auths = res.data.userInfo.auths
-              const roles = res.data.userInfo.roles
-              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
+              store.dispatch('GenerateRoutes',auths).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })

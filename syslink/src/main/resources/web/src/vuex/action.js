@@ -13,28 +13,10 @@ import axios from 'axios'
  * @param roles
  * @param route
  */
-function hasPermission(auth,role, route) {
-
-
-
-
-
-  // if (route.meta && route.meta.auth) {
-  //   console.log(route.meta.auth)
-  //   console.log(route.meta.role)
-  //   return auth.some(auth => route.meta.auth.indexOf(auth) >= 0)
-  // } 
-  // if(route.meta && route.meta.role)
-  // {
-
-
-  //   return role.some(role => route.meta.role.indexOf(role) >= 0)
-  // }
-  if(route.meta)
-  {
-    return role.some(role => route.meta.role.indexOf(role) >= 0)||auth.some(auth => route.meta.auth.indexOf(auth) >= 0)
-  }
-  else {
+function hasPermission(roles, route) {
+  if (route.meta && route.meta.role) {
+    return roles.some(role => route.meta.role.indexOf(role) >= 0)
+  } else {
     return true
   }
 }
@@ -44,12 +26,12 @@ function hasPermission(auth,role, route) {
  * @param asyncRouterMap
  * @param roles
  */
-function filterAsyncRouter(limitRoutes, auth,role) {
+function filterAsyncRouter(limitRoutes, roles) {
   const accessedRouters = limitRoutes.filter(route => {
-    if (hasPermission(auth,role, route)) {
+    if (hasPermission(roles, route)) {
 
       if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children, auth,role)
+        route.children = filterAsyncRouter(route.children, roles)
  
       }
       return true
@@ -200,17 +182,15 @@ export default{
         })
       })
     },
-    GenerateRoutes({ commit }, token) {
+    GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
-        const  auth  = token.auths
-        const  role  = token.roles
-      console.log(token)
-       console.log(auth)
-       console.log(role)
+        const  roles  = data
+       //  console.log(roles)
+       console.log('7')
         let accessedRouters
   
 
-          accessedRouters = filterAsyncRouter(limitRoutes, auth,role)
+          accessedRouters = filterAsyncRouter(limitRoutes, roles)
    
    
         commit('SET_ROUTERS', accessedRouters)

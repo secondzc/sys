@@ -17,9 +17,9 @@
      <div style="line-height: 50px;width: 150px;">
       
     </div>
-    <div  @click="toMySpace" >
-   <img :src="SysLogo"  @click="toMySpace" style="height: 40px;margin-top: 5px;" />
-   <img :src="SylTitle"  @click="toMySpace" style="height: 40px;margin-top: 5px;" />
+    <div>
+   <img :src="SysLogo"  style="height: 40px;margin-top: 5px;" />
+   <img :src="SylTitle"  style="height: 40px;margin-top: 5px;" />
     </div>
  
    </div>

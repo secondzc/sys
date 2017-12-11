@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.controller.InputStreamRunnable;
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.service.GUserService;
+import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.FileModel;
 import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.domain.ModelUnion;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.DirectoryModel;
@@ -65,6 +68,10 @@ public class DirectoryController {
     private ReviewFlowInstanceService reviewFlowInstanceService;
     @Autowired
     private StatusChangeService statusChangeService;
+    @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
+    private ModelUnionService modelUnionService;
 
 
 
@@ -261,7 +268,7 @@ public class DirectoryController {
         }
         //更新模型的层次结构
         //获取package下面的所有model
-       this.updateModelFramwork();
+       this.updateModelFramwork(name,fileName);
         //        this.doCmd(name,fileXmlPath,fileName);
         result = true;
         System.out.println("上传完毕！！！");
@@ -793,7 +800,7 @@ public class DirectoryController {
     /**
      * 把對應的模型庫的目录进行更改
      */
-    public void updateModelFramwork(){
+    public void updateModelFramwork(String userName,String fileName){
         /*List<Model> modelList = modelService.queryModelByParId(nullModel.getId());*/
         //查询刚插入的model
         List<Model> packageList = modelService.getNullParId();
@@ -801,6 +808,8 @@ public class DirectoryController {
             packageList.get(0).setParentId(0);
             modelService.update(packageList.get(0));
             Long modelId = packageList.get(0).getId();
+            addModelUnion(userName,fileName,modelId);
+
             //下面两行都有异常要抛出
             try{
                 Long instanceId = reviewFlowInstanceService.startInstance(modelId);
@@ -818,6 +827,8 @@ public class DirectoryController {
                     model.setParentId(0);
                     modelService.update(model);
                     Long modelId = packageList.get(0).getId();
+                    addModelUnion(userName,fileName,modelId);
+
                     //下面两行都有异常要抛出
                     try{
                         Long instanceId = reviewFlowInstanceService.startInstance(modelId);
@@ -985,6 +996,21 @@ public class DirectoryController {
         }
         jo.put("state",1);
         return jo;
+    }
+
+    public void addModelUnion(String userName,String fileName,Long modelId){
+        //获取mworks传来的gogsUrl
+        String gogsUrl = "http://localhost:3000/xyx/MyPkg.git";
+        //获取仓库的名字
+        Map<String,Object> param = new HashMap<>();
+        GUser gUser = (GUser) gUserService.queryUserByName(userName);
+        param.put("userId",gUser.getID());
+        param.put("repositoryName",fileName);
+        Repository repository = repositoryService.queryByNameAndUserId(param);
+        ModelUnion modelUnion = new ModelUnion();
+        modelUnion.setModelId(modelId);
+        modelUnion.setRepositoryId(repository.getID());
+        modelUnionService.add(modelUnion);
     }
 }
 

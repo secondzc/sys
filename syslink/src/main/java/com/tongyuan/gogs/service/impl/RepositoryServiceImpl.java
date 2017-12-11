@@ -65,4 +65,9 @@ public class RepositoryServiceImpl implements RepositoryService{
         return this.repositoryMapper.update(repository);
     }
 
+    @Override
+    public Repository queryByNameAndUserId(Map<String, Object> param) {
+        return this.repositoryMapper.queryByNameAndUserId(param);
+    }
+
 }
