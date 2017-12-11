@@ -304,7 +304,7 @@
         </el-cascader>
         </el-form-item>
         <el-form-item label="角色" prop="roleId"   >
-        <el-select v-model="addForm.roleId"  placeholder="请选择(可多选)">
+        <el-select v-model="addForm.roleId"  placeholder="请选择" >
          <el-option
          v-for="item in roles1" :key="item.id" :label="item.name" :value="item.id">
         </el-option>

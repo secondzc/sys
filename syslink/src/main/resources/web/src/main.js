@@ -71,7 +71,7 @@ router.beforeEach((to, from, next) => {
        if(store.getters.session)
      {
     
-     if(to.path=='/login'||to.path=='/index')
+     if(to.path=='/login'||to.path=='/')
      {
       console.log(2)
        next('/Myspace')
@@ -93,7 +93,8 @@ router.beforeEach((to, from, next) => {
            
               
               const auths = store.getters.userInfo.auths
-              store.dispatch('GenerateRoutes',auths).then(()=>{
+              const roles = store.getters.userInfo.roles
+              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -107,8 +108,13 @@ router.beforeEach((to, from, next) => {
 
 
               store.dispatch('GetUserInfo').then(res =>{
-              const auths = res.data.userInfo.auths
-              store.dispatch('GenerateRoutes',auths).then(()=>{
+              // const auths = res.data.userInfo.auths
+              // const roles = res.data.userInfo.roles
+              let token = {auths:'',roles:''}
+              token.auths = res.data.userInfo.auths
+              token.roles = res.data.userInfo.roles
+              console.log(token)
+              store.dispatch('GenerateRoutes',token).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })
@@ -165,7 +171,8 @@ router.beforeEach((to, from, next) => {
            
               
               const auths = store.getters.userInfo.auths
-              store.dispatch('GenerateRoutes',auths).then(()=>{
+              const roles = store.getters.userInfo.roles
+              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -180,7 +187,8 @@ router.beforeEach((to, from, next) => {
 
               store.dispatch('GetUserInfoFirst',userName).then(res =>{
               const auths = res.data.userInfo.auths
-              store.dispatch('GenerateRoutes',auths).then(()=>{
+              const roles = res.data.userInfo.roles
+              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })
