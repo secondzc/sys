@@ -19,15 +19,15 @@
 		<el-table :data="items" highlight-current-row  @selection-change="selsChange" style="width: 100%;" :loading='nodesLoading'>
 			<el-table-column type="selection" width="50">
 			</el-table-column>
-			<el-table-column type="index" label="节点次序" width-min="200">
+			<el-table-column type="index" label="节点次序" width="120">
 			</el-table-column>
-			<el-table-column prop="reviewNodeName" label="节点名" width-min="120" >
+			<el-table-column prop="reviewNodeName" label="节点名" min-width="120" >
 			</el-table-column>
-			<el-table-column prop="description" label="节点描述" width-min="120" >
+			<el-table-column prop="description" label="节点描述" min-width="120" >
 			</el-table-column>
-			<el-table-column prop="userName" label="审核者" width-min="120" >
+			<el-table-column prop="userName" label="审核者" min-width="120" >
 			</el-table-column>
-			<el-table-column label="操作" width-min="200">
+			<el-table-column label="操作" min-width="200">
 				<template scope="scope">
 					<el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
 					<el-button type="danger" size="small" @click="remove(scope.row)">删除</el-button>

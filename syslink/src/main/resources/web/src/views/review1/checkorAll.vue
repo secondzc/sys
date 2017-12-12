@@ -3,16 +3,16 @@
 		 <h3>其他审批流程记录</h3>
 		<!--除了正在审签之外的列表-->
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
-			<el-table-column type="index" width="60" >
+			<el-table-column type="index" min-width="60" >
 			</el-table-column>
-			<el-table-column prop="model.name" label="模型名" width="100" >
+			<el-table-column prop="model.name" label="模型名" min-width="100" >
 			</el-table-column>
-			<el-table-column prop="template.templateName" label="模板名" width="100" >
+			<el-table-column prop="template.templateName" label="模板名" min-width="100" >
 			</el-table-column>
-			<el-table-column prop="instanceName" label="审签实例名" width="150" >
+			<el-table-column prop="instanceName" label="审签实例名" min-width="150" >
 			</el-table-column>
 
-			<el-table-column prop="reviewNodeInstance.status" label="审签状态" width="150" :formatter="format">
+			<el-table-column prop="reviewNodeInstance.status" label="审签状态" min-width="150" :formatter="format">
 			</el-table-column>
 		</el-table>
 
