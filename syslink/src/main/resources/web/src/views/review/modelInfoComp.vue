@@ -24,13 +24,14 @@
     		      <div >{{this.reviewModel.createTime}}</div>
     		  </div>
     	</el-card>
-    </div>
+       </div>
     <!-- <div style="width:300px;">
     	<h5>模型浏览器</h5>
         <model-tree></model-tree>
     </div> -->
     </div>
-
+    	    <h3>详情查看</h3> 
+            <el-button @click="toTree">转到模型树</el-button> 
   </section> 
 </template>
 
@@ -39,6 +40,7 @@
 		data(){
 			return {
 				reviewModel:{
+					id:0,
 					name:'',
 					type:'',
 					discription:'',
@@ -67,6 +69,12 @@
 				})
 				console.log(this.reviewModel);
 			},
+			toTree(){ 
+	            console.log('12.10'+this.reviewModel.id); 
+	            this.$store.dispatch('sendModelId',this.reviewModel.id); 
+	            this.$store.dispatch('sendTreeModelId',this.reviewModel.id); 
+	            this.$router.push({path:'/model/packageDiagram'}); 
+	        }, 
 		},
 		mounted(){
 			this.instanceId = sessionStorage.getItem('instanceId');

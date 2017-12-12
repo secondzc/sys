@@ -30,11 +30,14 @@
                                   width="30%"
                                   >
                               <!--<span>这是一段信息</span>-->
-                              <myUpload @refreshMyModel="getModel" style="text-align: center;" ></myUpload>
+                              <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></myUpload>
                               <!--<span slot="footer" class="dialog-footer">-->
                               <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                               <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
+                              <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
+ 
+                              <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button>
                           </el-dialog>
 
                       </div>
@@ -493,7 +496,8 @@
                 }
             };
             return {
-
+              toReviewFlag:false,
+ 
                        url: {
                       C: '',
                       U: '',
@@ -665,7 +669,18 @@
                 }, 500);
             },
         
-
+         allowToReview(){
+ 
+          this.allowToReviewFlag = true;
+ 
+         },
+ 
+         toReview(){
+ 
+          this.$router.push({path:'/brief'});
+ 
+         },
+ 
 
         hanldeNodeClick (data) {
             //该目录下的模型列表

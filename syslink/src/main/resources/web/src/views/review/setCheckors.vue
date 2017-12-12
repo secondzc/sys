@@ -60,7 +60,7 @@
 		<!--修改界面-->
 		<el-dialog title="配置人员" :visible.sync="editItemsDialogVisible" v-model="editItemsDialogVisible" :close-on-click-modal="false">
 			<el-form :model="editItemsDialog" label-width="80px" >
-				<el-form-item label="节点名字" prop="reviewNodeName">
+				<el-form-item label="节点名" prop="reviewNodeName">
 					<el-input v-model="editItemsDialog.reviewNodeName" ></el-input>
 				</el-form-item>
 				<el-form-item label="节点描述" prop="description">
