@@ -1,9 +1,13 @@
 <template>
 	<section>
-		<h3>待审核流程</h3>
-		<checkor></checkor>
-		<h3>审签中的流程进度</h3>
-	    <my-submit></my-submit>
+		<el-tabs v-model="activeTab">
+			<el-tab-pane label="待审核的流程" name="checkor">
+				<checkor></checkor>
+			</el-tab-pane>
+			<el-tab-pane label="审签中的流程" name="mySubmit">
+				<my-submit></my-submit>
+			</el-tab-pane>
+		</el-tabs>
 	</section>
 </template>
 
@@ -14,7 +18,12 @@
 		components:{
 			checkor,
 			mySubmit,
-		}
+		},
+		data(){
+			return{
+				activeTab:"checkor",
+			};
+		},
 	}
 </script>
 

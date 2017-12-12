@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h3 v-if="isCheckor">协同</h3>
-		<div style="width:500px" id="comment" v-if="isCheckor">
+		<el-card style="width:660px;margin-left:20px;"  v-if="isCheckor">
 			<el-form>
 			<el-form-item label="是否通过:">
 				<el-radio-group v-model="isAgree">
@@ -16,7 +16,7 @@
 			<el-button type="primary" @click="submit" v-loading="submitLoading">提交</el-button>
 			</el-form-item>
 		    </el-form>
-		</div>
+		</el-card>
 					<h3>处理人意见区</h3>
 		<!-- <div style="width:520px">
 
