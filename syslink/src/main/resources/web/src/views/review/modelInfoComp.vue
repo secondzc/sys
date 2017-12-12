@@ -3,27 +3,27 @@
     <h3>模型信息</h3> 
     <div style="display:flex">
     	<div style="margin-left:20px;margin-top:10px;">
-    	<div style="width:660px;">
-    		<div class="modelInfo">
-    			<div style="display:inline-block"><p>模型名字:</p></div>
-    		    <div style="display:inline-block">{{this.reviewModel.name}}</div>
+    	<el-card style="width:660px;">
+    		<div style="display:flex">
+    			<div style="width:100px;"><p>模型名:</p></div>
+    		    <div >{{this.reviewModel.name}}</div>
     		</div>
-    		<div class="modelInfo">
-    			<div style="display:inline-block"><p>模型类型:</p></div>
-    		    <div style="display:inline-block">{{this.reviewModel.type}}</div>
+    		
+    		<div style="display:flex">
+    			<div style="width:100px;"><p>模型类型:</p></div>
+    		    <div >{{this.reviewModel.type}}</div>
     		</div>
 
-    	
-    		<div class="modelInfo">
-    			 <div style="display:inline-block"><p>模型描述:</p></div>
-    		     <div style="display:inline-block">{{this.reviewModel.discription}}</div>
-    		</div>
-    		<div class="modelInfo">
-    			  <div style="display:inline-block"><p>创建时间:</p></div>
-    		      <div style="display:inline-block">{{this.reviewModel.createTime}}</div>
-    		</div>
-            
-    	</div>
+            <div style="display:flex">
+    			 <div style="width:100px;"><p>模型描述:</p></div>
+    		     <div >{{this.reviewModel.discription}}</div>
+    		 </div>
+    		
+    		<div style="display:flex">
+    			  <div style="width:100px;"><p>创建时间:</p></div>
+    		      <div >{{this.reviewModel.createTime}}</div>
+    		  </div>
+    	</el-card>
     </div>
     <!-- <div style="width:300px;">
     	<h5>模型浏览器</h5>
