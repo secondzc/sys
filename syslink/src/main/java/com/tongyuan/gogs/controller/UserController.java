@@ -227,13 +227,7 @@ public class UserController extends BaseController {
         {
 
             userService.addGUser(map);
-            UserRole userRole = new UserRole();
-            if(map.get("roleId")!=null)
-            {
-                userRole.setRoleId(Integer.parseInt(map.get("roleId").toString()));
-                userRole.setUid(Long.parseLong(map.get("id").toString()));
-                roleService.addUserRole(userRole);
-            }
+
 
 
 

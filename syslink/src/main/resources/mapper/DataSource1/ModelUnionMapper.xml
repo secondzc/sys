@@ -10,18 +10,23 @@
         id,model_id,repository_id
     </sql>
     <insert id="add">
-         INSERT INTO modelunion (model_id,repository_id) VALUES
-        (#{modelId},#{repositoryId},)
+         INSERT INTO model_union (model_id,repository_id) VALUES
+        (#{modelId},#{repositoryId})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.ModelUnion">
-        UPDATE modelunion SET
+        UPDATE model_union SET
             model_id = #{modelId},repository_id = #{repositoryId}
             WHERE id = #{id}
     </update>
     <delete id="deleteByIds" parameterType="java.lang.String">
-        DELETE FROM modelunion WHERE id in
+        DELETE FROM model_union WHERE id in
         <foreach item="idItem" collection="array" open="(" separator="," close=")">
             #{idItem}
         </foreach>
     </delete>
+    <select id="queryUnion" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.ModelUnion">
+        SELECT <include refid="baseColumnList" ></include>
+        FROM model_union
+        WHERE model_id = #{model_id,jdbcType=BIGINT} and repository_id = #{repository_id,jdbcType=BIGINT}
+    </select>
 </mapper>

@@ -115,10 +115,10 @@ public class CommonServiceImp implements CommonService {
 		return result;
 	}
 
-//	/* 上传任务压缩文件,fileName为**.zip
-//    */
-//	public boolean UploadFile(String fileName, long beginPos, long length,
-//							  byte[] data) {
+	/* 上传任务压缩文件,fileName为**.zip
+    */
+	public boolean UploadFile(String fileName, long beginPos, long length,
+							  byte[] data) {
 //		System.out.println("starting upload the file...");
 //		boolean result = false;
 //		//获取压缩包 C:/Temp/zip/文件名
@@ -246,7 +246,8 @@ public class CommonServiceImp implements CommonService {
 //		result = true;
 //		System.out.println("上传完毕！！！");
 //        return result;
-//	}
+		return true;
+	}
 
 	/**
 	 * 模型分类树
@@ -308,6 +309,7 @@ public class CommonServiceImp implements CommonService {
 
 		System.out.println("End create the repository...");
 		System.out.println("starting upload the file...");
+		fileName = fileName.split("\\.")[0];
 		String modelReposityUrl = "";
 		boolean result = false;
 		//获取压缩包 C:/Temp/zip/文件名

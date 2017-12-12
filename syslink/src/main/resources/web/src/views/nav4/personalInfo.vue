@@ -24,12 +24,12 @@
         </el-form-item>
           <el-form-item label="新密码" prop="newPassWd"   >
         
-            <el-input type="password"  v-model="editForm.newPassWd" auto-complete="off"></el-input>
+            <el-input type="password"  v-model="editForm.newPassWd" auto-complete="off"  :disabled="!this.editForm.oldPassWd"></el-input>
         
         </el-form-item>
          <el-form-item label="确认密码" prop="newCheckPassWd"   >
          
-            <el-input type="password"  v-model="editForm.newCheckPassWd" auto-complete="off"></el-input>
+            <el-input type="password"  v-model="editForm.newCheckPassWd" auto-complete="off"  :disabled="!this.editForm.oldPassWd"></el-input>
            
         </el-form-item>
        

@@ -712,9 +712,17 @@ public class ModelController extends  BaseController {
         List<VariableTreeObj> modelTreeList = new ArrayList<>();
         List<VariableTreeObj> modelList = new ArrayList<>();
         try {
+            //获取根节点模型
+            Model rootModel = modelService.queryModelById(modelId);
+            VariableTreeObj treeRoot = new VariableTreeObj();
+            treeRoot.setId(rootModel.getId());
+            treeRoot.setName(rootModel.getName());
+            List<VariableTreeObj> rootChild = new ArrayList<>();
+            treeRoot.setChildren(rootChild);
+            modelTreeList.add(treeRoot);
             //查询到所有的model
             List<Model> allModel = modelService.findAllModel();
-            variableController.getSearchModel(modelId,allModel,modelTreeList,modelList);
+            variableController.getSearchModel(modelId,allModel,rootChild,modelList);
         }catch(Exception e) {
             e.printStackTrace();
             jo.put("status","1");

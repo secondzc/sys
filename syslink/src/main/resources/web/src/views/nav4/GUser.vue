@@ -243,7 +243,7 @@
         </el-cascader>
         </el-form-item>
         
-        <el-form-item label="自定义名称" prop="fullName"   >
+        <el-form-item label="真实姓名" prop="fullName"   >
             <el-input v-model="editForm.fullName" auto-complete="off"></el-input>
         </el-form-item>
           <el-form-item label="邮箱" prop="email"   >
@@ -290,11 +290,14 @@
         <el-form-item label="用户名" prop="name"  >
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
+         <el-form-item label="真实姓名" prop="fullName"  >
+          <el-input v-model="addForm.fullName" auto-complete="off"></el-input>
+        </el-form-item>
          <el-form-item label="密码" prop="passwd">
       <el-input type="password" v-model="addForm.passwd" auto-complete="off"  placeholder="为空则使用默认密码"></el-input>
      </el-form-item>
      <el-form-item label="确认密码" prop="checkPass">
-     <el-input type="password" v-model="addForm.checkPass" auto-complete="off" ></el-input>
+     <el-input type="password" v-model="addForm.checkPass" :disabled="!this.addForm.passwd" auto-complete="off" ></el-input>
      </el-form-item>
       <el-form-item label="邮箱" prop="email"    >
         <el-input v-model="addForm.email" auto-complete="off" ></el-input>
@@ -304,7 +307,7 @@
         </el-cascader>
         </el-form-item>
         <el-form-item label="角色" prop="roleId"   >
-        <el-select v-model="addForm.roleId"  placeholder="请选择(可多选)">
+        <el-select v-model="addForm.roleId"  placeholder="请选择" >
          <el-option
          v-for="item in roles1" :key="item.id" :label="item.name" :value="item.id">
         </el-option>
@@ -435,6 +438,28 @@
           else
           {
               callback(new Error('只允许输入中文、字母、数字'));
+          }
+        }
+      };
+        var validateFullName = (rule, value, callback) => {
+        let re = new RegExp("[^\x00-\xff]");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入真实姓名'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+         
+            callback();
+    
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文'));
           }
         }
       };
@@ -710,6 +735,10 @@
           ],
           email:[
           { required:true,validator:validateEmail,trigger:'blur'}
+          ],
+
+          fullName:[
+          { required:true,validator:validateFullName,trigger:'blur'}
           ],
       
           passwd: [

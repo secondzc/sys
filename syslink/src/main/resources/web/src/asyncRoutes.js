@@ -56,6 +56,7 @@ import corporate from './views/corporate.vue'
 import Index from './views/Index.vue'
 import ModelHeader from './views/ModelHeader.vue'
 import myRepo from './views/nav4/myRepo.vue'
+import cRepo from  './views/nav4/cRepo.vue'
 import changePassWd from './views/nav4/changePassWd.vue'
 import personalInfo from './views/nav4/personalInfo.vue'
 import NewIndex from  './views/NewIndex.vue'
@@ -274,28 +275,29 @@ export let  commonRoutes = [
             // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
         ]
     },
-   {
-        path: '',
-        component: NewHeader,
-        name: '仿真',
-        iconCls: 'iconfont icon-guize',
-        leaf: true,//只有一个节点
+   // {
+   //      path: '',
+   //      component: NewHeader,
+   //      name: '仿真',
+   //      iconCls: 'iconfont icon-guize',
+   //      leaf: true,//只有一个节点
    
-        children: [
-            // { path: '/page6', component: Page6, name: '我的仿真' }
-            { path: '/nav3/index', component: FileContent, name: '我的仿真' }
-        ]
-    },
+   //      children: [
+   //          // { path: '/page6', component: Page6, name: '我的仿真' }
+   //          { path: '/nav3/index', component: FileContent, name: '我的仿真' }
+   //      ]
+   //  },
     {
         path: '',
         component: NewHeader,
-        name: '仓库',
+        name: '仓库管理',
         iconCls: 'iconfont icon-cangku',
-        leaf: true,//只有一个节点
+      
    
         children: [
             // { path: '/page6', component: Page6, name: '我的仿真' }
-            { path: '/myRepo', component: myRepo, name: '我的仓库' }
+            { path: '/myRepo', component: myRepo, name: '我的仓库',iconCls: 'iconfont icon-renwu' },
+             { path: '/cRepo', component: cRepo, name: '协同仓库' ,iconCls: 'iconfont icon-renren'}
         ]
     },
     // {
@@ -366,16 +368,16 @@ export let limitRoutes=[
             // { path: '/main', component: Main, name: '项目', hidden: true },
             // { path: '/test2', component: test2, name: '项目管理' },
             // { path: '/tree', component: tree, name: '组织管理' ,meta:{role:['management_org_list']}},
-            { path: '/depart', component: depart, name: '组织管理' ,iconCls:'iconfont icon-zuzhijiagoujiekou', meta:{role:['management_org_list']}},
+            { path: '/depart', component: depart, name: '组织管理' ,iconCls:'iconfont icon-zuzhijiagoujiekou', meta:{auth:['management_org_list'],role:[1]}},
           //  { path: 'TreeGrid', component: TreeGrid, name: '用户管理' ,meta:{role:['management_user_list']}},
-            { path: '/GUser', component: GUser, name: '用户管理' ,iconCls:'iconfont icon-hezuoguanxi', meta:{role:['management_user_list']}},
-            { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{role:['management_role_list']}},
-            { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{role:['management_auth_list']} },
+            { path: '/GUser', component: GUser, name: '用户管理' ,iconCls:'iconfont icon-hezuoguanxi', meta:{auth:['management_user_list'],role:[1]}},
+            { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{auth:['management_role_list'],role:[1]}},
+            { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]} },
          //   { path: 'user', component: user, name: '应用监控' },
-            { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{role:['management_log_list']}},
+            { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{auth:['management_log_list'],role:[1]}},
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
-            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban'}, 
+            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban',meta:{auth:['management_template_list'],role:[1]}}, 
         ]
     },
     {
