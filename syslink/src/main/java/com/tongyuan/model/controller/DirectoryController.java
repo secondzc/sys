@@ -1013,8 +1013,8 @@ public class DirectoryController {
         ModelUnion modelUnion = modelUnionService.queryUnion(unionParam);
         if(modelUnion == null){
             ModelUnion Union = new ModelUnion();
-            modelUnion.setModelId(modelId);
-            modelUnion.setRepositoryId(repository.getID());
+            Union.setModelId(modelId);
+            Union.setRepositoryId(repository.getID());
             modelUnionService.add(Union);
         }
     }
