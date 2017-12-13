@@ -286,7 +286,7 @@
             
               let para = Object.assign({}, this.addForm);
               console.log(this.addForm.parentId);
-              if(this.addForm.parentId.length>0)
+              if(this.addForm.parentId)
               {
                   para.parentId=para.parentId[para.parentId.length-1];
               }

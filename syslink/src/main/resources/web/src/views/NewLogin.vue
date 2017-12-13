@@ -14,11 +14,11 @@
   <!--   <img :src="loginLogo"  style="max-height: 100px;width: 200px;" /> -->
     <el-form-item prop="userName">
       <el-input type="text" v-model="ruleForm2.userName" auto-complete="off" placeholder="账号"
-       @keyup.enter.native="handleSubmit2" ref="inputName"></el-input>
+       @keyup.enter.native="handleSubmit2" ref="inputName"   suffix-icon="iconfont icon-account"></el-input>
     </el-form-item>
     <el-form-item prop="password">
       <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"
-      @keyup.enter.native="handleSubmit2"></el-input>
+      @keyup.enter.native="handleSubmit2"   suffix-icon="iconfont icon-mima"></el-input>
     </el-form-item>
     <div style="display:flex;">
 

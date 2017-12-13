@@ -56,10 +56,6 @@ router.beforeEach((to, from, next) => {
 
  
 
-  
-  
-  
-  //对sessionid 和 记住我做判断，是否登录从而更改弹出层的
     console.log( Cookies.get('JSESSIONID') )
     console.log( Cookies.get() )
 

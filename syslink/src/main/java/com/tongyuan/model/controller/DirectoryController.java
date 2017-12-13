@@ -251,12 +251,12 @@ public class DirectoryController {
         String[] subFiles = xmlFilePath.list();
 
 
-/*        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
-        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);*/
+//        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
+//        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
         //查找最外层空的model
         //修改成根据插入的分类id找到对应的package包
-/*        Model nullModel = modelService.queryByNameAndDir(param);*/
-/*        String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\/.git";*/
+//       Model nullModel = modelService.queryByNameAndDir(param);  String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\\n" +
+//               "     /.git";
 
 
         GUser user =  gUserService.querListByName(name);
@@ -1009,7 +1009,12 @@ public class DirectoryController {
         param.put("repositoryName",fileName.toLowerCase());
         Repository repository = repositoryService.queryByNameAndUserId(param);
         unionParam.put("model_id",modelId);
-        unionParam.put("repository_id",repository.getID());
+
+        if(repository!=null)
+        {
+            unionParam.put("repository_id",repository.getID());
+        }
+
         ModelUnion modelUnion = modelUnionService.queryUnion(unionParam);
         if(modelUnion == null){
             ModelUnion Union = new ModelUnion();
