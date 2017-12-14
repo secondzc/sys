@@ -39,15 +39,15 @@ public class ReviewUserNodeImpl implements ReviewUserNodeService{
     /**
      * @param rootId 节点的deptId
      * @param node   自己定义的数据类型
-     * @param deptLeaf
+     * @param deptLeaf  所有部门的集合
      */
     public void buildTree(Integer rootId,ReviewUserNode node,List<ReviewUserNode> deptLeaf){
+        deptLeaf.add(node);
         List<Map<String,Object>> children = departMapper.queryByPid(rootId);
         if(children.isEmpty()){
             //此部门下没有子部门了
             return ;
         }
-        deptLeaf.add(node);
         List<ReviewUserNode> reviewUserNodeList = new ArrayList<>();
         for(Map<String,Object> child:children){
             ReviewUserNode reviewUserNode = new ReviewUserNode();

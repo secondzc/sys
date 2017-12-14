@@ -16,18 +16,18 @@
 		</el-col>
 
         <!--列表-->
-		<el-table :data="items" highlight-current-row  @selection-change="selsChange" style="width: 80%;" :loading='nodesLoading'>
+		<el-table :data="items" highlight-current-row  @selection-change="selsChange" style="width: 100%;" :loading='nodesLoading'>
 			<el-table-column type="selection" width="50">
 			</el-table-column>
-			<el-table-column type="index" label="节点次序" width="100">
+			<el-table-column type="index" label="节点次序" width="120">
 			</el-table-column>
-			<el-table-column prop="reviewNodeName" label="节点名" width="120" >
+			<el-table-column prop="reviewNodeName" label="节点名" min-width="120" >
 			</el-table-column>
-			<el-table-column prop="description" label="节点描述" width="120" >
+			<el-table-column prop="description" label="节点描述" min-width="120" >
 			</el-table-column>
-			<el-table-column prop="userName" label="审核者名字" width="120" >
+			<el-table-column prop="userName" label="审核者" min-width="120" >
 			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column label="操作" min-width="200">
 				<template scope="scope">
 					<el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
 					<el-button type="danger" size="small" @click="remove(scope.row)">删除</el-button>
@@ -45,8 +45,10 @@
 				     <el-input v-model="addItemsDialog.description"></el-input>
 				</el-form-item>
 				<el-form-item label="审核者" prop="userName" :rules="[{required:true,message:'请 选择审核者',trigger:'blur'}]">
-				     <el-input v-model="addItemsDialog.userName" :disabled="true" style="width:80%"></el-input>
-				     <el-button type="primary" @click.native="chooseName">选择审核者</el-button>
+					 <div style="display:flex;">
+				      <el-input v-model="addItemsDialog.userName" :disabled="true" style="margin-right:10px;"></el-input>
+				      <el-button type="primary" @click.native="chooseName">选择审核者</el-button>
+				     </div>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -58,15 +60,17 @@
 		<!--修改界面-->
 		<el-dialog title="配置人员" :visible.sync="editItemsDialogVisible" v-model="editItemsDialogVisible" :close-on-click-modal="false">
 			<el-form :model="editItemsDialog" label-width="80px" >
-				<el-form-item label="节点名字" prop="reviewNodeName">
+				<el-form-item label="节点名" prop="reviewNodeName">
 					<el-input v-model="editItemsDialog.reviewNodeName" ></el-input>
 				</el-form-item>
 				<el-form-item label="节点描述" prop="description">
 				     <el-input v-model="editItemsDialog.description"></el-input>
 				</el-form-item>
-				<el-form-item label="审核者名字" prop="userName">
-				     <el-input v-model="editItemsDialog.userName" :disabled="true"></el-input>
+				<el-form-item label="审核者" prop="userName">
+					<div style="display:flex;">
+				     <el-input v-model="editItemsDialog.userName" :disabled="true" style="margin-right:10px;"></el-input>
 				     <el-button type="primary" @click.native="chooseName">选择审核者</el-button>
+				 </div>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

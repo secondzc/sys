@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h3 v-if="isCheckor">协同</h3>
-		<div style="width:500px" id="comment" v-if="isCheckor">
+		<el-card style="width:660px;margin-left:20px;"  v-if="isCheckor">
 			<el-form>
 			<el-form-item label="是否通过:">
 				<el-radio-group v-model="isAgree">
@@ -16,9 +16,9 @@
 			<el-button type="primary" @click="submit" v-loading="submitLoading">提交</el-button>
 			</el-form-item>
 		    </el-form>
-		</div>
+		</el-card>
 					<h3>处理人意见区</h3>
-		<div style="width:520px">
+		<!-- <div style="width:520px">
 
 			<div style="border: 1px solid #9E9E9E;margin-left:20px" v-for="(commentPage,index) in commentPages">
 				<div style="width:20%;float:left">审核者：{{commentPage.checkorName}}</div>
@@ -29,7 +29,31 @@
 				处理人意见：{{commentPage.comment}}
 			    </div>
 			</div>
-		</div>
+		</div> -->
+		<el-card style="width:660px;margin-left:20px;">
+			<div v-for="(commentPage,index) in commentPages">
+    	        <div style="display:flex">
+    	        	<div style="width:100px;"><p>审核者:</p></div>
+    	            <div >{{commentPage.checkorName}}</div>
+    	        </div>
+    	        
+    	        <div style="display:flex">
+    	        	<div style="width:100px;"><p>审核结果:</p></div>
+    	            <div >{{commentPage.showStatus}}</div>
+    	        </div>
+
+                 <div style="display:flex">
+    	        	 <div style="width:100px;"><p>审核时间:</p></div>
+    	             <div >{{commentPage.lastUpdateTime}}</div>
+    	         </div>
+    	        
+    	        <div style="display:flex">
+    	        	  <div style="width:100px;"><p>处理人意见:</p></div>
+    	              <div >{{commentPage.comment}}</div>
+    	        </div>
+    	        <hr v-if="index!=commentPages.length-1">
+    	     </div>
+    	</el-card>
 	</div>
 </template>
 
