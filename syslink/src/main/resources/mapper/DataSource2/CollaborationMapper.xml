@@ -22,6 +22,12 @@
         WHERE repo_id = #{repoId};
     </select>
 
+    <insert id="add">
+        INSERT  INTO collaboration (repo_id,user_id,mode) VALUES (#{repoId},#{userId},#{mode})
+    </insert>
+    <delete id="delete">
+        delete from collaboration where id=#{id}
+    </delete>
 
 
 

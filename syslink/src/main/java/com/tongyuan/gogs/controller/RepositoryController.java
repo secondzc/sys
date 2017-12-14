@@ -3,16 +3,11 @@ package com.tongyuan.gogs.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.sun.org.apache.xpath.internal.operations.Bool;
-import com.tongyuan.gogs.domain.Action;
-import com.tongyuan.gogs.domain.GUser;
-import com.tongyuan.gogs.domain.Repository;
-import com.tongyuan.gogs.domain.Watch;
-import com.tongyuan.gogs.service.ActionService;
-import com.tongyuan.gogs.service.GUserService;
-import com.tongyuan.gogs.service.RepositoryService;
-import com.tongyuan.gogs.service.WatchService;
+import com.tongyuan.gogs.domain.*;
+import com.tongyuan.gogs.service.*;
 import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.wrapper.RepositoryWarpper;
+import com.tongyuan.util.FileUtils;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +34,12 @@ public class RepositoryController extends BaseController{
     private WatchService watchService;
     @Autowired
     private GUserService guserService;
-
     @Autowired
     private ResourceUtil resourceUtil;
+    @Autowired
+    private CollaborationService collaborationService;
+    @Autowired
+    private AccessService accessService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -147,33 +145,8 @@ public class RepositoryController extends BaseController{
         repository.setOwnerID(user.getID());
         repository.setLowerName(fileName.toLowerCase());
         repository.setName(fileName);
-        repository.setDefaultBranch("master");
-        repository.setSize(0);
-        repository.setNumWatches(1);
-        repository.setNumStars(0);
-        repository.setNumForks(0);
-        repository.setAllowPublicIssues(false);
-        repository.setNumIssues(0);
-        repository.setNumClosedIssues(0);
-        repository.setNumPulls(0);
-        repository.setNumClosedPulls(0);
-        repository.setNumMilestones(0);
-        repository.setNumClosedMilestones(0);
-        repository.setIsPrivate(false);
-        repository.setIsBare(true);
-        repository.setIsMirror(false);
-        repository.setEnableWiki(true);
-        repository.setEnableExternalWiki(false);
-        repository.setAllowPublicWiki(false);
-        repository.setEnableIssues(true);
-        repository.setAllowPublicWiki(false);
-        repository.setEnableExternalTracker(false);
-        repository.setExternalTrackerStyle("numeric");
-        repository.setEnablePulls(true);
-        repository.setIsFork(false);
-        repository.setForkID((long) 0);
-        repository.setCreatedUnix(new Date().getTime() / 1000);
-        boolean result = repositoryService.add(repository);
+        repositoryService.setParameter(repository);
+        Long repositoryId = repositoryService.add(repository);
         //查找插入的仓库对象
         Repository repositoryData = repositoryService.queryByName(fileName);
         Watch watch = new Watch();
@@ -201,6 +174,32 @@ public class RepositoryController extends BaseController{
         }
         return  jo;
     }
+
+    public void forkAndCollaboration(String userName,String repositoryName){
+        GUser gUser = guserService.querListByName(userName);
+        GUser admin = guserService.querListByName("admin");
+        gUser.setNumRepos(gUser.getNumRepos()+1);
+        guserService.update(gUser);
+        Map<String,Object> param = new HashMap<>();
+        param.put("userId",gUser.getID());
+        param.put("repositoryName",repositoryName.toLowerCase());
+        Repository repository = repositoryService.queryByNameAndUserId(param);
+        collaborationService.addDefault(admin.getID(),repository.getID());
+        accessService.addDefault(admin.getID(),repository.getID());
+        Long forkRepositoryId = repositoryService.forkRepository(repository,gUser,admin.getID());
+        Watch watch = new Watch();
+        watch.setRepoID(forkRepositoryId);
+        watch.setUserID(gUser.getID());
+        boolean watchResult = watchService.add(watch);
+        repository.setNumForks(repository.getNumForks()+1);
+        repositoryService.update(repository);
+        //第一次执行时把fork对象的库复制到用户下面
+        FileUtils.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ userName + gUser.getLoginName()+ repositoryName.toLowerCase() +".git" + "/");
+    }
+
+
+
+
 
 
 

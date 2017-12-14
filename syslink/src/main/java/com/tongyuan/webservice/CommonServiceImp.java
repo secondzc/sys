@@ -298,6 +298,7 @@ public class CommonServiceImp implements CommonService {
 	 */
 	public String uploadModel(String userName,Long classID,String fileName, long beginPos, long length,
 		byte[] data){
+		fileName = fileName.split("\\.")[0];
 		System.out.println("starting create the repository...");
 		Boolean isScopeDir = directoryController.isScope(classID);
 /*		if(isScopeDir){
@@ -305,11 +306,14 @@ public class CommonServiceImp implements CommonService {
 		}else{
 			repositoryController.addRepository(userName,fileName,null);
 		}*/
-
+		//当用户上传模型到公有库（fork到admin用户下面）
+		if(isScopeDir){
+			repositoryController.forkAndCollaboration(userName,fileName);
+		}
 
 		System.out.println("End create the repository...");
 		System.out.println("starting upload the file...");
-		fileName = fileName.split("\\.")[0];
+
 		String modelReposityUrl = "";
 		boolean result = false;
 		//获取压缩包 C:/Temp/zip/文件名

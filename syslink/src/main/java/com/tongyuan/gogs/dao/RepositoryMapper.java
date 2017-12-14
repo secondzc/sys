@@ -12,7 +12,7 @@ import java.util.Map;
  */
 @Mapper
 public interface RepositoryMapper {
-    boolean add(Repository repository);
+    Long add(Repository repository);
     Repository queryByName(String Name);
     public List<Repository> findAllRepository();
     List<Map<String,Object>> queryMyRepo(Map<String,Object>map);

@@ -7,7 +7,8 @@ import java.util.Map;
 
 public interface CollaborationMapper {
 
-
-    List<Map<String,Object>> queryByUid(Map<String,Object>map);
+    boolean add(Collaboration collaboration);
+    boolean delete(Long id);
+   // List<Map<String,Object>> queryByUid(Map<String,Object>map);
     boolean queryByRepoId(Long id);
 }

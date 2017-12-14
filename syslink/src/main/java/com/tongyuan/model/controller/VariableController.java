@@ -13,6 +13,7 @@ import com.tongyuan.model.service.ModelService;
 import com.tongyuan.model.service.VariableService;
 import com.tongyuan.pageModel.ComponentTreeObj;
 import com.tongyuan.pageModel.VariableTreeObj;
+import com.tongyuan.util.FileUtils;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import com.tongyuan.webservice.CommonService;
@@ -428,7 +429,9 @@ public class VariableController {
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
 //        }
-
+//        FileUtils.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ "xyx"+"/" + "circuittest" +".git",System.getProperty("user.home")+"/gogs-repositories/"+ "admin"+"/"+ "circuittest" +".git"+"/");
+//        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+ "admin"+"/" + "circuittest" +".git");
+//        file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+ "admin"+"/" + "111.git"));
 
     }
 

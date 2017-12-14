@@ -84,7 +84,7 @@
     allow_public_issues,enable_external_tracker,external_tracker_url,external_tracker_format,external_tracker_style,
     enable_pulls,is_fork,fork_id,created_unix,updated_unix
   </sql>
-  <insert id="add" parameterType="com.tongyuan.gogs.domain.Repository">
+  <insert id="add" parameterType="com.tongyuan.gogs.domain.Repository"  useGeneratedKeys="true" keyProperty="ID">
     INSERT INTO repository (owner_id, lower_name,name,description,website,default_branch,size,num_watches,num_stars,num_forks,
     num_issues,num_closed_issues,num_pulls,num_closed_pulls,num_milestones,num_closed_milestones,is_private,
     is_bare,is_mirror,enable_wiki,allow_public_wiki,enable_external_wiki,external_wiki_url,enable_issues,
