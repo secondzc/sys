@@ -66,6 +66,10 @@ public class ResourceUtil {
         return  getString("gogsHostPath");
     }
 
+    public static final String getHttpPort(){
+        return  getString("HostPath");
+    }
+
 
     /**
      * 获取文件仓目录
@@ -92,6 +96,14 @@ public class ResourceUtil {
 
     public String getGogsPath(){
         String path = ResourceUtil.getGogsHttpPort();
+        if(StringUtil.isNull(path)){
+            path = "";
+        }
+        return  path;
+    }
+
+    public String getLocalPath(){
+        String path = ResourceUtil.getHttpPort();
         if(StringUtil.isNull(path)){
             path = "";
         }

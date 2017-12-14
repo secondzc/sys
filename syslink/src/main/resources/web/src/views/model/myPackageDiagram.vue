@@ -106,6 +106,7 @@
     import modeltree from './modelTree.vue'
     import modeltreeContAndVar from './modelTreeContAndVar.vue'
     import PackageDiagramModelChild from "./packageDiagramModelChild.vue";
+    import global_ from '../global.vue'
     import { mapState,mapGetters} from 'vuex'
     import {mapActions} from 'vuex'
     import '../../assets/jqueryUI/tabs.css'
@@ -153,12 +154,12 @@
                         _this.form = response.data.form;
                         _this.textInfo= response.data.form.textInfo;
                         if(response.data.form.diagramSvgPath == null){
-                            _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.svgUrl = "http://"+ global_.HostPath + "/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.svgUrl = response.data.form.diagramSvgPath;
                         }
                         if(response.data.form.iconSvgPath == null){
-                            _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.iconUrl = "http://"+ global_.HostPath +"/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.iconUrl = response.data.form.iconSvgPath;
                         }
@@ -188,12 +189,12 @@
                         _this.form = response.data.form;
                         _this.textInfo= response.data.form.textInfo
                         if(response.data.form.diagramSvgPath == null){
-                            _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.svgUrl = "http://"+ global_.HostPath+"/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.svgUrl = response.data.form.diagramSvgPath;
                         }
                         if(response.data.form.iconSvgPath == null){
-                            _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                            _this.iconUrl = "http://"+ global_.HostPath +"/FileLibrarys/FileLibrary/zanwu.jpg"
                         }else{
                             _this.iconUrl = response.data.form.iconSvgPath;
                         }
@@ -316,12 +317,12 @@
                             _this.form = response.data.form;
                             _this.textInfo= response.data.form.textInfo
                             if(response.data.form.diagramSvgPath == null){
-                                _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.svgUrl = "http://"+ global_.HostPath+"/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.svgUrl = response.data.form.diagramSvgPath;
                             }
                             if(response.data.form.iconSvgPath == null){
-                                _this.iconUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.iconUrl = "http://"+ global_.HostPath+"/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.iconUrl = response.data.form.iconSvgPath;
                             }
@@ -338,7 +339,7 @@
                 }
             },
             goReposity(){
-                location.href = "http://syslink.com:3000" + "/"+this.$data.name +"/"+ this.form.name.split(".",1)[0]
+                location.href = "http://"+ global_.gogsHostPath + "/"+this.$data.name +"/"+ this.form.name.split(".",1)[0]
             }
         }
     };

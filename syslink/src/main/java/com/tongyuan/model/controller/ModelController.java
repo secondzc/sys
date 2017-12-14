@@ -504,7 +504,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setDirectoryId(searchModel.get(i).getDirectoryId());
                 modelWeb.setType(searchModel.get(i).getType());
                 if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
-                    modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
+                    modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
                 }
                 modelWeb.setUploadTime(searchModel.get(i).getCreateTime().getTime());
                 modelWeb.setCreateTime(DateUtil.format(searchModel.get(i).getCreateTime(),"yyyy-MM-dd"));
@@ -603,13 +603,13 @@ public class ModelController extends  BaseController {
             }
 
             if(model.getDiagramSvgPath() != null && model.getDiagramSvgPath() != ""){
-                modelWeb.setDiagramSvgPath("http://syslink.com:8080/FileLibrarys"+model.getDiagramSvgPath().substring(7));
+                modelWeb.setDiagramSvgPath("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getDiagramSvgPath().substring(7));
             }
             if(model.getIconSvgPath() != null && model.getIconSvgPath() != ""){
-                modelWeb.setIconSvgPath("http://syslink.com:8080/FileLibrarys"+model.getIconSvgPath().substring(7));
+                modelWeb.setIconSvgPath("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getIconSvgPath().substring(7));
             }
             if(model.getInfoTextPath() != null && model.getInfoTextPath() != ""){
-                modelWeb.setInfoTextPath("http://syslink.com:8080/FileLibrarys"+model.getInfoTextPath().substring(7));
+                modelWeb.setInfoTextPath("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getInfoTextPath().substring(7));
             }
             for (Repository repository: allRepository) {
                 if(modelWeb.getRepositoryName().equals(repository.getName())){
@@ -970,7 +970,7 @@ public class ModelController extends  BaseController {
             FileUtils.copyFileCover(model.getInfoTextPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".info.html",true);
             FileUtils.copyFileCover(model.getIconSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".icon.svg",true);
             FileUtils.zipFiles("C:\\Temp\\FileLibrary\\","C:\\Temp\\FileLibrary\\" +name,"C:\\Temp\\FileLibrary\\"+name+"Model");
-             realUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/"+name+"Model";
+             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+"/FileLibrary/"+name+"Model";
             }catch(Exception e) {
                 e.printStackTrace();
                 jo.put("status","1");

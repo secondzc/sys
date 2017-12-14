@@ -518,7 +518,7 @@ public class CommonServiceImp implements CommonService {
 				modelWeb.setType(searchModel.get(i).getType());
 //				if(oneOfModel.get(i).getDiagramSvgPath() != null && oneOfModel.get(i).getDiagramSvgPath() != ""){
 				if(oneOfModel.get(i).getIconSvgPath() != null && oneOfModel.get(i).getIconSvgPath() != ""){
-					modelWeb.setImageUrl("http://syslink.com:8080/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
+					modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+oneOfModel.get(i).getIconSvgPath().substring(7));
 				}
 				modelWeb.setUploadTime(oneOfModel.get(i).getCreateTime().getTime());
 				modelWeb.setCreateTime(DateUtil.format(oneOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));

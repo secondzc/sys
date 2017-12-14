@@ -38,6 +38,7 @@
 </template>
 <script>
     import { mapState,mapGetters} from 'vuex'
+    import global_ from '../global.vue'
     export default {
         data() {
             return {
@@ -59,7 +60,7 @@
             //上传文件
             uploadUrl :function(){
                 var scope = false;
-                return "http://syslink.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
+                return "http://"+global_.HostPath +"/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope
                 //  return "https://jsonplaceholder.typicode.com/posts/"
             },
             submitUpload() {
@@ -74,14 +75,14 @@
                 console.log(file);
             },
             beforeUploadFile(file){
-                    //检验gogs仓库是否存在，不存在则创建一个仓库
-                    var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
-                    this.$http.post(modelUrl)
-                        .then(function (response) {
-                        })
-                        .catch(function (error) {
-                            console.log(error)
-                        })
+//                    //检验gogs仓库是否存在，不存在则创建一个仓库
+//                    var modelUrl = '/api/repository/add?name=' + this.$data.name + '&fileName=' + file.name.split("\.")[0]
+//                    this.$http.post(modelUrl)
+//                        .then(function (response) {
+//                        })
+//                        .catch(function (error) {
+//                            console.log(error)
+//                        })
                     if (this.bmsg < 0) {
                         this.$message({
                             message: '请选择一个模型目录！',
@@ -185,7 +186,7 @@
             },
             coverModel(){
                 var scope = false;
-                var realUrl =   "http://syslink.com:8080/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
+                var realUrl =   "http://"+global_.HostPath +"/api/directory/uploadDirectory?name="+this.$data.name+"&directoryId="+this.bmsg + "&scope=" + scope;
                 this.$refs.vueFileUploader.uploadFiles[0].url = realUrl;
                 this.isCover = true;
                 this.dialogVisible = false;

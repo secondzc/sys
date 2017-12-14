@@ -16,6 +16,7 @@
 </template>
 <script>
     import { mapState,mapGetters} from 'vuex'
+    import global_ from '../global.vue'
     export default {
         data() {
             return {
@@ -42,7 +43,7 @@
                         .then(function (response) {
                             _this.form = response.data.form;
                             if(response.data.form.diagramSvgPath == null){
-                                _this.svgUrl = "http://syslink.com:8080/FileLibrarys/FileLibrary/zanwu.jpg"
+                                _this.svgUrl = "http://"+global_.HostPath+"/FileLibrarys/FileLibrary/zanwu.jpg"
                             }else{
                                 _this.svgUrl = response.data.form.diagramSvgPath;
                             }

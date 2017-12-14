@@ -4,6 +4,7 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.controller.InputStreamRunnable;
+import com.tongyuan.gogs.controller.RepositoryController;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.service.GUserService;
@@ -72,6 +73,8 @@ public class DirectoryController {
     private RepositoryService repositoryService;
     @Autowired
     private ModelUnionService modelUnionService;
+    @Autowired
+    private RepositoryController repositoryController;
 
 
 
@@ -195,6 +198,9 @@ public class DirectoryController {
              bytes =  map.get("file").get(0).getBytes();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(scope){
+            repositoryController.forkAndCollaboration(name,fileName);
         }
         System.out.println("starting upload the file...");
         boolean result = false;

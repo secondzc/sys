@@ -27,19 +27,13 @@
             <el-input disabled="disabled" v-model="form.discription"></el-input>
         </el-form-item>
         <el-form-item label="视图:" label-width="150px">
-            <!--<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>-->
             <a  href="javascript:void(0)"   @click="svgUrl" >视图</a>
-            <!--form.diagramSvgPath-->
         </el-form-item>
         <el-form-item label="图片:" >
-            <!--<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>-->
             <a  href="javascript:void(0)"   @click="iconUrl" >图片</a>
-            <!--form.diagramSvgPath-->
         </el-form-item>
         <el-form-item label="Info:" >
-            <!--<a href="http://gogs.modelica-china.com:8080/FileLibrary/xieyx/2017-09-07_09-09-722/syslink/src/test/ModelDomLibrary/package2.Test2.A.diagram.svg" target="_blank">svg</a>-->
             <a  href="javascript:void(0)"   @click="infoUrl" >info信息</a>
-            <!--form.diagramSvgPath-->
         </el-form-item>
     </el-form>
 
@@ -54,11 +48,6 @@
                 type="index"
                 width="100">
         </el-table-column>
-        <!--<el-table-column-->
-        <!--property="date"-->
-        <!--label="日期"-->
-        <!--width="120">-->
-        <!--</el-table-column>-->
         <el-table-column
                 property="name"
                 label="类型名"
@@ -99,13 +88,8 @@
                 label="输入变量"
                 width="120">
         </el-table-column>
-        <!--<el-table-column-->
-        <!--property="address"-->
-        <!--label="地址">-->
-        <!--</el-table-column>-->
     </el-table>
     <div style="margin-top: 20px">
-        <!--<el-button @click="setCurrent(tableData[1])">选中第二行</el-button>-->
         <el-button @click="setCurrent()">返回模型</el-button>
     </div>
     </section>
@@ -116,16 +100,6 @@
     export default {
         data() {
             return {
-//                form: {
-//                    name: '',
-//                    region: '',
-//                    date1: '',
-//                    date2: '',
-//                    delivery: false,
-//                    type: [],
-//                    resource: '',
-//                    desc: ''
-//                }
                 form:[],
                 tableData: [
                 ],
@@ -159,8 +133,6 @@
         },
         methods: {
             setCurrent(row) {
-             //   this.$refs.singleTable.setCurrentRow(row);
-//                this.$store.dispatch('sendModelId',modelId.currentTarget.attributes[2].value);
                 var _this=this;
                 this.$store.dispatch('sendA',_this.form.directoryParentId);
                 this.$router.push({path: '/model/index'});
