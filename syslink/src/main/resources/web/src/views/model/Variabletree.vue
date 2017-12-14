@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height: inherit;">
         {{getVarTree}}
         {{treeModelVar}}
         <zk-table

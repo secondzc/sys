@@ -79,7 +79,7 @@
                     </el-tab-pane>
                     <el-tab-pane style="height: 100%">
                         <span slot="label"><i class="el-icon-tickets"></i> 变量</span>
-                        <div style="">
+                        <div style="height: inherit;">
                             <package-diagram-model-child ></package-diagram-model-child>
                         </div>
                     </el-tab-pane>

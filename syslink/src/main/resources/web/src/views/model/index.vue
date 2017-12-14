@@ -135,7 +135,7 @@
                                         width="150" >
                                     <template scope="scope">
                                        
-                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;"/>
+                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;height: 95px;"/>
                                         
                                         
                                     </template>
@@ -270,7 +270,7 @@
                 </div>
                 <div  style="display: flex;flex-direction: column;height:inherit;width: auto;">
 
-                    <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: center;
+                    <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: flex-start;
               display: flex;flex-wrap: wrap;height:calc(100% - 66px);border-bottom: solid 1px #e6e6e6;">
                     
 

@@ -140,7 +140,7 @@
 
 
       <el-main  :class="{hideMain:!sidebar,Main:sidebar}"  >
-        <div style="height: 10px;" v-if="this.func.isLogin()">
+        <div style="height: 20px;" v-if="this.func.isLogin()">
          
           <el-breadcrumb separator="/">
      <el-breadcrumb-item :to="{ path: '/Myspace' }"><i class="el-icon-location-outline"></i>
@@ -152,7 +152,7 @@
               
         </div>
 
-      	<router-view style="height: cacl(100%-10px);margin-top: 20px;"></router-view>
+      	<router-view style="height: inherit;overflow-x: hidden;"></router-view>
 
 
 
@@ -375,10 +375,15 @@ import SylTitle from '@/assets/systitle.png'
   .hideMain{
     height: inherit;
     margin-left: 100px;
+    overflow-y: hidden;
   }
   .Main{
     height: inherit;
     margin-left: 240px;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0px 0px 0px;
 
   }
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="modelContent">
+    <div class="modelContent" style="height: inherit;">
       <!--<div class="left">-->
           <!--<div><p>模型变量视图：</p></div>-->
           <variabletree  ></variabletree>
