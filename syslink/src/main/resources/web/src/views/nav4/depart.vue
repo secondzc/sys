@@ -442,14 +442,20 @@
   }
 </script>
 
-<style scoped >
+<style  >
 
 
 .zk-table{
-  height: 100%;
-  overflow-y:hidden;
+  height: -moz-calc(100% - 30px)!important;
+   height :-webkit-calc(100% - 30px)!important; 
+   height : calc(100% - 30px)!important;
+ 
 }
- .zk-table__header-wrapper {
-    overflow-y: hidden;
+.zk-table__body-wrapper {
+    overflow: auto!important;
+    height: calc(100%-60px)!important;
+     height: -moz-calc(100% - 60px)!important;
+    height :-webkit-calc(100% - 60px)!important; 
 }
+
 </style>
