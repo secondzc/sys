@@ -31,7 +31,7 @@
     </div> -->
     </div>
     	    <h3>详情查看</h3> 
-            <el-button @click="toTree">转到模型树</el-button> 
+            <el-button type="primary" @click="toTree" style="margin-left:20px;">转到模型树</el-button> 
   </section> 
 </template>
 
