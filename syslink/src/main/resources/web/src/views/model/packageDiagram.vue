@@ -338,7 +338,7 @@
                 }
             },
             goReposity(){
-                location.href = "http://syslink.com:3000" + "/"+ "admin" +"/"+ this.form.name.split(".",1)[0]
+                location.href = "http://syslink.com:3000" + "/"+ "admin" +"/"+ this.form.userName + this.form.name.split(".",1)[0]
             }
         }
     };

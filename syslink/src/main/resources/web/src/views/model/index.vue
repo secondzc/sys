@@ -30,14 +30,11 @@
                                   width="30%"
                                   >
                               <!--<span>这是一段信息</span>-->
-                              <upload-file @refreshModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></upload-file>
+                              <upload-file @refreshModel="getModel" style="text-align: center;" ></upload-file>
                               <!--<span slot="footer" class="dialog-footer">-->
                                 <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                                 <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
-                               <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
- 
-                                <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button> 
                           </el-dialog>
 
 
@@ -138,7 +135,7 @@
                                         width="150" >
                                     <template scope="scope">
                                        
-                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;height: 95px;"/>
+                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;"/>
                                         
                                         
                                     </template>
@@ -273,7 +270,7 @@
                 </div>
                 <div  style="display: flex;flex-direction: column;height:inherit;width: auto;">
 
-                    <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: flex-start;
+                    <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: center;
               display: flex;flex-wrap: wrap;height:calc(100% - 66px);border-bottom: solid 1px #e6e6e6;">
                     
 
@@ -509,8 +506,6 @@
                 }
             };
             return {
-               allowToReviewFlag:false,
- 
                url: {
               C: '',
               U: '',
@@ -680,18 +675,7 @@
                     resolve(data);
                 }, 500);
             },
-                    allowToReview(){
- 
-              this.allowToReviewFlag=true;
- 
-            },
- 
-            toReview(){
- 
-              this.$router.push({path:'/brief'});
- 
-            },
- 
+        
 
 
         hanldeNodeClick (data) {
