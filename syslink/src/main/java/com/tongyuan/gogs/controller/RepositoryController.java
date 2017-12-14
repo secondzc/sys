@@ -194,15 +194,8 @@ public class RepositoryController extends BaseController{
         repository.setNumForks(repository.getNumForks()+1);
         repositoryService.update(repository);
         //第一次执行时把fork对象的库复制到用户下面
-        FileUtils.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ userName + gUser.getLoginName()+ repositoryName.toLowerCase() +".git" + "/");
+        FileUtils.copyDirectoryCover(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ userName + gUser.getLoginName()+ repositoryName.toLowerCase() +".git" + "/",true);
     }
-
-
-
-
-
-
-
 }
 
 
