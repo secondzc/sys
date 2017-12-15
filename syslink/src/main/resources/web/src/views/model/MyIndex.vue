@@ -164,7 +164,7 @@
 
                                 <el-table-column
                                         label="类型"
-                                        prop="classes"
+                                        prop="type"
                                         min-width=100
                                          >
                                 
