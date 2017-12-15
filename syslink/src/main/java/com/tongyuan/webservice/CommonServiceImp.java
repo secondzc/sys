@@ -299,6 +299,7 @@ public class CommonServiceImp implements CommonService {
 	public String uploadModel(String userName,Long classID,String fileName, long beginPos, long length,
 		byte[] data){
 		fileName = fileName.split("\\.")[0];
+		GUser user =  gUserService.querListByName(userName);
 		System.out.println("starting create the repository...");
 		Boolean isScopeDir = directoryController.isScope(classID);
 /*		if(isScopeDir){
@@ -308,7 +309,13 @@ public class CommonServiceImp implements CommonService {
 		}*/
 		//当用户上传模型到公有库（fork到admin用户下面）
 		if(isScopeDir){
-			repositoryController.forkAndCollaboration(userName,fileName);
+			Map<String,Object> param = new HashMap<>();
+			param.put("userId",user.getID());
+			param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
+			Repository repository = repositoryService.queryByNameAndUserId(param);
+			if(repository == null) {
+				repositoryController.forkAndCollaboration(userName, fileName);
+			}
 		}
 
 		System.out.println("End create the repository...");
@@ -385,7 +392,7 @@ public class CommonServiceImp implements CommonService {
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
 		Model nullModel = modelService.queryByNameAndDir(param);*/
-		GUser user =  gUserService.querListByName(userName);
+
 		String repository = subFiles[0].split("\\.")[0];
 		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + ".git";
 		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
