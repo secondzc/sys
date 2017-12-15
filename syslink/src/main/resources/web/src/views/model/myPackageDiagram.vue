@@ -256,7 +256,7 @@
             addStar(item){
                 if(item.alreadyStar == false){
                     var _this = this;
-                    var url = '/api/star/add?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    var url = '/api/star/add?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" +  _this.name
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -268,7 +268,7 @@
                 }
                 if(item.alreadyStar == true){
                     var _this = this;
-                    var url = '/api/star/delete?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    var url = '/api/star/delete?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" +  _this.name
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -283,7 +283,7 @@
             addWatch(item){
                 if(item.alreadyWatch == false){
                     var _this = this;
-                    var url = '/api/watch/add?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    var url = '/api/watch/add?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" +  _this.name
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -295,7 +295,7 @@
                 }
                 if(item.alreadyWatch == true){
                     var _this = this;
-                    var url = '/api/watch/delete?userId='+ item.userId +"&repoName=" +item.repositoryName
+                    var url = '/api/watch/delete?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" +  _this.name
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
