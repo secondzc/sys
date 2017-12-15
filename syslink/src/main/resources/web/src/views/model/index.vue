@@ -586,8 +586,8 @@
                     },
                 file:{
                     dialogVisible: false,
-                }
-                ,
+                },
+                name : this.$store.state.userInfo.profile.name,
                 publicDirId : this.$store.getters.publicDirId.data.id,
             };
         },
@@ -854,12 +854,13 @@
         addStar(item){
             if (item.alreadyStar == false) {
                 var _this = this;
-                var url = '/api/star/add?userId=' + item.userId + "&repoName=" + item.repositoryName
+                var url = '/api/star/add?userId=' + item.userId + "&repoName=" + item.repositoryName + "&repoOwner=" +  _this.name
                 _this.$http.post(url)
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
                             item.alreadyStar = true;
+                            item.numberStar = item.numberStar +1;
                             _this.modelVariable(item);
                         }
                     }).catch(function (error) {
@@ -868,12 +869,13 @@
             }
             if (item.alreadyStar == true) {
                 var _this = this;
-                var url = '/api/star/delete?userId=' + item.userId + "&repoName=" + item.repositoryName
+                var url = '/api/star/delete?userId=' + item.userId + "&repoName=" + item.repositoryName + "&repoOwner=" +  _this.name
                 _this.$http.post(url)
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
                             item.alreadyStar = false;
+                            item.numberStar = item.numberStar -1;
                             _this.modelVariable(item);
                         }
                     }).catch(function (error) {
@@ -885,12 +887,13 @@
         addWatch(item){
             if (item.alreadyWatch == false) {
                 var _this = this;
-                var url = '/api/watch/add?userId=' + item.userId + "&repoName=" + item.repositoryName
+                var url = '/api/watch/add?userId=' + item.userId + "&repoName=" + item.repositoryName + "&repoOwner=" +  _this.name
                 _this.$http.post(url)
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
                             item.alreadyWatch = true;
+                            item.numberWatch = item.numberWatch +1;
                             _this.modelVariable(item);
                         }
                     }).catch(function (error) {
@@ -899,12 +902,13 @@
             }
             if (item.alreadyWatch == true) {
                 var _this = this;
-                var url = '/api/watch/delete?userId=' + item.userId + "&repoName=" + item.repositoryName
+                var url = '/api/watch/delete?userId=' + item.userId + "&repoName=" + item.repositoryName + "&repoOwner=" +  _this.name
                 _this.$http.post(url)
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
                             item.alreadyWatch = false;
+                            item.numberWatch = item.numberWatch -1;
                             _this.modelVariable(item);
                         }
                     }).catch(function (error) {
