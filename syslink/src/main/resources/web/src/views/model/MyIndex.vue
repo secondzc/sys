@@ -844,6 +844,8 @@
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
+                            item.alreadyStar = true;
+                            _this.modelVariable(item);
                         }
                     }).catch(function (error) {
                     console.log(error);
@@ -856,6 +858,8 @@
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
+                            item.alreadyStar = false;
+                            _this.modelVariable(item);
                         }
                     }).catch(function (error) {
                     console.log(error);
@@ -871,6 +875,8 @@
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
+                            item.alreadyWatch = true;
+                            _this.modelVariable(item);
                         }
                     }).catch(function (error) {
                     console.log(error);
@@ -883,6 +889,8 @@
                     .then(function (response) {
                         if (response.data.msg == "ok") {
                             _this.getModel();
+                            item.alreadyWatch = false;
+                            _this.modelVariable(item);
                         }
                     }).catch(function (error) {
                     console.log(error);
