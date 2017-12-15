@@ -612,30 +612,18 @@ public class ModelController extends  BaseController {
                 modelWeb.setInfoTextPath("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getInfoTextPath().substring(7));
             }
             for (Repository repository: allRepository) {
-                if(modelWeb.getRepositoryName().equals(repository.getName())){
-                    //关注列表
-                    List<Watch> watches = new ArrayList<>();
-                    for (Watch watch : allWatch){
-                        if(repository.getID() == watch.getRepoID()){
-                            watches.add(watch);
-                        }
-                        if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
-                            modelWeb.setAlreadyWatch(true);
-                        }
+                if(model.getScope()){
+                    if((user.getName()+modelWeb.getRepositoryName()).equals(repository.getName())){
+                        setWebModelWatchAndStar(allWatch,repository,modelWeb,allStar);
                     }
-                    modelWeb.setNumberWatch(watches.size());
-                    //收藏列表
-                    List<Star> stars = new ArrayList<>();
-                    for (Star star : allStar) {
-                        if (repository.getID() == star.getRepoId()){
-                            stars.add(star);
-                        }
-                        if(repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()){
-                            modelWeb.setAlreadyStar(true);
-                        }
-                    }
-                    modelWeb.setNumberStar(stars.size());
                 }
+                else{
+                        if(modelWeb.getRepositoryName().equals(repository.getName())){
+                            setWebModelWatchAndStar(allWatch,repository,modelWeb,allStar);
+                        }
+                    }
+
+
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -652,55 +640,30 @@ public class ModelController extends  BaseController {
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
-//    @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
-//                           HttpServletRequest request , HttpServletResponse response){
-//        JSONObject jo=new JSONObject();
-//        //查询到所有的model
-//        List<Model> allModel = modelService.findAllModel();
-//        //过滤后的modelList
-//        List<Model> searchModel = new ArrayList<>();
-//        //树子节点所有id
-//        List<Long> modelIdList = new ArrayList<>();
-//        TreeObj treeObj = new TreeObj();
-//        //返回一个Tree数组对象
-//        List<TreeObj> treeObjList = new ArrayList<>();
-//        try {
-//            //获取根节点模型
-//            Model rootModel = modelService.queryModelById(modelId);
-//            //获取树节点的所有id
-////            getModelChildTree(rootModel.getId(), allModel,modelIdList);
-////            modelIdList.add(modelId);
-////            //所需要的ModelTree
-////            for (Long id: modelIdList) {
-////                for (Model model: allModel) {
-////                   if(id == model.getId()) {
-////                       searchModel.add(model);
-////                   }
-////                }
-////            }
-//            //子节点
-//            List<TreeObj> treeChild = new ArrayList<>();
-//            treeObj.setId(rootModel.getId());
-//            treeObj.setLabel(rootModel.getName());
-//            getModelChildTree(modelId,allModel,treeChild);
-//            treeObj.setChildren(treeChild);
-//            treeObjList.add(treeObj);
-//
-//        }catch(Exception e) {
-//            e.printStackTrace();
-//            jo.put("status","1");
-//            jo.put("code",0);
-//            jo.put("msg","ok");
-//            return jo;
-//        }
-//        jo.put("status",1);
-//        jo.put("code",0);
-//        jo.put("msg","ok");
-//        jo.put("data",treeObjList);
-//        return (JSONObject) JSONObject.toJSON(jo);
-//    }
+    public void setWebModelWatchAndStar(List<Watch> allWatch,Repository repository,ModelWeb modelWeb,List<Star> allStar){
+        List<Watch> watches = new ArrayList<>();
+        for (Watch watch : allWatch){
+            if(repository.getID() == watch.getRepoID()){
+                watches.add(watch);
+            }
+            if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
+                modelWeb.setAlreadyWatch(true);
+            }
+        }
+        modelWeb.setNumberWatch(watches.size());
+        //收藏列表
+        List<Star> stars = new ArrayList<>();
+        for (Star star : allStar) {
+            if (repository.getID() == star.getRepoId()){
+                stars.add(star);
+            }
+            if(repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()){
+                modelWeb.setAlreadyStar(true);
+            }
+        }
+        modelWeb.setNumberStar(stars.size());
+    }
+
 
 
     @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
