@@ -199,8 +199,15 @@ public class DirectoryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        GUser user =  gUserService.querListByName(name);
         if(scope){
-            repositoryController.forkAndCollaboration(name,fileName);
+            Map<String,Object> param = new HashMap<>();
+            param.put("userId",user.getID());
+            param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
+            Repository repository = repositoryService.queryByNameAndUserId(param);
+            if(repository == null) {
+                repositoryController.forkAndCollaboration(name,fileName);
+            }
         }
         System.out.println("starting upload the file...");
         boolean result = false;
@@ -265,7 +272,7 @@ public class DirectoryController {
 //               "     /.git";
 
 
-        GUser user =  gUserService.querListByName(name);
+
        this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
         //遍历xmlMap进行数据的插入
         for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
