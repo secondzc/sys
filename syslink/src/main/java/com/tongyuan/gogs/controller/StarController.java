@@ -41,12 +41,18 @@ public class StarController {
     @ResponseBody
     public JSONObject add(@RequestParam(value = "userId",required = false)Long user_id,
                           @RequestParam(value = "repoName",required = false)String repoName,
+                          @RequestParam(value = "repoOwner",required = false)String repoOwner,
                           HttpServletRequest request , HttpServletResponse response)
     {
         JSONObject jo = new JSONObject();
         try{
+            GUser owner = gUserService.querListByName(repoOwner);
             Star star = new Star();
-            Repository repository = repositoryService.queryByName(repoName);
+ //           Repository repository = repositoryService.queryByName(repoName);
+            Map<String,Object> param = new HashMap<>();
+            param.put("userId",owner.getID());
+            param.put("repositoryName",repoName.toLowerCase());
+            Repository repository = repositoryService.queryByNameAndUserId(param);
             if(user_id != null && !user_id.equals("")  && repository!= null  ){
                 star.setUid(user_id);
                 star.setRepoId(repository.getID());
@@ -73,12 +79,18 @@ public class StarController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject delete(@RequestParam(value = "userId",required = false)Long user_id,
-                          @RequestParam(value = "repoName",required = false)String repoName,
+                             @RequestParam(value = "repoName",required = false)String repoName,
+                             @RequestParam(value = "repoOwner",required = false)String repoOwner,
                           HttpServletRequest request , HttpServletResponse response)
     {
         JSONObject jo = new JSONObject();
         try{
-            Repository repository = repositoryService.queryByName(repoName);
+            GUser owner = gUserService.querListByName(repoOwner);
+            Map<String,Object> param = new HashMap<>();
+            param.put("userId",owner.getID());
+            param.put("repositoryName",repoName.toLowerCase());
+            Repository repository = repositoryService.queryByNameAndUserId(param);
+//            Repository repository = repositoryService.queryByName(repoName);
             if(user_id != null && !user_id.equals("")  && repository != null  ){
                 Map<String, Object> params = new HashMap<>();
                 params.put("uid",user_id);

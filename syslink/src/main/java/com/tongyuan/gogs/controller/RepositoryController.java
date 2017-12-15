@@ -8,6 +8,7 @@ import com.tongyuan.gogs.service.*;
 import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.wrapper.RepositoryWarpper;
 import com.tongyuan.util.FileUtils;
+import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,8 @@ public class RepositoryController extends BaseController{
     private CollaborationService collaborationService;
     @Autowired
     private AccessService accessService;
+    @Autowired
+    private ModelUtil modelUtil;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -125,6 +128,7 @@ public class RepositoryController extends BaseController{
 
     public  JSONObject addRepository(String name,String fileName,Boolean scope){
         JSONObject jo = new JSONObject();
+        Map<String,Object> param = new HashMap<>();
         //查看模型库是否存在
         String userName = "";
         if(scope == null){
@@ -148,7 +152,10 @@ public class RepositoryController extends BaseController{
         repositoryService.setParameter(repository);
         Long repositoryId = repositoryService.add(repository);
         //查找插入的仓库对象
-        Repository repositoryData = repositoryService.queryByName(fileName);
+        param.put("userId",user.getID());
+        param.put("repositoryName",fileName.toLowerCase());
+        Repository repositoryData = repositoryService.queryByNameAndUserId(param);
+   //     Repository repositoryData = repositoryService.queryByName(fileName);
         Watch watch = new Watch();
         watch.setRepoID(repositoryData.getID());
         watch.setUserID(user.getID());
@@ -194,7 +201,9 @@ public class RepositoryController extends BaseController{
         repository.setNumForks(repository.getNumForks()+1);
         repositoryService.update(repository);
         //第一次执行时把fork对象的库复制到用户下面
-        FileUtils.copyDirectoryCover(System.getProperty("user.home")+"/gogs-repositories/"+ userName+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ userName + gUser.getLoginName()+ repositoryName.toLowerCase() +".git" + "/",true);
+        modelUtil.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ userName.toLowerCase()+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/");
+        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + repositoryName.toLowerCase() +".git");
+        file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + userName.toLowerCase() + repositoryName.toLowerCase() +".git"));
     }
 }
 
