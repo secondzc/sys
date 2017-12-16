@@ -309,8 +309,9 @@ public class CommonServiceImp implements CommonService {
 		}*/
 		//当用户上传模型到公有库（fork到admin用户下面）
 		if(isScopeDir){
+			GUser admin = gUserService.querListByName("admin");
 			Map<String,Object> param = new HashMap<>();
-			param.put("userId",user.getID());
+			param.put("userId",admin.getID());
 			param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
 			Repository repository = repositoryService.queryByNameAndUserId(param);
 			if(repository == null) {

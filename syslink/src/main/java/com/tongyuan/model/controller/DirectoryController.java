@@ -201,8 +201,9 @@ public class DirectoryController {
         }
         GUser user =  gUserService.querListByName(name);
         if(scope){
+            GUser admin = gUserService.querListByName("admin");
             Map<String,Object> param = new HashMap<>();
-            param.put("userId",user.getID());
+            param.put("userId",admin.getID());
             param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
             Repository repository = repositoryService.queryByNameAndUserId(param);
             if(repository == null) {
