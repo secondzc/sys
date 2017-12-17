@@ -10,17 +10,18 @@
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="template_id" property="templateId" jdbcType="BIGINT"/>
+        <result column="hidden" property="hidden" jdbcType="BOOLEAN"/>
     </resultMap>
 
     <sql id="baseColumnList">
-        instance_id,review_flow_instance.create_time,description,instance_name,review_flow_instance.last_update_time,model_id,status,template_id
+        instance_id,review_flow_instance.create_time,description,instance_name,review_flow_instance.last_update_time,model_id,status,template_id,hidden
     </sql>
 
     <insert id="add" parameterType="com.tongyuan.model.domain.ReviewNodeInstance" useGeneratedKeys="true" keyProperty="instanceId">
         INSERT INTO review_flow_instance
-        (create_time,description,instance_name,last_update_time,model_id,status,template_id)
+        (create_time,description,instance_name,last_update_time,model_id,status,template_id,hidden)
         VALUES
-        (#{createTime},#{description},#{instanceName},#{lastUpdateTime},#{modelId},#{status},#{templateId})
+        (#{createTime},#{description},#{instanceName},#{lastUpdateTime},#{modelId},#{status},#{templateId},FALSE)
     </insert>
 
     <select id="queryByInstanceId" parameterType="java.lang.Long" resultMap="baseResultMap">
@@ -31,7 +32,9 @@
     </select>
 
     <delete id="deleteByInstanceIds" parameterType="java.lang.String">
-        DELETE FROM review_flow_instance WHERE instance_id IN
+        UPDATE review_flow_instance
+        SET hidden = TRUE
+        WHERE instance_id IN
         <foreach item="idItem" collection="array" open="(" separator="," close=")">
             #{idItem}
         </foreach>
@@ -58,6 +61,7 @@
             #{statusItem}
         </foreach>
         AND #{userId} = model.user_id
+        AND hidden = FALSE
     </select>
 
     <update id="updateTime" parameterType="java.util.Map">

@@ -26,8 +26,20 @@ public class ReviewFlowInstance {
     private Byte status;
     @Column
     private Timestamp createTime;
+
+    public Boolean getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
     @Column
+
     private Timestamp lastUpdateTime;
+    @Column
+    private Boolean hidden;
 
 
     public Long getInstanceId() {

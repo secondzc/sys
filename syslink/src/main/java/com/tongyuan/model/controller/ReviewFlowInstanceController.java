@@ -121,7 +121,7 @@ public class ReviewFlowInstanceController extends BaseController {
     }
 
     /**
-     * 根据id删除流程实例
+     * 根据id删除流程实例(并不是删一行，而相当于是设一个隐藏的标志位）
      * @param request
      * @param response
      */

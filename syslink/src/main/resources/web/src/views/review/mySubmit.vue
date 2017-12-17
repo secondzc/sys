@@ -128,9 +128,6 @@
                 });
                 //当异步获取的结果返回之后才能存入packageId            
     		},
-    		remove(row){
-
-    		},
     		selsChange(sels){
     			this.sels = sels;
     		},
