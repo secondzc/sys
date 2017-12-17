@@ -31,7 +31,8 @@
     </div> -->
     </div>
     	    <h3>查看/下载</h3> 
-            <el-button type="primary" @click="toTree" style="margin-left:20px;">查看</el-button>
+    	    </el-popover>
+            <el-button type="primary" @click="toTree" style="margin-left:20px;" :disabled="!isModelica">查看</el-button>
             <el-button type="primary" @click="download" :loading="downloading">下载</el-button> 
   </section> 
 </template>
@@ -49,6 +50,7 @@
 				},
 				listLoading: false,
 				downloading:false,
+				isModelica: false,
 			}
 		},
 		// props: {
@@ -78,6 +80,7 @@
 				this.func.ajaxPost(url,{instanceId:this.instanceId},res=>{
 					if(res.data.flag==true){
 						this.reviewModel = res.data.reviewModel;
+						this.isModelica = (res.data.reviewModel.type==='Modelica'?true:false);
 						this.listLoading = false;
 					}
 				})
