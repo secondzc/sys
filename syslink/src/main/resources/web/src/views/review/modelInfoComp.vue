@@ -30,8 +30,9 @@
         <model-tree></model-tree>
     </div> -->
     </div>
-    	    <h3>详情查看</h3> 
-            <el-button type="primary" @click="toTree" style="margin-left:20px;">转到模型树</el-button> 
+    	    <h3>查看/下载</h3> 
+            <el-button type="primary" @click="toTree" style="margin-left:20px;">查看</el-button>
+            <el-button type="primary" @click="download" :loading="downloading">下载</el-button> 
   </section> 
 </template>
 
@@ -47,6 +48,7 @@
 					createTime:'',
 				},
 				listLoading: false,
+				downloading:false,
 			}
 		},
 		// props: {
@@ -57,6 +59,18 @@
 		// },
 		//props: ['instanceId'],
 		methods: {
+			download(){
+				let url="/api/model/download";
+				this.downloading=true;
+				this.func.ajaxPost(url,{modelId:this.reviewModel.id},res=>{
+					if(res.data.flag){
+						this.$message({
+							message:'下载成功！',
+						});
+						this.downloading=flase;
+					}
+				})
+			},
 			getReviewModel(){
 				this.listLoading=true;
 				console.log("instanceId="+this.instanceId);
