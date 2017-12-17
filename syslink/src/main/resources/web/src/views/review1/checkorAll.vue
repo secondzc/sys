@@ -1,18 +1,30 @@
 <template>
 	<section>
 		
+        <!--工具条-->
+		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+			<el-form :inline="true" >
+				<el-form-item>
+					<el-input v-model="modelName" placeholder="模型名"></el-input>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" v-on:click="getDetail">查询</el-button>
+				</el-form-item>
+			</el-form>
+		</el-col>
+
 		<!--包括同意、不同意、正在审核  这三种情况-->
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
 			<el-table-column type="index" min-width="60" v-if="false">
 			</el-table-column>
-			<el-table-column prop="model.name" label="模型名" min-width=120>
+			<el-table-column prop="model.name" label="模型名" min-width=120 sortable>
 			</el-table-column>
-			<el-table-column prop="userName" label="用户名" min-width=120>
+			<el-table-column prop="userName" label="用户名" min-width=120 sortable>
 			</el-table-column>
-			<el-table-column prop="createTime" label="创建时间" min-width=180>
+			<el-table-column prop="createTime" label="创建时间" min-width=180 sortable>
 			</el-table-column>
 
-			<el-table-column prop="reviewNodeInstance.status" label="审签状态" min-width="150" :formatter="format">
+			<el-table-column prop="reviewNodeInstance.status" label="审签状态" min-width="150" :formatter="format" sortable>
 			</el-table-column>
 			<el-table-column label="操作" min-width=300>
 				<template scope="scope">
@@ -48,7 +60,7 @@
 				detail:[],
 				listLoading:false,
 				sels: [],
-
+				modelName: '',
 			}
 		},
 		methods: {
@@ -94,6 +106,7 @@
 				let params = {
 					page:this.page,
 					rows: this.pageSize,
+					modelName: this.modelName,
 				}
 				this.func.ajaxPost(url,params,res=>{
 					this.pages = res.data.pages;

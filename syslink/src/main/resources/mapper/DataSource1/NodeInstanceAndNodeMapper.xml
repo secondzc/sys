@@ -54,8 +54,8 @@
         INNER JOIN review_node E ON D.node_id = E.node_id
         WHERE
         D.status = 2 AND E.user_id = #{userId}
-        <if test="instanceName!=null and instanceName!=''">
-            AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
+        <if test="modelName!=null and modelName!=''">
+            AND B.name LIKE CONCAT(CONCAT('%',#{modelName,jdbcType=VARCHAR}),'%')
         </if>
     </select>
 
@@ -84,8 +84,8 @@
         E.user_id = #{userId}
         AND
         (D.status=2 OR D.status=3 OR D.status=4)
-        <if test="instanceName!=null and instanceName!=''">
-            AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
+        <if test="modelName!=null and modelName!=''">
+            AND B.name LIKE CONCAT(CONCAT('%',#{modelName,jdbcType=VARCHAR}),'%')
         </if>
     </select>
 

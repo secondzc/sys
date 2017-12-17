@@ -24,11 +24,11 @@
 			<el-table-column type="selection" width="50">
 			</el-table-column>
 			
-            <el-table-column prop="instanceName" label="模型名" min-width="120" >
+            <el-table-column prop="instanceName" label="模型名" min-width="120" sortable>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" min-width="120" >
+            <el-table-column prop="createTime" label="创建时间" min-width="120" sortable>
             </el-table-column>
-            <el-table-column prop="status" label="当前状态" min-width="120" :formatter="format">
+            <el-table-column prop="status" label="当前状态" min-width="120" :formatter="format" sortable>
             </el-table-column>
 
 			<el-table-column label="操作" width="300" >
