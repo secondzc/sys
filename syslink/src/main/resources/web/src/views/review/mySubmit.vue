@@ -24,12 +24,13 @@
 			<el-table-column prop="status" label="当前状态" min-width="120" :formatter="format">
 			</el-table-column>
 
-			<el-table-column label="操作" width="200">
-				<template scope="scope">
-					<el-button size="small" @click="detail(scope.$index,scope.row)">查看详情</el-button>
-					<el-button type="danger" size="small" @click="remove(scope.row)">删除</el-button>
-				</template>
-			</el-table-column>
+			<el-table-column label="操作" width="300" >
+                <template scope="scope">
+                    <el-button size="small" @click="detail(scope.$index,scope.row)" :disabled="scope.row.status==4">查看详情</el-button>
+                    <el-button size="small" @click="cancel(scope.$index,scope.row)" :disabled="scope.row.status==4">撤销流程</el-button>
+                    <el-button type="danger" size="small" @click="remove(scope.row)">删除记录</el-button>
+                </template>
+            </el-table-column>
 		</el-table>
 
         <!--工具条-->
@@ -77,6 +78,20 @@
             },
         },
     	methods: {
+             cancel(index,row){
+                var url='/api/reviewFlowInstance/cancel';
+                this.listLoading = true;
+                this.func.ajaxPost(url,{instanceId:row.instanceId},res=>{
+                    if(res.data.flag===true){
+                        this.listLoading = false;
+                        this.$message({
+                            type:'success',
+                            message:'撤销成功',
+                        });
+                        this.getInstance();
+                    };
+                });
+            },
     		getInstance(){
                 //这里是brief的组件，只查询提交的审签中的流程，即status为1 
     			this.listLoading = true;

@@ -9,10 +9,17 @@
 			</el-table-column>
 			<el-table-column prop="userName" label="用户名" min-width=120>
 			</el-table-column>
-			<el-table-column prop="createTime" label="创建时间" min-width=120>
+			<el-table-column prop="createTime" label="创建时间" min-width=180>
 			</el-table-column>
 
 			<el-table-column prop="reviewNodeInstance.status" label="审签状态" min-width="150" :formatter="format">
+			</el-table-column>
+			<el-table-column label="操作" min-width=300>
+				<template scope="scope">
+					<el-button size="small" @click="toDetail(scope.$index, scope.row)" >详情</el-button> 
+					<el-button size="small" @click="handleAgree(scope.$index, scope.row)" :disabled="passed(scope.row)">同意</el-button>
+					<el-button type="danger" size="small" @click="handleDisagree(scope.$index, scope.row)" :disabled="passed(scope.row)">拒绝</el-button>
+				</template>
 			</el-table-column>
 		</el-table>
 
@@ -45,6 +52,42 @@
 			}
 		},
 		methods: {
+			toDetail(index,row){ 
+                //转到详情页 
+                sessionStorage.setItem('instanceId',row.reviewNodeInstance.instanceId); 
+                sessionStorage.setItem('id',row.id);
+                this.$router.push({path:'/checkorDetail'});
+             }, 
+             handleAgree(index,row){
+				let url="/api/checkor/agree";
+				this.func.ajaxPost(url,{id:row.id},res=>{
+					if(res.data.flag==true){
+						this.$message({
+							message:'操作成功！'
+						})
+						this.getDetail();
+					}
+				})
+			},
+			handleDisagree(index,row){
+				let url="/api/checkor/disagree";
+				this.func.ajaxPost(url,{id:row.id},res=>{
+					if(res.data.flag==true){
+						this.$message({
+							message:'操作成功！'
+						})
+						this.getDetail();
+					}
+				})
+			},
+			passed(row){
+				console.log('检查是否审核过了',row);
+				if(row.reviewNodeInstance.status===2){
+					return false;
+				}else{
+					return true;
+				}
+			},
 			getDetail(){
 				this.listLoading = true;
 				let url = "api/checkor/queryAllByReviewer";
