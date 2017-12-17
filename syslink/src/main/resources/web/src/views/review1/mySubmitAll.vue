@@ -1,7 +1,7 @@
 <template>
 
 	<section>
-        <h3>其他提交流程记录</h3> 
+        
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             

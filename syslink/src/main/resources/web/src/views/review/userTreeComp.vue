@@ -1,5 +1,6 @@
 <template>
 	<section>
+	<el-row>
 		<el-tree
 	:data="data2"
 	show-checkbox
@@ -9,9 +10,12 @@
 	highlight-current
 	:props="defaultProps"
 	@check-change="check">
-</el-tree>
-    <el-button type="primary" @click="affirm" :disabled="this.namesNum!==1">确定</el-button>
-	</section>
+   </el-tree>
+   </el-row>
+   <el-row>
+    <el-button type="primary" @click="affirm" :disabled="this.namesNum!==1" style="float:right;margin-bottom:10px;">确定</el-button>
+    </el-row>
+    </section>
 	
 
 </template>
