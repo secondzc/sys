@@ -23,16 +23,14 @@
 		<el-table :data="instances" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="50">
 			</el-table-column>
-			<el-table-column prop="instanceName" label="流程名" width="120" >
-			</el-table-column>
-			<el-table-column prop="description" label="流程描述" width="120" >
-			</el-table-column>
-			<el-table-column prop="status" label="当前状态" width="120" :formatter="format">
-			</el-table-column>
-			<el-table-column prop="createTime" label="创建时间" width="180" >
-			</el-table-column>
-			<el-table-column prop="lastUpdateTime" label="最后修改时间" width="180" >
-			</el-table-column>
+			
+            <el-table-column prop="instanceName" label="模型名" min-width="120" >
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" min-width="120" >
+            </el-table-column>
+            <el-table-column prop="status" label="当前状态" min-width="120" :formatter="format">
+            </el-table-column>
+
 			<el-table-column label="操作" width="300" >
 				<template scope="scope">
 					<el-button size="small" @click="detail(scope.$index,scope.row)" :disabled="scope.row.status==4">查看详情</el-button>

@@ -4,11 +4,11 @@
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width:100%;">
 			<el-table-column type="index" v-if="false" >
 			</el-table-column>
-			<el-table-column prop="instanceName" label="流程名" min-width="120" > 
-            </el-table-column> 
 			<el-table-column prop="model.name" label="模型名" min-width=120>
 			</el-table-column>
-			<el-table-column prop="template.templateName" label="模板名" width=120 >
+			<el-table-column prop="userName" label="用户名" min-width=120>
+			</el-table-column>
+			<el-table-column prop="createTime" label="创建时间" min-width=120>
 			</el-table-column>
 			<el-table-column label="操作" min-width=300>
 				<template scope="scope">
@@ -73,6 +73,8 @@
 					this.pages = res.data.pages;
                     this.total = res.data.total;
 					this.detail = res.data.records;
+					console.log('返回的结果');
+					console.log(this.detail);
 					this.listLoading = false;
 				})
 			},

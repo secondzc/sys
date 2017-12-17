@@ -20,6 +20,16 @@ public class CheckorPage {
     private String description;
     private Timestamp createTime;
     private Timestamp lastUpdateTime;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     private Model model;
     private ReviewFlowTemplate template;
     private ReviewNodeInstance reviewNodeInstance;

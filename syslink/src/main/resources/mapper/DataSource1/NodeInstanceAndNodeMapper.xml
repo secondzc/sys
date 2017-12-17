@@ -19,6 +19,7 @@
         <association property="model" javaType="com.tongyuan.model.domain.Model">
             <id property="id" column="id"/>
             <result property="name" column="model_name"/>
+            <result property="userId" column="model_user_id"/>
         </association>
         <association property="template" javaType="com.tongyuan.model.domain.ReviewFlowTemplate">
             <id property="templateId" column="review_flow_template_template_id"/>
@@ -43,7 +44,8 @@
         A.instance_name AS review_flow_instance_instance_name,
         B.name AS model_name,
         C.template_id AS review_flow_template_template_id,
-        C.template_name AS review_flow_template_template_name
+        C.template_name AS review_flow_template_template_name,
+        B.user_id AS model_user_id
 
         FROM  review_flow_instance A
         INNER JOIN model B ON  A.model_id = B.id
@@ -70,7 +72,8 @@
         B.name AS model_name,
         C.template_id AS review_flow_template_template_id,
         C.template_name AS review_flow_template_template_name,
-        D.status AS review_node_instance_status
+        D.status AS review_node_instance_status,
+        B.user_id AS model_user_id
 
         FROM  review_flow_instance A
         INNER JOIN model B ON  A.model_id = B.id
