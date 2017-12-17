@@ -57,6 +57,7 @@
         <if test="modelName!=null and modelName!=''">
             AND B.name LIKE CONCAT(CONCAT('%',#{modelName,jdbcType=VARCHAR}),'%')
         </if>
+        ORDER BY A.last_update_time DESC
     </select>
 
 
@@ -87,6 +88,7 @@
         <if test="modelName!=null and modelName!=''">
             AND B.name LIKE CONCAT(CONCAT('%',#{modelName,jdbcType=VARCHAR}),'%')
         </if>
+        ORDER BY D.status,A.last_update_time DESC
     </select>
 
 

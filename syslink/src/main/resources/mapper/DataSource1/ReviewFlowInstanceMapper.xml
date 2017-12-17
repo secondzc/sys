@@ -62,6 +62,7 @@
         </foreach>
         AND #{userId} = model.user_id
         AND hidden = FALSE
+        GROUP BY status,create_time DESC
     </select>
 
     <update id="updateTime" parameterType="java.util.Map">
