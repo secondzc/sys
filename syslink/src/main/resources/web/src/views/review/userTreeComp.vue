@@ -31,6 +31,7 @@ export default{
 			namesNum:0,
 		};
 	},
+	props:['reset'],
 	methods: {
 		//参数表示节点本身，节点是否被选中，节点的子树种是否有被选中的节点
 		check(var1,var2,var3){
@@ -54,6 +55,7 @@ export default{
 				}
 			};
             this.$emit('affirmName',this.names[0]);
+            this.reset=false;
 		},
 		getData2(){
 			var url='/api/userTree/query';
@@ -64,9 +66,18 @@ export default{
 			});
 		},
 	},
+	watch:{
+		reset(val,oldval){
+			console.log(val+'  '+oldval);
+			if((!oldval) && val){
+				this.$refs.tree.setCheckedKeys([]);
+			}
+		}
+	},
 	mounted(){
 		this.getData2();
-	}
+		console.log('开始加载人员树');
+	},
 }
 </script>
 
