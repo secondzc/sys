@@ -1,11 +1,11 @@
 <template>
 	<section>
 		
-		<!--除了正在审签之外的列表-->
+		<!--包括同意、不同意、正在审核  这三种情况-->
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
-			<el-table-column type="index" min-width="60" >
+			<el-table-column type="index" min-width="60" v-if="false">
 			</el-table-column>
-			 <el-table-column prop="instanceName" label="流程名" width="150" > 
+			 <el-table-column prop="instanceName" label="流程名" min-width="150" > 
             </el-table-column> 
 			<el-table-column prop="model.name" label="模型名" min-width="100" >
 			</el-table-column>
@@ -95,6 +95,7 @@
 			format: function(row,column){
 				let status = row.reviewNodeInstance.status;
 				let msg = '';
+				//逻辑上来说查出来的数据只有2.3.4的情况
 				if(status==1){
 				 msg="未进入审核状态";
 				}else if(status ==2){

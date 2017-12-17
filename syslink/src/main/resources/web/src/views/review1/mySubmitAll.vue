@@ -91,14 +91,14 @@
                 });
             },
     		getInstance(){
-                //查询的除了审签中的之外所有状态的视图
+                //查询的所有状态的视图
                 //这时flowInstanceStatus为空，查询所有的
     			this.listLoading = true;
     			let params = {
     				flowInstanceName: this.filters.name,
     				page: this.page,
     				rows: this.pageSize,
-                    flowInstanceStatus: '2,3,4',
+                    flowInstanceStatus: '1,2,3,4',
     			}
     			let url="/api/reviewFlowInstance/queryByNameAndStatus";
     			this.func.ajaxPost(url,params,res=>{

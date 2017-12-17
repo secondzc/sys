@@ -2,9 +2,9 @@
 	<section>
 		<!--列表-->
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width:100%;">
-			<el-table-column type="index"  >
+			<el-table-column type="index" v-if="false" >
 			</el-table-column>
-			<el-table-column prop="instanceName" label="流程名" width="120" > 
+			<el-table-column prop="instanceName" label="流程名" min-width="120" > 
             </el-table-column> 
 			<el-table-column prop="model.name" label="模型名" min-width=120>
 			</el-table-column>

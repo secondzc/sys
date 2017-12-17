@@ -58,7 +58,7 @@
     </select>
 
 
-    <!--审核者按照审签实例的实例名来查找  只能看到轮到自己审核的，除了正在审签之外的状态的集合-->
+    <!--审核者按照审签实例的实例名来查找  只能看到轮到自己审核的，包括同意、不同意、正在审核的-->
     <select id="queryAllByReviewer" resultMap="pageResultMap" parameterType="java.util.Map">
         SELECT
         D.id AS review_node_instance_id,
@@ -80,7 +80,7 @@
         WHERE
         E.user_id = #{userId}
         AND
-        (D.status=1 OR D.status=3 OR D.status=4)
+        (D.status=2 OR D.status=3 OR D.status=4)
         <if test="instanceName!=null and instanceName!=''">
             AND A.instanceName LIKE CONCAT(CONCAT('%',#{instanceName,jdbcType=VARCHAR}),'%')
         </if>
