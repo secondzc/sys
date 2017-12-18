@@ -76,7 +76,7 @@
         WHERE instance_id=#{instanceId}
     </update>
 
-    <select id="queryByModelId" parameterType="java.lang.Long">
+    <select id="queryByModelId" parameterType="java.lang.Long" resultMap="baseResultMap">
         SELECT
         <include refid="baseColumnList"/>
         FROM review_flow_instance
