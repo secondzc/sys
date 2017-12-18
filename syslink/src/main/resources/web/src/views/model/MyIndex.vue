@@ -205,7 +205,7 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary" 
                                      size="small"
-                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!validateCAE(scope.row,scope.$index)"></el-button>
                                     </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
@@ -279,7 +279,7 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
-                                    <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" > </i>
+                                    <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="validateCAE(o)"> </i>
     
                                  </div>
                              
@@ -1030,16 +1030,15 @@
                         duration: 2000
                     });
                 }
-
             },
-//            handleClose(done) {
-//                this.$confirm('确认关闭？')
-//                    .then(_ => {
-//                        done();
-//                    })
-//                    .catch(_ => {});
-//            }
-
+            validateCAE(o){
+                if(o.type == 'Modelica'){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
     },
 
 

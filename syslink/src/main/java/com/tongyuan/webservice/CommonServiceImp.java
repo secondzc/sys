@@ -287,6 +287,8 @@ public class CommonServiceImp implements CommonService {
 		Map<String, Object> xmlMap = new HashMap<String, Object>();
 		//存放解析的所有xmlMap
 		Map<String,Map> xmlAnalysisMap = new HashMap<>();
+		//存放解析的CAExmlMap
+		Map<String,Map> caeXmlAnalysisMap = new HashMap<>();
 		//存放解析svg，info文件所在位置的Map
 		Map<String,String> svgPath = new HashMap<>();
 		Map<String,Object> params = new HashMap<String,Object>();
@@ -305,31 +307,43 @@ public class CommonServiceImp implements CommonService {
 		String fileXmlPath = directory.getRelativeAddress();
 		//获取到xml所在的文件位置
 		String xmlPath = "";
+		//获取cae模型xml所在职位
+		String caePath = "";
 		xmlPath= resourceUtil.getXmlPath(fileXmlPath,xmlPath);
 		//对xml进行解析,遍历xml文件下所有文件
 		if(StringUtil.isNull(xmlPath)){
-            result = false;
-        }
-		File xmlFilePath = new File(xmlPath);
-		String[] subFiles = xmlFilePath.list();
+			//       result = false;
+			caePath = resourceUtil.getCAEXmlPath(fileXmlPath,caePath);
+			File caeXmlFilePath = new File(caePath);
+			String[] caeSubFiles = caeXmlFilePath.list();
+			directoryController.insertCaeXmlInfo(caeSubFiles,caeXmlFilePath,xmlMap,caeXmlAnalysisMap);
+			for(Map.Entry<String,Map> entry : caeXmlAnalysisMap.entrySet()){
+				modelController.insertCAEData(entry,svgPath,isScopeDir,user,directory,classID);
+				modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ entry.getKey().split("\\.")[0] + ".git";
+			}
+
+		}else{
+			File xmlFilePath = new File(xmlPath);
+			String[] subFiles = xmlFilePath.list();
 /*		Model model = directoryController.setPackageParam(userName,subFiles,directory,classID,isScopeDir,filePath);
 		Map<String, Object> param = directoryController.isAddModelAndReview(subFiles,classID,model);
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
 		Model nullModel = modelService.queryByNameAndDir(param);*/
 
-		String repository = subFiles[0].split("\\.")[0];
-		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + ".git";
-		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
-		//遍历xmlMap进行数据的插入
-		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-			//解析xmlmap 把数据存放到数据
-			modelController.insertData(entry,svgPath,isScopeDir,user,directory,classID);
+			String repository = subFiles[0].split("\\.")[0];
+			modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + ".git";
+			directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
+			//遍历xmlMap进行数据的插入
+			for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+				//解析xmlmap 把数据存放到数据
+				modelController.insertData(entry,svgPath,isScopeDir,user,directory,classID);
+			}
+			//更新模型的层次结构
+			//获取package下面的所有model
+			directoryController.updateModelFramwork(userName,fileName);
+			System.out.println("上传完毕！！！");
 		}
-		//更新模型的层次结构
-		//获取package下面的所有model
-		directoryController.updateModelFramwork(userName,fileName);
-		System.out.println("上传完毕！！！");
 		return modelReposityUrl;
 	}
 
