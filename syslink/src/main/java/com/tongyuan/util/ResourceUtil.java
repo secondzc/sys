@@ -123,9 +123,6 @@ public class ResourceUtil {
                              byte[] data) throws IOException {
         boolean result = false;
         File file = new File(filePath);
-        if(file.exists()){
-            resourceUtil.deleteFile(filePath);
-        }
         RandomAccessFile ra = new RandomAccessFile(filePath, "rw");
         try {
             ra.seek(beginPos);
@@ -393,7 +390,7 @@ public class ResourceUtil {
     }
 
     //吧xml解析成map
-    private static Object xml2map(Element element) {
+    public static Object xml2map(Element element) {
         System.out.println(element);
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String,String> componentMap = new HashMap<String,String>();
