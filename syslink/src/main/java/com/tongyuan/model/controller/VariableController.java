@@ -252,7 +252,6 @@ public class VariableController {
         }else{
             return name;
         }
-
     }
 
      //组件浏览器（点击某个指定的模型，展示组件变量，切模型名要全称，组件变量名称要简写）

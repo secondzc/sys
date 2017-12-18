@@ -503,7 +503,7 @@ public class ModelController extends  BaseController {
                 modelWeb.setTextInfo(searchModel.get(i).getTextInfo());
                 modelWeb.setDirectoryId(searchModel.get(i).getDirectoryId());
                 modelWeb.setType(searchModel.get(i).getType());
-                if(searchModel.get(i).getDiagramSvgPath() != null && searchModel.get(i).getDiagramSvgPath() != ""){
+                if(searchModel.get(i).getIconSvgPath() != null && searchModel.get(i).getIconSvgPath() != ""){
                     modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
                 }
                 modelWeb.setUploadTime(searchModel.get(i).getCreateTime().getTime());
@@ -970,6 +970,83 @@ public class ModelController extends  BaseController {
         jo.put("msg","ok");
         return (JSONObject) JSONObject.toJSON(jo);
 
+    }
+
+    public void insertCAEData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,FileModel directory,Long directoryId){
+        Map<String,Object> xmlMap = entry.getValue();
+        Model model = new Model();
+        long modelId = 0;
+        String type = "";
+        Map<String,String> generalInfo = new HashMap<>();
+        if((Map<String, String>) xmlMap.get("GeneralInfo") != null){
+            generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
+            model.setUserId(user.getID());
+            model.setScope(scope);
+            model.setDirectoryId(directoryId);
+            model.setFileId(directory.getId());
+            model.setCreateTime(DateUtil.getTimestamp());
+            model.setLastUpdateTime(DateUtil.getTimestamp());
+            if(StringUtil.isNull((String) xmlMap.get("ModelType"))){
+                model.setType((String) xmlMap.get("ModelType"));
+            }
+            model.setDeleted(false);
+            model.setClasses("Model");
+            if(!StringUtil.isNull(generalInfo.get("IconFile"))){
+                model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
+            }
+            if(!StringUtil.isNull(generalInfo.get("Description"))){
+                model.setDiscription(generalInfo.get("Description"));
+            }
+            if(!StringUtil.isNull(generalInfo.get("Name"))){
+                model.setName(generalInfo.get("Name"));
+            }
+            Map<String, Object> param = new HashMap<>();
+            param.put("fileName",model.getName());
+            param.put("directoryId",directoryId);
+            Model validateModel = modelService.queryByNameAndDir(param);
+            if( validateModel == null){
+                modelService.add(model);
+                modelId = model.getId();
+            }else{
+                model.setLastUpdateTime(DateUtil.getTimestamp());
+                model.setId(validateModel.getId());
+                modelService.update(model);
+                modelId = validateModel.getId();
+            }
+        }
+        if((Map<String, Object>) xmlMap.get("Files") != null){
+            Map<String,Object> filesMap = (Map<String, Object>) xmlMap.get("Files");
+            type = decideType(filesMap.get("File"),type);
+            if("List".equals(type)){
+                List<Map<String,Object>> fileList = (List<Map<String, Object>>) filesMap.get("File");
+                for (Map<String,Object> file:fileList) {
+                    if(file.get("Variables") != null){
+                        Map<String,Object> variables = (Map<String, Object>) file.get("Variables");
+                        if(variables.get("Variable") != null){
+                            List<Map<String,String>> variableList = (List<Map<String, String>>) variables.get("Variable");
+                            for (Map<String,String> variable :variableList) {
+                                insertCAEVariable(variable,modelId);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    public void insertCAEVariable(Map<String,String> variable,Long modelId){
+        Variable caeVariable = new Variable();
+        caeVariable.setModelId(modelId);
+        caeVariable.setName(variable.get("Name"));
+        caeVariable.setType(variable.get("Type"));
+        caeVariable.setUnits(variable.get("Units"));
+        caeVariable.setUpperBound(variable.get("Max"));
+        caeVariable.setLowerBound(variable.get("Min"));
+        caeVariable.setCreateTime(DateUtil.getTimestamp());
+        if("".equals(variable.get("parentName"))){
+            variableService.add(caeVariable);
+        }
     }
 
 }

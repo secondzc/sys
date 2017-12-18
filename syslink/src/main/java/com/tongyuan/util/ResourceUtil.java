@@ -342,6 +342,36 @@ public class ResourceUtil {
         return path;
     }
 
+    public String getCAEXmlPath(String filePath, String caePath){
+        String path= "";
+        //查看这个根目录文件啊是否存在
+        File rootPath = new File(filePath);
+        if (!rootPath.exists()) {
+            System.out.println("文件或文件夹不存在");
+            return null;
+        }
+        String fileNameToLowerCase = rootPath.getName().trim().toLowerCase();
+        //找到xml所在的文件夹位置并输出
+        if(rootPath.isFile()){
+            if(fileNameToLowerCase.endsWith(".xmlwrapper")){
+                path =  rootPath.getParent();
+            }
+            else if(fileNameToLowerCase.endsWith(".lgw")){
+                path =  rootPath.getParent();
+            }
+        }
+        else{
+            String[] subFiles = rootPath.list();
+            for (int i = 0; i < subFiles.length; i++) {
+                path = getCAEXmlPath(rootPath +"/" +subFiles[i],path);
+                if(!StringUtil.isNull(path)){
+                    break;
+                }
+            }
+        }
+        return path;
+    }
+
     //解析xml
     public static Map<String,Object> analysisXmlPath(String xmlFilePath) {
         Map<String, Object> xmlMap = new HashMap<String, Object>();
@@ -368,6 +398,9 @@ public class ResourceUtil {
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String,String> componentMap = new HashMap<String,String>();
         List<Element> elements = element.elements();
+        if("Component".equals(element.getName())){
+            map.put("ModelType",element.attribute(0).getValue());
+        }
         if(element.getName().endsWith("_Model")){
             map.put(element.getName(),element.getText());
         }

@@ -207,7 +207,7 @@ public class DirectoryController {
             param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
             Repository repository = repositoryService.queryByNameAndUserId(param);
             if(repository == null) {
-                repositoryController.forkAndCollaboration(name,fileName);
+               repositoryController.forkAndCollaboration(name,fileName);
             }
         }
         System.out.println("starting upload the file...");
@@ -238,6 +238,8 @@ public class DirectoryController {
         Map<String, Object> xmlMap = new HashMap<String, Object>();
         //存放解析的所有xmlMap
         Map<String,Map> xmlAnalysisMap = new HashMap<>();
+        //存放解析的CAExmlMap
+        Map<String,Map> caeXmlAnalysisMap = new HashMap<>();
         //存放解析svg，info文件所在位置的Map
         Map<String,String> svgPath = new HashMap<>();
         Map<String,Object> params = new HashMap<String,Object>();
@@ -256,36 +258,45 @@ public class DirectoryController {
         String fileXmlPath = directory.getRelativeAddress();
         //获取到xml所在的文件位置
         String xmlPath = "";
+        //获取cae模型xml所在职位
+        String caePath = "";
         xmlPath= resourceUtil.getXmlPath(fileXmlPath,xmlPath);
         //对xml进行解析,遍历xml文件下所有文件
         if(StringUtil.isNull(xmlPath)){
-            result = false;
-        }
-        File xmlFilePath = new File(xmlPath);
-        String[] subFiles = xmlFilePath.list();
+     //       result = false;
+            caePath = resourceUtil.getCAEXmlPath(fileXmlPath,caePath);
+            File caeXmlFilePath = new File(caePath);
+            String[] caeSubFiles = caeXmlFilePath.list();
+            this.insertCaeXmlInfo(caeSubFiles,caeXmlFilePath,xmlMap,caeXmlAnalysisMap);
+            for(Map.Entry<String,Map> entry : caeXmlAnalysisMap.entrySet()){
+                     modelController.insertCAEData(entry,svgPath,scope,user,directory,directoryId);
+            }
+
+        }else{
+            File xmlFilePath = new File(xmlPath);
+            String[] subFiles = xmlFilePath.list();
 
 
 //        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
 //        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
-        //查找最外层空的model
-        //修改成根据插入的分类id找到对应的package包
+            //查找最外层空的model
+            //修改成根据插入的分类id找到对应的package包
 //       Model nullModel = modelService.queryByNameAndDir(param);  String modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + name.toLowerCase() + "/"+ nullModel.getName() + "\\\n" +
 //               "     /.git";
-
-
-
-       this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
-        //遍历xmlMap进行数据的插入
-        for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-            //解析xmlmap 把数据存放到数据
-            modelController.insertData(entry,svgPath,scope,user,directory,directoryId);
+            this.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
+            //遍历xmlMap进行数据的插入
+            for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+                //解析xmlmap 把数据存放到数据
+                modelController.insertData(entry,svgPath,scope,user,directory,directoryId);
+            }
+            //更新模型的层次结构
+            //获取package下面的所有model
+            this.updateModelFramwork(name,fileName);
+            //        this.doCmd(name,fileXmlPath,fileName);
+            result = true;
+            System.out.println("上传完毕！！！");
         }
-        //更新模型的层次结构
-        //获取package下面的所有model
-       this.updateModelFramwork(name,fileName);
-        //        this.doCmd(name,fileXmlPath,fileName);
-        result = true;
-        System.out.println("上传完毕！！！");
+
     }
 
     //web端增加模型目录
@@ -810,6 +821,21 @@ public class DirectoryController {
             }
         }
     }
+
+    public void insertCaeXmlInfo(String[] subFiles,File xmlFilePath,Map<String, Object> xmlMap,Map<String,Map> xmlAnalysisMap){
+        for (int i = 0; i < subFiles.length; i++) {
+            String [] fileNames = subFiles[i].split("\\.");
+            //文件的类型
+            String filePreType = fileNames[fileNames.length-2];
+            String fileType = fileNames[fileNames.length-1];
+            if(("xmlwrapper").equals(fileType)){
+                xmlMap =  resourceUtil.analysisXmlPath(xmlFilePath +"/" +subFiles[i]);
+                xmlAnalysisMap.put(subFiles[i],xmlMap);
+            }
+        }
+    }
+
+
 
     /**
      * 把對應的模型庫的目录进行更改
