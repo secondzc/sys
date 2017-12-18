@@ -51,21 +51,7 @@ public class ReviewFlowInstanceController extends BaseController {
     public JSONObject cancel(HttpServletRequest request){
         JSONObject jo = new JSONObject();
         Long instanceId = Long.valueOf(request.getParameter("instanceId"));
-        //设置流程实例的status
-        Map<String,Object> map = new HashMap<>();
-        map.put("instanceId",instanceId);
-        map.put("status", ConstReviewFlowInstanceStatus.CANCEL);
-        reviewFlowInstanceService.setStatus(map);
-        //设置节点实例的status
-        List<ReviewNodeInstance> nodeInstances = nodeInstanceService.queryByInstanceId(instanceId);
-        for(ReviewNodeInstance nodeInstance:nodeInstances){
-            Byte status = new Byte((byte)(nodeInstance.getStatus()+4));
-            Long id = nodeInstance.getId();
-            Map<String,Object> map1 = new HashMap<>();
-            map1.put("status",status);
-            map1.put("id",id);
-            nodeInstanceService.updateStatus(map1);
-        }
+        reviewFlowInstanceService.cancel(instanceId);
         jo.put("flag",true);
         return jo;
     }

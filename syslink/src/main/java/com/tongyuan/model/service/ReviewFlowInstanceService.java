@@ -19,4 +19,6 @@ public interface ReviewFlowInstanceService {
     int updateTime(Map<String, Object> map);
 
     Long startInstance(Long modelId) throws SqlNumberException;
+    ReviewFlowInstance queryByModelId(Long modelId);
+    void cancel(Long instanceId);
 }

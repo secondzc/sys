@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.dao.ReviewFlowInstanceMapper;
 import com.tongyuan.model.domain.*;
+import com.tongyuan.model.domain.enums.ConstReviewFlowInstanceStatus;
 import com.tongyuan.model.service.*;
 import com.tongyuan.tools.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,30 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
         Long instanceId = fillInstance(modelId);
         CompleteNodeInstance(instanceId);
         return instanceId;
+    }
+
+    @Override
+    public ReviewFlowInstance queryByModelId(Long modelId) {
+        return reviewFlowInstanceMapper.queryByModelId(modelId);
+    }
+
+    @Override
+    public void cancel(Long instanceId) {
+        //设置流程实例的status
+        Map<String,Object> map = new HashMap<>();
+        map.put("instanceId",instanceId);
+        map.put("status", ConstReviewFlowInstanceStatus.CANCEL);
+        reviewFlowInstanceService.setStatus(map);
+        //设置节点实例的status
+        List<ReviewNodeInstance> nodeInstances = nodeInstanceService.queryByInstanceId(instanceId);
+        for(ReviewNodeInstance nodeInstance:nodeInstances){
+            Byte status = new Byte((byte)(nodeInstance.getStatus()+4));
+            Long id = nodeInstance.getId();
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("status",status);
+            map1.put("id",id);
+            nodeInstanceService.updateStatus(map1);
+        }
     }
 
     /**

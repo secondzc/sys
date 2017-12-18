@@ -9,10 +9,7 @@ import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.RepositoryService;
-import com.tongyuan.model.domain.Directory;
-import com.tongyuan.model.domain.FileModel;
-import com.tongyuan.model.domain.Model;
-import com.tongyuan.model.domain.ModelUnion;
+import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.DirectoryModel;
@@ -35,6 +32,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -185,6 +183,20 @@ public class DirectoryController {
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 @RequestParam(value = "scope",required = false)Boolean scope,
                                 HttpServletRequest request , HttpServletResponse response){
+        //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
+        if(scope){
+            //根据directoryid和name找到相对应的model，再找到对应的reviewFlowInstance
+            Map<String,Object> map = new HashMap<>();
+            map.put("fileName",name);
+            map.put("directoryId",directoryId);
+            Model model = modelService.queryByNameAndDir(map);
+            if(model!=null){
+                //如果不为空，则说明是覆盖的方式，进行撤销
+                ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByModelId(model.getId());
+                reviewFlowInstanceService.cancel(reviewFlowInstance.getInstanceId());
+            }
+
+        }
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest)request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
          Long fileSize = map.get("file").get(0).getSize();
@@ -291,7 +303,7 @@ public class DirectoryController {
             }
             //更新模型的层次结构
             //获取package下面的所有model
-            this.updateModelFramwork(name,fileName);
+            this.updateModelFramwork(name,fileName,scope);
             //        this.doCmd(name,fileXmlPath,fileName);
             result = true;
             System.out.println("上传完毕！！！");
@@ -840,7 +852,7 @@ public class DirectoryController {
     /**
      * 把對應的模型庫的目录进行更改
      */
-    public void updateModelFramwork(String userName,String fileName){
+    public void updateModelFramwork(String userName,String fileName,boolean scope){
         /*List<Model> modelList = modelService.queryModelByParId(nullModel.getId());*/
         //查询刚插入的model
         List<Model> packageList = modelService.getNullParId();
@@ -851,11 +863,14 @@ public class DirectoryController {
             addModelUnion(userName,fileName,modelId);
 
             //下面两行都有异常要抛出
-            try{
-                Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                statusChangeService.updateNextStatus(instanceId,"1");
-            }catch(SqlNumberException e){
-                e.printStackTrace();
+            //scope为1表示公共库，要参加审签
+            if(scope) {
+                try {
+                    Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                    statusChangeService.updateNextStatus(instanceId, "1");
+                } catch (SqlNumberException e) {
+                    e.printStackTrace();
+                }
             }
         }
         else if(packageList.size() <= 0){

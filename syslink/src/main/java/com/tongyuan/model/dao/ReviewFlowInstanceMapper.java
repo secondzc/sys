@@ -17,4 +17,5 @@ public interface ReviewFlowInstanceMapper {
     int setStatus(Map<String, Object> map);
     List<ReviewFlowInstance> queryByNameAndStatus(Map<String, Object> map);
     int updateTime(Map<String, Object> map);
+    ReviewFlowInstance queryByModelId(Long modelId);
 }
