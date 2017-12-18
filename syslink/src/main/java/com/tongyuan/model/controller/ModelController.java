@@ -412,8 +412,8 @@ public class ModelController extends  BaseController {
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
         //过滤后的modelList
         List<Model> searchModel = new ArrayList<>();
-        //查询过滤后模型库内的一个组件
-//        List<Model> oneOfModel = new ArrayList<>();
+        //查询公有上传申签通过的模型
+        List<Model> reviewOfModel = new ArrayList<>();
         //查询所有direactory
         List<Directory> allDirectory = directoryService.findAllDirectory();
         //查询所有的repository
@@ -980,26 +980,28 @@ public class ModelController extends  BaseController {
         Map<String,String> generalInfo = new HashMap<>();
         if((Map<String, String>) xmlMap.get("GeneralInfo") != null){
             generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
-            model.setUserId(user.getID());
-            model.setScope(scope);
+//            model.setUserId(user.getID());
+//            model.setScope(scope);
             model.setDirectoryId(directoryId);
             model.setFileId(directory.getId());
-            model.setCreateTime(DateUtil.getTimestamp());
-            model.setLastUpdateTime(DateUtil.getTimestamp());
-            if(StringUtil.isNull((String) xmlMap.get("ModelType"))){
-                model.setType((String) xmlMap.get("ModelType"));
-            }
-            model.setDeleted(false);
-            model.setClasses("Model");
+//            model.setCreateTime(DateUtil.getTimestamp());
+//            model.setLastUpdateTime(DateUtil.getTimestamp());
+//            if(StringUtil.isNull((String) xmlMap.get("ModelType"))){
+//                model.setType((String) xmlMap.get("ModelType"));
+//            }
+//            model.setDeleted(false);
+//            model.setClasses("Model");
+            this.insertCAEModel(xmlMap,generalInfo,model,user,scope);
             if(!StringUtil.isNull(generalInfo.get("IconFile"))){
                 model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
             }
-            if(!StringUtil.isNull(generalInfo.get("Description"))){
-                model.setDiscription(generalInfo.get("Description"));
-            }
-            if(!StringUtil.isNull(generalInfo.get("Name"))){
-                model.setName(generalInfo.get("Name"));
-            }
+            model.setModelFilePath(directory.getRelativeAddress()+"/"+ entry.getKey());
+//            if(!StringUtil.isNull(generalInfo.get("Description"))){
+//                model.setDiscription(generalInfo.get("Description"));
+//            }
+//            if(!StringUtil.isNull(generalInfo.get("Name"))){
+//                model.setName(generalInfo.get("Name"));
+//            }
             Map<String, Object> param = new HashMap<>();
             param.put("fileName",model.getName());
             param.put("directoryId",directoryId);
@@ -1035,6 +1037,31 @@ public class ModelController extends  BaseController {
         }
     }
 
+    public void toolInsertCAE(Map<String,Object> xmlMap,boolean isScopeDir,GUser user,Long dirID,String modelFilePath){
+        Model model = new Model();
+        long modelId = 0;
+        String type = "";
+        Map<String,String> generalInfo = new HashMap<>();
+        this.insertCAEModel(xmlMap,generalInfo,model,user,isScopeDir);
+        Map<String, Object> param = new HashMap<>();
+        param.put("fileName",model.getName());
+        param.put("directoryId",dirID);
+        Model validateModel = modelService.queryByNameAndDir(param);
+        if( validateModel == null){
+            modelService.add(model);
+            modelId = model.getId();
+        }else{
+            model.setLastUpdateTime(DateUtil.getTimestamp());
+            model.setId(validateModel.getId());
+            modelService.update(model);
+            modelId = validateModel.getId();
+        }
+        this.getCAEVariable(xmlMap,type,modelId);
+
+    }
+
+
+
     public void insertCAEVariable(Map<String,String> variable,Long modelId){
         Variable caeVariable = new Variable();
         caeVariable.setModelId(modelId);
@@ -1046,6 +1073,54 @@ public class ModelController extends  BaseController {
         caeVariable.setCreateTime(DateUtil.getTimestamp());
         if("".equals(variable.get("parentName"))){
             variableService.add(caeVariable);
+        }
+    }
+
+
+    public void insertCAEModel(Map<String,Object> xmlMap,Map<String,String> generalInfo,Model model,GUser user,boolean scope) {
+        if ((Map<String, String>) xmlMap.get("GeneralInfo") != null) {
+            generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
+            model.setUserId(user.getID());
+            model.setScope(scope);
+            model.setCreateTime(DateUtil.getTimestamp());
+            model.setLastUpdateTime(DateUtil.getTimestamp());
+            if (StringUtil.isNull((String) xmlMap.get("ModelType"))) {
+                model.setType((String) xmlMap.get("ModelType"));
+            }
+            model.setDeleted(false);
+            model.setClasses("Model");
+            //这里增加一个icon地址
+//            if(!StringUtil.isNull(generalInfo.get("IconFile"))){
+//                model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
+//            }
+            if (!StringUtil.isNull(generalInfo.get("Description"))) {
+                model.setDiscription(generalInfo.get("Description"));
+            }
+            if (!StringUtil.isNull(generalInfo.get("Name"))) {
+                model.setName(generalInfo.get("Name"));
+            }
+        }
+    }
+
+    public void getCAEVariable( Map<String,Object> xmlMap,String type,long modelId){
+        if((Map<String, Object>) xmlMap.get("Files") != null){
+            Map<String,Object> filesMap = (Map<String, Object>) xmlMap.get("Files");
+            type = decideType(filesMap.get("File"),type);
+            if("List".equals(type)){
+                List<Map<String,Object>> fileList = (List<Map<String, Object>>) filesMap.get("File");
+                for (Map<String,Object> file:fileList) {
+                    if(file.get("Variables") != null){
+                        Map<String,Object> variables = (Map<String, Object>) file.get("Variables");
+                        if(variables.get("Variable") != null){
+                            List<Map<String,String>> variableList = (List<Map<String, String>>) variables.get("Variable");
+                            for (Map<String,String> variable :variableList) {
+                                insertCAEVariable(variable,modelId);
+                            }
+                        }
+
+                    }
+                }
+            }
         }
     }
 

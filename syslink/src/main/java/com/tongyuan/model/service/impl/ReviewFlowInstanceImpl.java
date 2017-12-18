@@ -65,6 +65,11 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
         return reviewFlowInstanceMapper.updateTime(map);
     }
 
+    @Override
+    public List<ReviewFlowInstance> allReviewFlow() {
+        return this.reviewFlowInstanceMapper.allReviewFlow();
+    }
+
     /**
      * 开始审签流程
      * 返回的是开始的流程的id

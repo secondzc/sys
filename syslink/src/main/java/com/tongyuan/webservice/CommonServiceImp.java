@@ -166,6 +166,10 @@ public class CommonServiceImp implements CommonService {
             Element root = doc.getRootElement();
             Map<String,Object> xmlMap = (Map<String, Object>)resourceUtil.xml2map(root);
             //TODO:存入数据库
+			GUser user =  gUserService.querListByName(userName);
+			Boolean isScopeDir = directoryController.isScope(dirID);
+			modelController.toolInsertCAE(xmlMap,isScopeDir,user,dirID,modelFilePath);
+			result =true;
         }catch (DocumentException e){
             e.printStackTrace();
         }
