@@ -20,4 +20,6 @@ public interface ReviewFlowInstanceService {
     List<ReviewFlowInstance> allReviewFlow();
 
     Long startInstance(Long modelId) throws SqlNumberException;
+    ReviewFlowInstance queryByModelId(Long modelId);
+    void cancel(Long instanceId);
 }

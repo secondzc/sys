@@ -35,9 +35,9 @@
                               <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                               <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
-                              <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
+                              <!-- <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
  
-                              <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button>
+                              <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button> -->
                           </el-dialog>
 
                       </div>

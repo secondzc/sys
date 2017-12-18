@@ -75,4 +75,11 @@
         SET last_update_time=#{lastUpdateTime}
         WHERE instance_id=#{instanceId}
     </update>
+
+    <select id="queryByModelId" parameterType="java.lang.Long">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM review_flow_instance
+        WHERE model_id = #{modelId}
+    </select>
 </mapper>

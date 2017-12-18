@@ -345,7 +345,7 @@ public class CommonServiceImp implements CommonService {
 			}
 			//更新模型的层次结构
 			//获取package下面的所有model
-			directoryController.updateModelFramwork(userName,fileName);
+			directoryController.updateModelFramwork(userName,fileName,true);
 			System.out.println("上传完毕！！！");
 		}
 		return modelReposityUrl;
