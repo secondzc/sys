@@ -128,7 +128,7 @@ export let  commonRoutes = [
         children: [
             // { path: '/main', component: Main, name: '项目', hidden: true },
               //{path:'/template',component:template,name:'模板管理'}, 
-              {path:'/brief',component:brief,name:'我的流程',iconCls: 'iconfont icon-liucheng1'}, 
+              {path:'/brief',component:brief,name:'我的待办',iconCls: 'iconfont icon-liucheng1'}, 
               {path:'/checkorAll',component:checkorAll,name:'我的审核',iconCls: 'iconfont icon-page1'}, 
               {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交',iconCls: 'iconfont icon-tijiao'}, 
 

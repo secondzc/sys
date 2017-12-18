@@ -83,7 +83,7 @@
 		<el-dialog title="选择人员" :visible.sync="chooseNameVisible" v-model="chooseNameVisible" :close-on-click-modal="false"
 		v-loading="userNamesLoading">
 			<template>
-			  <user-tree @affirmName="affirmName1"></user-tree>
+			  <user-tree @affirmName="affirmName1" :reset="chooseNameVisible"></user-tree>
 			</template>
 		</el-dialog>
 	</section>
@@ -230,7 +230,9 @@
 			},
 			chooseName() {
 				this.chooseNameVisible = true;
-				//this.query();
+				//父组件向子组件传递刷新已选人员的信息
+				this.reset=false;
+				this.reset=true;
 			},
 			getUserNames() {
 

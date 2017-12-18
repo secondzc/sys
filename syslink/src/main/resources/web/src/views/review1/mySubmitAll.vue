@@ -1,7 +1,7 @@
 <template>
 
 	<section>
-        <h3>其他提交流程记录</h3> 
+        
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             
@@ -23,16 +23,14 @@
 		<el-table :data="instances" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="50">
 			</el-table-column>
-			<el-table-column prop="instanceName" label="流程名" width="120" >
-			</el-table-column>
-			<el-table-column prop="description" label="流程描述" width="120" >
-			</el-table-column>
-			<el-table-column prop="status" label="当前状态" width="120" :formatter="format">
-			</el-table-column>
-			<el-table-column prop="createTime" label="创建时间" width="180" >
-			</el-table-column>
-			<el-table-column prop="lastUpdateTime" label="最后修改时间" width="180" >
-			</el-table-column>
+			
+            <el-table-column prop="instanceName" label="模型名" min-width="120" sortable>
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" min-width="120" sortable>
+            </el-table-column>
+            <el-table-column prop="status" label="当前状态" min-width="120" :formatter="format" sortable>
+            </el-table-column>
+
 			<el-table-column label="操作" width="300" >
 				<template scope="scope">
 					<el-button size="small" @click="detail(scope.$index,scope.row)" :disabled="scope.row.status==4">查看详情</el-button>
@@ -91,14 +89,14 @@
                 });
             },
     		getInstance(){
-                //查询的除了审签中的之外所有状态的视图
+                //查询的所有状态的视图
                 //这时flowInstanceStatus为空，查询所有的
     			this.listLoading = true;
     			let params = {
     				flowInstanceName: this.filters.name,
     				page: this.page,
     				rows: this.pageSize,
-                    flowInstanceStatus: '2,3,4',
+                    flowInstanceStatus: '1,2,3,4',
     			}
     			let url="/api/reviewFlowInstance/queryByNameAndStatus";
     			this.func.ajaxPost(url,params,res=>{

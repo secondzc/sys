@@ -13,7 +13,7 @@
 				<el-input type="textarea" v-model="comment" style="width:75%;margin-left:20px"></el-input>
 			</el-form-item>
 			<el-form-item>
-			<el-button type="primary" @click="submit" v-loading="submitLoading">提交</el-button>
+			<el-button type="primary" @click="submit" v-loading="submitLoading" style="margin-left:400px;">提交</el-button>
 			</el-form-item>
 		    </el-form>
 		</el-card>
@@ -101,6 +101,8 @@
 						this.submitLoading = false
 					}
 				})
+				//提交完之后转到我的代办页面
+				this.$router.push({path:'/brief'});
 			},
 		},
 		mounted(){

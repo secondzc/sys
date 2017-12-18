@@ -69,9 +69,11 @@ public class CheckorController extends BaseController{
         Long userId = getUserId();
         String page = request.getParameter("page");
         String rows = request.getParameter("rows");
+        String modelName = request.getParameter("modelName");
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("page",page);
         map.put("rows",rows);
+        map.put("modelName",modelName);
         //测试用
         //Long userId = 4L;
         map.put("userId",userId);
@@ -108,9 +110,11 @@ public class CheckorController extends BaseController{
         Long userId = getUserId();
         String page = request.getParameter("page");
         String rows = request.getParameter("rows");
+        String modelName = request.getParameter("modelName");
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("page",page);
         map.put("rows",rows);
+        map.put("modelName",modelName);
         //测试用
         //Long userId = 4L;
         map.put("userId",userId);
