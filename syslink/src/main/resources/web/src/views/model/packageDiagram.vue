@@ -210,7 +210,6 @@
                     })
             }
         }
-
     },
         methods: {
             toDetails()
@@ -256,7 +255,7 @@
             addStar(item){
                 if(item.alreadyStar == false){
                     var _this = this;
-                    var url = '/api/star/add?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" + global_.publicOwner
+                    var url = '/api/star/add?userId='+ item.userId +"&repoName=" + item.userName +item.repositoryName + "&repoOwner=" + global_.publicOwner
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -268,7 +267,7 @@
                 }
                 if(item.alreadyStar == true){
                     var _this = this;
-                    var url = '/api/star/delete?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" + global_.publicOwner
+                    var url = '/api/star/delete?userId='+ item.userId +"&repoName=" + item.userName +item.repositoryName + "&repoOwner=" + global_.publicOwner
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -283,7 +282,7 @@
             addWatch(item){
                 if(item.alreadyWatch == false){
                     var _this = this;
-                    var url = '/api/watch/add?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" + global_.publicOwner
+                    var url = '/api/watch/add?userId='+ item.userId +"&repoName=" + item.userName +item.repositoryName + "&repoOwner=" + global_.publicOwner
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -295,7 +294,7 @@
                 }
                 if(item.alreadyWatch == true){
                     var _this = this;
-                    var url = '/api/watch/delete?userId='+ item.userId +"&repoName=" +item.repositoryName + "&repoOwner=" + global_.publicOwner
+                    var url = '/api/watch/delete?userId='+ item.userId +"&repoName=" + item.userName +item.repositoryName + "&repoOwner=" + global_.publicOwner
                     _this.$http.post(url)
                         .then(function (response) {
                             if(response.data.msg == "ok"){

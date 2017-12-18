@@ -743,6 +743,9 @@
             this.$router.push({path: '/model/myPackageDiagram'});
         },
         modelVariable: function (model) {
+            if(model == null){
+                return
+            }
             var modelVariable = new Array;
             modelVariable.push(model);
             this.variable = modelVariable;
@@ -759,6 +762,9 @@
             this.list = repositories
         },
         handleCurrentChange(val) {
+            if(val == null){
+                return
+            }
             this.$refs.singleTable.setCurrentRow(val);
             var modelVariable = new Array;
             modelVariable.push(val);

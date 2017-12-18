@@ -283,10 +283,10 @@
                                     <el-card class="Card" style="height: 350px;width: 250px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0" 
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
-                                   <span style="font-weight: bold;">{{o.name}}</span>
-                                      <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="func.directoryJudge(o.directoryId)"> </i>
+                                             <span style="font-weight: bold;">{{o.name}}</span>
+                                                <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="func.directoryJudge(o.directoryId)"> </i>
     
-                                 </div>
+                                         </div>
                              
                                         <div :index="o.index"  @click="modelVariable(o)" >
                                             <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
@@ -370,7 +370,7 @@
                 </div>
 
                  <div v-else="this.varLength != 0" v-for="(o, index) in variable" :key="o.id" :offset="index > 0 ? 2 : 0" style="height: inherit;overflow-y: hidden;">
-                        <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
+                        <el-card  :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
                           <div slot="header" class="clearfix">
                         <span style="font-weight: bold;">{{o.name}}</span>
                       <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
@@ -611,7 +611,6 @@
                 console.log(url);
                 _this.$http.post(url)
                     .then(function (response) {
-//                    _this.repositories = response.data.repositories;
                         _this.pager.total = response.data.repositories.length;
                         _this.modelTotal = response.data.repositories.length;
                         _this.varLength = _this.variable.length;
@@ -755,6 +754,9 @@
             this.$router.push({path: '/model/packageDiagram'});
         },
         modelVariable: function (model) {
+            if(model == null){
+                return
+            }
             var modelVariable = new Array;
             modelVariable.push(model);
             this.variable = modelVariable;
@@ -771,6 +773,9 @@
             this.list = repositories
         },
         handleCurrentChange(val) {
+            if(val == null){
+                return
+            }
             this.$refs.singleTable.setCurrentRow(val);
             var modelVariable = new Array;
             modelVariable.push(val);
@@ -834,6 +839,7 @@
                                 duration: 2000
                             });
                             _this.getModel();
+
                         }
                         else {
                             _this.$message({
