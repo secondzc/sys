@@ -183,20 +183,7 @@ public class DirectoryController {
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 @RequestParam(value = "scope",required = false)Boolean scope,
                                 HttpServletRequest request , HttpServletResponse response){
-        //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
-        if(scope){
-            //根据directoryid和name找到相对应的model，再找到对应的reviewFlowInstance
-            Map<String,Object> map = new HashMap<>();
-            map.put("fileName",name);
-            map.put("directoryId",directoryId);
-            Model model = modelService.queryByNameAndDir(map);
-            if(model!=null){
-                //如果不为空，则说明是覆盖的方式，进行撤销
-                ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByModelId(model.getId());
-                reviewFlowInstanceService.cancel(reviewFlowInstance.getInstanceId());
-            }
 
-        }
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest)request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
          Long fileSize = map.get("file").get(0).getSize();
@@ -206,6 +193,21 @@ public class DirectoryController {
          if(fileNames2.length >=1){
              fileName = fileNames2[0];
          }
+
+        //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
+        if(scope){
+            //根据directoryid和name找到相对应的model，再找到对应的reviewFlowInstance
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("fileName",fileName);
+            map1.put("directoryId",directoryId);
+            Model model = modelService.queryByNameAndDir(map1);
+            if(model!=null){
+                //如果不为空，则说明是覆盖的方式，进行撤销
+                ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByModelId(model.getId());
+                reviewFlowInstanceService.cancel(reviewFlowInstance.getInstanceId());
+            }
+        }
+
         try {
              bytes =  map.get("file").get(0).getBytes();
         } catch (IOException e) {
