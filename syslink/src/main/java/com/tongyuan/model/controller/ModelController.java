@@ -69,7 +69,8 @@ public class ModelController extends  BaseController {
     private StarService starService;
     @Autowired
     private AuthService authService;
-
+    @Autowired
+    private ReviewFlowInstanceService reviewFlowInstanceService;
     @Autowired
     private VariableController variableController;
 
@@ -422,6 +423,8 @@ public class ModelController extends  BaseController {
         List<Watch> allWatch = watchService.findAllWatch();
         //查询所有的star
         List<Star> allStar = starService.findAllStar();
+        //查询所有的审核模型
+        List<ReviewFlowInstance> allReviewFlow = reviewFlowInstanceService.allReviewFlow();
         //存放directory的id
         List<Long> directoryIdList  = new ArrayList<>();
         if(parent_id == null){
@@ -447,6 +450,7 @@ public class ModelController extends  BaseController {
                             if(scope != null){
                                 if(model.getParentId() == 0 && model.getScope() == scope ){
                                     searchModel.add(model);
+                                    reviewOfModel.add(model);
                                 }
                             }else{
                                 if(model.getParentId() == 0){
@@ -471,6 +475,7 @@ public class ModelController extends  BaseController {
                     for (Model model : allModelList) {
                         if (model.getParentId() == 0 && model.getScope() == scope) {
                             searchModel.add(model);
+                            reviewOfModel.add(model);
                         }
                     }
                 }else{
@@ -488,31 +493,40 @@ public class ModelController extends  BaseController {
 //                        }
 //                    }
 //                }
+                if(scope == null){
+                    for (Model model :searchModel) {
+                        for (ReviewFlowInstance reviewFlowInstance:allReviewFlow) {
+                            if(reviewFlowInstance.getModelId() == model.getId() && reviewFlowInstance.getStatus() == 3){
+                                reviewOfModel.add(model);
+                            }
+                        }
+                    }
+                }
             }
-            for (int i = 0; i <= searchModel.size() -1; i++) {
+            for (int i = 0; i <= reviewOfModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
-                GUser user = gUserService.queryById(searchModel.get(i).getUserId());
-                modelWeb.setIndex(searchModel.get(i).getId());
-                modelWeb.setTotal(searchModel.size());
-                modelWeb.setName(modelUtil.splitName(searchModel.get(i).getName()));
-                modelWeb.setRepositoryName(searchModel.get(i).getName().split("\\.")[0]);
-                modelWeb.setParentId(searchModel.get(i).getParentId());
+                GUser user = gUserService.queryById(reviewOfModel.get(i).getUserId());
+                modelWeb.setIndex(reviewOfModel.get(i).getId());
+                modelWeb.setTotal(reviewOfModel.size());
+                modelWeb.setName(modelUtil.splitName(reviewOfModel.get(i).getName()));
+                modelWeb.setRepositoryName(reviewOfModel.get(i).getName().split("\\.")[0]);
+                modelWeb.setParentId(reviewOfModel.get(i).getParentId());
                 modelWeb.setUserName(user.getLowerName());
                 modelWeb.setUserId(user.getID());
-                modelWeb.setClasses(searchModel.get(i).getClasses());
-                modelWeb.setTextInfo(searchModel.get(i).getTextInfo());
-                modelWeb.setDirectoryId(searchModel.get(i).getDirectoryId());
-                modelWeb.setType(searchModel.get(i).getType());
-                if(searchModel.get(i).getIconSvgPath() != null && searchModel.get(i).getIconSvgPath() != ""){
-                    modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+searchModel.get(i).getIconSvgPath().substring(7));
+                modelWeb.setClasses(reviewOfModel.get(i).getClasses());
+                modelWeb.setTextInfo(reviewOfModel.get(i).getTextInfo());
+                modelWeb.setDirectoryId(reviewOfModel.get(i).getDirectoryId());
+                modelWeb.setType(reviewOfModel.get(i).getType());
+                if(reviewOfModel.get(i).getIconSvgPath() != null && reviewOfModel.get(i).getIconSvgPath() != ""){
+                    modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+reviewOfModel.get(i).getIconSvgPath().substring(7));
                 }
-                modelWeb.setUploadTime(searchModel.get(i).getCreateTime().getTime());
-                modelWeb.setCreateTime(DateUtil.format(searchModel.get(i).getCreateTime(),"yyyy-MM-dd"));
-                if(searchModel.get(i).getLastUpdateTime() != null){
-                    modelWeb.setUpdateTime(DateUtil.format(searchModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+                modelWeb.setUploadTime(reviewOfModel.get(i).getCreateTime().getTime());
+                modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+                if(reviewOfModel.get(i).getLastUpdateTime() != null){
+                    modelWeb.setUpdateTime(DateUtil.format(reviewOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
                 }
-                modelWeb.setDiscription(searchModel.get(i).getDiscription());
-                modelWeb.setType(searchModel.get(i).getType());
+                modelWeb.setDiscription(reviewOfModel.get(i).getDiscription());
+                modelWeb.setType(reviewOfModel.get(i).getType());
                 modelWeb.setNumberStar(0);
                 modelWeb.setNumberWatch(0);
                 modelWeb.setAlreadyStar(false);
