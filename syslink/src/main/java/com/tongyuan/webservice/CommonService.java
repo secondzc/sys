@@ -25,7 +25,11 @@ public interface CommonService {
 
 	@WebMethod
 	@WebResult(name = "String",targetNamespace = "")
-	public boolean UploadFile(@WebParam(name = "fileName") String fileName,@WebParam(name = "beginPos") long beginPos,@WebParam(name = "length") long length,@WebParam(name = "data") byte[] data);
+	public String UploadFile(@WebParam(name = "userName") String userName,@WebParam(name = "fileName") String fileName,@WebParam(name = "remoteModelPath") String remoteModelPath,@WebParam(name = "beginPos") long beginPos,@WebParam(name = "length") long length,@WebParam(name = "data") byte[] data);
+
+	@WebMethod
+	@WebResult(name = "String",targetNamespace = "")
+	public boolean UploadMetaFile(@WebParam(name = "userName") String userName,@WebParam(name = "dirID") Long dirID,@WebParam(name = "modelFilePath") String modelFilePath,@WebParam(name = "metaFileContent") String metaFileContent);
 
 	@WebMethod
 	@WebResult(name = "String",targetNamespace = "")
