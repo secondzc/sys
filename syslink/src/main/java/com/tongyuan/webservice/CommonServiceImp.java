@@ -395,29 +395,31 @@ public class CommonServiceImp implements CommonService {
 			directoryController.insertCaeXmlInfo(caeSubFiles,caeXmlFilePath,xmlMap,caeXmlAnalysisMap);
 			for(Map.Entry<String,Map> entry : caeXmlAnalysisMap.entrySet()){
 				modelController.insertCAEData(entry,svgPath,isScopeDir,user,directory,classID);
+				modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ entry.getKey().split("\\.")[0] + ".git";
 			}
 
-		}
-		File xmlFilePath = new File(xmlPath);
-		String[] subFiles = xmlFilePath.list();
+		}else{
+			File xmlFilePath = new File(xmlPath);
+			String[] subFiles = xmlFilePath.list();
 /*		Model model = directoryController.setPackageParam(userName,subFiles,directory,classID,isScopeDir,filePath);
 		Map<String, Object> param = directoryController.isAddModelAndReview(subFiles,classID,model);
 		//查找最外层空的model
 		//修改成根据插入的分类id找到对应的package包
 		Model nullModel = modelService.queryByNameAndDir(param);*/
 
-		String repository = subFiles[0].split("\\.")[0];
-		modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + ".git";
-		directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
-		//遍历xmlMap进行数据的插入
-		for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
-			//解析xmlmap 把数据存放到数据
-			modelController.insertData(entry,svgPath,isScopeDir,user,directory,classID);
+			String repository = subFiles[0].split("\\.")[0];
+			modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ repository + ".git";
+			directoryController.insertSvgPath(subFiles,xmlFilePath,xmlMap,svgPath,xmlAnalysisMap);
+			//遍历xmlMap进行数据的插入
+			for(Map.Entry<String,Map> entry : xmlAnalysisMap.entrySet()){
+				//解析xmlmap 把数据存放到数据
+				modelController.insertData(entry,svgPath,isScopeDir,user,directory,classID);
+			}
+			//更新模型的层次结构
+			//获取package下面的所有model
+			directoryController.updateModelFramwork(userName,fileName);
+			System.out.println("上传完毕！！！");
 		}
-		//更新模型的层次结构
-		//获取package下面的所有model
-		directoryController.updateModelFramwork(userName,fileName);
-		System.out.println("上传完毕！！！");
 		return modelReposityUrl;
 	}
 
