@@ -70,6 +70,9 @@ public class ResourceUtil {
         return  getString("HostPath");
     }
 
+    public static final String getExportFileUrl(){
+        return getString("exportFileUrl");
+    }
 
     /**
      * 获取文件仓目录
@@ -110,6 +113,13 @@ public class ResourceUtil {
         return  path;
     }
 
+    public String getRelativeUrl(){
+        String path = ResourceUtil.getExportFileUrl();
+        if(StringUtil.isNull(path)){
+            path = "";
+        }
+        return  path;
+    }
 
     /**
      * 接收文件，将其写入zip文件临时地址

@@ -2,6 +2,7 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.domain.Star;
@@ -73,6 +74,8 @@ public class ModelController extends  BaseController {
     private ReviewFlowInstanceService reviewFlowInstanceService;
     @Autowired
     private VariableController variableController;
+    @Autowired
+    private StatusChangeService statusChangeService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,FileModel directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -506,32 +509,7 @@ public class ModelController extends  BaseController {
             for (int i = 0; i <= reviewOfModel.size() -1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
                 GUser user = gUserService.queryById(reviewOfModel.get(i).getUserId());
-                modelWeb.setIndex(reviewOfModel.get(i).getId());
-                modelWeb.setTotal(reviewOfModel.size());
-                modelWeb.setName(modelUtil.splitName(reviewOfModel.get(i).getName()));
-                modelWeb.setRepositoryName(reviewOfModel.get(i).getName().split("\\.")[0]);
-                modelWeb.setParentId(reviewOfModel.get(i).getParentId());
-                modelWeb.setUserName(user.getLowerName());
-                modelWeb.setUserId(user.getID());
-                modelWeb.setClasses(reviewOfModel.get(i).getClasses());
-                modelWeb.setTextInfo(reviewOfModel.get(i).getTextInfo());
-                modelWeb.setDirectoryId(reviewOfModel.get(i).getDirectoryId());
-                modelWeb.setType(reviewOfModel.get(i).getType());
-                if(reviewOfModel.get(i).getIconSvgPath() != null && reviewOfModel.get(i).getIconSvgPath() != ""){
-                    modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+reviewOfModel.get(i).getIconSvgPath().substring(7));
-                }
-                modelWeb.setUploadTime(reviewOfModel.get(i).getCreateTime().getTime());
-                modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
-                if(reviewOfModel.get(i).getLastUpdateTime() != null){
-                    modelWeb.setUpdateTime(DateUtil.format(reviewOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
-                }
-                modelWeb.setDiscription(reviewOfModel.get(i).getDiscription());
-                modelWeb.setType(reviewOfModel.get(i).getType());
-                modelWeb.setNumberStar(0);
-                modelWeb.setNumberWatch(0);
-                modelWeb.setAlreadyStar(false);
-                modelWeb.setAlreadyWatch(false);
-
+                this.insertModelWeb(modelWeb ,reviewOfModel,i,user);
                 repositoryModelList.add(modelWeb );
             }
             for (ModelWeb modelWeb : repositoryModelList) {
@@ -942,12 +920,7 @@ public class ModelController extends  BaseController {
         try{
             Model model = modelService.queryModelById(modelId);
             String name = modelUtil.splitName(model.getName());
-            FileUtils.copyFileCover(model.getModelFilePath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".dom.xml",true);
-            FileUtils.copyFileCover(model.getDiagramSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".diagram.svg",true);
-            FileUtils.copyFileCover(model.getInfoTextPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".info.html",true);
-            FileUtils.copyFileCover(model.getIconSvgPath(),"C:\\Temp\\FileLibrary\\"+name+"\\"+ name +".icon.svg",true);
-            FileUtils.zipFiles("C:\\Temp\\FileLibrary\\","C:\\Temp\\FileLibrary\\" +name,"C:\\Temp\\FileLibrary\\"+name+"Model");
-             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+"/FileLibrary/"+name+"Model";
+             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getModelFilePath().substring(7);
             }catch(Exception e) {
                 e.printStackTrace();
                 jo.put("status","1");
@@ -986,7 +959,7 @@ public class ModelController extends  BaseController {
 
     }
 
-    public void insertCAEData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,FileModel directory,Long directoryId){
+    public void insertCAEData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,FileModel directory,Long directoryId,String modelFilePath){
         Map<String,Object> xmlMap = entry.getValue();
         Model model = new Model();
         long modelId = 0;
@@ -994,28 +967,14 @@ public class ModelController extends  BaseController {
         Map<String,String> generalInfo = new HashMap<>();
         if((Map<String, String>) xmlMap.get("GeneralInfo") != null){
             generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
-//            model.setUserId(user.getID());
-//            model.setScope(scope);
             model.setDirectoryId(directoryId);
             model.setFileId(directory.getId());
-//            model.setCreateTime(DateUtil.getTimestamp());
-//            model.setLastUpdateTime(DateUtil.getTimestamp());
-//            if(StringUtil.isNull((String) xmlMap.get("ModelType"))){
-//                model.setType((String) xmlMap.get("ModelType"));
-//            }
-//            model.setDeleted(false);
-//            model.setClasses("Model");
-            this.insertCAEModel(xmlMap,generalInfo,model,user,scope);
+
             if(!StringUtil.isNull(generalInfo.get("IconFile"))){
                 model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
             }
-            model.setModelFilePath(directory.getRelativeAddress()+"/"+ entry.getKey());
-//            if(!StringUtil.isNull(generalInfo.get("Description"))){
-//                model.setDiscription(generalInfo.get("Description"));
-//            }
-//            if(!StringUtil.isNull(generalInfo.get("Name"))){
-//                model.setName(generalInfo.get("Name"));
-//            }
+            model.setModelFilePath(modelFilePath);
+            this.insertCAEModel(xmlMap,generalInfo,model,user,scope);
             Map<String, Object> param = new HashMap<>();
             param.put("fileName",model.getName());
             param.put("directoryId",directoryId);
@@ -1030,24 +989,12 @@ public class ModelController extends  BaseController {
                 modelId = validateModel.getId();
             }
         }
-        if((Map<String, Object>) xmlMap.get("Files") != null){
-            Map<String,Object> filesMap = (Map<String, Object>) xmlMap.get("Files");
-            type = decideType(filesMap.get("File"),type);
-            if("List".equals(type)){
-                List<Map<String,Object>> fileList = (List<Map<String, Object>>) filesMap.get("File");
-                for (Map<String,Object> file:fileList) {
-                    if(file.get("Variables") != null){
-                        Map<String,Object> variables = (Map<String, Object>) file.get("Variables");
-                        if(variables.get("Variable") != null){
-                            List<Map<String,String>> variableList = (List<Map<String, String>>) variables.get("Variable");
-                            for (Map<String,String> variable :variableList) {
-                                insertCAEVariable(variable,modelId);
-                            }
-                        }
-
-                    }
-                }
-            }
+        this.getCAEVariable(xmlMap,type,modelId);
+        try {
+            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+            statusChangeService.updateNextStatus(instanceId, "1");
+        } catch (SqlNumberException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1057,6 +1004,7 @@ public class ModelController extends  BaseController {
         String type = "";
         Map<String,String> generalInfo = new HashMap<>();
         this.insertCAEModel(xmlMap,generalInfo,model,user,isScopeDir);
+        model.setDirectoryId(dirID);
         Map<String, Object> param = new HashMap<>();
         param.put("fileName",model.getName());
         param.put("directoryId",dirID);
@@ -1071,6 +1019,12 @@ public class ModelController extends  BaseController {
             modelId = validateModel.getId();
         }
         this.getCAEVariable(xmlMap,type,modelId);
+        try {
+            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+            statusChangeService.updateNextStatus(instanceId, "1");
+        } catch (SqlNumberException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1136,6 +1090,35 @@ public class ModelController extends  BaseController {
                 }
             }
         }
+    }
+
+
+    public void insertModelWeb(ModelWeb modelWeb ,List<Model> reviewOfModel,int i,GUser user){
+        modelWeb.setIndex(reviewOfModel.get(i).getId());
+        modelWeb.setTotal(reviewOfModel.size());
+        modelWeb.setName(modelUtil.splitName(reviewOfModel.get(i).getName()));
+        modelWeb.setRepositoryName(reviewOfModel.get(i).getName().split("\\.")[0]);
+        modelWeb.setParentId(reviewOfModel.get(i).getParentId());
+        modelWeb.setUserName(user.getLowerName());
+        modelWeb.setUserId(user.getID());
+        modelWeb.setClasses(reviewOfModel.get(i).getClasses());
+        modelWeb.setTextInfo(reviewOfModel.get(i).getTextInfo());
+        modelWeb.setDirectoryId(reviewOfModel.get(i).getDirectoryId());
+        modelWeb.setType(reviewOfModel.get(i).getType());
+        if(reviewOfModel.get(i).getIconSvgPath() != null && reviewOfModel.get(i).getIconSvgPath() != ""){
+            modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+reviewOfModel.get(i).getIconSvgPath().substring(7));
+        }
+        modelWeb.setUploadTime(reviewOfModel.get(i).getCreateTime().getTime());
+        modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+        if(reviewOfModel.get(i).getLastUpdateTime() != null){
+            modelWeb.setUpdateTime(DateUtil.format(reviewOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+        }
+        modelWeb.setDiscription(reviewOfModel.get(i).getDiscription());
+        modelWeb.setType(reviewOfModel.get(i).getType());
+        modelWeb.setNumberStar(0);
+        modelWeb.setNumberWatch(0);
+        modelWeb.setAlreadyStar(false);
+        modelWeb.setAlreadyWatch(false);
     }
 
 }

@@ -258,6 +258,14 @@ public class DirectoryController {
         Map<String,String> svgPath = new HashMap<>();
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("name",fileName);
+        //把上传的文件zip包存在映射路径
+        String caeZipAbsoluteUrl = "";
+        try {
+            caeZipAbsoluteUrl = modelPath+"/"+ fileName+".zip";
+            resourceUtil.writeFile(caeZipAbsoluteUrl,0,fileSize,bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //查找到项目所在的位置
         List<FileModel> directoryList = fileModelService.queryListByName(params);
         //选取最近push的一个directory对象
@@ -283,7 +291,7 @@ public class DirectoryController {
             String[] caeSubFiles = caeXmlFilePath.list();
             this.insertCaeXmlInfo(caeSubFiles,caeXmlFilePath,xmlMap,caeXmlAnalysisMap);
             for(Map.Entry<String,Map> entry : caeXmlAnalysisMap.entrySet()){
-                     modelController.insertCAEData(entry,svgPath,scope,user,directory,directoryId);
+                     modelController.insertCAEData(entry,svgPath,scope,user,directory,directoryId,caeZipAbsoluteUrl);
             }
 
         }else{

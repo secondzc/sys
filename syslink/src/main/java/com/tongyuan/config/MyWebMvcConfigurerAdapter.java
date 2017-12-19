@@ -4,6 +4,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.tongyuan.model.interceptor.MyInterceptor;
+import com.tongyuan.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -24,6 +25,8 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 
     @Autowired
     private MyInterceptor myInterceptor;
+    @Autowired
+    private ResourceUtil resourceUtil;
     /**
      * 配置静态访问资源
      * @param registry
@@ -34,7 +37,8 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         //自定义项目内目录
         //registry.addResourceHandler("/my/**").addResourceLocations("classpath:/my/");
         //指向外部目录
-        registry.addResourceHandler("/FileLibrarys/**").addResourceLocations("file:C:/Temp/FileLibrary");
+        String resourceLocations = resourceUtil.getRelativeUrl();
+        registry.addResourceHandler("/FileLibrarys/**").addResourceLocations(resourceLocations);
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         super.addResourceHandlers(registry);
     }

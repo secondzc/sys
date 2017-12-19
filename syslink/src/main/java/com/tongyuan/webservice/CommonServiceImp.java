@@ -322,7 +322,7 @@ public class CommonServiceImp implements CommonService {
 			String[] caeSubFiles = caeXmlFilePath.list();
 			directoryController.insertCaeXmlInfo(caeSubFiles,caeXmlFilePath,xmlMap,caeXmlAnalysisMap);
 			for(Map.Entry<String,Map> entry : caeXmlAnalysisMap.entrySet()){
-				modelController.insertCAEData(entry,svgPath,isScopeDir,user,directory,classID);
+				modelController.insertCAEData(entry,svgPath,isScopeDir,user,directory,classID,"");
 				modelReposityUrl = "http://"+resourceUtil.getGogsPath()+"/" + userName.toLowerCase() + "/"+ entry.getKey().split("\\.")[0] + ".git";
 			}
 
