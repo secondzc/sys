@@ -51,6 +51,18 @@
         FROM auth
         WHERE parent_id =#{authId}
     </select>
+    <select id="queryAuthByRoleId" resultMap="baseResultMap" parameterType="INTEGER">
+        SELECT
+        d.auth_id,d.auth_name,d.auth_code,d.create_date,d.description,d.url,d.parent_id,
+        l.auth_id
+        FROM
+        auth as d
+        INNER JOIN role_auth as l
+        ON d.auth_id=l.auth_id
+        AND l.role_id=#{roleId}
+        WHERE 1=1
+    </select>
+
     <delete id="deleteById" parameterType="INTEGER">
         delete from auth where auth_id=#{id}
     </delete>

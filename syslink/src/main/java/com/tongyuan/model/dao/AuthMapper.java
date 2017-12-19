@@ -25,4 +25,6 @@ public interface AuthMapper {
     public Auth queryById(Integer authId);
 
     public List<Map<String,Object>> getChildren(Map<String, Object> map);
+
+    public List<Auth> queryAuthByRoleId(Integer roleId);
 }

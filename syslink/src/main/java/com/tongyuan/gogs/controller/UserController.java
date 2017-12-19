@@ -60,16 +60,12 @@ public class UserController extends BaseController {
     public JSONObject assignRole(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-        //  Map<String,Object>roles = new HashMap<>();
-        //   roles.put("roles",map.get("assigned").toString());
 
-//        roles.put("uid",Integer.parseInt(map.get("uid").toString()));
         String a = map.get("assigned").toString();
         a=a.substring(1,a.length()-1);
 
         Integer []roles =   Convert.toIntArray(",",a);
-        //      map.put("roles",map.get("permissionId").toString());
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
+
 
         try
         {
