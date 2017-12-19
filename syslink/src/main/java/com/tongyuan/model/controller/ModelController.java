@@ -493,12 +493,12 @@ public class ModelController extends  BaseController {
 //                        }
 //                    }
 //                }
-                if(scope == null){
-                    for (Model model :searchModel) {
-                        for (ReviewFlowInstance reviewFlowInstance:allReviewFlow) {
-                            if(reviewFlowInstance.getModelId() == model.getId() && reviewFlowInstance.getStatus() == 3){
-                                reviewOfModel.add(model);
-                            }
+            }
+            if(scope == null){
+                for (Model model :searchModel) {
+                    for (ReviewFlowInstance reviewFlowInstance:allReviewFlow) {
+                        if(reviewFlowInstance.getModelId() == model.getId() && reviewFlowInstance.getStatus() == 3){
+                            reviewOfModel.add(model);
                         }
                     }
                 }
