@@ -25,7 +25,7 @@
                           <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件<i class="el-icon-upload"></i></el-button>
 
                           <el-dialog
-                                  title="上传压缩文件"
+                                  title="上传模型文件"
                                   :visible.sync="file.dialogVisible"
                                   width="30%"
                                   >
@@ -35,7 +35,7 @@
                               <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                               <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
-                              <!-- <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
+                            <!--   <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
  
                               <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button> -->
                           </el-dialog>

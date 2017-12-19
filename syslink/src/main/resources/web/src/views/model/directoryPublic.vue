@@ -249,7 +249,8 @@
           )
         ]
         
-       
+       if(this.func.authJudge('management_model_directory'))
+       {
          return h(
           'div',
           {
@@ -260,7 +261,20 @@
           },
           childrenNodes
         )
-  
+       }
+       else
+       {
+        return h(
+          'div',
+          {
+            'class': 'el-tree-node__label',
+            prop: {
+              children: '-'
+            }
+          },
+          childrenNodes1
+        )
+       }
 
        
       },

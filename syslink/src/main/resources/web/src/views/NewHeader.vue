@@ -1,4 +1,4 @@
-<template>
+ <template>
 	
 <el-container style="height: 100%;overflow:hidden;width: 100%;">
  <el-header style="padding: 0px;height: 50px;background-color: #fafafa;border-bottom: solid 2px #e6e6e6;padding-right: 20px;display: inline-flex;width: inherit;" v-bind:style="styleObject">
@@ -16,7 +16,7 @@
         <i class="iconfont icon-weibiaoti26" @click="collapse" v-show="this.func.isLogin()&&!this.func.isOpened()" style="font-size: 20px;"></i>
       </el-tooltip>
     </div>
-    <div @click="toMySpace">
+    <div @click="toBrief">
          <img :src="SysLogo"  style="height: 40px;margin-top: 5px;" />
    <img :src="SylTitle"  style="height: 40px;margin-top: 5px;" />
     </div>
@@ -32,7 +32,7 @@
     <div style="width: 20px;"></div>
    
   
-  <el-menu-item index="1"  @click="toMySpace" v-bind:style="styleObject1">工作台</el-menu-item>
+  <el-menu-item index="1"  @click="toBrief" v-bind:style="styleObject1">工作台</el-menu-item>
   <el-menu-item index="2" @click="toCorporate" v-bind:style="styleObject1">协同</el-menu-item>
   <el-menu-item index="3"  @click="toModel" v-bind:style="styleObject1">模型</el-menu-item>
   <!-- <el-menu-item index="4" @click="toCorporate" v-bind:style="styleObject1">仿真</el-menu-item> -->
@@ -172,7 +172,7 @@
 import Sidebar from './Sidebar'
 import LoginHeader from './LoginHeader'
 import Cookies from 'js-cookie'
-
+import global_ from './global.vue'
 import SysLogo from '@/assets/syslogo.png'
 import SylTitle from '@/assets/systitle.png'
     export default {
@@ -280,10 +280,10 @@ import SylTitle from '@/assets/systitle.png'
             	  var _this = this;
               _this.$router.push('/login');
             },
-            toMySpace()
+            toBrief()
             {
                  var _this = this;
-              _this.$router.push('/Myspace');
+              _this.$router.push('/brief');
             },
             //折叠导航栏
             collapse:function(){

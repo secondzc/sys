@@ -19,7 +19,7 @@ import Vuex from 'vuex'
 import Vuetify from 'vuetify';
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
-import routes from './routes'
+
 import Mock from './mock'
 import axios from 'axios'
 
@@ -67,10 +67,10 @@ router.beforeEach((to, from, next) => {
        if(store.getters.session)
      {
     
-     if(to.path=='/login'||to.path=='/')
+     if(to.path=='/login')
      {
       console.log(2)
-       next('/Myspace')
+       next('/brief')
      }
      else
      {
@@ -116,13 +116,10 @@ router.beforeEach((to, from, next) => {
                       })
 
                   }).catch(() => {
-               Cookies.remove('syslink')
-               Cookies.remove('JSESSIONID')
-               console.log(Cookies.get('syslink'))
-               console.log(Cookies.get('JSESSIONID'))
-
-               console.log(8)
-               next({ path: '/login' })
+             store.dispatch('LogOut').then(()=>{
+                 next({ path: '/login' })
+                    }) 
+               
           
           })
               store.dispatch('GetPublicDirId')
@@ -134,7 +131,7 @@ router.beforeEach((to, from, next) => {
   else
   {
      let rememberMe = Cookies.get('syslink')
-  console.log(rememberMe)
+      console.log(rememberMe)
       if(rememberMe)
       {
           let userName = {userName:rememberMe};
@@ -142,10 +139,10 @@ router.beforeEach((to, from, next) => {
 
 
 
-            if(to.path=='/login'||to.path=='/index')
+            if(to.path=='/login')
             {
            
-             next('/Myspace')
+             next('/brief')
             }
            else
            {
@@ -189,11 +186,9 @@ router.beforeEach((to, from, next) => {
                 next({ ...to })   
                       })
                   }).catch(() => {
-               // localStorage.clear()
-               // sessionStorage.clear()
-               Cookies.remove('syslink')
-               Cookies.remove('JSESSIONID')
-               next({ path: '/login' })
+            store.dispatch('LogOut').then(()=>{
+                 next({ path: '/login' })
+                    }) 
           
           })
             store.dispatch('GetPublicDirId')
@@ -202,19 +197,17 @@ router.beforeEach((to, from, next) => {
         }  
          })
          .catch(() => {
-               Cookies.remove('syslink')
-               Cookies.remove('JSESSIONID')    
-               next({ path: '/login' })
+               store.dispatch('LogOut').then(()=>{
+                 next({ path: '/login' })
+                    }) 
           
           })
-
-
 
       }
       else
       {
 
-         if(to.path == '/login'||to.path=='/index') 
+         if(to.path == '/login') 
         {
         
           next()
@@ -230,9 +223,9 @@ router.beforeEach((to, from, next) => {
 
 
   }).catch(() => {
-               Cookies.remove('syslink')
-               Cookies.remove('JSESSIONID')    
-               next({ path: '/login' })
+            store.dispatch('LogOut').then(()=>{
+                 next({ path: '/login' })
+                    }) 
           
           })
 
@@ -242,149 +235,7 @@ router.beforeEach((to, from, next) => {
 
 
 
-  // //是否登录作用域在单标签页
-  // if(logined)
-  // {
-  //     if(to.path =='/login')
-  //     {
-  //           next('/Myspace')
-  //     }
-  //     else
-  //     {
-  //         //  验证用户信息是否失效
-  //           if(store.getters.userInfo)
-  //           {
-  //             if(store.getters.isLoaded)
-  //             {
-  //               next()
-  //             }
-  //             else
-  //             {
-           
-              
-  //             const auths = store.getters.userInfo.auths
-  //             store.dispatch('GenerateRoutes',auths).then(()=>{
-  //             router.addRoutes(store.getters.addRouters)      
-  //             next({ ...to }) 
-  //                   }) 
-  //             }
-              
-  //           }
-  //           else
-  //           {  
-
-  //             store.dispatch('GetUserInfoFirst',uid).then(res =>{
-  //             const auths = res.data.userInfo.auths
-  //             store.dispatch('GenerateRoutes',auths).then(()=>{
-  //             router.addRoutes(store.getters.addRouters)      
-  //               next({ ...to })   
-  //                     })
-  //                 }).catch(() => {
-  //              localStorage.clear()
-  //              sessionStorage.clear()
-  //              next({ path: '/login' })
-          
-  //         })
-            
-  //        }
-  //     }
-  // }
-  // else
-  // {
-  //    //是否启用记住我，作用域在整个浏览器
-  //    if(rememberMe)
-  //    {
-  //       let a = {logined:''};
-  //        a.logined=true;
-  //        sessionStorage.setItem('logined',JSON.stringify(a));
-         
-        
-
-  //        if (to.path == '/login'||to.path=='/index') 
-  //        {
-  //            next('/Myspace')
-  //        }
-  //        else
-  //        {     
-            
-  //           //验证用户信息是否失效
-  //           if(store.getters.userInfo)
-  //           {
-
-  //             if(store.getters.isLoaded)
-  //             {  
-  //               next()
-  //             }
-  //             else
-  //             {
-           
-              
-  //             const auths = store.getters.userInfo.auths
-  //             console.log(auths)
-  //                   store.dispatch('GenerateRoutes',auths).then(()=>{
-  //                   router.addRoutes(store.getters.addRouters)      
-  //                   next({ ...to }) 
-  //                   }) 
-  //             }
-              
-  //           }
-  //           else
-  //           { 
-  //             store.dispatch('GetUserInfoFirst',uid).then(res =>{
-  //             const auths = res.data.userInfo.auths
-  //             store.dispatch('GenerateRoutes',auths).then(()=>{
-             
-  //             router.addRoutes(store.getters.addRouters)      
-           
-  //               next({ ...to })   
-  //                     })
-  //                 }).catch(() => {
-  //              localStorage.clear()
-  //              sessionStorage.clear()
-  //              next({ path: '/login' })
-          
-  //         })
-  //           }
-  //        }
-  //    }
-  //    else
-  //    {
-  //     console.log('1')
-  //       if(to.path == '/login'||to.path=='/index') 
-  //       {
-  //          console.log('2')
-  //         next()
-  //       }
-  //       else
-  //       {
-  //        next('/login')
-  //       }
-  //    }
-  // }
-
-
-
-     
-// })
-
-
-// const router = new VueRouter({
-//   routes
-// })
-
-// router.beforeEach((to, from, next) => {
-//   //NProgress.start();
-//   if (to.path == '/login') {
-//     sessionStorage.removeItem('user');
-//   }
-//   let user = JSON.parse(sessionStorage.getItem('user'));
-//   if (!user && to.path != '/login') {
-//     next({ path: '/login' })
-//   } else {
-//     next()
-//   }
-// })
-
+ 
 
 //router.afterEach(transition => {
 //NProgress.done();

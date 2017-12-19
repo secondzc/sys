@@ -23,7 +23,7 @@
     <el-steps :space="200" :active="sequence" finish-status="success" v-loading="stepLoading" style="margin-left:20px;">
     	<el-step v-for="(item,index) in this.detailPages" :title="reviewTitle[index]" :description="item.user.name" :status="reviewStatus[index]"></el-step> 
     </el-steps>
-    <model-info></model-info>
+    <model-info style="margin-top: 20px;"></model-info>
 </section>
 
 </template>

@@ -1,7 +1,8 @@
 <template>
-	<div>
-		<review-detail></review-detail>
-		<comment-comp :isCheckor="isCheckor"></comment-comp>
+	<div class="component">
+		<sapn style="font-size: 16px;text-decoration: underline;">ÉóºËÁ÷³Ì</sapn>
+		<review-detail style="margin-top: 20px;"></review-detail>
+		<comment-comp :isCheckor="isCheckor" style="margin-top: 20px;"></comment-comp>
 	</div>
 </template>
 <script >
@@ -21,4 +22,13 @@
 	}
 </script>
 
-<style></style>
+<style scoped>
+	.component
+	{
+		margin-top: 10px;
+          height: calc(100%-60px)!important;
+     height: -moz-calc(100% - 60px)!important;
+    height :-webkit-calc(100% - 60px)!important; 
+	}
+
+</style>

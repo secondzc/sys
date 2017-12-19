@@ -1,11 +1,28 @@
 <template>
-    <p class="page-container">404 page not found</p>
+	<div style="text-align: center;margin-top: 10%;">
+		  <img :src="notFound" style="height: 224px;width: 512px;" />
+	</div>
+  
 </template>
 
-<style lang="scss" scoped>
-    .page-container {
-        font-size: 20px;
-        text-align: center;
-        color: rgb(192, 204, 218);
+
+<script >
+	
+	 import notFound from '@/assets/notFound.png'
+
+	 export default {
+  data() {
+    return {
+      notFound: notFound ,
+     
     }
+  },
+  methods: {
+   
+  }
+}
+</script>
+
+<style  scoped>
+  
 </style>

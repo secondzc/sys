@@ -154,7 +154,7 @@
                       
                      
                     
-                      _this.$router.push({path: '/Myspace'});
+                      _this.$router.push({path: '/brief'});
                  }else{
                      //如果返回500，就在页面上方弹出错误信息
                      _this.errormsg(response.data.errormsg);

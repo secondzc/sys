@@ -1,6 +1,6 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
-import Home from './views/Home.vue'
+
 import Gogs from './views/Gogs.vue'
 import Main from './views/Main.vue'
 import Table from './views/nav1/Table.vue'
@@ -53,14 +53,14 @@ import error404 from './views/404.vue'
 import depart from './views/nav4/depart.vue'
 import Sidebar from './views/Sidebar.vue'
 import corporate from './views/corporate.vue'
-import Index from './views/Index.vue'
+
 import ModelHeader from './views/ModelHeader.vue'
 import myRepo from './views/nav4/myRepo.vue'
 import cRepo from  './views/nav4/cRepo.vue'
 import changePassWd from './views/nav4/changePassWd.vue'
 import personalInfo from './views/nav4/personalInfo.vue'
-import NewIndex from  './views/NewIndex.vue'
-import NewDetails from './views/NewDetails.vue'
+
+
 import LoginHeader from './views/LoginHeader.vue'
 import LogOut from './views/LogOut.vue'
 import NewHeader from './views/NewHeader.vue'
@@ -180,10 +180,15 @@ export let  commonRoutes = [
     },
 
     {
-        path: '/404',
-        component: NotFound,
+        path: '',
+        component: NewHeader1,
         name: '',
-        hidden: true
+        hidden: true,
+         children: [
+           
+            {path:'/404',component:error404,name:'无法找到'}
+        
+        ]
     },
     {
         path: '',
@@ -202,18 +207,8 @@ export let  commonRoutes = [
         name: '',
         hidden: true
     },
-       {
-        path: '/NewIndex',
-        component: NewIndex,
-        name: '',
-        hidden: true
-    },
-    {
-        path: '/NewDetails',
-        component: NewDetails,
-        name: '',
-        hidden: true
-    },
+    
+    
     
     // {
     //     path: '',

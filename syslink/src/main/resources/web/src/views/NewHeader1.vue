@@ -17,9 +17,9 @@
      <div style="line-height: 50px;width: 150px;">
       
     </div>
-    <div  @click="toMySpace" >
-   <img :src="SysLogo"  @click="toMySpace" style="height: 40px;margin-top: 5px;" />
-   <img :src="SylTitle"  @click="toMySpace" style="height: 40px;margin-top: 5px;" />
+    <div  @click="toBrief" >
+   <img :src="SysLogo"  style="height: 40px;margin-top: 5px;" />
+   <img :src="SylTitle"  style="height: 40px;margin-top: 5px;" />
     </div>
  
    </div>
@@ -34,7 +34,7 @@
    </div>
    
   
-  <el-menu-item index="1"  @click="toMySpace" v-bind:style="styleObject1">工作台</el-menu-item>
+  <el-menu-item index="1"  @click="toBrief" v-bind:style="styleObject1">工作台</el-menu-item>
   <el-menu-item index="2" @click="toCorporate" v-bind:style="styleObject1">协同</el-menu-item>
   <el-menu-item index="3"  @click="toModel" v-bind:style="styleObject1">模型</el-menu-item>
  <!--  <el-menu-item index="4" @click="toCorporate" v-bind:style="styleObject1">仿真</el-menu-item> -->
@@ -237,10 +237,10 @@ import SylTitle from '@/assets/systitle.png'
                 var _this = this;
               _this.$router.push('/login');
             },
-            toMySpace()
+            toBrief()
             {
                  var _this = this;
-              _this.$router.push('/Myspace');
+              _this.$router.push('/brief');
             },
             //折叠导航栏
             collapse:function(){

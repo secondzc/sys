@@ -166,15 +166,16 @@
 
             },
             uploadSuccess(response,file,fileList){
-                this.$message({
-                    message: '上传成功！',
-                    type: 'success',
-                    duration: 3000
-                });
+                // this.$message({
+                //     message: '上传成功！',
+                //     type: 'success',
+                //     duration: 3000
+                // });
                 this.isCover = false;
                 this.$refs.vueFileUploader.clearFiles();
-                this.$emit("refreshModel");
-                this.$emit("allowToReview");
+                // this.$emit("refreshModel");
+                // this.$emit("allowToReview");
+                this.$emit("uploadFileSuccess");
  
             },
             handleClose(done) {
