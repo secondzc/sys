@@ -220,13 +220,18 @@ import SylTitle from '@/assets/systitle.png'
             },
               toCorporate :function () {
                 var _this = this;
-                let host = window.location.host;               
-                let a = host;
-                let b = a.split(':');
-                let c = b[0];
-                let url = c+":3000";
-                window.location.href="http://"+url
-                console.log(b);
+                let gogsDomain = global_.gogsHostPath;
+                let gogsPort = global_.gogsPort;
+                let domain = global_.HostPath;
+
+                 if(gogsPort.length>0)
+                {
+                  window.location.href="http://"+domain+gogsPort;
+                }
+                else
+                {
+                  window.location.href="http://"+domain+'/'+gogsDomain;
+                }
 
                 // window.location.href="http://"+url;
 

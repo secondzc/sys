@@ -338,7 +338,17 @@
                 }
             },
             goReposity(){
-                location.href = "http://"+ global_.gogsHostPath + "/"+ global_.publicOwner +"/"+ this.form.userName + this.form.name.split(".",1)[0]
+                     let gogsDomain = global_.gogsHostPath;
+                let gogsPort = global_.gogsPort;
+                let domain = global_.HostPath;
+                   if(gogsPort.length>0)
+                {
+                  window.location.href="http://"+domain+gogsPort+ "/"+this.$data.name +"/"+ this.form.name.split(".",1)[0];
+                }
+                else
+                {
+                  window.location.href="http://"+domain+'/'+gogsDomain+ "/"+this.$data.name +"/"+ this.form.name.split(".",1)[0];
+                }
             }
         }
     };

@@ -22,9 +22,9 @@
         '#ADADAD'
     ]
     const colorListLength = 20
-    const gogsHostPath = "localhost" ;
-    const gogsPort = ":3000";
-    const HostPath = "localhost:8080"
+    const gogsHostPath = "corporate" ;
+    const gogsPort = "";
+    const HostPath = "192.168.199.131"
     function getRandColor () {
         var tem = Math.round(Math.random() * colorListLength)
         return colorList[tem]

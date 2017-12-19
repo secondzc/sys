@@ -208,9 +208,9 @@
                                      icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!validateCAE(scope.row,scope.$index)"></el-button>
                                     </el-tooltip>
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
-                                            <el-button type="primary"
+                                            <el-button type="info"
                                                        size="small"
-                                                       icon="el-icon-search"   @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)"></el-button>
+                                                       icon="el-icon-download"   @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)"></el-button>
                                         </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">

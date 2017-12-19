@@ -85,6 +85,7 @@
 
 <script>
   import util from '../../common/js/util'
+  import global_ from '../global.vue'
 
 
 
@@ -188,12 +189,18 @@
       toRepo(index,row)
       {
 
-        let host = window.location.host;               
-        let a = host;
-        let b = a.split(':');
-        let c = b[0];
-        let url = c+":3000";
-        location.href="http://"+url+"/"+row.userName+"/"+row.name;
+                let gogsDomain = global_.gogsHostPath;
+                let gogsPort = global_.gogsPort;
+                let domain = global_.HostPath;
+
+                if(gogsPort.length>0)
+                {
+                  window.location.href="http://"+domain+gogsPort+"/"+row.userName+"/"+row.name;
+                }
+                else
+                {
+                  window.location.href="http://"+domain+'/'+gogsDomain+"/"+row.userName+"/"+row.name;
+                }
       },
      
        batchRemove: function () {

@@ -4,7 +4,7 @@ import { commonRoutes, limitRoutes } from '../asyncRoutes'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-
+  import global_ from '../views/global.vue'
 
 
 
@@ -94,12 +94,21 @@ function clearLogin() {
 }
 function clearLogin1()
 {
-    let host = window.location.host;              
-                let a = host
-                let b = a.split(':')
-                let c = b[0]
-                let url = c+":3000"
-     return           axios.get('http://'+url+'/user/logout')
+   let gogsDomain = global_.gogsHostPath;
+    let gogsPort = global_.gogsPort;
+     let domain = global_.HostPath;
+
+
+      if(gogsPort.length>0)
+           {
+                  return   axios.get ("http://"+domain+gogsPort+'/user/logout');
+          }
+                else
+           {
+                  window.location.href="http://"+domain+'/'+gogsDomain;
+                  return   axios.get('http://'+domain+'/'+gogsDomain+'/user/logout')
+        }
+           
 }
 
 
