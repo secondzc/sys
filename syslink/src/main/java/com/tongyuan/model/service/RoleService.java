@@ -17,6 +17,8 @@ public interface RoleService {
     public boolean delete(long id);
     public List<Map<String,Object>> query();
 
+    public Set<Auth> queryByUid(long uid);
+
 
 
 

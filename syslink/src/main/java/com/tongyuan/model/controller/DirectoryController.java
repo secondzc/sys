@@ -291,6 +291,7 @@ public class DirectoryController {
             String[] subFiles = xmlFilePath.list();
 
 
+
 //        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
 //        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
             //查找最外层空的model
@@ -309,6 +310,7 @@ public class DirectoryController {
             //        this.doCmd(name,fileXmlPath,fileName);
             result = true;
             System.out.println("上传完毕！！！");
+
         }
 
     }
@@ -938,7 +940,7 @@ public class DirectoryController {
         Map<String, Object> param = new HashMap<>();
         param.put("fileName",subFiles[0].split("\\.")[0]);
         param.put("directoryId",directoryId);
-        if(modelService.queryByNameAndDir(param) == null){
+//        if(modelService.queryByNameAndDir(param) == null){
             //by:zhangcy  在这里加入了审签的代码
             modelService.add(model);
             Long modelId = model.getId();
@@ -949,7 +951,7 @@ public class DirectoryController {
             }catch(SqlNumberException e){
                 e.printStackTrace();
             }
-        }
+//        }
         return param;
     }
 

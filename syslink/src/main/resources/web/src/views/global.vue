@@ -22,7 +22,8 @@
         '#ADADAD'
     ]
     const colorListLength = 20
-    const gogsHostPath = "localhost:3000" ;
+    const gogsHostPath = "localhost" ;
+    const gogsPort = ":3000";
     const HostPath = "localhost:8080"
     function getRandColor () {
         var tem = Math.round(Math.random() * colorListLength)
@@ -34,6 +35,7 @@
         colorListLength,
         getRandColor,
         gogsHostPath,
-        HostPath
+        HostPath,
+        gogsPort
     }
 </script>

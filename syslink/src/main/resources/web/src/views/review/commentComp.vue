@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<h3 v-if="isCheckor">协同</h3>
+		
+		<sapn style="font-size: 16px;text-decoration: underline;" v-if="isCheckor">协同</sapn>
 		<el-card style="width:660px;margin-left:20px;"  v-if="isCheckor">
 			<el-form>
 			<el-form-item label="是否通过:">
@@ -17,7 +18,11 @@
 			</el-form-item>
 		    </el-form>
 		</el-card>
-					<h3>处理人意见区</h3>
+
+		<div style="margin-top: 20px;">
+			<sapn style="font-size: 16px;text-decoration: underline;">处理人意见区</sapn>
+		</div>
+					
 		<!-- <div style="width:520px">
 
 			<div style="border: 1px solid #9E9E9E;margin-left:20px" v-for="(commentPage,index) in commentPages">

@@ -2,6 +2,7 @@ import * as types from './mutation_type'
 
 import { commonRoutes, limitRoutes } from '../asyncRoutes'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 
 
@@ -17,19 +18,14 @@ function hasPermission(auth,role, route) {
 
 
 
-
-
-  // if (route.meta && route.meta.auth) {
-  //   console.log(route.meta.auth)
-  //   console.log(route.meta.role)
-  //   return auth.some(auth => route.meta.auth.indexOf(auth) >= 0)
-  // } 
-  // if(route.meta && route.meta.role)
-  // {
-
-
-  //   return role.some(role => route.meta.role.indexOf(role) >= 0)
-  // }
+    if(!auth)
+  {
+    auth=[];
+  }
+  if(!role)
+  {
+    role=[];
+  }
   if(route.meta)
   {
     return role.some(role => route.meta.role.indexOf(role) >= 0)||auth.some(auth => route.meta.auth.indexOf(auth) >= 0)
@@ -86,6 +82,31 @@ function getPublicDirId(publicDir){
     return axios.post('api/directory/getPublicDirId',publicDir)
 }
 
+function clearLogin() {
+     Cookies.remove('syslink')
+      Cookies.remove('gogs_awesome')
+    return    axios.post('api/user/destory')
+              
+              
+               
+              
+    
+}
+function clearLogin1()
+{
+    let host = window.location.host;              
+                let a = host
+                let b = a.split(':')
+                let c = b[0]
+                let url = c+":3000"
+     return           axios.get('http://'+url+'/user/logout')
+}
+
+
+
+
+
+
 
 export default{
     sendA({commit},aData){
@@ -103,9 +124,6 @@ export default{
     sendTreeModelId({commit},treeModelIdData){
         commit(types.Send_TreeModelId,treeModelIdData);
     },
-    // sendTreeRootId({commit},treeRootData){
-    //     commit(types.Send_TreeRootId,treeRootData);
-    // },
 
 
     GetUserInfo({ commit, state },userInfo){
@@ -157,20 +175,7 @@ export default{
         }).catch(error => {
           reject(error)
         })
-           getPrivateDirId().then(response => {
-               const data = response.data
-               commit('SET_PrivateDirId',data)
-               resolve(response)
-           }).catch(error => {
-               reject(error)
-           })
-           getPublicDirId().then(response => {
-               const data = response.data
-               commit('SET_PublicDirId',data)
-               resolve(response)
-           }).catch(error => {
-               reject(error)
-           })
+         
       })
       },
     GetSession({commit,state},){
@@ -219,17 +224,19 @@ export default{
       })
     },
     LogOut({ commit, state }) {
-      return new Promise((resolve, reject) => {
-   //     logout(state.token).then(() => {
-   //       console.log(state.permission)
-          commit('RESET_ROUTERS',commonRoutes)
+
+          return new Promise((resolve, reject) => {
+          clearLogin()
+          clearLogin1()
+         commit('RESET_ROUTERS',commonRoutes)
           commit('SET_ISLOADED')
-      //    removeToken()
           resolve()
- //       }).catch(error => {
- //         reject(error)
- //       })
+     
+          
       })
+
+
+    
     },
     ResetAuth({ commit, state }){
         return new Promise((resolve, reject) => {

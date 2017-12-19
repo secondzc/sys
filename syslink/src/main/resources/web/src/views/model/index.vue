@@ -25,19 +25,27 @@
                           <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件<i class="el-icon-upload"></i></el-button>
 
                           <el-dialog
-                                  title="上传压缩文件"
+                                  title="上传模型文件"
                                   :visible.sync="file.dialogVisible"
+                                  v-if="file.dialogVisible"
                                   width="30%"
                                   >
                               <!--<span>这是一段信息</span>-->
-                              <upload-file @refreshModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></upload-file>
+                              <upload-file  style="text-align: center;" 
+                              @uploadFileSuccess="uploadFileSuccess"
+                               ></upload-file>
                               <!--<span slot="footer" class="dialog-footer">-->
                                 <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
                                 <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
                               <!--</span>-->
-                               <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
- 
-                                <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button> 
+                               <!-- <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
+                                <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag" size="small">跳转</el-button>  -->
+                                 <span slot="footer" class="dialog-footer">
+   
+               <el-button size="small"  type="primary" :disabled="!uploadCheckFlag"  @click="uploadCheck">确定</el-button>
+               </span>
+                              
+                               
                           </el-dialog>
 
 
@@ -488,7 +496,8 @@
 
 <script >
     import errGif from '@/assets/401_images/401.gif'
-    import kzTree from './directory.vue';
+    import kzTree from './directoryPublic.vue';
+
     import uploadFile from  '../nav3/Page6.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
@@ -514,6 +523,7 @@
             };
             return {
                allowToReviewFlag:false,
+               uploadCheckFlag:false,
  
                url: {
               C: '',
@@ -683,16 +693,33 @@
                     resolve(data);
                 }, 500);
             },
-                    allowToReview(){
+            allowToReview(){
  
               this.allowToReviewFlag=true;
  
             },
- 
             toReview(){
  
               this.$router.push({path:'/brief'});
- 
+            },
+            uploadFileSuccess(){
+             
+             this.uploadCheckFlag=true;
+
+
+            },
+            uploadCheck(){
+              this.getModel();
+              this.$confirm('上传已成功！是否跳转到审签页', '提示', {
+           confirmButtonText: '确定',
+           cancelButtonText: '取消',
+           type: 'success '
+           }).then(() => {
+           this.$router.push('/brief')
+            }).catch(() => {
+              this.file.dialogVisible=false;
+            });
+         
             },
  
 

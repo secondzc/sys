@@ -97,5 +97,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    @Override
+    public List<Auth>queryAuthByRoleId(Integer roleId)
+    {
+        return this.authMapper.queryAuthByRoleId(roleId);
+    }
+
+
 
 }

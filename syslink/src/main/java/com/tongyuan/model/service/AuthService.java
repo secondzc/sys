@@ -22,4 +22,6 @@ public interface AuthService {
     public void directoryFilter(List<Long> dirctoryIdList, long uid);
 
     public Set<Auth> getAuthByUserAuth(Long uid);
+
+    public List<Auth>queryAuthByRoleId(Integer roleId);
 }

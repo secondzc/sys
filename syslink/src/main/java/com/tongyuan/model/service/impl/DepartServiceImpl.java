@@ -1,8 +1,14 @@
 package com.tongyuan.model.service.impl;
 
+import com.tongyuan.gogs.dao.GUserMapper;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.DepartMapper;
+import com.tongyuan.model.dao.UserDepartMapper;
 import com.tongyuan.model.domain.Depart;
+import com.tongyuan.model.domain.UserDepart;
 import com.tongyuan.model.service.DepartService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +25,10 @@ public class DepartServiceImpl implements DepartService {
 
     @Autowired
     DepartMapper departMapper ;
+    @Autowired
+    UserDepartMapper userDepartMapper;
+    @Autowired
+    GUserMapper gUserMapper;
     @Override
     public boolean addDepart(Map<String,Object>map)
     {
@@ -33,6 +43,11 @@ public class DepartServiceImpl implements DepartService {
     public boolean deleteDepart(Integer id)
     {
         List<Map<String ,Object>>departs = departMapper.queryByPid(id);
+        List<UserDepart>userDeparts = userDepartMapper.queryByDepartId(id);
+        for(UserDepart userDepart :userDeparts)
+        {
+            gUserMapper.delete(userDepart.getUid());
+        }
         boolean d =  departMapper.deleteById(id);
         if(departs.size()>0)
         {

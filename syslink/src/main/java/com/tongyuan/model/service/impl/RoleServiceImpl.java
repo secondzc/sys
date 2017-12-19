@@ -4,10 +4,12 @@ import com.tongyuan.gogs.dao.GUserMapper;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.dao.*;
 import com.tongyuan.model.domain.Auth;
+import com.tongyuan.model.domain.Role;
 import com.tongyuan.model.domain.RoleAuth;
 import com.tongyuan.model.domain.UserRole;
 import com.tongyuan.model.service.AuthService;
 import com.tongyuan.model.service.RoleService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,71 +102,54 @@ public class RoleServiceImpl implements RoleService {
     {
         boolean a = userRoleMapper.delete(uid);
         boolean b = true;
-
-
+        //用户权限中是否含有创建仓库的权限
+        boolean c= false;
+        //本次所分配的角色中是否包含新建仓库的权限
+        boolean d= false;
         GUser user = gUserMapper.queryById(uid);
-
-
-        if(user.getAdmin())
-        {
-
-
-            boolean c = false;
-            boolean d = false;
-            Set<Auth> userAuths = authService.getAuthByUserAuth(uid);
-            if(userAuths.size()>0)
-            {
-                for(Auth auth :userAuths)
-                {
-                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
-                    {
-                        c=true;
-                    }
-                }
-            }
-            Set<Auth> userRoleAuths =getAuthByUserRole(uid);
-            if(userRoleAuths.size()>0)
-            {
-                for(Auth auth :userRoleAuths)
-                {
-                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
-                    {
-                        d=true;
-                    }
-                }
-            }
-
-            if(!c&d)
-            {
-                user.setAdmin(false);
-                gUserMapper.update(user);
-
-            }
-
-
-
-        }
-
         for(int i =0;i<roles.length;i++)
         {
             UserRole userRole = new UserRole();
             userRole.setUid(uid);
             userRole.setRoleId(roles[i]);
-            List<RoleAuth> roleAuths = roleAuthMapper.queryByRoleId(roles[i]);
+            List<Auth> roleAuths = authMapper.queryAuthByRoleId(roles[i]);
             if(roleAuths.size()>0)
             {
-                for(RoleAuth roleAuth :roleAuths)
+                for(Auth auth :roleAuths)
                 {
-                    Auth auth = authMapper.queryById(roleAuth.getAuthId());
+
                     if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
                     {
-                        user.setAdmin(true);
-                        gUserMapper.update(user);
+                      d = true;
                     }
                 }
             }
             b = b&userRoleMapper.add(userRole);
         }
+
+        Set<Auth>userAuths = authService.getAuthByUserAuth(uid);
+        for(Auth auth : userAuths)
+        {
+            if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+            {
+                c=true;
+            }
+        }
+        if(c||d)
+        {
+            user.setAdmin(true);
+            gUserMapper.update(user);
+        }
+        else
+
+        {
+            user.setAdmin(false);
+            gUserMapper.update(user);
+        }
+
+
+
+
         return  a&b;
     }
 
@@ -205,5 +190,21 @@ public class RoleServiceImpl implements RoleService {
         }
            return allauths;
     }
+    @Override
+    public Set<Auth> queryByUid(long uid)
+    {
+        List<UserRole>userRoles = userRoleMapper.query(uid);
+        Set<Auth> auths = new HashSet<>();
+        for(UserRole userRole : userRoles)
+        {
+            List<Auth> roleAuths = authMapper.queryAuthByRoleId(userRole.getRoleId());
+            if(roleAuths.size()>0)
+            {
+                auths.addAll(roleAuths);
+            }
+        }
+        return auths;
+    }
+
 
 }

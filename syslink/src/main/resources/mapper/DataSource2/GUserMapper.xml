@@ -184,7 +184,6 @@
             or full_name like CONCAT('%',#{name},'%')
             or name like CONCAT('%',#{name},'%'))
         </if>
-
     </select>
 
     <select id="nameJudge" resultMap="mapResultMap" resultType="map" parameterType="map">
