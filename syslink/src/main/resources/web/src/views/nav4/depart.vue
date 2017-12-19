@@ -446,9 +446,10 @@
 
 
 .zk-table{
-  height: -moz-calc(100% - 30px)!important;
-   height :-webkit-calc(100% - 30px)!important; 
-   height : calc(100% - 30px)!important;
+  height: -moz-calc(100% - 40px)!important;
+   height :-webkit-calc(100% - 40px)!important; 
+   height : calc(100% - 40px)!important;
+   overflow-x: auto!important;
  
 }
 .zk-table__body-wrapper {

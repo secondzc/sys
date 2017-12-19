@@ -187,11 +187,11 @@
        </el-dropdown-item>
         <el-dropdown-item style="width: inherit;" > 
   
-      <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+     <!--  <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
         <span>
-          模型访问控制
+          模型下载权限
         </span>
-      </div>
+      </div> -->
        </el-dropdown-item>
 
    <!--    <el-button  type="text"  @click="handleEdit(scope.$index, scope.row)"
@@ -363,7 +363,7 @@
 
 
 
-    <el-dialog title="模型访问控制" :visible.sync="modelVisible" v-if="modelVisible"   >
+    <el-dialog title="模型下载权限" :visible.sync="modelVisible" v-if="modelVisible"   >
 
  <!--    <div slot="title">    -->
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >

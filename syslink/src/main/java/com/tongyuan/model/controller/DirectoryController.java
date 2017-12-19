@@ -178,7 +178,7 @@ public class DirectoryController {
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-//    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
     public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 @RequestParam(value = "scope",required = false)Boolean scope,

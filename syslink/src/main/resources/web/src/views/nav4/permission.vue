@@ -6,29 +6,29 @@
 
     <!--工具条-->
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
-      <el-form :inline="true" >
+<!--       <el-form :inline="true" >
         <el-form-item>
           <el-button size="small" v-if="" type="primary" @click="handleAdd"  >新建组</el-button>
           <el-button  size="small" @click="handleEdit">编辑组</el-button>
           <el-button type="danger" size="small" @click="handleDel">删除组</el-button>
         </el-form-item>
-      </el-form>
-
-      <hr/> 
+      </el-form> -->
+<!-- 
+      <hr/>  -->
    <!--  </el-col> -->
 
     <!--列表-->
     <el-table :data="group" highlight-current-row  @selection-change="selsChange"     style="width: 100%;">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
+<!--       <el-table-column type="selection" width="55">
+      </el-table-column> -->
         <el-table-column type="expand">
            <template slot-scope="scope" >
      
         <el-table :data="scope.row.children" >
-      <el-table-column type="selection" width="55">
+    <!--   <el-table-column type="selection" width="55">
       </el-table-column>
        <el-table-column type="index" width="60">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="authName" label="名称" min-width="120" sortable>
       </el-table-column>
       <!--
@@ -43,13 +43,13 @@
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
-        <el-table-column label="操作" width="200">
+      <!--   <el-table-column label="操作" width="200">
         <template slot-scope="scope">
          
           <el-button size="small" @click="handleEditItem(scope.$index, scope.row)">编辑项</el-button>
           <el-button type="danger" size="small" @click="handleItemDel(scope.$index, scope.row)">删除项</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
         </el-table>
    
 
@@ -57,8 +57,8 @@
 
       </template>
     </el-table-column>
-      <el-table-column type="index" width="60">
-      </el-table-column>
+  <!--     <el-table-column type="index" width="60">
+      </el-table-column> -->
       <el-table-column prop="authName" label="名称" min-width="120" sortable>
       </el-table-column>
       
@@ -69,11 +69,11 @@
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
-      <el-table-column label="操作" width="200">
+    <!--   <el-table-column label="操作" width="200">
         <template slot-scope="scope">
          <el-button  type="primary" size="small" @click="handleAddItem(scope.$index, scope.row)">新建项</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
    
