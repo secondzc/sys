@@ -883,15 +883,17 @@ public class DirectoryController {
                 if (model.getName().split("\\.").length == 1) {
                     model.setParentId(0);
                     modelService.update(model);
-                    Long modelId = packageList.get(0).getId();
+                    Long modelId = model.getId();
                     addModelUnion(userName,fileName,modelId);
 
                     //下面两行都有异常要抛出
-                    try{
-                        Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                        statusChangeService.updateNextStatus(instanceId,"1");
-                    }catch(SqlNumberException e){
-                        e.printStackTrace();
+                    if(scope) {
+                        try {
+                            Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                            statusChangeService.updateNextStatus(instanceId, "1");
+                        } catch (SqlNumberException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
