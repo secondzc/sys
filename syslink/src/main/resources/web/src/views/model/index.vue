@@ -211,9 +211,12 @@
                                          <el-button type="primary" 
                                             size="small"
                                                     icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!validateCAE(scope.row,scope.$index)"></el-button>
-                                     <!--icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!func.directoryJudge(scope.row.directoryId,scope.row.userId)"></el-button>-->
-
-                                    </el-tooltip>
+                                          </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
+                                            <el-button type="primary"
+                                                   size="small"
+                                                   icon="el-icon-search"   @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)"></el-button>
+                                        </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                                   <el-button   size="small" type="danger" icon="el-icon-delete"  @click="handleDeleted(scope.$index, scope.row)" :disabled="!func.authJudge('management_model_delete')"></el-button>
@@ -1049,7 +1052,16 @@
                 else{
                     return false;
                 }
+            },
+            validateCAEDownload(o){
+                if(o.type == 'Modelica'){
+                    return true;
+                }
+                else{
+                    return false;
+                }
             }
+
 
 //            handleClose(done) {
 //                this.$confirm('确认关闭？')
