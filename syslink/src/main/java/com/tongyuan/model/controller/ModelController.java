@@ -971,11 +971,25 @@ public class ModelController extends  BaseController {
             generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
             model.setDirectoryId(directoryId);
             model.setFileId(directory.getId());
+            model.setUserId(user.getID());
+            model.setScope(scope);
+            model.setCreateTime(DateUtil.getTimestamp());
+            model.setLastUpdateTime(DateUtil.getTimestamp());
+            if (!StringUtil.isNull((String) xmlMap.get("ModelType"))) {
+                model.setType((String) xmlMap.get("ModelType"));
+            }
+            model.setDeleted(false);
+            model.setClasses("Model");
             if(!StringUtil.isNull(generalInfo.get("IconFile"))){
                 model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
             }
+            if (!StringUtil.isNull(generalInfo.get("Description"))) {
+                model.setDiscription(generalInfo.get("Description"));
+            }
+            if (!StringUtil.isNull(generalInfo.get("Name"))) {
+                model.setName(generalInfo.get("Name"));
+            }
             model.setModelFilePath(modelFilePath);
-            this.insertCAEModel(xmlMap,generalInfo,model,user,scope,modelFilePath);
             Map<String, Object> param = new HashMap<>();
             param.put("fileName",model.getName());
             param.put("directoryId",directoryId);
