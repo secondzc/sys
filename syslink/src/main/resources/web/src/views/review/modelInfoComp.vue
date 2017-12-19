@@ -67,11 +67,12 @@
 				let url="/api/model/download";
 				this.downloading=true;
 				this.func.ajaxPost(url,{modelId:this.reviewModel.id},res=>{
-					if(res.data.flag){
+                    location.href = res.data.data;
+					if(res.data.msg = "ok"){
 						this.$message({
 							message:'下载成功！',
 						});
-						this.downloading=flase;
+						this.downloading = false;
 					}
 				})
 			},

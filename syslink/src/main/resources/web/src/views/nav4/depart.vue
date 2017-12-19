@@ -4,9 +4,9 @@
 
      <!--工具条-->
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
-      <el-form :inline="true" >
+      <el-form :inline="true" style="height: 45px;" >
         <el-form-item>
-          <el-button type="primary" @click="handleAdd" size="small" >新建</el-button>
+          <el-button type="primary" @click="handleAdd" size="small" >新建<i class="el-icon-plus el-icon--right"></i></el-button>
         </el-form-item>
       </el-form>
       <hr />

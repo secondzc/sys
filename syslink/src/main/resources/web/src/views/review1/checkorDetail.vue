@@ -1,6 +1,6 @@
 <template>
 	<div class="component">
-		<sapn style="font-size: 16px;text-decoration: underline;">ÉóºËÁ÷³Ì</sapn>
+		<sapn style="font-size: 16px;text-decoration: underline;">æˆ‘çš„å®¡æ ¸</sapn>
 		<review-detail style="margin-top: 20px;"></review-detail>
 		<comment-comp :isCheckor="isCheckor" style="margin-top: 20px;"></comment-comp>
 	</div>

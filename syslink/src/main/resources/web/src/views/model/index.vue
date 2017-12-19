@@ -143,10 +143,10 @@
                                     style="width: 100%">
                                 <el-table-column
                                         label=""
-                                        width="150" >
+                                        width="80" >
                                     <template scope="scope">
                                        
-                                            <img v-bind:src="scope.row.imageUrl" style="width: 140px;height: 95px;"/>
+                                            <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
  
                                         
                                         
