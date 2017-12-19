@@ -1,7 +1,6 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
@@ -35,6 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -969,12 +971,11 @@ public class ModelController extends  BaseController {
             generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
             model.setDirectoryId(directoryId);
             model.setFileId(directory.getId());
-
             if(!StringUtil.isNull(generalInfo.get("IconFile"))){
                 model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
             }
             model.setModelFilePath(modelFilePath);
-            this.insertCAEModel(xmlMap,generalInfo,model,user,scope);
+            this.insertCAEModel(xmlMap,generalInfo,model,user,scope,modelFilePath);
             Map<String, Object> param = new HashMap<>();
             param.put("fileName",model.getName());
             param.put("directoryId",directoryId);
@@ -1003,8 +1004,8 @@ public class ModelController extends  BaseController {
         long modelId = 0;
         String type = "";
         Map<String,String> generalInfo = new HashMap<>();
-        this.insertCAEModel(xmlMap,generalInfo,model,user,isScopeDir);
         model.setDirectoryId(dirID);
+        this.insertCAEModel(xmlMap,generalInfo,model,user,isScopeDir, modelFilePath);
         Map<String, Object> param = new HashMap<>();
         param.put("fileName",model.getName());
         param.put("directoryId",dirID);
@@ -1045,14 +1046,14 @@ public class ModelController extends  BaseController {
     }
 
 
-    public void insertCAEModel(Map<String,Object> xmlMap,Map<String,String> generalInfo,Model model,GUser user,boolean scope) {
+    public void insertCAEModel(Map<String, Object> xmlMap, Map<String, String> generalInfo, Model model, GUser user, boolean scope, String modelRelativePath) {
         if ((Map<String, String>) xmlMap.get("GeneralInfo") != null) {
             generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
             model.setUserId(user.getID());
             model.setScope(scope);
             model.setCreateTime(DateUtil.getTimestamp());
             model.setLastUpdateTime(DateUtil.getTimestamp());
-            if (StringUtil.isNull((String) xmlMap.get("ModelType"))) {
+            if (!StringUtil.isNull((String) xmlMap.get("ModelType"))) {
                 model.setType((String) xmlMap.get("ModelType"));
             }
             model.setDeleted(false);
@@ -1061,6 +1062,28 @@ public class ModelController extends  BaseController {
 //            if(!StringUtil.isNull(generalInfo.get("IconFile"))){
 //                model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
 //            }
+            //模型源文件路径
+            String modelFullPath = resourceUtil.getunzipPath()+modelRelativePath;
+            model.setModelFilePath(modelFullPath);
+            //将xml中的base64内容保存为文件
+            String clientIconFile = generalInfo.get("IconFile");
+            String base64IconData = generalInfo.get("IconData");
+            if (!StringUtil.isNull(clientIconFile))
+            {
+                String serverIconFile = Paths.get(modelFullPath).getParent().toString()
+                        +"/"+Paths.get(clientIconFile).getFileName();
+                byte[] byIconData = Base64.getDecoder().decode(base64IconData);
+                try {
+                    OutputStream out = new FileOutputStream(serverIconFile);
+                    out.write(byIconData);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                model.setIconSvgPath(serverIconFile);
+            }
+
             if (!StringUtil.isNull(generalInfo.get("Description"))) {
                 model.setDiscription(generalInfo.get("Description"));
             }

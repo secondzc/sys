@@ -219,63 +219,28 @@ public class GUserServiceImpl implements GUserService {
         userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
         boolean b = this.userDepartMapper.add(userDepart);
         UserRole userRole = new UserRole();
-        boolean c =false;
+        boolean c =true;
         if(map.get("roleId")!=null)
         {
-            userRole.setRoleId(Integer.parseInt(map.get("roleId").toString()));
+            Integer roleId = Integer.parseInt(map.get("roleId").toString());
+            //查找角色中是否包含新建仓库的权限，
+            List<Auth> roleAuths = authMapper.queryAuthByRoleId(roleId);
+            for(Auth auth : roleAuths)
+            {
+                if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
+                {
+                    //增加建库权限
+                    map.put("isAdmin",1);
+                    gUserMapper.updateUser(map);
+                }
+
+            }
+            userRole.setRoleId(roleId);
             userRole.setUid(Long.parseLong(map.get("id").toString()));
-           c = roleService.addUserRole(userRole);
+            c = roleService.addUserRole(userRole);
         }
 
 
-
-//        Integer name = Integer.parseInt(map.get("name").toString());
-//
-//        for(int i=1;i<=1000;i++)
-//        {
-//            map.put("id",Long.parseLong(map.get("id").toString())+1);
-//            map.put("name",name+i);
-//            map.put("lowerName",name+i);
-//            String email = name+i+"@gogs.com";
-//            map.put("email",email);
-//            map.put("fullName","");
-//
-//            //  map.put("email","");
-//            //  map.put("passwd","");
-//            map.put("loginType",0);
-//            map.put("loginSource",0);
-//            map.put("loginName","");
-//            map.put("type",0);
-//            map.put("location","");
-//            map.put("website","");
-//            map.put("lastRepoVisibility",0);
-//            map.put("createdUnix", System.currentTimeMillis()/1000L);
-//            map.put("updatedUnix",System.currentTimeMillis()/1000L);
-//            map.put("maxRepoCreation",-1);
-//            map.put("isActive",1);
-//            map.put("isAdmin",0);
-//            map.put("allowGitHook",0);
-//            map.put("allowImportLocal",0);
-//            map.put("prohibitLogin",0);
-//
-//            map.put("useCustomAvatar",1);
-//            map.put("numFollowers",0);
-//            map.put("numFollowing",0);
-//            map.put("numStars",0);
-//            map.put("numRepos",0);
-//            map.put("description","");
-//
-//            map.put("numTeams",1);
-//
-//            map.put("numMembers",1);
-//            map.put("avatar","");
-//            map.put("avatarEmail","");
-//            gUserMapper.add(map);
-//            UserDepart userDepart1 = new UserDepart();
-//            userDepart1.setUid(Long.parseLong(map.get("id").toString()));
-//            userDepart1.setDepartId(Integer.parseInt(map.get("departId").toString()));
-//            userDepartMapper.add(userDepart1);
-//        }
         return  a&b&c;
 
 
@@ -424,76 +389,10 @@ public class GUserServiceImpl implements GUserService {
     public boolean updateAuth(Long uid, Integer[] authIds)
     {
         GUser user = gUserMapper.queryById(uid);
-        if(user.getAdmin())
-        {
-            //用户权限中是否含有仓库权限
-            boolean c = false;
+           //本次权限分配中是否包含创建仓库的权限
+           boolean c =false;
             //角色权限中是否含有仓库权限
             boolean d = false;
-//            List<UserAuth> userAuths = userAuthMapper.queryByUid(uid);
-//
-//            if(userAuths.size()>0)
-//            {
-//                for(UserAuth userAuth:userAuths)
-//                {
-//                    Auth auth = authMapper.queryById(userAuth.getAuthId());
-//                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
-//                    {
-//                        // user.setAdmin(false);
-//                        // gUserMapper.update(user);
-//                        c = true;
-//                    }
-//                }
-//            }
-//
-//            List<UserRole> userRoles = userRoleMapper.query(uid);
-//            if(userRoles.size()>0)
-//            {
-//                for (UserRole userRole : userRoles)
-//                {
-//                    List<RoleAuth> roleAuths = roleAuthMapper.queryByRoleId(userRole.getRoleId());
-//                    for(RoleAuth roleAuth :roleAuths)
-//                    {
-//                        Auth auth = authMapper.queryById(roleAuth.getAuthId());
-//                        if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
-//                        {
-//                            d = true;
-//                        }
-//                    }
-//                }
-//            }
-
-            Set<Auth> userAuths = authService.getAuthByUserAuth(uid);
-            if(userAuths.size()>0)
-            {
-                for(Auth auth :userAuths)
-                {
-                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
-                    {
-                        c=true;
-                    }
-                }
-            }
-            Set<Auth> userRoleAuths = roleService.getAuthByUserRole(uid);
-            if(userRoleAuths.size()>0)
-            {
-                for(Auth auth :userRoleAuths)
-                {
-                    if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
-                    {
-                        d=true;
-                    }
-                }
-            }
-
-            if(c&!d)
-            {
-                user.setAdmin(false);
-                gUserMapper.update(user);
-            }
-
-
-        }
 
         boolean a = userAuthMapper.deleteByUid(uid);
         boolean b = true;
@@ -505,10 +404,31 @@ public class GUserServiceImpl implements GUserService {
             Auth auth = authMapper.queryById(authIds[i]);
             if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))
             {
-                user.setAdmin(true);
-                gUserMapper.update(user);
+               c=true;
             }
+
             b = b&userAuthMapper.add(userAuth);
+        }
+        Set<Auth> roleAuths = roleService.queryByUid(uid);
+        if(roleAuths.size()>0)
+        {
+            for(Auth auth1 : roleAuths)
+            {
+                if(auth1.getAuthCode().equalsIgnoreCase("management_repo_add"))
+                {
+                    d=true;
+                }
+            }
+        }
+        if(c||d)
+        {
+            user.setAdmin(true);
+            gUserMapper.update(user);
+        }
+        else
+        {
+            user.setAdmin(false);
+            gUserMapper.update(user);
         }
         return a&b;
     }
