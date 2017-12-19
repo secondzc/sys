@@ -178,7 +178,7 @@ public class DirectoryController {
     //web端上传模型
     @RequestMapping(value = "/uploadDirectory",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+//    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
     public void uploadDirectory(@RequestParam(value = "name",required = false)String name,
                                 @RequestParam(value = "directoryId",required = false)Long directoryId,
                                 @RequestParam(value = "scope",required = false)Boolean scope,
@@ -214,16 +214,7 @@ public class DirectoryController {
             e.printStackTrace();
         }
         GUser user =  gUserService.querListByName(name);
-        if(scope){
-            GUser admin = gUserService.querListByName("admin");
-            Map<String,Object> param = new HashMap<>();
-            param.put("userId",admin.getID());
-            param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
-            Repository repository = repositoryService.queryByNameAndUserId(param);
-            if(repository == null) {
-               repositoryController.forkAndCollaboration(name,fileName);
-            }
-        }
+
         System.out.println("starting upload the file...");
         boolean result = false;
         //获取压缩包 C:/Temp/zip/文件名
@@ -295,11 +286,18 @@ public class DirectoryController {
             }
 
         }else{
+            if(scope){
+                GUser admin = gUserService.querListByName("admin");
+                Map<String,Object> param = new HashMap<>();
+                param.put("userId",admin.getID());
+                param.put("repositoryName",user.getLowerName()+fileName.toLowerCase());
+                Repository repository = repositoryService.queryByNameAndUserId(param);
+                if(repository == null) {
+                    repositoryController.forkAndCollaboration(name,fileName);
+                }
+            }
             File xmlFilePath = new File(xmlPath);
             String[] subFiles = xmlFilePath.list();
-
-
-
 //        Model model = this.setPackageParam(name,subFiles,directory,directoryId,scope,filePath);
 //        Map<String, Object> param = this.isAddModelAndReview(subFiles,directoryId,model);
             //查找最外层空的model
