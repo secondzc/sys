@@ -170,14 +170,15 @@
 
 <script>
 import Sidebar from './Sidebar'
-
+import LoginHeader from './LoginHeader'
 import Cookies from 'js-cookie'
 import global_ from './global.vue'
 import SysLogo from '@/assets/syslogo.png'
 import SylTitle from '@/assets/systitle.png'
     export default {
     	 components: {
-          Sidebar
+          Sidebar,
+          LoginHeader
  
   },
         data() {

@@ -50,12 +50,14 @@ Vue.use(ZkTable);
 router.beforeEach((to, from, next) => {
 
 
-  // console.log(from.path)
-  // console.log(to.path)
+  console.log(from.path)
+  console.log(to.path)
 
 
  
 
+    console.log( Cookies.get('JSESSIONID') )
+    console.log( Cookies.get() )
 
 
     let sessionId = Cookies.get('JSESSIONID') 
@@ -84,11 +86,11 @@ router.beforeEach((to, from, next) => {
               else
               {
                  console.log(6)
-              let token = {auths:'',roles:''}
-              token.auths = store.getters.userInfo.auths
-              token.roles = store.getters.userInfo.roles
-        
-              store.dispatch('GenerateRoutes',token).then(()=>{
+           
+              
+              const auths = store.getters.userInfo.auths
+              const roles = store.getters.userInfo.roles
+              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -107,6 +109,7 @@ router.beforeEach((to, from, next) => {
               let token = {auths:'',roles:''}
               token.auths = res.data.userInfo.auths
               token.roles = res.data.userInfo.roles
+              console.log(token)
               store.dispatch('GenerateRoutes',token).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
@@ -150,7 +153,8 @@ router.beforeEach((to, from, next) => {
                console.log(11)
               if(store.getters.isLoaded)
               {
-  
+                console.log(store.getters.userInfo)
+                  console.log(store.getters.session)
                  console.log(9)
                 next()
               }
@@ -158,10 +162,10 @@ router.beforeEach((to, from, next) => {
               {
                 console.log(11)
            
-             let token = {auths:'',roles:''}
-              token.auths = res.data.userInfo.auths
-              token.roles = res.data.userInfo.roles
-              store.dispatch('GenerateRoutes',token).then(()=>{
+              
+              const auths = store.getters.userInfo.auths
+              const roles = store.getters.userInfo.roles
+              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -175,10 +179,9 @@ router.beforeEach((to, from, next) => {
             
 
               store.dispatch('GetUserInfoFirst',userName).then(res =>{
-              let token = {auths:'',roles:''}
-              token.auths = res.data.userInfo.auths
-              token.roles = res.data.userInfo.roles
-              store.dispatch('GenerateRoutes',token).then(()=>{
+              const auths = res.data.userInfo.auths
+              const roles = res.data.userInfo.roles
+              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })
