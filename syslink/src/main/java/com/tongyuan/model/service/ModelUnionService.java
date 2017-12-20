@@ -1,6 +1,6 @@
 package com.tongyuan.model.service;
 
-import com.tongyuan.model.domain.ModelUnion;
+import com.tongyuan.model.domain.ModelRepo;
 
 import java.util.Map;
 
@@ -8,8 +8,8 @@ import java.util.Map;
  * Created by Administrator on 2017-12-10.
  */
 public interface ModelUnionService {
-    int add(ModelUnion model);
-    boolean update(ModelUnion model);
+    int add(ModelRepo model);
+    boolean update(ModelRepo model);
     int deleteByIds(String[] ids);
-    ModelUnion queryUnion(Map<String,Object> param);
+    ModelRepo queryUnion(Map<String,Object> param);
 }

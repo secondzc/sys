@@ -49,8 +49,6 @@ public class Variable {
     @Column
     //创建时间
     private Date createTime;
-    //父类名称
-    private String parentName;
     @Column
     //父类id
     private long componnetId;
@@ -152,14 +150,6 @@ public class Variable {
 
     public void setIsInput(int isInput) {
         IsInput = isInput;
-    }
-
-    public String getParentName() {
-        return parentName;
-    }
-
-    public void setParentName(String parentName) {
-        this.parentName = parentName;
     }
 
     public long getComponnetId() {

@@ -5,15 +5,18 @@ import javax.persistence.*;
 /**
  * Created by xyx on 2017-9-18.
  */
-@Entity
 public class Watch {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long ID;
-    @Column
     private long UserID;
-    @Column
     private long RepoID;
+    public Watch(){
+    }
+
+    public Watch(long ID, long userID, long repoID) {
+        this.ID = ID;
+        UserID = userID;
+        RepoID = repoID;
+    }
 
     public long getID() {
         return ID;

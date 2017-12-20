@@ -35,15 +35,6 @@ public class Directory {
     @Column
     //最后修改时间
     private Date lastUpdateTime;
-
-    @Column
-    //删除标记为
-    private String absoluteAddress;
-
-    @Column
-    //删除标记为
-    private String relativeAddress;
-
     @Column
     //删除标记为
     private Boolean isDeleted;
@@ -96,22 +87,6 @@ public class Directory {
 
     public void setLastUpdateTime(Date lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
-    }
-
-    public String getAbsoluteAddress() {
-        return absoluteAddress;
-    }
-
-    public void setAbsoluteAddress(String absoluteAddress) {
-        this.absoluteAddress = absoluteAddress;
-    }
-
-    public String getRelativeAddress() {
-        return relativeAddress;
-    }
-
-    public void setRelativeAddress(String relativeAddress) {
-        this.relativeAddress = relativeAddress;
     }
 
     public Boolean getDeleted() {

@@ -4,7 +4,8 @@
     <resultMap id="baseResultMap" type="com.tongyuan.model.domain.Component">
         <id column="id" property="id" jdbcType="BIGINT"  />
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
-        <result column="current_model_id" property="currentModelId" jdbcType="BIGINT"/>
+        <result column="parent_model_id" property="parentModelId" jdbcType="BIGINT"/>
+        <result column="m_class" property="mClass" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="type" property="Type" jdbcType="VARCHAR"/>
         <result column="modification" property="Modification" jdbcType="VARCHAR"/>
@@ -14,16 +15,16 @@
     </resultMap>
 
     <sql id="baseColumnList" >
-        id,model_id,current_model_id,name,type,modification,parent_name,parent_id,create_time
+        id,model_id,parent_model_id,name,type,modification,parent_name,parent_id,create_time,m_class
     </sql>
     <insert id="add" parameterType="com.tongyuan.model.domain.Component" useGeneratedKeys="true" keyProperty="id">
-         INSERT INTO component (model_id,current_model_id,name, type,modification,parent_name,parent_id,create_time) VALUES
-        (#{modelId},#{currentModelId}, #{name}, #{Type},#{Modification}, #{parentName}, #{parentId}, #{createTime})
+         INSERT INTO component (model_id,parent_model_id,name, type,modification,parent_name,parent_id,create_time,m_class) VALUES
+        (#{modelId},#{parentModelId}, #{name}, #{Type},#{Modification}, #{parentName}, #{parentId}, #{createTime}, #{mClass})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Component">
         UPDATE component SET
-            model_id = #{modelId},current_model_id = #{currentModelId},name = #{name},type = #{Type},modification = #{Modification},parent_name = #{parentName},parent_id = #{parentId}
-            ,create_time = #{createTime}
+            model_id = #{modelId},parent_model_id = #{parentModelId},name = #{name},type = #{Type},modification = #{Modification},parent_name = #{parentName},parent_id = #{parentId}
+            ,create_time = #{createTime},m_class = #{mClass}
             WHERE id = #{id}
     </update>
     <delete id="deleteByIds" parameterType="java.lang.String">

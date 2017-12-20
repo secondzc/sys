@@ -5,33 +5,36 @@ import javax.persistence.*;
 /**
  * Created by xyx on 2017-9-18.
  */
-@Entity
 public class Action {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long ID;
-    @Column
     private long UserID;
-    @Column
     private Integer OpType;
-    @Column
     private long ActUserID;
-    @Column
     private String ActUserName;
-    @Column
     private long RepoID;
-    @Column
     private String RepoUserName;
-    @Column
     private String RepoName;
-    @Column
     private String RefName;
-    @Column
     private Boolean IsPrivate;
-    @Column
     private String Content;
-    @Column
     private Long CreatedUnix;
+
+    public Action(){};
+
+    public Action(long ID, long userID, Integer opType, long actUserID, String actUserName, long repoID, String repoUserName, String repoName, String refName, Boolean isPrivate, String content, Long createdUnix) {
+        this.ID = ID;
+        UserID = userID;
+        OpType = opType;
+        ActUserID = actUserID;
+        ActUserName = actUserName;
+        RepoID = repoID;
+        RepoUserName = repoUserName;
+        RepoName = repoName;
+        RefName = refName;
+        IsPrivate = isPrivate;
+        Content = content;
+        CreatedUnix = createdUnix;
+    }
 
     public long getID() {
         return ID;

@@ -15,23 +15,23 @@ public class Component {
     private long id;
 
     @Column( nullable = false)
-    //模型Id
+    //自身model的id
     private long modelId;
 
     @Column
-    //当前模型Id
-    private long currentModelId;
+    //作为组件时，所属模型的id
+    private long parentModelId;
 
     @Column( nullable = false, length = 128)
     //组件名称
     private String name;
 
     @Column( nullable = false, length = 128)
-    //组件类型
+    //组件类型名字
     private String Type;
 
     @Column
-    //组件限制
+    //变更
     private String Modification;
 
     @Column
@@ -45,6 +45,9 @@ public class Component {
     @Column
     //创建时间
     private Date createTime;
+    @Column
+    //组件类别 class,model,connector,block,record
+    private String mClass;
 
     public long getId() {
         return id;
@@ -60,6 +63,14 @@ public class Component {
 
     public void setModelId(long modelId) {
         this.modelId = modelId;
+    }
+
+    public long getParentModelId() {
+        return parentModelId;
+    }
+
+    public void setParentModelId(long parentModelId) {
+        this.parentModelId = parentModelId;
     }
 
     public String getName() {
@@ -102,19 +113,19 @@ public class Component {
         this.parentId = parentId;
     }
 
-    public long getCurrentModelId() {
-        return currentModelId;
-    }
-
-    public void setCurrentModelId(long currentModelId) {
-        this.currentModelId = currentModelId;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getmClass() {
+        return mClass;
+    }
+
+    public void setmClass(String mClass) {
+        this.mClass = mClass;
     }
 }

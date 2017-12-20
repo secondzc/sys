@@ -5,15 +5,17 @@ import javax.persistence.*;
 /**
  * Created by Administrator on 2017-11-2.
  */
-@Entity
 public class Star {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long ID;
-    @Column
     private long Uid;
-    @Column
     private long RepoId;
+    public Star(){}
+
+    public Star(long ID, long uid, long repoId) {
+        this.ID = ID;
+        Uid = uid;
+        RepoId = repoId;
+    }
 
     public long getID() {
         return ID;

@@ -1,7 +1,7 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.ModelUnionMapper;
-import com.tongyuan.model.domain.ModelUnion;
+import com.tongyuan.model.domain.ModelRepo;
 import com.tongyuan.model.service.ModelUnionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ public class ModelUnionServiceImpl implements ModelUnionService{
     @Autowired
     ModelUnionMapper modelUnionMapper;
     @Override
-    public int add(ModelUnion model) {
+    public int add(ModelRepo model) {
         return this.modelUnionMapper.add(model);
     }
 
     @Override
-    public boolean update(ModelUnion model) {
+    public boolean update(ModelRepo model) {
         return this.modelUnionMapper.update(model);
     }
 
@@ -33,7 +33,7 @@ public class ModelUnionServiceImpl implements ModelUnionService{
     }
 
     @Override
-    public ModelUnion queryUnion(Map<String, Object> param) {
+    public ModelRepo queryUnion(Map<String, Object> param) {
         return this.modelUnionMapper.queryUnion(param);
     }
 }

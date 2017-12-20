@@ -1,7 +1,10 @@
+/*
 package com.tongyuan.model.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.tools.javac.comp.Todo;
+import com.sun.xml.bind.v2.TODO;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.controller.InputStreamRunnable;
 import com.tongyuan.gogs.controller.RepositoryController;
@@ -37,9 +40,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
+*/
 /** 教程页面
  * Created by tengj on 2017/3/13.
- */
+ *//*
+
 @Controller
 @RequestMapping("/api/directory")
 public class DirectoryController {
@@ -49,8 +54,9 @@ public class DirectoryController {
     private DirectoryService directoryService;
     @Autowired
     private ResourceUtil resourceUtil;
-    @Autowired
-    private FileModelService fileModelService;
+    //TODO 文件删除
+//    @Autowired
+//    private FileModelService fileModelService;
     @Autowired
     private FileX fileX;
     @Autowired
@@ -138,16 +144,19 @@ public class DirectoryController {
             String relativePath=parentF.getAbsolutePath().replace('\\', '/');
             String unzipPath= ResourceUtil.getFileDriectory();
             //获取实际路径
-         //   String relativePath=currentPath.substring(unzipPath.length(), currentPath.length());
             String currentPath=relativePath.substring(unzipPath.length(), relativePath.length());
-            FileModel directory  = new FileModel();
+            //TODO 文件删除
+  */
+/*          FileModel directory  = new FileModel();
             directory.setName(parentF.getName());
             directory.setAbsoluteAddress(currentPath);
             directory.setRelativeAddress(relativePath);
             //获取当前的时间
             directory.setCreateTime(nowDate);
             directory.setDescription(description);
-            directory.setDeleted(false);
+            directory.setDeleted(false);*//*
+
+
             //如果当前的路径就是根目录
             if(currentPath.equals(rootPath)){
                 // directory.setParentId();
@@ -156,16 +165,21 @@ public class DirectoryController {
                 //获取父目录地址
                 String parentPath=parentF.getParent().replace('\\', '/');
                 //创建一个父类目录对象
-                FileModel parentDirectory = new FileModel();
+                //TODO 文件删除
+*/
+/*                FileModel parentDirectory = new FileModel();
                 List<FileModel> directoryList = new ArrayList<FileModel>();
                 directoryList = fileModelService.queryListByPath(parentPath);
                 if(!directoryList.isEmpty()){
                     parentDirectory = directoryList.get(0);
                     directory.setParentId(parentDirectory.getId());
-                }
+                }*//*
+
             }
 
-            fileModelService.add(directory);
+           */
+/* fileModelService.add(directory);*//*
+
             result = true;
         }
         catch (Exception e){
@@ -518,11 +532,13 @@ public class DirectoryController {
     }
 
 
-    /*
+    */
+/*
   * name 是上传者
   * fileXmlPath 是文件所在位置
   * filName 为文件名称
-  * */
+  * *//*
+
     public void doCmd(String name, String fileXmlPath,String fileName){
         JSONObject jo = new JSONObject();
 //        Map<String,Object> params = new HashMap<>();
@@ -555,11 +571,15 @@ public class DirectoryController {
         {
             Process p = Runtime.getRuntime().exec(cmd);
 
-               /*为"错误输出流"单独开一个线程读取之,否则会造成标准输出流的阻塞*/
+               */
+/*为"错误输出流"单独开一个线程读取之,否则会造成标准输出流的阻塞*//*
+
             Thread t=new Thread(new InputStreamRunnable(p.getErrorStream(),"ErrorStream"));
             t.start();
 
-               /*"标准输出流"就在当前方法中读取*/
+               */
+/*"标准输出流"就在当前方法中读取*//*
+
             BufferedInputStream bis = new BufferedInputStream(p.getInputStream());
 
             if(encoding!=null && encoding.length()!=0)
@@ -778,12 +798,14 @@ public class DirectoryController {
         return jo;
     }
 
-    /**
+    */
+/**
      * 输入一个模型目录，判断是否是公有模型
      * true 公有模型 false 私有模型
      * @param directoryId
      * @return
-     */
+     *//*
+
     public Boolean isScope(Long directoryId){
         Boolean result = false;
         Directory publicDir = new Directory();
@@ -808,14 +830,16 @@ public class DirectoryController {
     }
 
 
-    /**
+    */
+/**
      * 給不同的模型存入對應的模型svg地址
      * @param subFiles
      * @param xmlFilePath
      * @param xmlMap
      * @param svgPath
      * @param xmlAnalysisMap
-     */
+     *//*
+
     public void insertSvgPath(String[] subFiles,File xmlFilePath,Map<String, Object> xmlMap,Map<String,String> svgPath,Map<String,Map> xmlAnalysisMap){
         for (int i = 0; i < subFiles.length; i++) {
             //查看文件的格式
@@ -859,11 +883,15 @@ public class DirectoryController {
 
 
 
-    /**
+    */
+/**
      * 把對應的模型庫的目录进行更改
-     */
+     *//*
+
     public void updateModelFramwork(String userName,String fileName,boolean scope){
-        /*List<Model> modelList = modelService.queryModelByParId(nullModel.getId());*/
+        */
+/*List<Model> modelList = modelService.queryModelByParId(nullModel.getId());*//*
+
         //查询刚插入的model
         List<Model> packageList = modelService.getNullParId();
         if(packageList.size() == 1){
@@ -935,13 +963,15 @@ public class DirectoryController {
         return  model;
     }
 
-    /**
+    */
+/**
      * 是否增加模型并申签
      * @param subFiles
      * @param directoryId
      * @param model
      * @return
-     */
+     *//*
+
     public Map<String, Object> isAddModelAndReview(String[] subFiles,Long directoryId,Model model){
         Map<String, Object> param = new HashMap<>();
         param.put("fileName",subFiles[0].split("\\.")[0]);
@@ -1082,9 +1112,9 @@ public class DirectoryController {
             unionParam.put("repository_id",repository.getID());
         }
 
-        ModelUnion modelUnion = modelUnionService.queryUnion(unionParam);
+        ModelRepo modelUnion = modelUnionService.queryUnion(unionParam);
         if(modelUnion == null){
-            ModelUnion Union = new ModelUnion();
+            ModelRepo Union = new ModelRepo();
             Union.setModelId(modelId);
             Union.setRepositoryId(repository.getID());
             modelUnionService.add(Union);
@@ -1093,3 +1123,4 @@ public class DirectoryController {
 }
 
 
+*/

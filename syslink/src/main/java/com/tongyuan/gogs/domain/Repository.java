@@ -5,79 +5,82 @@ import javax.persistence.*;
 /**
  * Created by xyx on 2017-9-18.
  */
-@Entity
 public class Repository {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long ID;
-    @Column( unique = true)
     private long OwnerID;
-    @Column(nullable = false, unique = true)
     private String LowerName;
-    @Column(nullable = false)
     private String Name;
-    @Column
     private String Description;
-    @Column
     private String Website;
-    @Column
     private String DefaultBranch;
-    @Column
     private long Size;
-    @Column
     private Integer NumWatches;
-    @Column
     private Integer NumStars;
-    @Column
     private Integer NumForks;
-    @Column
     private Integer NumIssues;
-    @Column
     private Integer NumClosedIssues;
-    @Column
     private Integer NumPulls;
-    @Column
     private Integer NumClosedPulls;
-    @Column
     private Integer NumMilestones;
-    @Column
     private Integer NumClosedMilestones;
-    @Column
     private Boolean IsPrivate;
-    @Column
     private Boolean IsBare;
-    @Column
     private Boolean IsMirror;
-    @Column
     private Boolean EnableWiki;
-    @Column
     private Boolean AllowPublicWiki;
-    @Column
     private Boolean EnableExternalWiki;
-    @Column
     private String ExternalWikiURL;
-    @Column
     private Boolean EnableIssues;
-    @Column
     private Boolean AllowPublicIssues;
-    @Column
     private Boolean EnableExternalTracker;
-    @Column
     private String ExternalTrackerURL;
-    @Column
     private String ExternalTrackerFormat;
-    @Column
     private String ExternalTrackerStyle;
-    @Column
     private Boolean EnablePulls;
-    @Column
     private Boolean IsFork;
-    @Column
     private Long ForkID;
-    @Column
     private Long CreatedUnix;
-    @Column
     private Long UpdatedUnix;
+    public Repository(){}
+
+
+    public Repository(long ID, long ownerID, String lowerName, String name, String description, String website, String defaultBranch, long size, Integer numWatches, Integer numStars, Integer numForks, Integer numIssues, Integer numClosedIssues, Integer numPulls, Integer numClosedPulls, Integer numMilestones, Integer numClosedMilestones, Boolean isPrivate, Boolean isBare, Boolean isMirror, Boolean enableWiki, Boolean allowPublicWiki, Boolean enableExternalWiki, String externalWikiURL, Boolean enableIssues, Boolean allowPublicIssues, Boolean enableExternalTracker, String externalTrackerURL, String externalTrackerFormat, String externalTrackerStyle, Boolean enablePulls, Boolean isFork, Long forkID, Long createdUnix, Long updatedUnix) {
+        this.ID = ID;
+        OwnerID = ownerID;
+        LowerName = lowerName;
+        Name = name;
+        Description = description;
+        Website = website;
+        DefaultBranch = defaultBranch;
+        Size = size;
+        NumWatches = numWatches;
+        NumStars = numStars;
+        NumForks = numForks;
+        NumIssues = numIssues;
+        NumClosedIssues = numClosedIssues;
+        NumPulls = numPulls;
+        NumClosedPulls = numClosedPulls;
+        NumMilestones = numMilestones;
+        NumClosedMilestones = numClosedMilestones;
+        IsPrivate = isPrivate;
+        IsBare = isBare;
+        IsMirror = isMirror;
+        EnableWiki = enableWiki;
+        AllowPublicWiki = allowPublicWiki;
+        EnableExternalWiki = enableExternalWiki;
+        ExternalWikiURL = externalWikiURL;
+        EnableIssues = enableIssues;
+        AllowPublicIssues = allowPublicIssues;
+        EnableExternalTracker = enableExternalTracker;
+        ExternalTrackerURL = externalTrackerURL;
+        ExternalTrackerFormat = externalTrackerFormat;
+        ExternalTrackerStyle = externalTrackerStyle;
+        EnablePulls = enablePulls;
+        IsFork = isFork;
+        ForkID = forkID;
+        CreatedUnix = createdUnix;
+        UpdatedUnix = updatedUnix;
+    }
 
     public long getID() {
         return ID;

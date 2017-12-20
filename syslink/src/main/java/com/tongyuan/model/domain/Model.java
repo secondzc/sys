@@ -40,11 +40,6 @@ public class Model {
     //模型目录ID
     private long directoryId;
 
-    @Column(name = "fileId")
-    //文件目录ID
-    private long fileId;
-
-
     @Column(name = "discription", length = 256)
     //模型描述
     private String discription;
@@ -56,22 +51,6 @@ public class Model {
     @Column(name = "Extends", length = 128)
     //基类名
     private String Extends;
-
-    @Column(name = "modelFilePath", length = 256)
-    //模型文件Url
-    private String modelFilePath;
-
-    @Column(name = "iconSvgPath", length = 256)
-    //Icon视图svg路径
-    private String iconSvgPath;
-
-    @Column(name = "diagramSvgPath", length = 256)
-    //Diagram视图svg路径
-    private String diagramSvgPath;
-
-    @Column(name = "infoTextPath", length = 256)
-    //Info视图文本路径
-    private String infoTextPath;
 
     @Column
     //删除标记为
@@ -93,9 +72,19 @@ public class Model {
     //是否为公共的模型 0；非公共的
     private Boolean scope;
 
-    //text信息（.mo文件）
-    @Column(length = 2000)
-    private String textInfo;
+    @Column
+    //icon文件id
+    private long iconFileId;
+    @Column
+    //diagram文件id
+    private long diagramFileId;
+    @Column
+    //info文件id
+    private long infoFileId;
+
+    //modeltext信息（.mo文件）
+    @Column
+    private String modelText;
 
     public long getId() {
         return id;
@@ -169,38 +158,6 @@ public class Model {
         Extends = anExtends;
     }
 
-    public String getModelFilePath() {
-        return modelFilePath;
-    }
-
-    public void setModelFilePath(String modelFilePath) {
-        this.modelFilePath = modelFilePath;
-    }
-
-    public String getIconSvgPath() {
-        return iconSvgPath;
-    }
-
-    public void setIconSvgPath(String iconSvgPath) {
-        this.iconSvgPath = iconSvgPath;
-    }
-
-    public String getDiagramSvgPath() {
-        return diagramSvgPath;
-    }
-
-    public void setDiagramSvgPath(String diagramSvgPath) {
-        this.diagramSvgPath = diagramSvgPath;
-    }
-
-    public String getInfoTextPath() {
-        return infoTextPath;
-    }
-
-    public void setInfoTextPath(String infoTextPath) {
-        this.infoTextPath = infoTextPath;
-    }
-
     public Boolean getDeleted() {
         return isDeleted;
     }
@@ -217,30 +174,6 @@ public class Model {
         this.userId = userId;
     }
 
-    public Boolean getScope() {
-        return scope;
-    }
-
-    public void setScope(Boolean scope) {
-        this.scope = scope;
-    }
-
-    public long getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(long fileId) {
-        this.fileId = fileId;
-    }
-
-    public String getTextInfo() {
-        return textInfo;
-    }
-
-    public void setTextInfo(String textInfo) {
-        this.textInfo = textInfo;
-    }
-
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -255,5 +188,45 @@ public class Model {
 
     public void setLastUpdateTime(Timestamp lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
+    }
+
+    public Boolean getScope() {
+        return scope;
+    }
+
+    public void setScope(Boolean scope) {
+        this.scope = scope;
+    }
+
+    public long getIconFileId() {
+        return iconFileId;
+    }
+
+    public void setIconFileId(long iconFileId) {
+        this.iconFileId = iconFileId;
+    }
+
+    public long getDiagramFileId() {
+        return diagramFileId;
+    }
+
+    public void setDiagramFileId(long diagramFileId) {
+        this.diagramFileId = diagramFileId;
+    }
+
+    public long getInfoFileId() {
+        return infoFileId;
+    }
+
+    public void setInfoFileId(long infoFileId) {
+        this.infoFileId = infoFileId;
+    }
+
+    public String getModelText() {
+        return modelText;
+    }
+
+    public void setModelText(String modelText) {
+        this.modelText = modelText;
     }
 }

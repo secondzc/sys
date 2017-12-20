@@ -8,8 +8,6 @@
         <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
         <result column="create_time" property="createTime" jdbcType="DATE"/>
         <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
-        <result column="absolute_address" property="absoluteAddress" jdbcType="VARCHAR"/>
-        <result column="relative_address" property="relativeAddress" jdbcType="VARCHAR"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
     </resultMap>
@@ -20,22 +18,20 @@
         <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
         <result column="create_time" property="createTime" jdbcType="DATE"/>
         <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
-        <result column="absolute_address" property="absoluteAddress" jdbcType="VARCHAR"/>
-        <result column="relative_address" property="relativeAddress" jdbcType="VARCHAR"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="baseColumnList" >
-        id, name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted,user_name
+        id, name, description,parent_id,create_time,last_update_time,is_deleted,user_name
     </sql>
     <insert id="add"  parameterType="com.tongyuan.model.domain.Directory">
-        INSERT INTO directory (name, description,parent_id,create_time,last_update_time,absolute_address,relative_address,is_deleted,user_name) VALUES
-        (#{name}, #{description}, #{parentId},#{createTime}, #{lastUpdateTime}, #{absoluteAddress},#{relativeAddress}, #{isDeleted},#{userName})
+        INSERT INTO directory (name, description,parent_id,create_time,last_update_time,is_deleted,user_name) VALUES
+        (#{name}, #{description}, #{parentId},#{createTime}, #{lastUpdateTime}, #{isDeleted},#{userName})
     </insert>
     <update id="update"  parameterType="com.tongyuan.model.domain.Directory">
             UPDATE directory SET
-            name = #{name},description = #{description},parent_id = #{parentId},create_time = #{createTime},last_update_time = #{lastUpdateTime},absolute_address = #{absoluteAddress},relative_address = #{relativeAddress},is_deleted = #{isDeleted}
+            name = #{name},description = #{description},parent_id = #{parentId},create_time = #{createTime},last_update_time = #{lastUpdateTime},is_deleted = #{isDeleted}
             ,user_name = #{userName}   WHERE id = #{id}
     </update>
     <delete id="deleteByIds" parameterType="java.lang.String">
@@ -48,8 +44,7 @@
         SELECT
         <include refid="baseColumnList" />
         FROM directory
-        where absolute_address = #{absoluteAddress}
-        and is_deleted = "0"
+        where  is_deleted = "0"
     </select>
     <select id="queryListByName" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory" parameterType="java.lang.String">
         SELECT
@@ -66,15 +61,6 @@
         where  1=1 GROUP BY NAME
     </select>
     <select id="findAllDirectory" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory" >
-        <!--SELECT-->
-        <!--<include refid="baseColumnList" ></include> FROM-->
-        <!--(SELECT-->
-        <!--<include refid="baseColumnList" ></include>-->
-        <!--FROM  directory-->
-        <!--WHERE-->
-         <!--is_deleted = "0"-->
-        <!--order by create_time desc) m-->
-        <!--where  1=1 GROUP BY NAME-->
         SELECT
         <include refid="baseColumnList" ></include>
         FROM  directory

@@ -6,77 +6,78 @@ import javax.persistence.*;
  * Created by xyx on 2017-9-18.
  */
 
-@Entity
 public class GUser {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long ID;
-    @Column(nullable = false, unique = true)
     private String LowerName;
-    @Column(nullable = false, unique = true)
     private String Name;
-    @Column
     private String FullName;
-    @Column
     private String Email;
-    @Column
     private String Passwd;
-    @Column
     private Integer LoginType;
-    @Column
     private Long LoginSource;
-    @Column
     private String LoginName;
-    @Column
     private Integer Type;
-    @Column
     private String Location;
-    @Column
     private String Website;
-    @Column
     private String Rands;
-    @Column
     private String Salt;
-    @Column
     private Long CreatedUnix;
-    @Column
     private Long UpdatedUnix;
-    @Column
     private Boolean LastRepoVisibility;
-    @Column
-//    private Boolean MaxRepoCreation;
     private  Integer MaxRepoCreation;
-    @Column
     private Boolean IsActive;
-    @Column
     private Boolean IsAdmin;
-    @Column
     private Boolean AllowGitHook;
-    @Column
     private Boolean AllowImportLocal;
-    @Column
     private Boolean ProhibitLogin;
-    @Column
     private String Avatar;
-    @Column
     private String AvatarEmail;
-    @Column
     private Boolean UseCustomAvatar;
-    @Column
     private Integer NumFollowers;
-    @Column
     private Integer NumFollowing;
-    @Column
     private Integer NumStars;
-    @Column
     private Integer NumRepos;
-    @Column
     private String Description;
-    @Column
     private Integer NumTeams;
-    @Column
     private Integer NumMembers;
 
+    public GUser(){}
+
+    public GUser(long ID, String lowerName, String name, String fullName, String email, String passwd, Integer loginType, Long loginSource, String loginName, Integer type, String location, String website, String rands, String salt, Long createdUnix, Long updatedUnix, Boolean lastRepoVisibility, Integer maxRepoCreation, Boolean isActive, Boolean isAdmin, Boolean allowGitHook, Boolean allowImportLocal, Boolean prohibitLogin, String avatar, String avatarEmail, Boolean useCustomAvatar, Integer numFollowers, Integer numFollowing, Integer numStars, Integer numRepos, String description, Integer numTeams, Integer numMembers) {
+        this.ID = ID;
+        LowerName = lowerName;
+        Name = name;
+        FullName = fullName;
+        Email = email;
+        Passwd = passwd;
+        LoginType = loginType;
+        LoginSource = loginSource;
+        LoginName = loginName;
+        Type = type;
+        Location = location;
+        Website = website;
+        Rands = rands;
+        Salt = salt;
+        CreatedUnix = createdUnix;
+        UpdatedUnix = updatedUnix;
+        LastRepoVisibility = lastRepoVisibility;
+        MaxRepoCreation = maxRepoCreation;
+        IsActive = isActive;
+        IsAdmin = isAdmin;
+        AllowGitHook = allowGitHook;
+        AllowImportLocal = allowImportLocal;
+        ProhibitLogin = prohibitLogin;
+        Avatar = avatar;
+        AvatarEmail = avatarEmail;
+        UseCustomAvatar = useCustomAvatar;
+        NumFollowers = numFollowers;
+        NumFollowing = numFollowing;
+        NumStars = numStars;
+        NumRepos = numRepos;
+        Description = description;
+        NumTeams = numTeams;
+        NumMembers = numMembers;
+    }
 
     public long getID() {
         return ID;
