@@ -45,7 +45,7 @@
   import Cookies from 'js-cookie'
   import loginLogo from '@/assets/loginLogo.png'
   import loginLogo1 from '@/assets/loginLogo1.png'
-  import bg from '@/assets/666.jpg'
+  import bg from '@/assets/background.jpg'
   //import NProgress from 'nprogress'
   export default {
     data() {

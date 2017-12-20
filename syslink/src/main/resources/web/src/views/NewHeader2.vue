@@ -67,15 +67,14 @@
 
 <script>
 import Sidebar from './Sidebar'
-import LoginHeader from './LoginHeader'
+
 import Cookies from 'js-cookie'
 
 import SysLogo from '@/assets/syslogo.png'
 import SylTitle from '@/assets/systitle.png'
     export default {
        components: {
-          Sidebar,
-          LoginHeader
+          Sidebar
  
   },
         data() {
