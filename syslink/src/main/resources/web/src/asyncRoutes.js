@@ -1,16 +1,8 @@
-import Login from './views/Login.vue'
+
 import NotFound from './views/404.vue'
 
-import Gogs from './views/Gogs.vue'
 import Main from './views/Main.vue'
-import Table from './views/nav1/Table.vue'
-import Form from './views/nav1/Form.vue'
-import user from './views/nav1/user.vue'
-import Page4 from './views/nav2/Page4.vue'
-import Page5 from './views/nav2/Page5.vue'
-import Page6 from './views/nav3/Page6.vue'
-import FileContent from './views/nav3/index.vue'
-import echarts from './views/charts/echarts.vue'
+
 
 
 
@@ -52,16 +44,14 @@ import error404 from './views/404.vue'
 
 import depart from './views/nav4/depart.vue'
 import Sidebar from './views/Sidebar.vue'
-import corporate from './views/corporate.vue'
 
-import ModelHeader from './views/ModelHeader.vue'
+
 import myRepo from './views/nav4/myRepo.vue'
 import cRepo from  './views/nav4/cRepo.vue'
 import changePassWd from './views/nav4/changePassWd.vue'
 import personalInfo from './views/nav4/personalInfo.vue'
 
 
-import LoginHeader from './views/LoginHeader.vue'
 import LogOut from './views/LogOut.vue'
 import NewHeader from './views/NewHeader.vue'
 import NewLogin from './views/NewLogin.vue'
@@ -87,39 +77,7 @@ Vue.use(Router)
 
 
 export let  commonRoutes = [
-    // {
-    //     path: '',
-    //     component: corporate,
-    //     name: '审签管理',
-    //     iconCls: 'el-icon-setting',//图标样式class
-    //     children: [
-    //         // { path: '/main', component: Main, name: '项目', hidden: true },
-    //         { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
-    //         { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
-    //     ]
-    // },
-    // {
-    //     path: '',
-    //     component: corporate,
-    //     name: '我的审签',
-    //     iconCls: 'el-icon-star-on',//图标样式class
-    //     children: [
-    //         // { path: '/main', component: Main, name: '项目', hidden: true },
-    //         {path:'/template',component:template,name:'我的模板'},
-    //         {path:'/checkor',component:checkor,name:'我的待办'},
-    //         {path:'/mySubmit',component:mySubmit,name:'我的提交'},
-    //     ]
-    // },
-     // {  
-     //      path: '', 
-     //      component: corporate, 
-     //      name: '审签管理', 
-     //      iconCls: 'el-icon-setting',//图标样式class 
-     //      children: [ 
-     //          // { path: '/main', component: Main, name: '项目', hidden: true }, 
-              
-     //      ] 
-     //  }, 
+  
       {
         path: '',
         component: NewHeader,
@@ -295,40 +253,7 @@ export let  commonRoutes = [
              { path: '/cRepo', component: cRepo, name: '协同仓库' ,iconCls: 'iconfont icon-renren'}
         ]
     },
-    // {
-    //     path: '',
-    //     component: corporate,
-    //     name: '分享',
-    //     noDropdown: true,
-    //     iconCls: 'el-icon-share',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/page4', component: Page4, name: '我的分享' }
-    //     ]
-    // },
-    //  {
-    //     path: '收藏',
-    //     component: corporate,
-    //     name: '我的收藏',
-    //     noDropdown: true,
-    //     iconCls: 'el-icon-star-on',//图标样式class
-    //     children: [
-    //         // { path: '/main', component: Main, name: '项目', hidden: true },
-    //         { path: '/table', component: Table, name: '项目' },
-    //         { path: '/form', component: Form, name: '模型' },
-    //         { path: '/user', component: user, name: '仿真' },
-    //     ]
-    // },
-    // {
-    //     path: '',
-    //     component: corporate,
-    //     name: '回收站',
-    //     iconCls: 'el-icon-delete',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/page6', component: Page6, name: '回收站' }
-    //     ]
-    // },
+  
     //   {
     //     path: '',
     //     component: corporate,

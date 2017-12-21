@@ -24,7 +24,7 @@
     const colorListLength = 20
     const gogsHostPath = "corporate" ;
     const gogsPort = "";
-    const HostPath = "192.168.10.21"
+    const HostPath = "192.168.199.131"
     function getRandColor () {
         var tem = Math.round(Math.random() * colorListLength)
         return colorList[tem]

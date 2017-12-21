@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section style="height: inherit;overflow-y: hidden;overflow-x: auto;width: inherit;display: flex;flex-direction: column;">
 
 <!--工具条-->
 
@@ -8,7 +8,8 @@
 
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom:0px;"> -->
   
-      <el-form :inline="true" :model="filters" >
+      <div style="height: 50px;margin-top: 10px;min-width: 500px;">
+          <el-form :inline="true" :model="filters" >
       
         <el-form-item>
           <el-input v-model="filters.name" placeholder="用户名/全名/邮箱"></el-input>
@@ -25,43 +26,16 @@
         </el-form-item>
 
       </el-form>
+      </div>
+    
       <hr/>
      
-  <!--   </el-col> -->
-  <el-row :gutter="20">
-  <el-col :span="6">
-   
 
-
-   <!-- <zk-table
-      ref="table"
-      sum-text="sum"
-      index-text="#"
-      :data="departs"
-      :columns="columns"
-      :stripe="false"
-      :border="false"
-      :show-header="true"
-      :show-summary="false"
-      :show-row-hover="true"
-      :show-index="false"
-      :tree-type="true"
-      :is-fold="false"
-      :expand-type="false"
-      :selection-type="false"
-      @row-click="handleDepart"
-      >
-     </zk-table> -->
-      <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2"></el-tree>
-
-
-
-  <div class="grid-content bg-purple"></div></el-col>
-  <el-col :span="18"><div class="grid-content bg-purple">
-
-
-    <!--列表-->
-    <el-table :data="users" highlight-current-row  center  @selection-change="selsChange" style="width: 100%;">
+  <div  style="display: flex;height: inherit;">
+     <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="max-width: 200px;"></el-tree>
+     
+      <!--列表-->
+    <el-table :data="users" highlight-current-row  center    height="100%"@selection-change="selsChange" class="tableWrapper">
       <el-table-column type="selection" width="55">
       </el-table-column>
           
@@ -142,7 +116,7 @@
      
 
 
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
 
         <el-dropdown>
@@ -187,11 +161,11 @@
        </el-dropdown-item>
         <el-dropdown-item style="width: inherit;" > 
   
-     <!--  <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+      <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
         <span>
-          模型下载权限
+          模型数据权限
         </span>
-      </div> -->
+      </div>
        </el-dropdown-item>
 
    <!--    <el-button  type="text"  @click="handleEdit(scope.$index, scope.row)"
@@ -209,24 +183,86 @@
       </el-table-column>
     </el-table>
 
-    <!--工具条-->
-    <el-col :span="24" class="toolbar">
+  </div>
+
      
+ <div>
+  
+  <div style="display: flex;height: 40px;margin-top: 10px;margin-bottom: 10px;width: 100%;">
+    <div style="min-width: 700px;">
       <el-pagination  
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pager.pageIndex"
-      :page-sizes="[10, 30, 50, 100]"
+      :page-sizes="[10, 30, 50, 1000]"
 
       :page-size="pager.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pager.total">
     </el-pagination>
-     <el-button type="danger" size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-    </el-col>
+    </div>
+     
+    <div style="max-width: 100px;">
+    <!--   <el-button type="danger" size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
+        <el-dropdown>
+  <el-button type="primary" size="small">
+    批量操作<i class="el-icon-caret-bottom el-icon--right"></i>
+  </el-button>
+  <el-dropdown-menu slot="dropdown">
 
-  </div></el-col>
-</el-row>
+
+
+   
+        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0" > 
+
+
+      <div @click="batchRemove" style="font-size: 12px;text-align: center;color: red">
+         <el-button  type="text"  
+      style="width: inherit;" size="small" :disabled="this.sels.length===0">删除</el-button>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0"> 
+  
+     
+      <div @click="handleRoleBatch"  style="font-size: 12px;text-align: center;color: red">
+         <el-button  type="text"  
+      style="width: inherit;" size="small" :disabled="this.sels.length===0">分配角色</el-button>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0"> 
+  
+     
+      <div @click="handleAuthBatch" style="font-size: 12px;text-align: center;color: red">
+         <el-button  type="text"  
+      style="width: inherit;" size="small" :disabled="this.sels.length===0">分配权限</el-button>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0"> 
+  
+     
+      <div @click="modelAuthBatch" size="small" style="font-size: 12px;text-align: center;color: red">
+         <el-button  type="text"  
+      style="width: inherit;" :disabled="this.sels.length===0">模型数据权限</el-button>
+      </div>
+       </el-dropdown-item>
+
+ 
+  </el-dropdown-menu>
+  </el-dropdown>
+    </div>
+     
+  </div>
+     
+   
+
+ </div>
+
+  
+
+
+   
+ 
+
 
     
 
@@ -656,6 +692,7 @@
          ids:{
           authIds:[],
           uid:'',
+          uids:[],
           roleId:'',
           directoryIds:[]
         },
@@ -726,7 +763,8 @@
         roles1:[],
         userRole:{
            assigned:[],
-           uid:''
+           uid:'',
+           uids:[]
         }
         ,
         addFormRules: {
@@ -822,22 +860,7 @@
          this.$refs.tree.setCheckedNodes(nodes);
       },
 
-      getUserRoles(para){
-
-        this.$http({
-          url:'/api/user/queryUserRoles',
-          method:'post',
-          data:para
-        }).then((res)=>{
-          if(res.data.flag)
-          {
-           this.userRole.assigned = res.data.userRoles;
-          }
-        })
-        .catch(error=>{
-          console.log(error);
-        })
-      },
+     
      // 获取角色穿梭框数据
      getRoles() {
          var _this = this;
@@ -891,18 +914,7 @@
         };
       },
     
-      
-
-      permissonJudge(){
-            var _this = this;
-        _this.$http.post('/api/user/if')
-        .then(function(response){
-          _this.abc.a=response.data.flag;
-        }) 
-        .catch(function (error) {
-              console.log(error);
-          });
-      },
+  
   
       
       query() {
@@ -922,7 +934,7 @@
       },
 
 
-  getUsers(node)
+    getUsers(node)
       {
 
          var _this = this;
@@ -1006,17 +1018,21 @@
       //显示编辑界面
 
       handleRole:function(index,row){
+     
+         
+        this.userRole.assigned = row.roles;
+        this.userRole.uid=row.id;
+  
+        this.roleVisble=true;
+       
+      },
+      handleRoleBatch:function(){
          this.userRole={
              assigned:[],
              uid:''
           }
-         
-      
-        this.userRole.uid=row.id;
-        let para = Object.assign({},this.userRole);
-        this.getUserRoles(para);
-        console.log(this.userRole.assigned);
-        this.roleVisble=true;
+     
+         this.roleVisble=true;
        
       },
         handleAuth(index,row)
@@ -1029,8 +1045,13 @@
          row.auths.forEach(x=>temp.push(x.authId));
          console.log(temp);
          this.authTree=temp;
+      },
+     handleAuthBatch()
+      {
 
-         // this.setCheckedNodes(row.auths);
+         this.permissionVisible=true;
+         this.authTree=[];
+       
       },
       modelAuth(index,row)
       {
@@ -1044,11 +1065,13 @@
          console.log(temp);
          this.modelTree=temp;
 
+      },
+      modelAuthBatch()
+      {
+      
+         this.modelVisible = true;
+         this.modelTree=[];
 
-
-
-
-         // this.$refs.tree1.setCheckedNodes(row.modelAuth);
       },
       //显示新增界面
       handleAdd: function () {
@@ -1146,9 +1169,14 @@
            
            
               this.roleLoading = true;
-              //NProgress.start();
-          //    let userId = thsi.sels.id;
-          
+              if(this.sels.length>0)
+              {
+                let a =  [];
+
+                    this.sels.forEach(x=>a.push(x.id));
+                    this.userRole.uids=a;
+                    
+              }
               let para = Object.assign({},this.userRole);
 
               
@@ -1188,8 +1216,21 @@
           if (valid) {
         
               this.permissionLoading = true;
-  
-              this.ids.authIds=this.getCheckedNodes();
+
+               if(this.sels.length>0)
+              {
+                let a =  [];
+
+                this.sels.forEach(x=>a.push(x.id));
+                this.ids.uids=a;
+                    
+              }
+              let  b = this.getCheckedNodes();
+              let c = [];
+              b.forEach(x=>c.push(x.authId));
+              this.ids.authIds = c;
+
+              // this.ids.authIds=this.getCheckedNodes();
               let para = Object.assign({}, this.ids);
    
               this.$http({
@@ -1230,9 +1271,22 @@
           if (valid) {
         
               this.modelVisible = true;
+                 if(this.sels.length>0)
+              {
+                let a =  [];
+
+                this.sels.forEach(x=>a.push(x.id));
+                this.ids.uids=a;
+                    
+              }
+              let  b = this.$refs.tree1.getCheckedNodes();
+              let c = [];
+              b.forEach(x=>c.push(x.id));
+              this.ids.directoryIds = c;
   
-              this.ids.directoryIds=this.$refs.tree1.getCheckedNodes();
-              console.log(this.ids.directoryIds);
+            
+
+
               let para = Object.assign({}, this.ids);
    
               this.$http({
@@ -1358,9 +1412,7 @@
       this.getDeparts();
       this.getDirectoryTree();
       console.log(this.$refs.editDialog);
-    //  this.func.changeDate();
-
-  //    this.permissonJudge();
+   
     }
   }
 
@@ -1382,4 +1434,12 @@
     margin-bottom: 0;
     width: 20%;
   }
+  .tableWrapper{
+    width: 100%;
+/*     height: calc(100%-100px)!important;
+     height: -moz-calc(100% - 100px)!important;
+    height :-webkit-calc(100% - 100px)!important; */
+
+
+   }
 </style>

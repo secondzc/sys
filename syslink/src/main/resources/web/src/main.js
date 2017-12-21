@@ -56,8 +56,6 @@ router.beforeEach((to, from, next) => {
 
  
 
-    console.log( Cookies.get('JSESSIONID') )
-    console.log( Cookies.get() )
 
 
     let sessionId = Cookies.get('JSESSIONID') 
@@ -67,7 +65,7 @@ router.beforeEach((to, from, next) => {
        if(store.getters.session)
      {
     
-     if(to.path=='/login')
+     if(to.path=='/login'||to.path=='/')
      {
       console.log(2)
        next('/brief')
@@ -86,11 +84,11 @@ router.beforeEach((to, from, next) => {
               else
               {
                  console.log(6)
-           
-              
-              const auths = store.getters.userInfo.auths
-              const roles = store.getters.userInfo.roles
-              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
+              let token = {auths:'',roles:''}
+              token.auths = store.getters.userInfo.auths
+              token.roles = store.getters.userInfo.roles
+        
+              store.dispatch('GenerateRoutes',token).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -109,7 +107,6 @@ router.beforeEach((to, from, next) => {
               let token = {auths:'',roles:''}
               token.auths = res.data.userInfo.auths
               token.roles = res.data.userInfo.roles
-              console.log(token)
               store.dispatch('GenerateRoutes',token).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
@@ -139,7 +136,7 @@ router.beforeEach((to, from, next) => {
 
 
 
-            if(to.path=='/login')
+            if(to.path=='/login'||to.path=='/')
             {
            
              next('/brief')
@@ -153,8 +150,7 @@ router.beforeEach((to, from, next) => {
                console.log(11)
               if(store.getters.isLoaded)
               {
-                console.log(store.getters.userInfo)
-                  console.log(store.getters.session)
+  
                  console.log(9)
                 next()
               }
@@ -162,10 +158,10 @@ router.beforeEach((to, from, next) => {
               {
                 console.log(11)
            
-              
-              const auths = store.getters.userInfo.auths
-              const roles = store.getters.userInfo.roles
-              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
+             let token = {auths:'',roles:''}
+              token.auths = res.data.userInfo.auths
+              token.roles = res.data.userInfo.roles
+              store.dispatch('GenerateRoutes',token).then(()=>{
               router.addRoutes(store.getters.addRouters)      
               next({ ...to }) 
                     }) 
@@ -179,9 +175,10 @@ router.beforeEach((to, from, next) => {
             
 
               store.dispatch('GetUserInfoFirst',userName).then(res =>{
-              const auths = res.data.userInfo.auths
-              const roles = res.data.userInfo.roles
-              store.dispatch('GenerateRoutes',auths,roles).then(()=>{
+              let token = {auths:'',roles:''}
+              token.auths = res.data.userInfo.auths
+              token.roles = res.data.userInfo.roles
+              store.dispatch('GenerateRoutes',token).then(()=>{
               router.addRoutes(store.getters.addRouters)      
                 next({ ...to })   
                       })

@@ -127,15 +127,14 @@
 
 <script>
 import Sidebar from './Sidebar'
-import LoginHeader from './LoginHeader'
+
 import Cookies from 'js-cookie'
 import global_ from './global.vue'
 import SysLogo from '@/assets/syslogo.png'
 import SylTitle from '@/assets/systitle.png'
     export default {
        components: {
-          Sidebar,
-          LoginHeader
+          Sidebar
  
   },
         data() {
@@ -268,12 +267,12 @@ import SylTitle from '@/assets/systitle.png'
             // console.log(abc);
             }
 
-            console.log(window.location.href);
-            console.log(window.location.protocol);
-            console.log(window.location.host);
-            console.log(window.location.port);
-            console.log(window.location.pathname);
-            console.log(window.location.hash);
+            // console.log(window.location.href);
+            // console.log(window.location.protocol);
+            // console.log(window.location.host);
+            // console.log(window.location.port);
+            // console.log(window.location.pathname);
+            // console.log(window.location.hash);
 
             // const uid = JSON.parse(localStorage.getItem('uid'));
             // console.log(uid);
