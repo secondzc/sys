@@ -15,4 +15,5 @@ public interface AttachmentMapper {
 
     Long add(Attachment attachment);
     int update(Attachment attachment);
+    public Attachment queryListByPath(String parentPath);
 }

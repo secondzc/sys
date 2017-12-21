@@ -23,21 +23,6 @@ public class DefalutAction {
             publicDir.setParentId(0);
             publicDir.setDeleted(false);
             directoryService.add(publicDir);
-            Directory privateModel = new Directory();
-            privateModel.setName("我的模型");
-            privateModel.setParentId(0);
-            privateModel.setDeleted(false);
-            directoryService.add(privateModel);
-        }
-        if(defaultModel.size() == 1){
-            defaultModel.get(0).setName("公有模型");
-            defaultModel.get(0).setDeleted(false);
-            directoryService.update(defaultModel.get(0));
-            Directory privateModel = new Directory();
-            privateModel.setName("我的模型");
-            privateModel.setParentId(0);
-            privateModel.setDeleted(false);
-            directoryService.add(privateModel);
         }
     }
 }

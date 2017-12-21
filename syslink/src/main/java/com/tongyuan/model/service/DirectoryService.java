@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.domain.Directory;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public interface DirectoryService {
     public List<Directory> queryListByPath(String absoluteAddress);
-    public boolean add(Directory directory);
+    public Long add(Directory directory);
     public boolean update(Directory directory);
     public boolean deleteByIds(String[] ids);
     public List<Directory> queryListByName(Map<String, Object> params);
@@ -24,7 +25,16 @@ public interface DirectoryService {
     public Map<String,Object> queryMapById(Long id);
     public List<Directory> selectDefaultDirectory ();
     //获取公有目录（唯一）
-    public List<Directory> getPublicDir();
+    public Directory getPublicDir();
     //获取我的模型目录（唯一）
-    public List<Directory> getPrivateDir();
+    public Directory getPrivateDir(String userName);
+    //创建个人的私有模型目录根节点
+    public void createPersonalModelRoot(Map<String,Object> map);
+    //获取directory目录(不包含子目录)
+    public void getDirExpChild(List<JSONObject> directoryModelList,Long parent_id
+    ,Boolean scope,String userName);
+    //web端增加模型目录
+    public Directory addOneDir(String name,Long parent_id,String userName);
+
+
 }

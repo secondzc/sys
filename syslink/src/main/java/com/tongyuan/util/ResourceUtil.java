@@ -1,5 +1,6 @@
 package com.tongyuan.util;
 
+import com.tongyuan.model.controller.DirectoryController;
 import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.tools.StringUtil;
 import org.apache.tools.zip.ZipEntry;
@@ -25,8 +26,8 @@ public class ResourceUtil {
 
     private static final int BUFFEREDSIZE = 1024;
 
-//    @Autowired
-//    private DirectoryController directoryController;
+    @Autowired
+    private DirectoryController directoryController;
     @Autowired
     private DirectoryService directoryService;
 //    @Autowired
@@ -294,23 +295,23 @@ public class ResourceUtil {
         return modelPath;
     }
 
-//    public void getSubFile(String filePath, String rootPath, String description){
-//        File parentF = new File(filePath);
-//        if (!parentF.exists()) {
-//            System.out.println("文件或文件夹不存在");
-//            return;
-//        }
-//        if(parentF.isFile()){
-//            directoryController.createModel(parentF,filePath,rootPath,description);
-//            return;
-//        }else{
-//            directoryController.createModel(parentF,filePath,rootPath,description);
-//            String[] subFiles = parentF.list();
-//            for (int i = 0; i < subFiles.length; i++) {
-//                getSubFile(filePath + "/" + subFiles[i],rootPath ,description);
-//            }
-//        }
-//    }
+    public void getSubFile(String filePath, String rootPath, String description){
+        File parentF = new File(filePath);
+        if (!parentF.exists()) {
+            System.out.println("文件或文件夹不存在");
+            return;
+        }
+        if(parentF.isFile()){
+            directoryController.createModel(parentF,filePath,rootPath,description);
+            return;
+        }else{
+            directoryController.createModel(parentF,filePath,rootPath,description);
+            String[] subFiles = parentF.list();
+            for (int i = 0; i < subFiles.length; i++) {
+                getSubFile(filePath + "/" + subFiles[i],rootPath ,description);
+            }
+        }
+    }
 
     /*
     * 获取xml文件所在文件的位置

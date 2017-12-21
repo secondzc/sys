@@ -1,5 +1,6 @@
 package com.tongyuan.model.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domain.enums.ExceptionMsg;
 import com.tongyuan.model.domain.result.Response;
@@ -196,12 +197,24 @@ public class BaseController {
     /**
      * 获取基于应用程序的url绝对路径
      *
-     * @param request
-     * @param url  以"/"打头的URL地址
      * @return 基于应用程序的url绝对路径
 
     public final String getAppbaseUrl(HttpServletRequest request, String url) {
         return request.getContextPath() + url;
     }
      */
+
+    protected  JSONObject returnErrorInfo(JSONObject jo){
+        jo.put("status", 1);
+        jo.put("code", 0);
+        jo.put("msg", "error");
+        return jo;
+    }
+
+    protected  JSONObject returnSuccessInfo(JSONObject jo){
+        jo.put("status", 1);
+        jo.put("code", 0);
+        jo.put("msg", "ok");
+        return jo;
+    }
 }

@@ -11,6 +11,7 @@ import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.UserDepart;
 import com.tongyuan.model.domain.UserRole;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
+import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.GUserWarpper;
@@ -48,6 +49,8 @@ public class UserController extends BaseController {
     private OperationlogService operationlogService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private DirectoryService directoryService;
     @Value("${defaultPassWord}")
     private String defaultPassWord;
 
@@ -223,6 +226,7 @@ public class UserController extends BaseController {
         {
 
             userService.addGUser(map);
+            directoryService.createPersonalModelRoot(map);
 
 
 

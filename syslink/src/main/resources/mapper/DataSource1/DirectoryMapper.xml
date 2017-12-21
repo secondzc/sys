@@ -25,7 +25,7 @@
     <sql id="baseColumnList" >
         id, name, description,parent_id,create_time,last_update_time,is_deleted,user_name
     </sql>
-    <insert id="add"  parameterType="com.tongyuan.model.domain.Directory">
+    <insert id="add"  parameterType="com.tongyuan.model.domain.Directory" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO directory (name, description,parent_id,create_time,last_update_time,is_deleted,user_name) VALUES
         (#{name}, #{description}, #{parentId},#{createTime}, #{lastUpdateTime}, #{isDeleted},#{userName})
     </insert>
@@ -138,13 +138,13 @@
         SELECT
         <include refid="baseColumnList" />
         FROM directory
-        where parent_id = 0 and name = '公有模型'  or name = '我的模型' and is_deleted = "0"
+        where parent_id = 0 and name = '公有模型' and is_deleted = "0"
     </select>
     <select id="getPrivateDir" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
         SELECT
         <include refid="baseColumnList" />
         FROM directory
-        where parent_id = 0 and name = '我的模型' and is_deleted = "0"
+        where parent_id = 0 and user_name = #{userName} and is_deleted = "0"
     </select>
     <select id="getPublicDir" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Directory">
         SELECT

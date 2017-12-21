@@ -13,7 +13,7 @@ import java.util.Map;
 @Mapper
 public interface DirectoryMapper {
     public List<Directory> queryListByPath(String absoluteAddress);
-    boolean add(Directory directory);
+    Long add(Directory directory);
     boolean update(Directory directory);
     boolean deleteByIds(String[] ids);
     public List<Directory> queryListByName(Map<String, Object> params);
@@ -26,6 +26,6 @@ public interface DirectoryMapper {
     public List<Map<String,Object>> queryMapListByParentId(Long parentId);
     public Map<String,Object> queryMapById(Long id);
     public List<Directory> selectDefaultDirectory();
-    List<Directory> getPublicDir();
-    List<Directory> getPrivateDir();
+    Directory getPublicDir();
+    Directory getPrivateDir(String userName);
 }

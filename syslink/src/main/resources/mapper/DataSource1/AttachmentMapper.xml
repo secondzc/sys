@@ -26,4 +26,9 @@
     </insert>
 
     <update id="update"></update>
+    <select id="queryListByPath" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT  <include refid="baseColumnList" />
+        from attachment
+        where file_path = #{filePath}
+    </select>
 </mapper>
