@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.ModelTypeMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.ModelType">
+    <id column="id" property="id" jdbcType="BIGINT"  />
+    <result column="icon" property="icon" jdbcType="BIGINT"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+    id,icon,name
+    </sql>
+    <select id="getModelTypeList" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.ModelType">
+        SELECT  <include refid="baseColumnList"></include>
+        from model_type
+        where 1=1
+    </select>
+</mapper>
