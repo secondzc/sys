@@ -1,57 +1,30 @@
 
-import NotFound from './views/404.vue'
-
 import Main from './views/Main.vue'
 
-
-
-
-import Repository from './views/repository/index2.vue'
 import Model from './views/model/index.vue'
 import myModel from './views/model/MyIndex.vue'
-import modelVariable from './views/model/modelVariable.vue' ;
 import packageDiagram from './views/model/packageDiagram.vue'
 import myPackageDiagram from  './views/model/myPackageDiagram.vue'
-import packageDiagramModel from './views/model/packageDiagramModel.vue'
 import packageDiagramVariable from './views/model/packageDiagramVariable.vue'
 import modelComponent from  './views/model/ModelComponent.vue'
-import modelCont from './views/model/modelCont.vue'
-import packageTransfModel from  './views/model/packageTransfModel.vue'
-
-
-
-
-
-
-
-import mySubmit from './views/review/mySubmit.vue'
-import Myorg from './views/nav4/Myorg.vue'
-import OrgEdit from './views/nav4/OrgEdit.vue'
+import modelUpload from './views/nav3/UploadFile.vue'
+import upload from './views/model/Upload.vue'
 import GUser from './views/nav4/GUser.vue'
-import TreeGrid from './views/nav4/TreeGrid.vue'
-import test from './views/nav4/model.vue'
-import tree from './views/nav4/tree.vue'
+
 import log from   './views/nav4/log.vue'
 import permission from './views/nav4/permission.vue'
 import role from './views/nav4/role.vue'
-import test2 from './views/nav4/test2.vue'
-import team from './views/nav4/team.vue'
-import OrgMange from './views/nav4/OrgMange.vue'
+
 
 import error401 from './views/401.vue'
 import error404 from './views/404.vue'
 
 
 import depart from './views/nav4/depart.vue'
-import Sidebar from './views/Sidebar.vue'
-
-
 import myRepo from './views/nav4/myRepo.vue'
 import cRepo from  './views/nav4/cRepo.vue'
 import changePassWd from './views/nav4/changePassWd.vue'
 import personalInfo from './views/nav4/personalInfo.vue'
-
-
 import LogOut from './views/LogOut.vue'
 import NewHeader from './views/NewHeader.vue'
 import NewLogin from './views/NewLogin.vue'
@@ -77,7 +50,39 @@ Vue.use(Router)
 
 
 export let  commonRoutes = [
-  
+    // {
+    //     path: '',
+    //     component: corporate,
+    //     name: '审签管理',
+    //     iconCls: 'el-icon-setting',//图标样式class
+    //     children: [
+    //         // { path: '/main', component: Main, name: '项目', hidden: true },
+    //         { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true },
+    //         { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true },
+    //     ]
+    // },
+    // {
+    //     path: '',
+    //     component: corporate,
+    //     name: '我的审签',
+    //     iconCls: 'el-icon-star-on',//图标样式class
+    //     children: [
+    //         // { path: '/main', component: Main, name: '项目', hidden: true },
+    //         {path:'/template',component:template,name:'我的模板'},
+    //         {path:'/checkor',component:checkor,name:'我的待办'},
+    //         {path:'/mySubmit',component:mySubmit,name:'我的提交'},
+    //     ]
+    // },
+     // {  
+     //      path: '', 
+     //      component: corporate, 
+     //      name: '审签管理', 
+     //      iconCls: 'el-icon-setting',//图标样式class 
+     //      children: [ 
+     //          // { path: '/main', component: Main, name: '项目', hidden: true }, 
+              
+     //      ] 
+     //  }, 
       {
         path: '',
         component: NewHeader,
@@ -187,17 +192,13 @@ export let  commonRoutes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/model/MyIndex', component: myModel, name: '我的模型' },
-       
-            { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
-            { path: '/model/modelCont', component: modelCont, name: '模型信息'},
-            // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
-          
+            { path: '/model/upload', component: upload, name: '模型上传' },
+            {path: '/model/uploadFile',component: modelUpload, name : "模型上传"},
             { path: '/model/myPackageDiagram', component: myPackageDiagram, name: '包视图'},
             { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
                 iconCls: 'el-icon-document',
                 leaf: true,//只有一个节点
                 children: [
-                    { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
                     ]
             },
             // { path: '/model/ModelComponent', component: modelComponent, name: '模型组件树信息' },
@@ -211,11 +212,9 @@ export let  commonRoutes = [
         leaf: true,//只有一个节点
         hidden:true,
         children: [
-            
             { path: '/model/index', component: Model, name: '公共模型' },
-            { path: '/model/packageTransfModel', component: packageTransfModel, name: '包转模型'},
-            { path: '/model/modelCont', component: modelCont, name: '模型信息'},
-            // { path: '/model/modelVariable', component: modelVariable, name: '模型参数' },
+            { path: '/model/upload', component: upload, name: '模型上传' },
+            {path: '/model/uploadFile',component: modelUpload, name : "模型上传"},
             { path: '/model/packageDiagram', component: packageDiagram, name: '包视图'},
            
             { path: '/model/packageDiagramVariable', component: packageDiagramVariable, name: '包视图组件参数信息',
@@ -253,7 +252,40 @@ export let  commonRoutes = [
              { path: '/cRepo', component: cRepo, name: '协同仓库' ,iconCls: 'iconfont icon-renren'}
         ]
     },
-  
+    // {
+    //     path: '',
+    //     component: corporate,
+    //     name: '分享',
+    //     noDropdown: true,
+    //     iconCls: 'el-icon-share',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/page4', component: Page4, name: '我的分享' }
+    //     ]
+    // },
+    //  {
+    //     path: '收藏',
+    //     component: corporate,
+    //     name: '我的收藏',
+    //     noDropdown: true,
+    //     iconCls: 'el-icon-star-on',//图标样式class
+    //     children: [
+    //         // { path: '/main', component: Main, name: '项目', hidden: true },
+    //         { path: '/table', component: Table, name: '项目' },
+    //         { path: '/form', component: Form, name: '模型' },
+    //         { path: '/user', component: user, name: '仿真' },
+    //     ]
+    // },
+    // {
+    //     path: '',
+    //     component: corporate,
+    //     name: '回收站',
+    //     iconCls: 'el-icon-delete',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/page6', component: Page6, name: '回收站' }
+    //     ]
+    // },
     //   {
     //     path: '',
     //     component: corporate,

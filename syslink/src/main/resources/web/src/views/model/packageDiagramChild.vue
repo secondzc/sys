@@ -15,7 +15,6 @@
 <script>
     import {mapActions} from 'vuex'
     import modeltree from './modelTree.vue'
-    import component from './Component.vue'
     import variabletree from './Variabletree.vue'
     import modelCont from './modelCont.vue'
 

@@ -21,7 +21,6 @@
 import {mapActions} from 'vuex'
 import modelbasecont from './modelBaseContent.vue'
 import modeltree from './modelTree.vue'
-import component from './Component.vue'
 import variabletree from './Variabletree.vue'
 import modelComponent from './ModelComponent.vue'
 
@@ -29,7 +28,6 @@ export default {
   name: 'packageDiagramVariable',
   components: {
       modeltree,
-      component,
       variabletree,
       modelComponent,
   },

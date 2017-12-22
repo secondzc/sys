@@ -3,7 +3,6 @@
 </template>
 
 <script>
-    import uploader from '../../../node_modules/simple-uploader.js'
     export default {
         data () {
             return {
@@ -41,10 +40,10 @@
 
 <style>
     .uploader-example {
-        width: 880px;
+        /*width: 880px;*/
         padding: 15px;
-        margin: 40px auto 0;
-        font-size: 12px;
+        margin: -18px auto 0;
+        font-size: 14px;
         box-shadow: 0 0 10px rgba(0, 0, 0, .4);
     }
     .uploader-example .uploader-btn {

@@ -22,31 +22,37 @@
                       min-width: 200px;">
                          <!--<upload-file ></upload-file>-->
 
-                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件<i class="el-icon-upload"></i></el-button>
+                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>
 
                           <el-dialog
-                                  title="上传模型文件"
-                                  :visible.sync="file.dialogVisible"
-                                  v-if="file.dialogVisible"
-                                  width="30%"
-                                  >
-                              <!--<span>这是一段信息</span>-->
-                              <upload-file  style="text-align: center;" 
-                              @uploadFileSuccess="uploadFileSuccess"
-                               ></upload-file>
-                              <!--<span slot="footer" class="dialog-footer">-->
-                                <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
-                                <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
-                              <!--</span>-->
-                               <!-- <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
-                                <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag" size="small">跳转</el-button>  -->
-                                 <span slot="footer" class="dialog-footer">
-   
-               <el-button size="small"  type="primary" :disabled="!uploadCheckFlag"  @click="uploadCheck">确定</el-button>
-               </span>
-                              
-                               
+                                  :title="uploadFileTitle"
+                          :visible.sync="file.dialogVisible"
+                          v-if="file.dialogVisible"
+                          width="80%"
+                          center
+                          >
+                              <upload></upload>
+
+
                           </el-dialog>
+                          <!--<el-dialog-->
+                                  <!--title="上传模型文件"-->
+                                  <!--:visible.sync="file.dialogVisible"-->
+                                  <!--v-if="file.dialogVisible"-->
+                                  <!--width="30%"-->
+                                  <!--&gt;-->
+                              <!--&lt;!&ndash;<span>这是一段信息</span>&ndash;&gt;-->
+                              <!--<upload-file  style="text-align: center;" -->
+                              <!--@uploadFileSuccess="uploadFileSuccess"-->
+                               <!--&gt;</upload-file>-->
+
+                                 <!--<span slot="footer" class="dialog-footer">-->
+   <!---->
+               <!--<el-button size="small"  type="primary" :disabled="!uploadCheckFlag"  @click="uploadCheck">确定</el-button>-->
+               <!--</span>-->
+                              <!---->
+                               <!---->
+                          <!--</el-dialog>-->
 
 
 
@@ -67,7 +73,7 @@
                     <div style="position: absolute;left: 270px;display: inline-flex;
                     min-width: 300px;line-height: 30px">
                         <span> <b>当前分类:</b></span>
-                          <breadcrumb ></breadcrumb>
+                          <breadcrumb @uplaodTitle="uplaodTitle"></breadcrumb>
                     </div>
                   
              
@@ -500,7 +506,7 @@
 <script >
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directoryPublic.vue';
-
+    import upload from './Upload.vue'
     import uploadFile from  '../nav3/Page6.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
@@ -514,6 +520,7 @@
             uploadFile,
             breadcrumb,
             sortableList,
+            upload,
         },
         data() {
             this.__currentNode = null;
@@ -525,6 +532,8 @@
                 }
             };
             return {
+                breadcrumbArray:[],
+                uploadFileTitle : '',
                allowToReviewFlag:false,
                uploadCheckFlag:false,
  
@@ -1061,17 +1070,21 @@
                         resolve(data)
                     });
             },
-            isSelectModel(){
-                if(this.$store.state.bmsg >= 0){
-                    this.file.dialogVisible = true;
-                }else{
-                    this.$message({
-                        message: '请选择模型目录！',
-                        type: 'warning',
-                        duration: 2000
-                    });
-                }
-
+//            isSelectModel(){
+//                if(this.$store.state.bmsg >= 0){
+//                    this.file.dialogVisible = true;
+//                }else{
+//                    this.$message({
+//                        message: '请选择模型目录！',
+//                        type: 'warning',
+//                        duration: 2000
+//                    });
+//                }
+//
+//            },
+            uploadFile(){
+//                this.$router.push({path: '/model/upload'});
+                this.file.dialogVisible = true;
             },
             validateCAE(o){
                 if(o.type == 'Modelica'){
@@ -1088,7 +1101,16 @@
                 else{
                     return false;
                 }
+            },
+            uplaodTitle(breadcrumbArray){
+                console.log(breadcrumbArray);
+                this.uploadFileTitle = "上传到:"
+                for(var i=0; i<breadcrumbArray.length;i++){
+                    this.uploadFileTitle += breadcrumbArray[0].name + "/"
+                }
+                this.uploadFileTitle = this.uploadFileTitle.substring(0,this.uploadFileTitle.length-1)
             }
+
 
 
 //            handleClose(done) {
@@ -1269,8 +1291,12 @@
                 url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.svg#iconfont') format('svg');
     }
 
-
-
+    .el-dialog--center .el-dialog__header .el-dialog__body{
+        padding: 0px 0px;
+    }
+    .el-dialog--center .el-dialog__header{
+        padding-top: 0px;
+    }
 
 
 </style>
