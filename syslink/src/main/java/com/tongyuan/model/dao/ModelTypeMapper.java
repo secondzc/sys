@@ -1,6 +1,6 @@
 package com.tongyuan.model.dao;
 
-import com.tongyuan.model.enums.ModelType;
+import com.tongyuan.model.domain.ModelType;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

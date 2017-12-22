@@ -1,7 +1,7 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.ModelTypeMapper;
-import com.tongyuan.model.enums.ModelType;
+import com.tongyuan.model.domain.ModelType;
 import com.tongyuan.model.service.ModelTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
