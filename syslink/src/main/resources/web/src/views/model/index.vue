@@ -31,7 +31,7 @@
                           width="80%"
                           center
                           >
-                              <upload></upload>
+                              <upload @closeDialog="closeDialog"></upload>
 
 
                           </el-dialog>
@@ -1109,6 +1109,9 @@
                     this.uploadFileTitle += breadcrumbArray[0].name + "/"
                 }
                 this.uploadFileTitle = this.uploadFileTitle.substring(0,this.uploadFileTitle.length-1)
+            },
+            closeDialog(){
+                this.file.dialogVisible =false
             }
 
 

@@ -6,7 +6,7 @@
         <div v-else="!showPicture">
             <el-upload
                     class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :action = "photo()"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload">
@@ -32,8 +32,11 @@
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
             },
+            photo(){
+                return "http://"+global_.HostPath+ "/api/model/uploadModelIcon"
+            },
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
+                const isJPG = file.type === 'image/*';
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {

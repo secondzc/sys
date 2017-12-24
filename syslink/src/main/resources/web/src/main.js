@@ -18,6 +18,7 @@ import store from './vuex/store'
 import Vuex from 'vuex'
 import Vuetify from 'vuetify';
 import uploader from 'vue-simple-uploader'
+import  upload from 'vue-upload-component'
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
 
@@ -39,6 +40,7 @@ Vue.config.debug = true;
 
 Vue.use(ElementUI)
 //Vue.use(VueRouter)
+Vue.use(upload)
 Vue.use(uploader)
 Vue.use(Vuex)
 Vue.use(Vuetify);

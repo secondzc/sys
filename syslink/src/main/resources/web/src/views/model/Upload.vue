@@ -12,9 +12,9 @@
                         </el-form-item>
                         <el-form-item label="模型类别">
                             <el-col >
-                                <el-select style="width: 100%" v-model="form.region" placeholder="模型类别">
+                                <el-select style="width: 100%" v-model="form.region" @change="getPhotoUrl(item)" placeholder="模型类别">
                                     <el-option
-                                            v-for="item in modelType" :key="item.id" :label="item.name" :value="item.id">
+                                            v-for="item in modelType" :key="item.id" :label="item.name" :value="item.name" >
                                     </el-option>
                                 </el-select>
                             </el-col>
@@ -25,12 +25,30 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item label="模型图标">
-                            <!--<el-col style="height: 120px;">-->
-                                <!--<div style="height: 100%">-->
-                                    <!--<img src="../../assets/test1.png" style="width: 100%;height: 100%;"/>-->
-                                <!--</div>-->
-                            <!--</el-col>-->
-                            <uploadPicture></uploadPicture>
+                            <!--<uploadPicture ></uploadPicture>-->
+                            <template>
+                                <section>
+                                    <div v-if="showPicture" class="avatar-uploader" style="margin-bottom: 17px">
+                                        <img v-bind:src="photoUrl" class="avatar"/>
+                                    </div>
+                                    <div v-else="!showPicture">
+                                        <el-upload
+                                                ref="ModelTypePicture"
+                                                class="avatar-uploader"
+                                                :action = "photo()"
+                                                :show-file-list="true"
+                                                :on-success="handleAvatarSuccess"
+                                                :before-upload="beforeAvatarUpload">
+                                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                        </el-upload>
+                                    </div>
+                                    <el-button v-if="showPicture" size="small" @click="showPicture = !showPicture" type="primary" style="margin-left: 45px">点击修改</el-button>
+                                    <el-button v-else="showPicture" size="small" @click="showPicture = !showPicture" type="primary" style="margin-left: 45px">取消修改</el-button>
+                                    <!--<el-button size="small" type="primary">点击上传</el-button>-->
+
+                                </section>
+                            </template>
 
                         </el-form-item>
                         <el-form-item>
@@ -46,10 +64,8 @@
                 </el-main>
             <el-footer>
                 <div style="float: right;height: 30px;width: 100%" >
-                    <el-button style="float: right;margin-left: 10px">取消</el-button>
+                    <el-button style="float: right;margin-left: 10px" @click="closeDia">取消</el-button>
                     <el-button style="float: right" type="primary" @click.native="onSubmit">提交</el-button>
-
-
                 </div>
             </el-footer>
             </el-container>
@@ -62,56 +78,127 @@
     import upload_breadcrumb from '../nav3/Uploadbreadcrumb.vue'
     import uploadPicture from '../nav3/UploadPicuter.vue'
     import uploadFile from '../nav3/UploadFile.vue'
+    import global_ from '../global.vue'
     export default {
         components: {
             upload_breadcrumb,
             uploadPicture,
-            uploadFile
+            uploadFile,
+            global_
         },
         data() {
             return {
                 form: {
                     name: '',
                     region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
+                    desc: '',
+                    photoList : [],
+                    fileList : [],
                 },
-                modelType:[],
+                photoUrl: '',
+                modelType: [],
+                showPicture: true,
+                imageUrl: '',
+                name : this.$store.state.userInfo.profile.name,
             }
         },
         methods: {
             onSubmit() {
                 console.log('submit!');
-            },
-            getRoles() {
                 var _this = this;
-                _this.$http.post('/api/modeltype/list')
+                let para = Object.assign({}, _this.form);
+                _this.$http({method:'post',
+                    url:'api/model/uploadFloder',
+                    data:para})
                     .then(function (response) {
-                        let a = response.data.role;
-                        _this.roles1 = response.data.role;
-                        for(let i = 0;i<a.length;i++)
-                        {
-
-                            _this.roles.push({
-                                key:a[i].id,
-                                label:a[i].name
-                            })
-                            // _this.roles = response.data.role;
-                        }
-
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
+            getModelTypeList() {
+                var _this = this;
+                _this.$http.post('/api/modeltype/getModelTypeList')
+                    .then(function (response) {
+                        let a = response.data.modelTypeList;
+                        _this.modelType = response.data.modelTypeList;
+                        if(_this.modelType.length != 0){
+                            _this.form.region = _this.modelType[0].name;
+                            _this.photoUrl ="http://"+ global_.HostPath +global_.mappedPackage + _this.modelType[0].filePath
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            getPhotoUrl(item){
+                if (this.modelType.length != 0 && this.form.region != "") {
+                    for (var i = 0; i < this.modelType.length; i++) {
+                        if (this.modelType[i].name == this.form.region) {
+                            this.photoUrl ="http://"+ global_.HostPath +global_.mappedPackage + this.modelType[i].filePath
+                        }
+                    }
+                }
+            },
+            closeDia(){
+                this.$emit("closeDialog")
+            },
+            refreshTable(){
+                this.$refs['form'].resetFields();
+                this.getModelTypeList();
+                this.getPhotoUrl();
+            },
+            //---------------------------------------------------上传图片
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+            },
+            photo(){
+                return "http://"+global_.HostPath+ "/api/model/uploadModelIcon?name="+this.name +"&directoryId="+this.bmsg + "&scope=" + true
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            }
+            //---------------------------------------------
+        },
+
+        mounted(){
+            this.getModelTypeList();
         }
     }
 
 </script>
 <style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
 
 </style>
