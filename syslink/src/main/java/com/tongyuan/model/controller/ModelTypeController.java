@@ -1,6 +1,7 @@
 package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.model.DTO.ModelTypeDto;
 import com.tongyuan.model.domain.ModelType;
 import com.tongyuan.model.service.ModelTypeService;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class ModelTypeController extends  BaseController{
     @ResponseBody
     public JSONObject getModelTypeList(HttpServletRequest request , HttpServletResponse response){
         JSONObject jo = new JSONObject();
-        List<ModelType> modelTypeList = new ArrayList<>();
+        List<ModelTypeDto> modelTypeList = new ArrayList<>();
         try {
             modelTypeList = modelTypeService.getModelTypeList();
         }catch (Exception e){

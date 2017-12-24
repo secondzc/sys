@@ -3,6 +3,7 @@ package com.tongyuan.model.service.impl;
 import com.tongyuan.model.dao.AttachmentMapper;
 import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.model.service.AttachmentService;
+import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,16 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public Attachment queryListByPath(String parentPath) {
         return this.attachmentMapper.queryListByPath(parentPath);
+    }
+
+    @Override
+    public void addIconOfModel(String fileName, String iconUrl, Long size) {
+        Attachment attachment = new Attachment();
+        attachment.setName(fileName+"Icon");
+        attachment.setCreateTime(DateUtil.getTimestamp());
+        attachment.setExt(".png");
+        attachment.setFloder(false);
+        attachment.setIconUrl(iconUrl);
+        this.attachmentMapper.add(attachment);
     }
 }

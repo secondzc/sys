@@ -1,5 +1,6 @@
 package com.tongyuan.model.service.impl;
 
+import com.tongyuan.model.DTO.ModelTypeDto;
 import com.tongyuan.model.dao.ModelTypeMapper;
 import com.tongyuan.model.domain.ModelType;
 import com.tongyuan.model.service.ModelTypeService;
@@ -18,7 +19,7 @@ public class ModelTypeServiceImpl implements ModelTypeService{
     @Autowired
     ModelTypeMapper modelTypeMapper;
     @Override
-    public List<ModelType> getModelTypeList() {
+    public List<ModelTypeDto> getModelTypeList() {
         return this.modelTypeMapper.getModelTypeList();
     }
 }

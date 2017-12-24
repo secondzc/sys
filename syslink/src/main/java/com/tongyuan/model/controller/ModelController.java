@@ -27,14 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.*;
@@ -76,6 +77,8 @@ public class ModelController extends  BaseController {
     private VariableController variableController;
     @Autowired
     private StatusChangeService statusChangeService;
+    @Autowired
+    private AttachmentService attachmentService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -1149,6 +1152,82 @@ public class ModelController extends  BaseController {
         modelWeb.setAlreadyStar(false);
         modelWeb.setAlreadyWatch(false);
     }
+
+    @RequestMapping(value = "/uploadModelIcon", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public void uploadModelIcon(@RequestParam(value = "name", required = false) String name,
+                                  @RequestParam(value = "directoryId", required = false) Long directoryId,
+                                  @RequestParam(value = "scope", required = false) Boolean scope,
+                                    HttpServletRequest request, HttpServletResponse response) {
+        StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
+        MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
+        Long fileSize = map.get("file").get(0).getSize();
+        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
+        String fileName = "";
+        byte[] bytes = new byte[0];
+        if (fileNames2.length >= 1) {
+            fileName = fileNames2[0];
+        }
+        //相对地址
+        String relativePath = "";
+        //绝对路径
+        String absolutePath = "";
+        relativePath = resourceUtil.getStorePath(name,fileName);
+        //把文件写入绝对路径
+        absolutePath = resourceUtil.getunzipPath() + relativePath;
+        try {
+            bytes = map.get("file").get(0).getBytes();
+            resourceUtil.writeFile(absolutePath,0,fileSize,bytes);
+            //创建一个attachment对象
+            attachmentService.addIconOfModel(fileName,relativePath,fileSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("文件写入出错!");
+        }
+    }
+
+
+    @RequestMapping(value = "/uploadModelFloder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public void uploadModelFloder(@RequestParam(value = "name", required = false) String name,
+                                  @RequestParam(value = "directoryId", required = false) Long directoryId,
+                                  @RequestParam(value = "scope", required = false) Boolean scope,
+                                  HttpServletRequest request, HttpServletResponse response) {
+        StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
+        MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
+        Long fileSize = map.get("file").get(0).getSize();
+        String fileName = "";
+        fileName = map.get("file").get(0).getOriginalFilename();
+        byte[] bytes = new byte[0];
+        //相对地址
+        String relativePath = "";
+        //绝对路径
+        String absolutePath = "";
+        relativePath = resourceUtil.getStorePath(name,fileName);
+        //把文件写入绝对路径
+        absolutePath = resourceUtil.getunzipPath() + relativePath;
+        try {
+            bytes = map.get("file").get(0).getBytes();
+            resourceUtil.writeFile(absolutePath,0,fileSize,bytes);
+            //创建一个attachment对象
+            attachmentService.addIconOfModel(fileName,relativePath,fileSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("文件写入出错!");
+        }
+    }
+
+    @RequestMapping(value = "/uploadFloder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public void uploadFloder(@RequestParam(value = "name", required = false) String name,
+                                  @RequestParam(value = "directoryId", required = false) Long directoryId,
+                                  @RequestParam(value = "scope", required = false) Boolean scope,
+                             @RequestBody Map<String,Object> map,
+                                  HttpServletRequest request, HttpServletResponse response) {
+        System.out.print("11111");
+    }
+
+
 
 }
 

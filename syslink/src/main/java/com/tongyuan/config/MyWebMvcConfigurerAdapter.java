@@ -38,7 +38,8 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         //registry.addResourceHandler("/my/**").addResourceLocations("classpath:/my/");
         //指向外部目录
         String resourceLocations = resourceUtil.getRelativeUrl();
-        registry.addResourceHandler("/FileLibrarys/**").addResourceLocations(resourceLocations);
+        String mappedPackage = resourceUtil.getMappedPackage();
+        registry.addResourceHandler(mappedPackage+"/**").addResourceLocations(resourceLocations);
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         super.addResourceHandlers(registry);
     }

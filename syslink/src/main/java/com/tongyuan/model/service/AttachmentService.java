@@ -9,4 +9,5 @@ public interface AttachmentService {
     Long add(Attachment attachment);
     int update(Attachment attachment);
     public Attachment queryListByPath(String parentPath);
+    public void addIconOfModel(String fileName,String iconUrl,Long size);
 }

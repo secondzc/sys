@@ -6,13 +6,20 @@
     <result column="icon" property="icon" jdbcType="BIGINT"/>
     <result column="name" property="name" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="DtoMap" type="com.tongyuan.model.DTO.ModelTypeDto">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="icon" property="icon" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="file_path" property="filePath" jdbcType="VARCHAR"/>
+    </resultMap>
 
     <sql id="baseColumnList" >
     id,icon,name
     </sql>
-    <select id="getModelTypeList" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.ModelType">
-        SELECT  <include refid="baseColumnList"></include>
+    <select id="getModelTypeList" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.ModelTypeDto">
+        SELECT  *
         from model_type
-        where 1=1
+        LEFT JOIN  attachment
+        on model_type.icon = attachment.id
     </select>
 </mapper>

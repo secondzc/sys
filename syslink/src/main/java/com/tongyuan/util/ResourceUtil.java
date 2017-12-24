@@ -66,6 +66,9 @@ public class ResourceUtil {
     public static final String getHttpPort(){
         return  getString("HostPath");
     }
+    public static final String getMapped(){
+        return getString("MappedPackage");
+    }
 
     public static final String getExportFileUrl(){
         return getString("exportFileUrl");
@@ -104,6 +107,13 @@ public class ResourceUtil {
 
     public String getLocalPath(){
         String path = ResourceUtil.getHttpPort();
+        if(StringUtil.isNull(path)){
+            path = "";
+        }
+        return  path;
+    }
+    public String getMappedPackage(){
+        String path = ResourceUtil.getMapped();
         if(StringUtil.isNull(path)){
             path = "";
         }
@@ -512,6 +522,17 @@ public class ResourceUtil {
                parentName = getParentName(element.getParent(),parentName);
         }
         return parentName;
+    }
+
+    //吧web端传过来的文件存在映射文件目录下
+    public String getStorePath(String userName,String fileName){
+        //相对地址
+        String relativePath = "";
+        String relativeDir = userName+"/"+resourceUtil.getNowTime();
+        File file = new File(resourceUtil.getunzipPath() + relativeDir);
+        file.mkdirs();
+        relativePath = relativeDir+"/"+fileName;
+        return relativePath;
     }
 
 
