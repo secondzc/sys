@@ -9,6 +9,7 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.service.DepartService;
+import com.tongyuan.model.service.DirectoryService;
 import com.tongyuan.model.service.OperationlogService;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.DepartWarpper;
@@ -48,6 +49,8 @@ public class UserController extends BaseController {
     private DepartService departService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private DirectoryService directoryService;
     @Value("${defaultPassWord}")
     private String defaultPassWord;
 
@@ -283,17 +286,18 @@ public class UserController extends BaseController {
         {
 
             userService.addGUser(map);
+            directoryService.createPersonalModelRoot(map);
 
-            for(int i=1;i<100;i++)
-            {
-                map.put("id",Long.parseLong(map.get("id").toString())+i);
-                map.put("name","test"+i);
-                map.put("fullName","测试"+i);
-                map.put("departId",map.get("departId"));
-                map.put("email","test"+i+"@syslink.com");
-                userService.addGUser(map);
-
-            }
+//            for(int i=1;i<100;i++)
+//            {
+//                map.put("id",Long.parseLong(map.get("id").toString())+i);
+//                map.put("name","test"+i);
+//                map.put("fullName","测试"+i);
+//                map.put("departId",map.get("departId"));
+//                map.put("email","test"+i+"@syslink.com");
+//                userService.addGUser(map);
+//
+//            }
 
 
 
