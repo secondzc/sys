@@ -142,12 +142,6 @@
         WHERE id=#{id}
     </update>
 
-
-
-
-
-
-
     <delete id="delete" parameterType="long">
         delete from user where id=#{id}
     </delete>
@@ -247,6 +241,71 @@
         SELECT
         id,name
         from USER
+    </select>
+
+    <select id="queryUserByDepartId" resultMap="mapResultMap" parameterType="java.util.List">
+
+        SELECT
+        d.id,d.lower_name,d.name,d.full_name,d.email,d.passwd,d.login_type,d.login_source,d.login_name,d.type,d.location,d.website,d.
+        rands,d.salt,d.created_unix,d.updated_unix,d.last_repo_visibility,d.max_repo_creation,d.is_active,d.is_admin,d.allow_git_hook,d.
+        allow_import_local,d.prohibit_login,d.avatar,d.avatar_email,d.use_custom_avatar,d.num_followers,d.num_following,d.num_stars,d.
+        num_repos,d.description,d.num_teams,d.num_members
+        FROM
+        gogs.user as d
+        INNER JOIN syslink.user_depart as l
+        ON d.id=l.uid
+        WHERE l.depart_id in
+        <foreach collection="list" index="index" item="departId" open="(" separator="," close=")">
+        #{departId}
+         </foreach>
+
+    </select>
+
+
+
+
+    <select id="queryUserByDirectoryAuth" resultMap="mapResultMap" parameterType="long">
+
+        SELECT
+        d.id,d.lower_name,d.name,d.full_name,d.email,d.passwd,d.login_type,d.login_source,d.login_name,d.type,d.location,d.website,d.
+        rands,d.salt,d.created_unix,d.updated_unix,d.last_repo_visibility,d.max_repo_creation,d.is_active,d.is_admin,d.allow_git_hook,d.
+        allow_import_local,d.prohibit_login,d.avatar,d.avatar_email,d.use_custom_avatar,d.num_followers,d.num_following,d.num_stars,d.
+        num_repos,d.description,d.num_teams,d.num_members
+        FROM
+        gogs.user as d
+        INNER JOIN syslink.directory_auth as l
+        ON d.id=l.uid
+        AND l.directory_id=#{directoryId}
+        AND l.mode>0
+     </select>
+
+
+    <select id="queryUserWithOutDirectoryAuth" resultMap="mapResultMap" >
+
+
+        SELECT *
+
+        FROM (
+        SELECT
+        d.id,d.lower_name,d.name,d.full_name,d.email,d.passwd,d.login_type,d.login_source,d.login_name,d.type,d.location,d.website,d.
+        rands,d.salt,d.created_unix,d.updated_unix,d.last_repo_visibility,d.max_repo_creation,d.is_active,d.is_admin,d.allow_git_hook,d.
+        allow_import_local,d.prohibit_login,d.avatar,d.avatar_email,d.use_custom_avatar,d.num_followers,d.num_following,d.num_stars,d.
+        num_repos,d.description,d.num_teams,d.num_members
+        FROM
+        gogs.user as d
+        INNER JOIN syslink.user_depart as l
+        ON d.id=l.uid
+        WHERE l.depart_id in
+        <foreach collection="param2" index="index" item="departId" open="(" separator="," close=")">
+            #{departId}
+        </foreach>
+        )U
+
+
+        LEFT JOIN syslink.directory_auth as l
+        ON U.id=l.uid
+        AND l.directory_id=#{param1}
+        WHERE l.uid is NULL
     </select>
 
 

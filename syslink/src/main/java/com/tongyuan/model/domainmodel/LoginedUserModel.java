@@ -31,7 +31,7 @@ public class LoginedUserModel {
 
     private List<String>modelAuths = new ArrayList<>();
 
-    private List<Long> directoryAuths = new ArrayList<>();
+    private List<Map<String,Object>> directoryAuths = new ArrayList<>();
 
 
     // 登录情况
@@ -113,12 +113,11 @@ public class LoginedUserModel {
 		this.modelAuths = modelAuths;
 	}
 
-
-	public List<Long> getDirectoryAuths() {
+	public List<Map<String, Object>> getDirectoryAuths() {
 		return directoryAuths;
 	}
 
-	public void setDirectoryAuths(List<Long> directoryAuths) {
+	public void setDirectoryAuths(List<Map<String, Object>> directoryAuths) {
 		this.directoryAuths = directoryAuths;
 	}
 }

@@ -76,6 +76,12 @@ public class DepartServiceImpl implements DepartService {
         return this.departMapper.queryByPid(parentId);
     }
 
+    @Override
+    public Map<String,Object> queryById (Integer id)
+    {
+        return this.departMapper.queryById(id);
+    }
+
 
 
 }

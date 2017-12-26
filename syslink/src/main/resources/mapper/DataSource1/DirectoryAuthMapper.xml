@@ -6,23 +6,70 @@
         <id column="id" property="id" jdbcType="BIGINT"  />
         <result column="uid" property="uid" jdbcType="BIGINT"/>
         <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
+        <result column="mode" property="mode" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="baseResultMap1" type="map">
+          <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
+        <result column="mode" property="mode" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="baseColumnList" >
-        id,uid,directory_id
+        id,uid,directory_id,mode
     </sql>
     <insert id="add"  parameterType="com.tongyuan.model.domain.UserAuth"   >
-        INSERT INTO directory_auth (uid, directory_id) VALUES
-        (#{uid}, #{directoryId})
+        INSERT INTO directory_auth (uid, directory_id,mode) VALUES
+        (#{uid}, #{directoryId},#{mode})
     </insert>
+
+
+
+    <update id="update"  >
+        UPDATE directory_auth SET mode=#{param3}
+        WHERE uid=#{param1} and directory_id =#{param2}
+    </update>
+
+
     <select id="queryByUid" resultMap="baseResultMap" resultType="map" parameterType="long">
         SELECT
         <include refid="baseColumnList" />
         FROM directory_auth
         WHERE uid = #{uid}
     </select>
+
+    <select id="queryUserDirectoryAuth" resultMap="baseResultMap1" >
+
+
+        SELECT directory_id, max(mode) as mode from
+        (
+
+        SELECT
+        directory_id,mode,uid
+        FROM
+        directory_auth
+        WHERE uid = #{param1}
+         UNION
+        SELECT
+        directory_id,mode,role_id
+        FROM
+        role_directory_auth
+        WHERE role_id in
+        <foreach collection="param2" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )as U
+        group BY  directory_id
+
+
+    </select>
+
+
+
     <delete id="deleteByUid" parameterType="long">
         delete from directory_auth where uid=#{uid}
+    </delete>
+
+    <delete id="delete" >
+        delete from directory_auth where uid=#{param1} and directory_id=#{param2}
     </delete>
 
 

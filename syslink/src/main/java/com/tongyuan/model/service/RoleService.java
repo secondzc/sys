@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.tongyuan.model.domain.Auth;
 import com.tongyuan.model.domain.UserRole;
 
@@ -29,7 +30,7 @@ public interface RoleService {
 
 
 
-    public boolean updateUserRoles(long uid, Integer[] roles);
+    public boolean updateUserRoles(long uid, JSONArray roles);
 
     public List<Integer> queryUserRoleByUid(long uid);
 

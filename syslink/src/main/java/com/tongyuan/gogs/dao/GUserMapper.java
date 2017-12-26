@@ -52,5 +52,12 @@ public interface GUserMapper {
 
     List<GUser>test1(Map<String, Object> map);
 
+    List<Map<String,Object>>queryUserByDirectoryAuth(long directoryId);
+
+    List<Map<String,Object>>queryUserWithOutDirectoryAuth(long directoryId,List<Integer> departIds);
+
+    List<Map<String,Object>>queryUserByDepartId (List<Integer> departIds);
+
+
     List<ReviewUserPage> queryAll();
 }

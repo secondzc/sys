@@ -28,7 +28,37 @@
        </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-         <el-button size="small" type="primary"  @click="handlePermission(scope.$index, scope.row)">分配权限</el-button>
+      <!--    <el-button size="small" type="primary"  @click="handlePermission(scope.$index, scope.row)">分配权限</el-button>
+ -->
+              <el-dropdown>
+  <el-button type="primary" size="small">
+    选项<i class="el-icon-caret-bottom el-icon--right"></i>
+  </el-button>
+  <el-dropdown-menu slot="dropdown">
+
+
+
+    <el-dropdown-item style="width: inherit;" > 
+
+  
+      <div @click="handlePermission(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+          分配权限
+        </span>
+      </div>
+       </el-dropdown-item>
+        <el-dropdown-item style="width: inherit;" > 
+  
+      <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
+        <span>
+         目录控制
+        </span>
+      </div>
+       </el-dropdown-item>
+
+  </el-dropdown-menu>
+  </el-dropdown>
+
         </template>
       </el-table-column>
     </el-table>
@@ -88,6 +118,29 @@
         <el-button type="primary" @click.native="permissionSubmit" :loading="permissionLoading">提交</el-button>
     </div>
     </el-dialog>
+
+
+
+    <el-dialog title="目录控制" :visible.sync="modelVisible" v-if="modelVisible"   >
+
+ <!--    <div slot="title">    -->
+    <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
+
+    <el-tree :data="data3" node-key="id"  
+    ref="tree1"  highlight-current :props="defaultProps1"  
+    :default-checked-keys="modelTree"   :default-expand-all="true"
+    :expand-on-click-node="false"   :render-content="nodeRender">
+    </el-tree>
+
+    </el-form>
+    <!-- </div> -->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="modelVisible=false">取消</el-button>
+        <el-button type="primary" @click.native="modelAuthSubmit" :loading="modelLoading">提交</el-button>
+      </div>
+
+    </el-dialog>
+
    
   </section>
 </template>
@@ -249,6 +302,16 @@
 
         permissionVisible:false,
         permissionLoading:false,
+
+        modelVisible:false,
+        modelLoading:false,
+          defaultProps1:{
+          label:'name',
+          children:'children'
+        },
+         data3:[],
+         modelTree:[],
+          directory:{},
        
         //编辑界面数据
         editForm: {
@@ -274,10 +337,63 @@
     },
     methods: {
 
-      ttttt()
-      {
-        this.$refs['editForm'].resetFields();
+
+        nodeRender(h, { node, data, store }) {
+             if(data.id>1)
+            {
+                return (
+          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+            <span>
+            <i class ="iconfont icon-wenjianjia" />
+              <span>{node.label}</span>
+            </span>
+            <span>
+            <el-radio-group v-model={data.mode}>
+            <el-radio  label={1}>可读</el-radio>
+            <el-radio label={2}>可写</el-radio>
+            <el-radio label={3}>完全</el-radio>
+            </el-radio-group>
+            <el-button  size="small" type="text" icon="el-icon-close" on-click={ () => this.modeClear(data) }  style="margin-left:5px;"></el-button>
+            </span>
+          </span>  
+          );
+            }
+            else
+            {
+                   return (
+          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+            <span>
+            <i class ="iconfont icon-wenjianjia" />
+              <span>{node.label}</span>
+            </span>
+          
+          </span>  
+          );
+            }
+
+
+      
       },
+        modelAuth(index,row)
+      {
+        
+
+
+         this.ids.roleId=row.id;
+         this.modelVisible = true;
+
+         let temp =  [];
+
+         row.directoryAuth.forEach(x=>temp.push(x.directoryId));
+         this.modelTree=temp;
+         this.setMode(this.data3,row.directoryAuth);
+         // console.log(this.data3);
+         // console.log(row.directoryAuth);
+      
+
+      },
+
+
         selsChange: function (sels) {
         this.sels = sels;
         console.log(sels);
@@ -320,6 +436,7 @@
           });
       },
 
+
  
       //删除
       handleDel: function () {
@@ -359,6 +476,97 @@
         }).catch(() => {
 
         });
+      },
+
+      modelAuthSubmit()
+      {
+       
+
+        let para = {directoryAuth:'',roleId:''};
+        para.directoryAuth=this.data3;
+        para.roleId=this.ids.roleId;
+         
+
+
+        this.$http({method:'post',
+                url:'api/DirectoryAuth/roleAdd',
+                data:para}).then((res)=>{
+                this.addLoading = false;
+                //NProgress.done();
+                if(res.data.flag)
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                }
+                else
+                {
+                  this.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                });
+
+                }
+            
+                this.modelVisible = false;
+                 this.getRoles();
+              });        
+
+
+        
+
+
+
+
+
+      },
+      setMode(data3,directoryAuth)
+      {
+         for(var a of data3 )
+         {
+
+           let f = false;
+
+             for(var b of directoryAuth)
+            {
+              if(a.id==b.directoryId)
+              {
+                 f= true;
+                if(b.mode>0)
+                {
+                  a.mode=b.mode;
+                }
+                else
+                {
+                  a.mode=0;
+                }
+              }
+            }
+            if(!f)
+            {
+             a.mode=0;
+            }
+           if(a.children)
+           {
+            this.setMode(a.children,directoryAuth);
+           }
+         }
+      },
+
+       getDirectoryTree()
+      {
+          
+          var _this = this;
+          _this.$http.post('api/directory/getDirectoryTree')
+              .then(function (response) {
+
+                _this.data3 = response.data.directoryTree;
+            
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
       },
      
       //显示编辑界面
@@ -518,6 +726,7 @@
     mounted() {
       this.getRoles();
       this.getGroups();
+      this.getDirectoryTree();
   
     }
   }

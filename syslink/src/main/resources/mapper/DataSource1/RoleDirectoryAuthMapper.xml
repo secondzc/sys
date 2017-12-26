@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.RoleDirectoryAuthMapper">
+
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.RoleDirectoryAuth">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="role_id" property="roleId" jdbcType="INTEGER"/>
+        <result column="directory_id" property="directoryId" jdbcType="BIGINT"/>
+        <result column="mode" property="mode" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="baseColumnList" >
+        id,role_id,directory_id,mode
+    </sql>
+    <insert id="add"  parameterType="com.tongyuan.model.domain.UserAuth"   >
+        INSERT INTO role_directory_auth (role_id, directory_id,mode) VALUES
+        (#{roleId}, #{directoryId},#{mode})
+    </insert>
+    <select id="queryByRoleId" resultMap="baseResultMap" resultType="map" parameterType="INTEGER">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM role_directory_auth
+        WHERE role_id = #{roleId}
+    </select>
+    <delete id="deleteByRoleId" parameterType="INTEGER">
+        delete from role_directory_auth where role_id = #{roleId}
+    </delete>
+
+
+
+</mapper>

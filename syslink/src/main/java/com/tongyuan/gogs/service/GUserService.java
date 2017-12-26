@@ -2,6 +2,8 @@
 
 package com.tongyuan.gogs.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domain.UserDepart;
@@ -31,11 +33,11 @@ public interface GUserService {
 
     public boolean updateUser(Map<String, Object> map);
 
-    public boolean updateUserInfo (Map<String,Object> map);
+    public boolean updateUserInfo(Map<String, Object> map);
 
     public Page<Map<String,Object>> queryUser(Map<String, Object> map);
 
-    public Page<UserDepart> queryUserDepart(Map<String,Object>map);
+    public Page<UserDepart> queryUserDepart(Map<String, Object> map);
 
     public boolean deleteUser(long id);
 
@@ -49,18 +51,27 @@ public interface GUserService {
 
     public Map<String,Object> queryUserByName(String name);
 
-    public Map<String,Object> queryUserById (long userId);
+    public Map<String,Object> queryUserById(long userId);
 
     public Map<String,Object> queryOrgByName(String name);
 
     public Map<String,Object> queryOrgById(long orgId);
 
-    public boolean updateAuth(Long uid, Integer[] authId);
+    public boolean updateAuth(Long uid, JSONArray authId);
 
-    public boolean updateModelAuth(Long uid,List<Map<String,Object>> models);
+    public boolean updateModelAuth(Long uid, List<Map<String, Object>> models);
 
-    public boolean updateModelAuth1(Long uid,List<Map<String,Object>> directories);
+    public boolean updateModelAuth1(Long uid, JSONArray directoryIds);
 
+    public boolean updateModelAuth2(Long uid, List<JSONObject> directoryIds);
+
+    public Page<Map<String,Object>>queryUserByDirectoryAuth(Map<String, Object> map);
+
+    public Page<Map<String,Object>>queryUserWithOutDirectoryAuth(Map<String, Object> map);
+
+    public Page<Map<String,Object>> queryUserByDepartId(Map<String, Object> map);
+
+    public List<Map<String,Object>> queryUserDirectoryAuths(long uid);
 
 
     //这个没有分页 by：zhangcy

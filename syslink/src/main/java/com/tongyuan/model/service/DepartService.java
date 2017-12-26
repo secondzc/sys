@@ -20,5 +20,7 @@ public interface DepartService {
 
     public List<Map<String,Object>> queryByPid(Integer parentId);
 
+    public Map<String,Object> queryById(Integer id);
+
 
 }

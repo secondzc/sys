@@ -1,15 +1,14 @@
 package com.tongyuan.model.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.tongyuan.gogs.dao.GUserMapper;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.dao.*;
 import com.tongyuan.model.domain.Auth;
-import com.tongyuan.model.domain.Role;
 import com.tongyuan.model.domain.RoleAuth;
 import com.tongyuan.model.domain.UserRole;
 import com.tongyuan.model.service.AuthService;
 import com.tongyuan.model.service.RoleService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +97,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean updateUserRoles(long uid , Integer []roles )
+    public boolean updateUserRoles(long uid , JSONArray roles )
     {
         boolean a = userRoleMapper.delete(uid);
         boolean b = true;
@@ -107,12 +106,12 @@ public class RoleServiceImpl implements RoleService {
         //本次所分配的角色中是否包含新建仓库的权限
         boolean d= false;
         GUser user = gUserMapper.queryById(uid);
-        for(int i =0;i<roles.length;i++)
+        for(int i =0;i<roles.size();i++)
         {
             UserRole userRole = new UserRole();
             userRole.setUid(uid);
-            userRole.setRoleId(roles[i]);
-            List<Auth> roleAuths = authMapper.queryAuthByRoleId(roles[i]);
+            userRole.setRoleId(roles.getIntValue(i));
+            List<Auth> roleAuths = authMapper.queryAuthByRoleId(roles.getIntValue(i));
             if(roleAuths.size()>0)
             {
                 for(Auth auth :roleAuths)

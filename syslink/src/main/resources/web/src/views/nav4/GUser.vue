@@ -163,7 +163,7 @@
   
       <div @click="modelAuth(scope.$index, scope.row)" style="font-size: 12px;text-align: center;color: #66b1ff">
         <span>
-          模型数据权限
+         目录控制
         </span>
       </div>
        </el-dropdown-item>
@@ -194,7 +194,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pager.pageIndex"
-      :page-sizes="[10, 30, 50, 1000]"
+      :page-sizes="[10, 30, 50, 100]"
 
       :page-size="pager.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
@@ -242,7 +242,7 @@
      
       <div @click="modelAuthBatch" size="small" style="font-size: 12px;text-align: center;color: red">
          <el-button  type="text"  
-      style="width: inherit;" :disabled="this.sels.length===0">模型数据权限</el-button>
+      style="width: inherit;" :disabled="this.sels.length===0">目录控制</el-button>
       </div>
        </el-dropdown-item>
 
@@ -395,18 +395,15 @@
 
 
 
-
-
-
-
-    <el-dialog title="模型下载权限" :visible.sync="modelVisible" v-if="modelVisible"   >
+    <el-dialog title="目录控制" :visible.sync="modelVisible" v-if="modelVisible"   >
 
  <!--    <div slot="title">    -->
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
 
-    <el-tree :data="data3" show-checkbox  node-key="id"  
+    <el-tree :data="data3" node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"  
-    :default-checked-keys="modelTree"   :default-expand-all="true"   :render-content="nodeRender">
+    :default-checked-keys="modelTree"   :default-expand-all="true"
+    :expand-on-click-node="false"   :render-content="nodeRender">
     </el-tree>
 
     </el-form>
@@ -821,38 +818,50 @@
     },
     methods: {
 
-      nodeRender (h, { _self, node, data }) {
-        // @todo: 使用jsx插件更好理解
-        const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
-          h('i', {
-                'class': data.icon,
-              
-              }),
-          h('span', data.name),
-          h('span',
+           nodeRender(h, { node, data, store }) {
+             if(data.id>1)
             {
-              'class': 'kz-tree-bar'
-            },
-
-          )
-        ]
-        return h(
-          'div',
-          {
-            'class': 'el-tree-node__label',
-            prop: {
-              children: '-'
+                return (
+          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+            <span>
+            <i class ="iconfont icon-wenjianjia" />
+              <span>{node.label}</span>
+            </span>
+            <span>
+            <el-radio-group v-model={data.mode}>
+            <el-radio  label={1}>可读</el-radio>
+            <el-radio label={2}>可写</el-radio>
+            <el-radio label={3}>完全</el-radio>
+            </el-radio-group>
+            <el-button  size="small" type="text" icon="el-icon-close" on-click={ () => this.modeClear(data) }  style="margin-left:5px;"></el-button>
+            </span>
+          </span>  
+          );
             }
-          },
-          childrenNodes
-        )
-      },
+            else
+            {
+                   return (
+          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+            <span>
+            <i class ="iconfont icon-wenjianjia" />
+              <span>{node.label}</span>
+            </span>
+          
+          </span>  
+          );
+            }
 
+
+      
+      },
+      modeClear(data)
+      {
+          data.mode=0;
+      },
       handleChange(value) {
         console.log(value);
         console.log(this.$refs.editDialog);
       },
-
       getCheckedNodes() {
         return this.$refs.tree.getCheckedNodes();
       },
@@ -938,7 +947,6 @@
       {
 
          var _this = this;
-         console.log(node);
          if(node)
          {
             _this.filters1.departId=node.id;
@@ -1055,16 +1063,54 @@
       },
       modelAuth(index,row)
       {
-        console.log(row.modelAuth);
+        
+
+
          this.ids.uid=row.id;
          this.modelVisible = true;
 
-            let temp =  [];
+         let temp =  [];
 
          row.directoryAuth.forEach(x=>temp.push(x.directoryId));
-         console.log(temp);
          this.modelTree=temp;
+         this.setMode(this.data3,row.directoryAuth);
+         console.log(this.data3);
+      
 
+      },
+
+      setMode(data3,directoryAuth)
+      {
+         for(var a of data3 )
+         {
+
+           let f = false;
+
+             for(var b of directoryAuth)
+            {
+              if(a.id==b.directoryId)
+              {
+                 f= true;
+                if(b.mode>0)
+                {
+                  a.mode=b.mode;
+                }
+                else
+                {
+                  a.mode=0;
+                }
+              }
+            }
+            if(!f)
+            {
+             a.mode=0;
+            }
+           if(a.children)
+           {
+            console.log(a.children);
+            this.setMode(a.children,directoryAuth);
+           }
+         }
       },
       modelAuthBatch()
       {
@@ -1288,6 +1334,15 @@
 
 
               let para = Object.assign({}, this.ids);
+              for(var d of this.data3)
+              {
+                if(!d.children)
+                {
+                  break;
+                }
+                console.log(d);
+              }
+              para.directoryAuth = this.data3;
    
               this.$http({
                 url:'/api/user/modelAuth',
@@ -1306,7 +1361,7 @@
                 }
                 else
                 {
-                   this.$message({
+                  this.$message({
                   message: '编辑失败',
                   type: 'error'
                 });
@@ -1411,7 +1466,8 @@
       this.getGroups();
       this.getDeparts();
       this.getDirectoryTree();
-      console.log(this.$refs.editDialog);
+      console.log(this.$refs['editForm']);
+  
    
     }
   }

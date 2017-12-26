@@ -33,8 +33,12 @@ public class GUserWarpper extends BaseControllerWarpper {
 
     private DirectoryMapper directoryMapper = SpringContextHolder.getBean(DirectoryMapper.class);
 
+    private UserRoleMapper userRoleMapper =  SpringContextHolder.getBean(UserRoleMapper.class);
+
     @Override
     public void warpTheMap(Map<String, Object> map) {
+
+      long uid  =  Long.parseLong(map.get("id").toString());
 
       String createDate = map.get("createdUnix").toString();
       String  date = UnixToDate.TimeStamp2Date(createDate);
@@ -42,7 +46,7 @@ public class GUserWarpper extends BaseControllerWarpper {
       map.remove("passwd");
       map.remove("rands");
       map.remove("salt");
-      UserDepart userDepart = userDepartMapper.queryByUid(Long.parseLong(map.get("id").toString()));
+      UserDepart userDepart = userDepartMapper.queryByUid(uid);
       if(userDepart!=null)
       {
           Map<String,Object>depart = departMapper.queryById(userDepart.getDepartId());
@@ -64,9 +68,9 @@ public class GUserWarpper extends BaseControllerWarpper {
 //        }
 //
 //        map.put("modelAuth",modelAuths);
-        List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
+        List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(uid);
         map.put("modelAuth",modelAuths);
-        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
+        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(uid);
         map.put("directoryAuth",directoryAuths);
 
 
@@ -84,6 +88,16 @@ public class GUserWarpper extends BaseControllerWarpper {
         }
 
         map.put("auths",auths);
+
+        List<UserRole> userRoles = userRoleMapper.query(uid);
+        List<Integer>roles = new ArrayList<>();
+        for(UserRole userRole : userRoles)
+        {
+            roles.add(userRole.getRoleId());
+        }
+        map.put("roles",roles);
+        map.put("ttt",0);
+        map.put("fff",false);
 
 
     }

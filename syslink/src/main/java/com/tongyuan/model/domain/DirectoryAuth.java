@@ -1,7 +1,6 @@
 package com.tongyuan.model.domain;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by yh on 2017/10/26.
@@ -17,6 +16,8 @@ public class DirectoryAuth {
     private long directoryId;
     @Column(nullable = false)
     private long uid;
+    @Column
+    private int mode;
 
 
     public DirectoryAuth(){};
@@ -47,5 +48,13 @@ public class DirectoryAuth {
 
     public void setUid(long uid) {
         this.uid = uid;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 }
