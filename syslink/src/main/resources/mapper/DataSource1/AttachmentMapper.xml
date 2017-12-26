@@ -25,10 +25,42 @@
         #{modelId})
     </insert>
 
-    <update id="update"></update>
+    <update id="update">
+         UPDATE model SET
+        parent_id = #{parentId},name = #{name},ext = #{ext},icon_url = #{iconUrl},size = #{size}, file_path = #{filePath}, http_path = #{httpPath},
+        create_time = #{createTime},is_floder = #{isFloder}, model_id = #{modelId}
+        WHERE id = #{id}
+    </update>
     <select id="queryListByPath" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT  <include refid="baseColumnList" />
         from attachment
         where file_path = #{filePath}
+    </select>
+    <select id="getModelFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        WHERE model_id = #{modelId}
+    </select>
+    <select id="getModelDetail" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        WHERE model_id = #{modelId}
+    </select>
+    <select id="getAttachByParentId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        where parent_id = #{parentId} or id = #{parentId}
+    </select>
+    <select id="getParentAttach" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+       SELECT * from  attachment n
+        JOIN
+        (SELECT * from attachment
+        where id = #{attachmentId}) m
+        on m.parent_id = n.id
+    </select>
+    <select id="getAllFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        from attachment
+        where 1= 1 AND is_floder = false and icon_url is null or trim(icon_url)= ''
     </select>
 </mapper>

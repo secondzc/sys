@@ -49,13 +49,13 @@
 
     <insert id="add" parameterType="com.tongyuan.model.domain.Model" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO model (parent_id, name,classes,type,directory_id,discription,Import,Extends,icon_file_id,diagram_file_id,
-        info_file_id,is_deleted,user_id,create_time,last_update_time,scope,text_info) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId}, #{discription},#{Import}, #{Extends}, #{iconFileId},
-        #{diagramFileId}, #{infoFileId}, #{isDeleted},#{userId}, #{createTime}, #{lastUpdateTime},#{scope},#{textInfo})
+        info_file_id,is_deleted,user_id,create_time,last_update_time,scope,model_text) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId}, #{discription},#{Import}, #{Extends}, #{iconFileId},
+        #{diagramFileId}, #{infoFileId}, #{isDeleted},#{userId}, #{createTime}, #{lastUpdateTime},#{scope},#{modelText})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Model">
         UPDATE model SET
-        parent_id = #{parentId},name = #{name},classes = #{classes},type = #{type},directory_id = #{directoryId},file_id = #{fileId},discription = #{discription},Import = #{Import},Extends = #{Extends},model_file_path =#{modelFilePath},icon_file_id = #{iconFileId}
-         ,diagram_file_id = #{diagramFileId},info_file_id = #{infoFileId},is_deleted = #{isDeleted},user_id = #{userId},create_time = #{createTime},last_update_time = #{lastUpdateTime},scope = #{scope},text_info = #{textInfo}
+        parent_id = #{parentId},name = #{name},classes = #{classes},type = #{type},directory_id = #{directoryId},discription = #{discription},Import = #{Import},Extends = #{Extends},icon_file_id = #{iconFileId}
+         ,diagram_file_id = #{diagramFileId},info_file_id = #{infoFileId},is_deleted = #{isDeleted},user_id = #{userId},create_time = #{createTime},last_update_time = #{lastUpdateTime},scope = #{scope},model_text = #{modelText}
         WHERE id = #{id}
     </update>
     <delete id="deleteByIds"  parameterType="java.lang.String">

@@ -10,6 +10,7 @@ import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.gogs.service.StarService;
 import com.tongyuan.gogs.service.WatchService;
+import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
@@ -1225,6 +1226,127 @@ public class ModelController extends  BaseController {
                              @RequestBody Map<String,Object> map,
                                   HttpServletRequest request, HttpServletResponse response) {
         System.out.print("11111");
+    }
+
+    @RequestMapping(value = "/treeModelCatalog",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject treeModelCatalog(@RequestParam(value = "modelId",required = false)Long modelId,
+                                HttpServletRequest request , HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        List<VariableTreeObj> modelCatalogList = new ArrayList<>();
+        try{
+            //模型的所有文件（包含文件夹）
+            List<Attachment> modelFiles = attachmentService.getModelFiles(modelId);
+            modelCatalogList = attachmentService.getModelCatalog(modelCatalogList,modelFiles);
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("获取模型目录失败");
+        }
+        jo.put("data",modelCatalogList);
+        return returnSuccessInfo(jo);
+    }
+
+    @RequestMapping(value = "/getModelDetail",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getModelDetail(@RequestParam(value = "modelId",required = false)Long modelId,
+                                     @RequestParam(value = "catalogId",required = false)Long catalogId,
+                                     HttpServletRequest request , HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        List<Attachment> modelDetail = new ArrayList<>();
+        List<AttachmentDto> modelDetailDto = new ArrayList<>();
+        try{
+            //模型目录下的文件和文件
+            if(catalogId == null){
+                List<Attachment> modelFiles = attachmentService.getModelDetail(modelId);
+                modelDetail = attachmentService.getModelDetailList(modelFiles,modelId,modelDetail);
+            }else{
+                List<Attachment> modelFiles = attachmentService.getAttachByParentId(catalogId);
+                modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,catalogId);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("获取模型目录失败");
+        }
+        modelDetailDto = attachmentService.transformDtoList(modelDetail);
+        jo.put("data",modelDetailDto);
+        return returnSuccessInfo(jo);
+    }
+
+    @RequestMapping(value = "/getModelFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getModelFiles(@RequestParam(value = "modelId",required = false)Long modelId,
+                                     HttpServletRequest request , HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        List<AttachmentDto> modelDetailDto = new ArrayList<>();
+        try{
+            //模型目录下的文件和文件
+                List<Attachment> modelFiles = attachmentService.getModelDetail(modelId);
+                modelDetailDto = attachmentService.transformDtoList(modelFiles);
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("获取模型目录失败");
+        }
+
+        jo.put("data",modelDetailDto);
+        return returnSuccessInfo(jo);
+    }
+
+    @RequestMapping(value = "/getParentFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getParentFiles(@RequestParam(value = "catalogId",required = false)Long catalogId,
+                                    HttpServletRequest request , HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        List<AttachmentDto> modelDetailDto = new ArrayList<>();
+        Attachment parentAttach = new Attachment();
+        List<Attachment> modelDetail = new ArrayList<>();
+        try{
+            //模型目录下的文件和文件
+            parentAttach = attachmentService.getParentAttach(catalogId);
+            List<Attachment> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
+            modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,parentAttach.getId());
+            modelDetailDto = attachmentService.transformDtoList(modelDetail);
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("获取模型目录失败");
+        }
+        jo.put("parentAttach",parentAttach);
+        jo.put("data",modelDetailDto);
+        return returnSuccessInfo(jo);
+    }
+
+    @RequestMapping(value = "/moveModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject moveModel(@RequestParam(value = "CurrentNodeId",required = false)Long CurrentNodeId,
+                                @RequestParam(value = "SelectedNodeId",required = false)Long SelectedNodeId,
+                                     HttpServletRequest request , HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        try{
+            Model model = modelService.queryModelById(CurrentNodeId);
+            model.setDirectoryId(SelectedNodeId);
+            modelService.update(model);
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("获取模型目录失败");
+            return  returnErrorInfo(jo);
+        }
+        return returnSuccessInfo(jo);
+    }
+
+    @RequestMapping(value = "/getAllFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject getAllFiles(HttpServletRequest request , HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        List<AttachmentDto> allFilesDto = new ArrayList<>();
+        try{
+            List<Attachment> allFiles = attachmentService.getAllFiles();
+            allFilesDto = attachmentService.transformDtoList(allFiles);
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.error("获取模型目录失败");
+            return  returnErrorInfo(jo);
+        }
+        jo.put("data", allFilesDto);
+        return returnSuccessInfo(jo);
     }
 
 
