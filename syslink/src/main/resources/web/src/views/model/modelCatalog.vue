@@ -10,6 +10,7 @@
                 class="filter-tree"
                 :data="data2"
                 :props="defaultProps"
+                node-key="id"
                 highlight-current
                 accordion
                 @node-click="treeNodeClick"
@@ -32,14 +33,13 @@
                 modelId: state => state.modelId,
                 a:state =>state.a
             }),
-            ...mapGetters(['modelId','amsg']),
+            ...mapGetters(['modelId','amsg','treeModelId']),
             getModelVar(){
                 var _this = this;
                 if(_this.modelId == null || _this.modelId == ''){
                     this.$router.push({path: '/model/index'});
                 }else {
-                    var url = '/api/model/treeModel?modelId=' + _this.modelId;
-//                   this.$store.dispatch('sendTreeModelId',_this.modelId);
+                    var url = '/api/model/treeModelCatalog?modelId=' + _this.treeModelId;
                     _this.$http.post(url)
                         .then(function (response) {
                            _this.data2 = response.data.data;
@@ -57,22 +57,44 @@
                 return data.name.indexOf(value) !== -1;
             },
             treeNodeClick(arg){
-                this.$store.dispatch('sendTreeModelId',arg.id);
-            }
+                this.$emit('catalog_id', arg.id);
+            },
+            updateNode(data){
+//                console.log(data);
+                this.$refs.tree2.setCheckedKeys([]);
+                this.$refs.tree2.setCheckedNodes([{
+                    id: data.id,
+                    label: data.name
+                }]);
+                var currNode;
+                currNode = this.$refs.tree2.getCurrentNode();
+//                this.$refs.tree2.setCurrentKey[7];
+//                currNode = this.$refs.tree2.getCurrentNode();
+                console.log(currNode);
+            },
+            getCatalog(data){
+                var _this = this;
+                var url = '/api/model/treeModelCatalog?modelId=' + data;
+                _this.$http.post(url)
+                    .then(function (response) {
+                        _this.data2 = response.data.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            },
         },
+            data() {
+                return {
+                    filterText: '',
+                    data2: [],
+                    defaultProps: {
+                        children: 'children',
+                        label: 'name',
+                    }
+                };
+            }
 
-        data() {
-            return {
-                filterText: '',
-                data2: [
-                ],
-                defaultProps: {
-                    children: 'children',
-                    label: 'name',
-                    iconClass:'iconClass'
-                }
-            };
-        }
     };
 </script>
 <style>

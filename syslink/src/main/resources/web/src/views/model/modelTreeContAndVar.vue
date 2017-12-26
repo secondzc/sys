@@ -5,7 +5,7 @@
                 class="filter-tree"
                 :data="data2"
                 :props="defaultProps"
-                highlight-current = "true"
+                highlight-current
                 accordion
                 ref="tree2">
         </el-tree>

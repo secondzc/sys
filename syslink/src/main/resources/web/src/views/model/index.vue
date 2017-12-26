@@ -1,5 +1,6 @@
 <template>
 
+
     <el-container class="main-container">
       <!--   <el-header  class="top-header">
             <span>标题栏</span>
@@ -15,7 +16,7 @@
 
 
 
-                
+
 
 
                       <div style="position: absolute;left: 20px;display: inline-flex;
@@ -23,7 +24,15 @@
                          <!--<upload-file ></upload-file>-->
 
                           <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>
-
+                          <el-dialog
+                                  title="文件列表"
+                                  :visible.sync="packageDetailDialog.SearchDialog"
+                                  width="80%"
+                                  center
+                                  ref="singleDialog"
+                          >
+                              <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
+                          </el-dialog>
                           <el-dialog
                                   :title="uploadFileTitle"
                           :visible.sync="file.dialogVisible"
@@ -34,6 +43,29 @@
                               <upload @closeDialog="closeDialog"></upload>
 
 
+                          </el-dialog>
+                          <el-dialog
+                                  title="模型详细信息"
+                                  :visible.sync="packageDetailDialog.dialogVisible"
+                                  width="80%"
+                                  center
+
+                          >
+                            <packageDetail ref="packageDetail"></packageDetail>
+                          </el-dialog>
+
+
+                          <el-dialog
+                                  title="移动模型"
+                                  :visible.sync="move.dialogVisible"
+                                  width="60%"
+                                  center
+                          >
+                              <selectDirectory :data="tree" style="min-height: 400px;"  @selectNode="getSelectedNode" ></selectDirectory>
+                              <div slot="footer" class="dialog-footer">
+                                  <el-button @click.native="move.dialogVisible = !move.dialogVisible">取消</el-button>
+                                  <el-button type="primary" @click.native="editSubmit" >提交</el-button>
+                              </div>
                           </el-dialog>
                           <!--<el-dialog-->
                                   <!--title="上传模型文件"-->
@@ -65,18 +97,18 @@
                           <el-button size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 30px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
                       </div>
 
-                     
 
-                     
+
+
                    <p>{{getRepos}}</p>
-                    
+
                     <div style="position: absolute;left: 270px;display: inline-flex;
                     min-width: 300px;line-height: 30px">
                         <span> <b>当前分类:</b></span>
                           <breadcrumb @uplaodTitle="uplaodTitle"></breadcrumb>
                     </div>
-                  
-             
+
+
 
 
 
@@ -98,7 +130,7 @@
                            @click="info=!info" :class="{buttonFocus:info}"></el-button>
                        </el-tooltip>
                   </div>
-         
+
             </div>
 
         </el-header>
@@ -108,42 +140,59 @@
 
                <div style="display: inline-block;height: 50px; overflow: hidden;" id="searchMoudle">
                   <!--<p>aaaa</p>-->
-                  <div style="display: inline-block;">
+                  <div v-if="filters.Model" style="display: inline-block;">
                       <!--工具条-->
                       <!--<el-col :span="24" class="toolbar" >-->
                       <el-form :inline="true" :model="filters">
-                         
+
                           <el-form-item style="margin-top: 5px;margin-left: 10px;">
-                            
+
                               <el-input placeholder="模型名称" v-model="filters.name" class="input-with-select">
-  
+
                         <el-button slot="append" icon="el-icon-search"  v-on:click="getModel"></el-button>
+                                  <el-button slot="append" icon="el-icon-d-caret"  v-on:click="transformFile"></el-button>
                        </el-input>
                       </el-form-item>
                       </el-form>
                       <!--</el-col>-->
                   </div>
+                   <div v-else="filters.Model" style="display: inline-block;">
+                       <!--工具条-->
+                       <!--<el-col :span="24" class="toolbar" >-->
+                       <el-form :inline="true" :model="filters">
+
+                           <el-form-item style="margin-top: 5px;margin-left: 10px;">
+
+                               <el-input placeholder="文件名称" v-model="filters.name" class="input-with-select">
+
+                                   <el-button slot="append" icon="el-icon-search"  v-on:click="seachFiles"></el-button>
+                                   <el-button slot="append" icon="el-icon-d-caret"  v-on:click="transformFile"></el-button>
+                               </el-input>
+                           </el-form-item>
+                       </el-form>
+                       <!--</el-col>-->
+                   </div>
               </div>
 
                 <kz-tree :data="tree" @node-click="hanldeNodeClick" class="left-tree" ></kz-tree>
-              
+
 
             </el-aside>
             <el-main class="list-main" v-show="listStatus">
 
-           
-<!-- 
+
+<!--
                 <template >
                     <section>
                         <div id="packageList" style="display: none"> -->
 
-                        
+
                               <div style="height: 100%; overflow-y: hidden;display: flex;flex-direction: column;flex-wrap: nowrap;">
                                 <el-table
                                     ref="singleTable"
                                     :data="repositories"
                                     height="100%"
-                                
+
                                     @current-change="handleCurrentChange"
                                     :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
                                     style="width: 100%">
@@ -151,11 +200,11 @@
                                         label=""
                                         width="80" >
                                     <template scope="scope">
-                                       
+
                                             <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
- 
-                                        
-                                        
+
+
+
                                     </template>
                                 </el-table-column>
 
@@ -163,21 +212,21 @@
                                         prop="name"
                                         min-width=100
                                    sortable>
-                                 
+
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
                                         prop="createTime"
                                         min-width=100
                                          sortable>
-                                    
+
                                 </el-table-column>
                                 <el-table-column
                                         label="修改日期"
                                         prop="updateTime"
                                         min-width=100
                                          sortable>
-                                  
+
                                 </el-table-column>
 
 
@@ -186,7 +235,7 @@
                                         prop="type"
                                         min-width=100
                                          >
-                                
+
                                 </el-table-column>
 
                                 <el-table-column
@@ -194,53 +243,42 @@
                                         prop="userName"
                                         min-width=100
                                          >
-                                   
+
                                 </el-table-column>
 
                                 <el-table-column
                                         label="描述"
                                         prop="discription"
                                          >
-                                   
+
                                 </el-table-column>
 
                                 <el-table-column min-width=150 label="操作">
                                     <template scope="scope">
-                                       <!--  <el-button
-                                                size="small"
-                                                type="primary"
-                                                @click="handleEdit(scope.$index, scope.row)">查看</el-button> -->
-                                        <!--<el-button-->
-                                        <!--size="small"-->
-                                        <!--type="primary"-->
-                                        <!--@click="handleDownload(scope.$index, scope.row)">下载</el-button>-->
-                                      <!--   <el-button
-                                                size="small"
-                                                type="danger"
-                                                @click="handleDeleted(scope.$index, scope.row)">删除</el-button> -->
-
-
                                     <el-button-group>
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
-                                         <el-button type="primary" 
+                                         <el-button type="primary"
                                             size="small"
-                                                    icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" :disabled="!validateCAE(scope.row,scope.$index)"></el-button>
+                                                    icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" ></el-button>
                                           </el-tooltip>
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
                                          <el-button type="info"
                                                    size="small"
                                                    icon="el-icon-download"   @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)"></el-button>
                                         </el-tooltip>
-                                    
+
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                                   <el-button   size="small" type="danger" icon="el-icon-delete"  @click="handleDeleted(scope.$index, scope.row)" v-if="func.authJudge('management_model_delete')"></el-button>
                                     </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                                            <el-button   size="small" type="danger" icon="el-icon-delete"  @click="moveModel(scope.$index, scope.row)" ></el-button>
+                                        </el-tooltip>
                                      </el-button-group>
                                     </template>
                                 </el-table-column>
                             </el-table>
-                             
-                                
+
+
 
                             <el-pagination
                                     @size-change="handleSizeChange"
@@ -252,14 +290,14 @@
                                     :total="pager.total"  style="max-height: 40px;min-height: 30px;">
                             </el-pagination>
                            </div>
-                            
-                           
+
+
                    <!--      </div> -->
 
 
                         <!--style="display: block;border: solid 2px #B0C4DE;"-->
                 <!--         <div id="modelList" style="display: block;"  >
-                           
+
                         </div>
                     </section>
                 </template> -->
@@ -268,9 +306,9 @@
 
 
             <el-main class="card-main" v-show="!listStatus">
-                <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 30px;">
+                <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 46px;">
                     <!--<span>排序</span>-->
-                    <div style="display: inline-block;line-height: 30px;margin-left: 20px;"><p>排序：</p></div>
+                    <div style="display: inline-block;line-height: 30px;margin-left: 20px;margin-top: 9px;"><p>排序：</p></div>
                     <div id="appp" style="display: inline-block;">
 
                         <sortable-list
@@ -294,19 +332,19 @@
                 <div  style="display: flex;flex-direction: column;height:inherit;width: auto;">
 
                     <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: flex-start;
- 
-              display: flex;flex-wrap: wrap;height:calc(100% - 66px);border-bottom: solid 1px #e6e6e6;">
-                    
 
-                    
-                                    <el-card class="Card" style="height: 350px;width: 250px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0" 
+              display: flex;flex-wrap: wrap;height:calc(100% - 66px);border-bottom: solid 1px #e6e6e6;">
+
+
+
+                                    <el-card class="Card" style="height: 350px;width: 250px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0"
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                              <span style="font-weight: bold;">{{o.name}}</span>
-                                                <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="validateCAE(o)"> </i>
-    
+                                                <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" > </i>
+
                                          </div>
-                             
+
                                         <div :index="o.index"  @click="modelVariable(o)" >
                                             <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
                                                 <img v-bind:src="o.imageUrl" style="height: 160px;width: 200px;margin-bottom: 10px;">
@@ -319,9 +357,9 @@
                                                   <div><span>上传者：{{o.userName}}</span></div>
                                                    <div><span>上传日期：{{o.createTime}}</span></div>
                                                 <div>
-                                                  
-                                                
-                                               
+
+
+
                                                     <div style="display: inline-block">
                                                         <a class="ui basic button" @click="addWatch(item)">
                                                             <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
@@ -342,11 +380,11 @@
                                             </div>
                                         </div>
                                     </el-card>
-                           
+
 
 
                     </div>
-                  
+
                        <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrent"
@@ -356,18 +394,10 @@
                                     layout="total, sizes, prev, pager, next, jumper"
                                     :total="pager.total"  style="min-height: 30px;max-height: 40px;">
                             </el-pagination>
-                   
-
-
-
-
-
-
-
 
                 </div>
 
-              
+
 
 
             </el-main>
@@ -375,7 +405,7 @@
                 <div v-if="varLength == 0" style="height: inherit;">
                     <div style="height: inherit;overflow-y: hidden;">
                     <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
-                    <div slot="header" class="clearfix">
+                    <div slot="header" class="clearfix" style="height: 10px">
                         <span style="font-weight: bold;">我的模型</span>
                         <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
                     </div>
@@ -390,10 +420,10 @@
 
                  <div v-else="this.varLength != 0" v-for="(o, index) in variable" :key="o.id" :offset="index > 0 ? 2 : 0" style="height: inherit;overflow-y: hidden;">
                         <el-card  :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
-                          <div slot="header" class="clearfix">
+                          <div slot="header" class="clearfix" style="height: 10px">
                         <span style="font-weight: bold;">{{o.name}}</span>
                       <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
-    
+
                           </div>
                         <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;">
                         <div style="padding: 14px;">
@@ -429,8 +459,8 @@
 
 
 
-                           
-                         
+
+
                             <div class="card-column">
                                 <div style="display: inline-block">
                                     <a class="ui basic button" @click="addWatch(o)">
@@ -456,18 +486,18 @@
 
 
 
-                            
+
                           <!--   <div class="bottom clearfix"> -->
                                 <!--<time class="time">{{ currentDate }}</time>-->
                                <!--  <el-button type="text" class="button" @click="viewInfo">关闭</el-button>
                             </div> -->
                         </div>
 
-                    </el-card>  
+                    </el-card>
 
                  </div>
                <!--  <el-col :span="24" v-for="(o, index) in variable" :key="o" :offset="index > 0 ? 2 : 0"> -->
-               
+
               <!--   </el-col> -->
 
 
@@ -496,7 +526,7 @@
 
     </el-container>
 
-   
+
 
 </template>
 
@@ -510,17 +540,25 @@
     import uploadFile from  '../nav3/Page6.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
+    import packageDetail from './packageDetail.vue'
+    import selectDirectory from './selectDirectory.vue'
+    import searchFileList from './SearchFileList.vue'
     import { mapState,mapGetters} from 'vuex'
     import {mapActions} from 'vuex'
+    import ElForm from "../../../node_modules/element-ui/packages/form/src/form";
 
 
     export default {
         components: {
+            ElForm,
             kzTree,
             uploadFile,
             breadcrumb,
             sortableList,
             upload,
+            packageDetail,
+            selectDirectory,
+            searchFileList
         },
         data() {
             this.__currentNode = null;
@@ -536,7 +574,7 @@
                 uploadFileTitle : '',
                allowToReviewFlag:false,
                uploadCheckFlag:false,
- 
+
                url: {
               C: '',
               U: '',
@@ -551,7 +589,7 @@
                 count: 1,
                 info: false,
                 listStatus:'true',
- 
+
 
                 modelTotal: '',
                 pager: {
@@ -584,7 +622,8 @@
                     treeItem: "",
                 },
                 filters: {
-                    name: ""
+                    name: "",
+                    Model : true,
                 },
                 loading: false,
                 isBusy: false,
@@ -608,9 +647,18 @@
                         }
                       }
                     },
+                packageDetailDialog:{
+                    dialogVisible: false,
+                    SearchDialog : false,
+                },
+                move :{
+                    dialogVisible: false,
+                },
                 file:{
                     dialogVisible: false,
                 },
+                SelectedNode : '',
+                CurrentNode : '',
                 name : this.$store.state.userInfo.profile.name,
                 publicDirId : this.$store.getters.publicDirId.data.id,
             };
@@ -706,17 +754,17 @@
                 }, 500);
             },
                     allowToReview(){
- 
+
               this.allowToReviewFlag=true;
- 
+
             },
- 
+
             toReview(){
- 
+
               this.$router.push({path:'/brief'});
             },
             uploadFileSuccess(){
-             
+
              this.uploadCheckFlag=true;
 
 
@@ -732,9 +780,9 @@
             }).catch(() => {
               this.file.dialogVisible=false;
             });
-         
+
             },
- 
+
 
 
         hanldeNodeClick (data) {
@@ -852,7 +900,13 @@
             console.log(index, row);
             this.$store.dispatch('sendModelId', row.index);
             this.$store.dispatch('sendTreeModelId', row.index);
-            this.$router.push({path: '/model/packageDiagram'});
+            if(row.type == "Modelica"){
+                this.$router.push({path: '/model/packageDiagram'});
+            }
+            else{
+                this.packageDetailDialog.dialogVisible = true;
+            }
+
         },
         handleDownload(index, row){
             console.log(index, row);
@@ -895,9 +949,6 @@
                 });
             }).catch(() => {
             });
-
-
-
         },
         addStar(item){
             if (item.alreadyStar == false) {
@@ -994,6 +1045,7 @@
                           duration: 2000
                       });
                   })
+              _this.getModel();
 //            this.fetchAddTreeNode()
           } else {
             return false
@@ -1112,10 +1164,47 @@
             },
             closeDialog(){
                 this.file.dialogVisible =false
+            },
+            moveModel(index, row){
+                this.move.dialogVisible =true;
+                this.CurrentNode = row;
+            },
+            editSubmit(){
+                var _this = this;
+                var url = '/api/model/moveModel?CurrentNodeId=' + _this.CurrentNode.index+ "&SelectedNodeId=" + _this.SelectedNode
+                _this.$http.post(url)
+                    .then(function (response) {
+                        if (response.data.msg == "ok") {
+                            _this.$message({
+                                message: '移动成功！',
+                                type: 'success',
+                                duration: 2000
+                            });
+                        }
+                    }).catch(function (error) {
+                    _this.$message({
+                        message: '移动失败！',
+                        type: 'error',
+                        duration: 2000
+                    });
+                    console.log(error);
+                });
+            },
+            getSelectedNode(data){
+                this.SelectedNode = data;
+            },
+            transformFile(){
+                this.filters.Model = !this.filters.Model;
+            },
+            seachFiles(){
+                this.packageDetailDialog.SearchDialog =true;
+                this.$refs.getSearchList.getFileList(this.filters.name);
+            },
+            showModel(data){
+                this.packageDetailDialog.SearchDialog =false;
+                this.packageDetailDialog.dialogVisible = true;
+                this.$refs.packageDetail.showFile(data);
             }
-
-
-
 //            handleClose(done) {
 //                this.$confirm('确认关闭？')
 //                    .then(_ => {
