@@ -350,7 +350,7 @@
             <span>
             <el-radio-group v-model={data.mode}>
             <el-radio  label={1}>可读</el-radio>
-            <el-radio label={2}>可写</el-radio>
+            <el-radio label={2}>读/写</el-radio>
             <el-radio label={3}>完全</el-radio>
             </el-radio-group>
             <el-button  size="small" type="text" icon="el-icon-close" on-click={ () => this.modeClear(data) }  style="margin-left:5px;"></el-button>
