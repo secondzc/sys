@@ -52,10 +52,14 @@
         directory_id,mode,role_id
         FROM
         role_directory_auth
-        WHERE role_id in
-        <foreach collection="param2" index="index" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        <if test="param2 !=null and param2.size>0">
+            WHERE role_id in
+            <foreach collection="param2" index="index" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+
+
         )as U
         group BY  directory_id
 
