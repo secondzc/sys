@@ -273,16 +273,16 @@
 
                                                    </el-button>
                                         </el-tooltip>
-
+                                    <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
+                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
+                                        </el-tooltip>
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                                   <el-button   size="small" type="danger" @click="handleDeleted(scope.$index, scope.row)" 
                                   >
                                     <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
                                   </el-button>
                                     </el-tooltip>
-                                        <el-tooltip class="item"  effect="dark" content="移动" placement="top-start">
-                                            <el-button   size="small" type="danger"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-yidong" style="font-size: 12px;"></i></el-button>
-                                        </el-tooltip>
+                                        
                                      </el-button-group>
                                     </template>
                                 </el-table-column>

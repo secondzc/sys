@@ -24,7 +24,7 @@
     const colorListLength = 20
     const gogsHostPath = "corporate" ;
     const gogsPort = "";
-    const HostPath = "localhost:8080"
+    const HostPath = "192.168.199.131"
     const mappedPackage = '/FileLibrarys/FileLibrary/'
     function getRandColor () {
         var tem = Math.round(Math.random() * colorListLength)
