@@ -3,7 +3,7 @@
 	<section>
         
 		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+		<el-col :span="24" style="padding-bottom: 0px;margin-top: 10px;">
             
 			<el-form :inline="true" :model="filters">
 <!--                 <el-radio-group v-model="tab" style="margin-bottom: 30px;">
@@ -14,10 +14,11 @@
 					<el-input v-model="filters.name" placeholder="模型名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getInstance">查询</el-button>
+					<el-button type="primary" size="small" v-on:click="getInstance">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
+        <hr/>
 
 		<!--列表-->
 		<el-table :data="instances" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
@@ -41,8 +42,8 @@
 		</el-table>
 
         <!--工具条-->
-        <el-col :span="24" class="toolbar">
-            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+        <el-col :span="24" style="margin-top: 10px;">
+            <el-button type="danger" @click="batchRemove" size="small" :disabled="this.sels.length===0">批量删除</el-button>
             <el-pagination layout="total,sizes,prev, pager, next" @current-change="handleCurrentChange"
             @size-change="handleSizeChange"  :total="total" :page-sizes ="pageSizes" :page-size="pageSize" style="float:right;">
             </el-pagination>

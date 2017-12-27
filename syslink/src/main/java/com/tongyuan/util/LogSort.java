@@ -1,7 +1,7 @@
 package com.tongyuan.util;
 
 
-import com.tongyuan.model.domain.Operationlog;
+import com.tongyuan.model.domain.Log;
 
 import java.util.Comparator;
 
@@ -11,9 +11,9 @@ import java.util.Comparator;
  * @author 刘奇
  *
  */
-public class LogSort implements Comparator<Operationlog> {
+public class LogSort implements Comparator<Log> {
 
-	public int compare(Operationlog o1,Operationlog o2){
+	public int compare(Log o1, Log o2){
 		return o1.getCreateDate().compareTo(o2.getCreateDate());
 	}
 	

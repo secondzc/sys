@@ -22,6 +22,7 @@ public interface DirectoryService {
     public List<Directory> queryListById(Long id);
     public List<Directory> queryByParentName(Map<String, Object> params);
     public List<Map<String,Object>> queryMapListByParentId(Long id);
+    public Map<String,Object>queryPublicRoot();
     public Map<String,Object> queryMapById(Long id);
     public List<Directory> selectDefaultDirectory ();
     //获取公有目录（唯一）

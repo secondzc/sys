@@ -4,7 +4,7 @@
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.realName" placeholder="姓名"  min-width="120" ></el-input>
+          <el-input v-model="filters.realName" placeholder="姓名/用户名"  min-width="120" ></el-input>
         </el-form-item>
          <el-form-item>
           <el-input v-model="filters.content" placeholder="内容"  min-width="120" ></el-input>
@@ -44,23 +44,31 @@
       </el-table-column>
       <el-table-column type="index" min-width="120">
       </el-table-column>
+       <el-table-column type="expand">
+      <template slot-scope="props">
+
+        详细信息：{{props.row.content}}
+        
+      </template>
+    </el-table-column>
       <el-table-column prop="userName" label="用户名" min-width="120" >
       </el-table-column>
       <el-table-column prop="realName" label="全名" min-width="120" >
        </el-table-column>
       <el-table-column prop="userIp" label="用户IP" min-width="160" >
        </el-table-column>
-      <el-table-column prop="content" label="内容" min-width="150" >
+         <el-table-column prop="title" label="标题" min-width="150" >
        </el-table-column>
+    <!--   <el-table-column prop="content" label="内容" min-width="150" >
+       </el-table-column> -->
       <el-table-column prop="createDate" label="操作时间" min-width="150" :formatter="formatDate" sortable>
       </el-table-column>
     </el-table>
 
 
-    <!--工具条-->
-    <el-col :span="24" class="toolbar">
-     
-      <el-pagination  
+    <div style="display: flex;margin-top: 10px;text-align: justify;justify-content: space-between;">
+      <el-button type="danger"  size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+     <el-pagination  
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pager.pageIndex"
@@ -69,8 +77,12 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="pager.total">
     </el-pagination>
-    <el-button type="danger"  size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-    </el-col>
+
+    </div>
+    
+     
+    
+    
 
 
   </section>

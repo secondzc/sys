@@ -52,15 +52,8 @@
       </el-table-column>
      
 
-  
-  
 
-     
-      
-   
-
-
-      <el-table-column label="操作" width="500" >
+      <el-table-column label="操作" width="500"     >
         <template slot-scope="scope">
 
        
@@ -71,8 +64,12 @@
   </el-radio-group>
 
     <el-button-group style="margin-left: 10px;">
+         <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
   <el-button type="primary" size="mini" icon="el-icon-edit" @click="scope.row.fff=!scope.row.fff" :disabled="scope.row.fff"></el-button>
-  <el-button type="primary" size="mini" icon="el-icon-share" :disabled="!scope.row.fff" @click="editSubmit(scope.$index, scope.row)" ></el-button>
+</el-tooltip>
+   <el-tooltip class="item" effect="dark" content="提交" placement="bottom">
+  <el-button type="primary" size="mini" icon="el-icon-upload2" :disabled="!scope.row.fff" @click="editSubmit(scope.$index, scope.row)" ></el-button>
+</el-tooltip>
 </el-button-group>
 
 
@@ -87,8 +84,14 @@
      
  <div>
   
-  <div style="display: flex;height: 40px;margin-top: 10px;margin-bottom: 10px;width: 100%;">
-    <div style="min-width: 700px;">
+  <div style="display: flex;height: 40px;margin-top: 10px;margin-bottom: 10px;width: 100%;text-align: justify;justify-content: space-between;">
+
+      <div >
+      <el-button type="danger" size="small" @click="batchRemove" :disabled="this.sels1.length===0">批量删除</el-button>
+ 
+    </div>
+     
+    <div >
       <el-pagination  
       @size-change="handleSizeChange1"
       @current-change="handleCurrentChange1"
@@ -101,55 +104,7 @@
     </el-pagination>
     </div>
      
-    <div style="max-width: 100px;">
-      <el-button type="danger" size="small" @click="batchRemove" :disabled="this.sels1.length===0">批量删除</el-button>
-    <!--     <el-dropdown>
-  <el-button type="primary" size="small">
-    批量操作<i class="el-icon-caret-bottom el-icon--right"></i>
-  </el-button>
-  <el-dropdown-menu slot="dropdown">
-
-
-
-   
-        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0" > 
-
-
-      <div @click="batchRemove" style="font-size: 12px;text-align: center;color: red">
-         <el-button  type="text"  
-      style="width: inherit;" size="small" :disabled="this.sels.length===0">删除</el-button>
-      </div>
-       </el-dropdown-item>
-        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0"> 
   
-     
-      <div @click="handleRoleBatch"  style="font-size: 12px;text-align: center;color: red">
-         <el-button  type="text"  
-      style="width: inherit;" size="small" :disabled="this.sels.length===0">分配角色</el-button>
-      </div>
-       </el-dropdown-item>
-        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0"> 
-  
-     
-      <div @click="handleAuthBatch" style="font-size: 12px;text-align: center;color: red">
-         <el-button  type="text"  
-      style="width: inherit;" size="small" :disabled="this.sels.length===0">分配权限</el-button>
-      </div>
-       </el-dropdown-item>
-        <el-dropdown-item style="width: inherit;" :disabled="this.sels.length===0"> 
-  
-     
-      <div @click="modelAuthBatch" size="small" style="font-size: 12px;text-align: center;color: red">
-         <el-button  type="text"  
-      style="width: inherit;" :disabled="this.sels.length===0">模型数据权限</el-button>
-      </div>
-       </el-dropdown-item>
-
- 
-  </el-dropdown-menu>
-  </el-dropdown> -->
-    </div>
-     
   </div>
      
    
@@ -159,43 +114,7 @@
   
     
 
-    <!--编辑界面-->
-    <el-dialog title="编辑用户信息" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false"  ref="editDialog" >
-   
-        <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm"    >
-        <el-form-item label="用户名" prop="name"   >
-          {{editForm.name}}
-        </el-form-item>
-
-         <el-form-item label="部门" prop="departId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.departId"   change-on-select   :show-all-levels="false" expand-trigger="hover">
-        </el-cascader>
-        </el-form-item>
-        
-        <el-form-item label="真实姓名" prop="fullName"   >
-            <el-input v-model="editForm.fullName" auto-complete="off"></el-input>
-        </el-form-item>
-          <el-form-item label="邮箱" prop="email"   >
-          <el-input v-model="editForm.email" auto-complete="off" ></el-input>
-        </el-form-item>
-         <el-form-item label="密码" prop="passwd"   >
-            <el-input v-model="editForm.passwd" auto-complete="off" placeholder="将值留空使其保持不变"></el-input>
-        </el-form-item>
-      
-        
-        </el-form-item> -->
-         <el-form-item  label-width="20px"  prop="prohibitLogin" style="margin-left: 20px;">
-          <el-checkbox v-model="editForm.prohibitLogin">该账户被禁止登录</el-checkbox>
-        </el-form-item>
- 
-         
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-      </div>
-    </el-dialog>
+  
 
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" v-if="addFormVisible"   
@@ -217,7 +136,7 @@
          <el-table-column prop="departName" label="部门" min-width="120" sortable>
          </el-table-column>
 
-      <el-table-column label="权限级别" width="500" >
+      <el-table-column label="权限级别" width="500"   >
         <template slot-scope="scope">
 
        
@@ -359,34 +278,11 @@
         editFormVisible: false,//编辑界面是否显示
         editLoading: false,
        
-        //编辑界面数据
-        editForm: {
-         fullName:'',
-         email:'',
-         website:'',
-         location:'',
-         passwd:'',
-         maxRepoCreation:'',
-         isActive:'',
-         isAdmin:'',
-         prohibitLogin:'',
-         allowGitHook:''
-          
-        },
+     
 
         addFormVisible: false,//新增界面是否显示
         addLoading: false,
       
-        //新增界面数据
-        addForm: {
-          name: '',
-          email: '',
-          passwd:'',
-          checkPass: '',
-          departId:''
-         
-
-        },
         roleVisble:false,
         roleLoading:false,
         roles:[],
@@ -410,6 +306,12 @@
       }
     },
     methods: {
+
+       filterTag(value, row) {
+        console.log(value);
+        console.log(row);
+        return row.ttt === value;
+      },
 
         
 
@@ -451,8 +353,6 @@
       setCheckedNodes(nodes) {
          this.$refs.tree.setCheckedNodes(nodes);
       },
-
-    
       reset(){
            this.filters={};
            this.getUsers();
@@ -477,51 +377,16 @@
          this.getUsers();
 
       },
-        querySearch(queryString, cb) {
-        var userSearch = this.userSearch;
-        var results = queryString ? userSearch.filter(this.createFilter(queryString)) : userSearch;
-        console.log(results);
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (user) => {
-          return (user.realName.indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-    
-  
-
-      query() {
-         var _this = this;
-         let para = Object.assign({},_this.filters,_this.pager);
-         console.log(this.filters);
-          _this.$http({method:'post',
-            url:'/api/user/query',
-            data:para})
-              .then(function (response) {
-                  _this.users = response.data.users;
-                  _this.pager.total=response.data.total;
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
-      },
-
 
     getUsers1(node)
       {
-
+        
          var _this = this;
+          console.log(_this.filters1.directoryId);
          if(node)
          {
             _this.filters1.directoryId=node.id;
          }
-         else
-         {
-           _this.filters1.departId=1;
-         }
-       
           let para = Object.assign({},_this.filters1,_this.pager1);
           _this.$http({method:'post',
             url:'/api/user/list1',
@@ -535,7 +400,7 @@
                     let b = a.directoryAuth;
                     for(var c of b)
                     {
-                      if (c.directoryId==node.id)
+                      if (c.directoryId== _this.filters1.directoryId)
                       {
                         a.ttt=c.mode;
                       }
@@ -708,6 +573,7 @@
         
         });
         }
+        this.sels=[];
 
      
       },
@@ -807,168 +673,14 @@
      
       },
 
-      roleSubmit:function(){
-           
-           
-              this.roleLoading = true;
-              if(this.sels.length>0)
-              {
-                let a =  [];
-
-                    this.sels.forEach(x=>a.push(x.id));
-                    this.userRole.uids=a;
-                    
-              }
-              let para = Object.assign({},this.userRole);
-
-              
-              this.$http({method:'post',
-                url:'api/user/assignRole',
-                data:para}).then((res)=>{
-                this.roleLoading = false;
-                //NProgress.done();
-                if(res.data.flag)
-                {
-                  this.$message({
-                  message: res.data.msg,
-                  type: 'success'
-                });
-                }
-                else
-                {
-                  this.$message({
-                  message: res.data.msg,
-                  type: 'error'
-                });
-
-                }
-           //     this.$refs['addForm'].resetFields();
-                this.roleVisble = false;
-                this.getUsers1();
-              });
-           
-          
-      },
-    
-
-      permissionSubmit: function () {
-
-
-        this.$refs.permission.validate((valid) => {
-          if (valid) {
-        
-              this.permissionLoading = true;
-
-               if(this.sels.length>0)
-              {
-                let a =  [];
-
-                this.sels.forEach(x=>a.push(x.id));
-                this.ids.uids=a;
-                    
-              }
-              let  b = this.getCheckedNodes();
-              let c = [];
-              b.forEach(x=>c.push(x.authId));
-              this.ids.authIds = c;
-
-              // this.ids.authIds=this.getCheckedNodes();
-              let para = Object.assign({}, this.ids);
-   
-              this.$http({
-                url:'/api/user/assign',
-                method:'post',
-                data:para
-              })
-               .then((res) => {
-                this.permissionLoading = false;
-                //NProgress.done();
-                if(res.data.flag)
-                {
-                  this.$message({
-                  message: '编辑成功',
-                  type: 'success'
-                });
-                }
-                else
-                {
-                   this.$message({
-                  message: '编辑失败',
-                  type: 'error'
-                });
-                } 
-                this.$refs['permission'].resetFields();
-                this.permissionVisible = false;
-                this.getGroups();
-                this.getUsers1();
-              });
-           
-          }
-        });
-      },
-       modelAuthSubmit: function () {
-
-
-        this.$refs.directoryForm.validate((valid) => {
-          if (valid) {
-        
-              this.modelVisible = true;
-                 if(this.sels.length>0)
-              {
-                let a =  [];
-
-                this.sels.forEach(x=>a.push(x.id));
-                this.ids.uids=a;
-                    
-              }
-              let  b = this.$refs.tree1.getCheckedNodes();
-              let c = [];
-              b.forEach(x=>c.push(x.id));
-              this.ids.directoryIds = c;
   
-            
-
-
-              let para = Object.assign({}, this.ids);
-   
-              this.$http({
-                url:'/api/user/modelAuth',
-                method:'post',
-                data:para
-              })
-               .then((res) => {
-                this.modelLoading = false;
-                //NProgress.done();
-                if(res.data.flag)
-                {
-                  this.$message({
-                  message: '编辑成功',
-                  type: 'success'
-                });
-                }
-                else
-                {
-                   this.$message({
-                  message: '编辑失败',
-                  type: 'error'
-                });
-                } 
-                this.$refs['directoryForm'].resetFields();
-                this.modelVisible = false;
-                this.getUsers1();
-              });
-           
-          }
-        });
-      },
-
       selsChange: function (sels) {
         this.sels = sels;
         console.log(sels);
       },
        selsChange1: function (sels) {
         this.sels1 = sels;
-          console.log(sels1);
+          console.log(sels);
       },
       //批量删除
       batchRemove: function () {
@@ -1051,17 +763,7 @@
               console.log(error);
           });
       },
-      handleDepart(row, rowIndex, $event)
-      {
-        console.log(row);
-      //  console.log(rowIndex);
-       console.log(rowIndex);
-        console.log(event);
-        console.log(event.target);
-    
 
-     //   this.getDeparts();
-      },
     
 
 

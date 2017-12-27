@@ -20,6 +20,7 @@
 
           <router-link v-else :to="child.path">
             <el-menu-item class="naviItem"  :index="child.path">
+               <i :class="child.iconCls"></i>
               <!-- <icon-svg v-if='child.icon' :icon-class="child.icon"></icon-svg> --><span >{{child.name}}</span>
             </el-menu-item>
           </router-link>

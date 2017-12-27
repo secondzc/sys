@@ -39,34 +39,44 @@ export default {
     }
     }
     ,
-    modelJudge  (authCode) {
-     let userInfo = store.getters.userInfo; 
-     const modelAuths = userInfo.modelAuths;
+    // modelJudge  (authCode) {
+    //  let userInfo = store.getters.userInfo; 
+    //  const modelAuths = userInfo.modelAuths;
     
-      const role = userInfo.roles;
-    if(modelAuths.includes(authCode)||role.includes(1))
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-    }
-    ,
-    directoryJudge  (authCode,userId) {
+    //   const role = userInfo.roles;
+    // if(modelAuths.includes(authCode)||role.includes(1))
+    // {
+    //   return true;
+    // }
+    // else
+    // {
+    //   return false;
+    // }
+    // }
+    // ,
+    directoryJudge  (userId,directoryId,mode) {
      let userInfo = store.getters.userInfo; 
      const directoryAuths = userInfo.directoryAuths;
        const role = userInfo.roles;
         const uid = userInfo.profile.iD;
-    if(directoryAuths.includes(authCode)||role.includes(1)||uid==userId)
+    if(role.includes(1))
     {
       return true;
     }
-    else
+    if(uid==userId)
     {
-      return false;
+      return true;
     }
+
+    for(var a of directoryAuths)
+    {
+      if(a.directoryId==directoryId&&a.mode>=mode)
+      {
+        return true;
+      }
+    }
+
+
     }
     ,
 	changeDate (){

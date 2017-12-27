@@ -2,16 +2,18 @@
 	<section>
 		
         <!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+		<el-col :span="24" style="padding-bottom: 0px;margin-top: 10px;">
 			<el-form :inline="true" >
 				<el-form-item>
 					<el-input v-model="modelName" placeholder="模型名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getDetail">查询</el-button>
+					<el-button type="primary" size="small" v-on:click="getDetail">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
+
+		<hr/>
 
 		<!--包括同意、不同意、正在审核  这三种情况-->
 		<el-table :data="detail" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%">
@@ -36,7 +38,7 @@
 		</el-table>
 
 		<!--工具条-->
-        <el-col :span="24" class="toolbar">
+        <el-col :span="24" style="margin-top: 10px;">
             <el-pagination layout="total,sizes,prev, pager, next" @current-change="handleCurrentChange"
             @size-change="handleSizeChange"  :total="total" :page-sizes ="pageSizes" :page-size="pageSize" style="float:right;">
             </el-pagination>

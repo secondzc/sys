@@ -2,10 +2,9 @@ package com.tongyuan.model.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.tongyuan.model.dao.OperationlogMapper;
-import com.tongyuan.model.domain.Operationlog;
-import com.tongyuan.model.domainmodel.Log;
-import com.tongyuan.model.service.OperationlogService;
+import com.tongyuan.model.dao.LogMapper;
+import com.tongyuan.model.domain.Log;
+import com.tongyuan.model.service.LogService;
 import com.tongyuan.tools.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,27 +18,27 @@ import java.util.Map;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Service
-public class OperationlogServiceImpl implements OperationlogService{
+public class LogServiceImpl implements LogService {
 
     @Autowired
-    OperationlogMapper operationlogMapper;
+    LogMapper logMapper;
     @Override
-    public boolean add(Operationlog operationlog){
-        return  this.operationlogMapper.add(operationlog);
+    public boolean add(Log log){
+        return  this.logMapper.add(log);
     }
     @Override
     public boolean delete(long id)
     {
-        return this.operationlogMapper.delete(id);
+        return this.logMapper.delete(id);
     }
 
 
     @Override
     public boolean addLog(String title,String content,HttpServletRequest request){
-        Operationlog log = new Operationlog();
+        Log log = new Log();
         {
 
-            Log log2 =new Log(request);
+            com.tongyuan.model.domainmodel.Log log2 =new com.tongyuan.model.domainmodel.Log(request);
             log.setUserId(log2.getUserId1());
             log.setUserIp(log2.getUserIp());
             log.setUserName(log2.getUserName1());
@@ -52,30 +51,30 @@ public class OperationlogServiceImpl implements OperationlogService{
             //设置日志内容
             log.setContent(content);
         }
-        return  this.operationlogMapper.add(log);
+        return  this.logMapper.add(log);
     }
 
     @Override
-    public List<Operationlog> findAllLog()
+    public List<Log> findAllLog()
     {
 
-        return this.operationlogMapper.findAllLog();
+        return this.logMapper.findAllLog();
     }
 
 
     @Override
-    public List<Operationlog> query(Map<String,Object> map)
+    public List<Log> query(Map<String,Object> map)
     {
         PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
 
-        return this.operationlogMapper.queryLog(map);
+        return this.logMapper.queryLog(map);
     }
 
     @Override
-    public Page<Operationlog>find(Map<String,Object>map)
+    public Page<Log>find(Map<String,Object>map)
     {
-        Page<Operationlog>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
-        operationlogMapper.queryLog(map);
+        Page<Log>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
+        logMapper.queryLog(map);
         return page;
     }
 

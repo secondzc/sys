@@ -88,6 +88,12 @@ public class DirectoryServiceImpl implements DirectoryService{
     }
 
     @Override
+    public Map<String,Object> queryPublicRoot()
+    {
+        return this.directoryMapper.queryPublicRoot();
+    }
+
+    @Override
     public Map<String,Object> queryMapById(Long id)
     {
         return this.directoryMapper.queryMapById(id);

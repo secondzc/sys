@@ -339,7 +339,7 @@
 
 
         nodeRender(h, { node, data, store }) {
-             if(data.id>1)
+             if(data.parentId!=0)
             {
                 return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">

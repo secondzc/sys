@@ -115,17 +115,17 @@
 
                   <div style="position: absolute;right: 50px;">
                              <el-button-group  >
-                                 <el-tooltip class="item" effect="dark" content="列表视图" placement="top-start">
+                                 <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
                     <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"
                     :class="{buttonFocus:listStatus}"></el-button>
                 </el-tooltip>
-                 <el-tooltip class="item" effect="dark" content="卡片视图" placement="top-start">
+                 <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
                     <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
                    :class="{buttonFocus:!listStatus}" ></el-button>
                 </el-tooltip>
 
                 </el-button-group>
-                 <el-tooltip class="item" effect="dark" content="详细信息" placement="top-start">
+                 <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
                 <el-button icon="el-icon-info"    size ="small"
                            @click="info=!info" :class="{buttonFocus:info}"></el-button>
                        </el-tooltip>
@@ -259,19 +259,29 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary"
                                             size="small"
-                                                    icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" ></el-button>
+                                                  @click="handleEdit(scope.$index, scope.row)"
+                                                     >
+                                                      <i class="iconfont icon-chakan" style="font-size: 12px;"></i>  
+
+                                                     </el-button>
                                           </el-tooltip>
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
                                          <el-button type="info"
                                                    size="small"
-                                                   icon="el-icon-download"   @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)"></el-button>
+                                             @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)">
+                                                      <i class="iconfont icon-xiazai" style="font-size: 12px;"></i>  
+
+                                                   </el-button>
                                         </el-tooltip>
 
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" icon="el-icon-delete"  @click="handleDeleted(scope.$index, scope.row)" v-if="func.authJudge('management_model_delete')"></el-button>
+                                  <el-button   size="small" type="danger" @click="handleDeleted(scope.$index, scope.row)" 
+                                  >
+                                    <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
+                                  </el-button>
                                     </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                            <el-button   size="small" type="danger" icon="el-icon-delete"  @click="moveModel(scope.$index, scope.row)" ></el-button>
+                                        <el-tooltip class="item"  effect="dark" content="移动" placement="top-start">
+                                            <el-button   size="small" type="danger"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-yidong" style="font-size: 12px;"></i></el-button>
                                         </el-tooltip>
                                      </el-button-group>
                                     </template>

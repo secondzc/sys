@@ -188,21 +188,9 @@
      
  <div>
   
-  <div style="display: flex;height: 40px;margin-top: 10px;margin-bottom: 10px;width: 100%;">
-    <div style="min-width: 700px;">
-      <el-pagination  
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="pager.pageIndex"
-      :page-sizes="[10, 30, 50, 100]"
+  <div style="display: flex;height: 40px;margin-top: 10px;margin-bottom: 10px;width: 100%;text-align: justify;justify-content: space-between;">
 
-      :page-size="pager.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="pager.total">
-    </el-pagination>
-    </div>
-     
-    <div style="max-width: 100px;">
+      <div>
     <!--   <el-button type="danger" size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
         <el-dropdown>
   <el-button type="primary" size="small">
@@ -250,6 +238,20 @@
   </el-dropdown-menu>
   </el-dropdown>
     </div>
+    <div >
+      <el-pagination  
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pager.pageIndex"
+      :page-sizes="[10, 30, 50, 100]"
+
+      :page-size="pager.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pager.total">
+    </el-pagination>
+    </div>
+     
+  
      
   </div>
      
@@ -819,7 +821,7 @@
     methods: {
 
            nodeRender(h, { node, data, store }) {
-             if(data.id>1)
+             if(!data.parentId==0)
             {
                 return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">

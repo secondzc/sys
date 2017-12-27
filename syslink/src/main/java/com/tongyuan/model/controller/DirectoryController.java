@@ -535,14 +535,13 @@ public class DirectoryController extends BaseController{
     public JSONObject getDirectoryTree(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         //点击树节点父类列表
-        List<Map<String, Object>> directoryTree = new ArrayList<>();
+        List<Map<String,Object>>directoryTree = new ArrayList<>();
+       Map<String, Object> publicDirectory = new HashMap<>();
         try {
-            directoryTree = directoryService.queryMapListByParentId(Long.valueOf(0));
-            if (directoryTree.size() > 0) {
-                directoryTree.remove(directoryTree.size() - 1);
-                for (Map<String, Object> map : directoryTree) {
-                    setChidren(map);
-                }
+            publicDirectory = directoryService.queryPublicRoot();
+            if (publicDirectory!=null) {
+                    setChidren(publicDirectory);
+              directoryTree.add(publicDirectory);
             }
         } catch (Exception e) {
             e.printStackTrace();

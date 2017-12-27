@@ -249,8 +249,8 @@ export let limitRoutes=[
             { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{auth:['management_role_list'],role:[1]}},
             // { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]} },
              { path: '',component:blankPage,  name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]}, children: [
-            { path: '/permission', component: permission, name: '系统权限'},
-             { path: '/directoryAuth', component: directoryAuth, name: '目录控制'}
+            { path: '/permission', component: permission, name: '系统权限',iconCls:'iconfont icon-xitong'},
+             { path: '/directoryAuth', component: directoryAuth, name: '目录控制',iconCls:'iconfont icon-guize'}
           
         ] },
          //   { path: 'user', component: user, name: '应用监控' },

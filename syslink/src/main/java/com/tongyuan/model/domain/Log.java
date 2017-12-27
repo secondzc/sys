@@ -4,13 +4,13 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 /**
- * OperationlogService entity.
+ * LogService entity.
  * @author MyEclipse Persistence Tools
  * 对应于操作日志表，
  * 该表用于保存用户在各个系统中的操作日志。
  */
 @Entity
-public class Operationlog  {
+public class Log {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,10 +43,10 @@ public class Operationlog  {
 	// Constructors
 
 	/** default constructor */
-	public Operationlog() {
+	public Log() {
 	}
 
-	public Operationlog(long userId, String userName, String realName, String userIp, String title, String content, Timestamp createDate) {
+	public Log(long userId, String userName, String realName, String userIp, String title, String content, Timestamp createDate) {
 		this.userId = userId;
 		this.userName = userName;
 		this.realName = realName;

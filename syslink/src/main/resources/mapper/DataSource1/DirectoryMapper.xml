@@ -127,6 +127,13 @@
         where parent_id = #{parentId}
         and is_deleted = "0"
     </select>
+    <select id="queryPublicRoot" resultMap="mapResultMap" resultType="map">
+        SELECT
+        <include refid="baseColumnList" />
+        FROM directory
+        where parent_id = 0
+        and is_deleted = "0" and user_name is NULL
+    </select>
     <select id="queryMapById" resultMap="mapResultMap" resultType="map">
         SELECT
         <include refid="baseColumnList" />

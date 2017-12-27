@@ -4,7 +4,7 @@ package com.tongyuan.model.controller;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-import com.tongyuan.model.service.OperationlogService;
+import com.tongyuan.model.service.LogService;
 import com.tongyuan.util.DateUtil;
 import com.tongyuan.util.EncodePasswd;
 import com.tongyuan.util.IpUtil;
@@ -34,7 +34,7 @@ public class LoginController extends BaseController {
     @Autowired
     private GUserService userService;
     @Autowired
-    OperationlogService operationlogService;
+    LogService logService;
 
 
 
@@ -119,7 +119,7 @@ public class LoginController extends BaseController {
                     LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
                     setSessionUser(request,loginedUser);
 
-                    operationlogService.addLog("登录","登录系统",request);
+                    logService.addLog("登录","登录系统",request);
 
 
 
@@ -204,7 +204,7 @@ public class LoginController extends BaseController {
          LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
          setSessionUser(request,loginedUser);
 
-         operationlogService.addLog("登录","登录系统",request);
+         logService.addLog("登录","登录系统",request);
 
 
 

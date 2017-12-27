@@ -10,7 +10,7 @@ import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.service.DepartService;
 import com.tongyuan.model.service.DirectoryService;
-import com.tongyuan.model.service.OperationlogService;
+import com.tongyuan.model.service.LogService;
 import com.tongyuan.model.service.RoleService;
 import com.tongyuan.model.wrapper.DepartWarpper;
 import com.tongyuan.model.wrapper.GUserWarpper;
@@ -44,7 +44,7 @@ public class UserController extends BaseController {
     @Autowired
     private GUserService userService;
     @Autowired
-    private OperationlogService operationlogService;
+    private LogService logService;
     @Autowired
     private DepartService departService;
     @Autowired
@@ -288,16 +288,16 @@ public class UserController extends BaseController {
             userService.addGUser(map);
             directoryService.createPersonalModelRoot(map);
 
-//            for(int i=1;i<100;i++)
-//            {
-//                map.put("id",Long.parseLong(map.get("id").toString())+i);
-//                map.put("name","test"+i);
-//                map.put("fullName","测试"+i);
-//                map.put("departId",map.get("departId"));
-//                map.put("email","test"+i+"@syslink.com");
-//                userService.addGUser(map);
-//
-//            }
+            for(int i=1;i<100;i++)
+            {
+                map.put("id",Long.parseLong(map.get("id").toString())+i);
+                map.put("name","test"+i);
+                map.put("fullName","测试"+i);
+                map.put("departId",map.get("departId"));
+                map.put("email","test"+i+"@syslink.com");
+                userService.addGUser(map);
+
+            }
 
 
 
@@ -490,17 +490,12 @@ public class UserController extends BaseController {
 
         LoginedUserModel loginedUserModel = new LoginedUserModel();
         GUser user = userService.querListByName(jsonObject.getString("userName"));
-        Cookie c = new Cookie("gogs_awesome",user.getName());
-        c.setDomain(".modelica-china.com");
-        c.setMaxAge(60);
-        c.setPath("/");
-        response.addCookie(c);
         String lginIp = IpUtil.getIpAddr(request);
         Date loginDate = DateUtil.getTimestamp();
         userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
 
-        operationlogService.addLog("登录","登录系统",request);
+        logService.addLog("登录","登录系统",request);
 
 
 
@@ -771,9 +766,7 @@ public class UserController extends BaseController {
         session.setAttribute("uname",user.getName());
         session.setAttribute("user",user);
 
-
-
-            jo.put("session",true);
+        jo.put("session",true);
 
         return (JSONObject) JSONObject.toJSON(jo);
     }

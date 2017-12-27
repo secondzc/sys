@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
-import com.tongyuan.model.domain.Operationlog;
-import com.tongyuan.model.service.OperationlogService;
+import com.tongyuan.model.domain.Log;
+import com.tongyuan.model.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,18 +23,18 @@ import java.util.*;
 public class OperationlogController extends BaseController{
 
     @Autowired
-    private OperationlogService operationlogService;
+    private LogService logService;
 
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject finAllLog()
     {
         JSONObject jo = new JSONObject();
-        List<Operationlog> operationlogList = new ArrayList<>();
+        List<Log> logList = new ArrayList<>();
         try
         {
-            List <Operationlog>operationlogs = operationlogService.findAllLog();
-            operationlogList.addAll(operationlogs);
+            List <Log> logs = logService.findAllLog();
+            logList.addAll(logs);
 
         }
         catch (Exception e)
@@ -46,7 +46,7 @@ public class OperationlogController extends BaseController{
         }
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-        jo.put("logs",operationlogList);
+        jo.put("logs", logList);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
@@ -57,8 +57,8 @@ public class OperationlogController extends BaseController{
     {
         JSONObject jo = new JSONObject();
 
-//        List<Operationlog> operationlogList = new ArrayList<>();
-        Page<Operationlog>page = new Page<>();
+//        List<Log> operationlogList = new ArrayList<>();
+        Page<Log>page = new Page<>();
         JSONObject jsonObject = JSON.parseObject(para);
         Map<String,Object> map = new HashMap<String ,Object>();
         map.put("realName",jsonObject.getString("realName"));
@@ -76,10 +76,10 @@ public class OperationlogController extends BaseController{
 
         try
         {
-//            List <Operationlog>operationlogs = operationlogService.query(map);
+//            List <Log>operationlogs = logService.query(map);
 
 //            operationlogList.addAll(operationlogs);
-            page = operationlogService.find(map);
+            page = logService.find(map);
 
 
             Map<String,Object> params = new HashMap<String,Object>();
@@ -97,7 +97,7 @@ public class OperationlogController extends BaseController{
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
 
-//        PageInfo<Operationlog> pageInfo =new PageInfo<Operationlog>(operationlogList);
+//        PageInfo<Log> pageInfo =new PageInfo<Log>(operationlogList);
         jo.put("logs",page);
         jo.put("total",page.getTotal());
 
@@ -122,7 +122,7 @@ public class OperationlogController extends BaseController{
         {
             for(int i=0;i<logs.size();i++)
             {
-                operationlogService.delete(logs.getIntValue(i));
+                logService.delete(logs.getIntValue(i));
             }
         }
         catch (Exception e)
