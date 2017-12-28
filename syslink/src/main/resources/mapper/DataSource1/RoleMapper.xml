@@ -27,6 +27,7 @@
         <include refid="baseColumnList" />
         FROM role
         WHERE 1=1
+        ORDER BY  create_date ASC
     </select>
     <delete id="delete" parameterType="long">
         delete from role where id=#{id}

@@ -25,7 +25,7 @@
         SELECT
         <include refid="baseColumnList" />
         FROM depart
-        WHERE parent_id =0
+        WHERE parent_id =0  ORDER BY create_date ASC
     </select>
     <select id="queryAllDeparts" resultMap="mapResultMap" resultType="map" >
         SELECT
@@ -43,7 +43,7 @@
         SELECT
         <include refid="baseColumnList" />
         FROM depart
-        WHERE parent_id =#{id}
+        WHERE parent_id =#{id}  ORDER BY create_date ASC
     </select>
     <delete id="deleteById" parameterType="INTEGER">
         delete from depart where id=#{id}

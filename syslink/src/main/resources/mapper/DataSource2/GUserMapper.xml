@@ -259,6 +259,7 @@
         #{departId}
          </foreach>
 
+        ORDER BY created_unix ASC
     </select>
 
 
@@ -277,6 +278,8 @@
         ON d.id=l.uid
         AND l.directory_id=#{directoryId}
         AND l.mode>0
+
+        ORDER BY created_unix ASC
      </select>
 
 
@@ -306,6 +309,8 @@
         ON U.id=l.uid
         AND l.directory_id=#{param1}
         WHERE l.uid is NULL
+
+        ORDER BY created_unix ASC
     </select>
 
 

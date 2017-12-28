@@ -116,22 +116,6 @@ public class UserController extends BaseController {
 
             try
             {
-//            users = userService.queryUser(map);
-//                userDeaprts = userService.queryUserDepart(map);
-//                if (userDeaprts.size()>0)
-//                {
-//                    for(UserDepart userDepart : userDeaprts)
-//                    {
-//                        Map<String,Object> user = userService.queryUserById(userDepart.getUid());
-//                        if(user!=null)
-//                        {
-//                            users.add(user);
-//                        }
-//                    }
-//
-//
-//                    new GUserWarpper(users).warp();
-//                }
                 users=userService.queryUserByDepartId(map);
             }
             catch (Exception e)

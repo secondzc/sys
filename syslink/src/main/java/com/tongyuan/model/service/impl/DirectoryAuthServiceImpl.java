@@ -49,7 +49,11 @@ public class DirectoryAuthServiceImpl implements DirectoryAuthService{
            roleDirectoryAuth.setRoleId(roleId);
            roleDirectoryAuth.setDirectoryId(directoryAuth.get(i).getLongValue("id"));
            roleDirectoryAuth.setMode(directoryAuth.get(i).getIntValue("mode"));
-           a=a&roleDirectoryAuthMapper.add(roleDirectoryAuth);
+           if(roleDirectoryAuth.getMode()>0)
+           {
+               a=a&roleDirectoryAuthMapper.add(roleDirectoryAuth);
+           }
+
        }
        return a&b;
     }

@@ -125,7 +125,7 @@
         <include refid="baseColumnList" />
         FROM directory
         where parent_id = #{parentId}
-        and is_deleted = "0"
+        and is_deleted = "0" ORDER BY create_time ASC
     </select>
     <select id="queryPublicRoot" resultMap="mapResultMap" resultType="map">
         SELECT
