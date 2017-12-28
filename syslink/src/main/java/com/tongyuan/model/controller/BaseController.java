@@ -54,6 +54,21 @@ public class BaseController {
         return userName;
     }
 
+    protected String getFullName(){
+        String fullName = "";
+        GUser user = getUser();
+        if(user!=null){
+            fullName = user.getFullName();
+        }
+        return fullName;
+    }
+
+    protected  String getLoginIp(){
+        return  getSession().getAttribute("loginIp").toString();
+    }
+
+
+
     protected Response result(){
         return new Response();
     }
@@ -68,69 +83,14 @@ public class BaseController {
 
 
 
-    /**
-     * 获取保存在Session中的用户对象
-     *
-     * @param request 请求对象
-     * @return
-     */
-    protected LoginedUserModel getSessionUser(HttpServletRequest request) {
-        LoginedUserModel loginedUserModel = null;
-        Object obj = request.getSession().getAttribute(CommonConstant.USER_CONTEXT);
-        if (obj!=null) {
-            loginedUserModel = (LoginedUserModel)obj;
-        }
-        return loginedUserModel ;
-    }
 
 
 
-    /**
-     * 获取当前用户用户名
-     *
-     * @param request 请求对象
-     * @return
-     */
-    protected String getCurrentUserName(HttpServletRequest request)
-    {
-        //开发时使用
-        if (getSessionUser(request)!=null&&getSessionUser(request).getProfile()!=null) {
-            return getSessionUser(request).getProfile().getName();
-        }
-        else {
-            return "获取失败";
-        }
-    }
 
-    /**
-     * 获取当前用户真名
-     * @param request
-     * @return
-     */
-    protected String getCurrentRealName(HttpServletRequest  request)
-    {
-        if (getSessionUser(request)!=null&&getSessionUser(request).getProfile()!=null) {
-            return getSessionUser(request).getProfile().getFullName();
-        }
-        else{
-            return "获取失败";
-        }
-    }
 
-    /**
-     * 获取当前用户id
-     * @param request
-     * @return
-     */
-    protected long getCurrentUserId(HttpServletRequest request)
-    {
-        if (getSessionUser(request)!=null&&getSessionUser(request).getProfile()!=null) {
-            return getSessionUser(request).getProfile().getID();
-        }
-        else {
-            return 0;
-        }
-    }
+
+
+
 
 
     /**

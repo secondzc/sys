@@ -61,16 +61,16 @@ public class LoginController extends BaseController {
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-        String username = request.getParameter("userName");
+        String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         String rememberMe = request.getParameter("rememberMe");
         Map<String,Object> map =new HashMap<String,Object>();
         Map<String,Object> params = new HashMap<String,Object>();
-        //   params.put("userName",username);
-        params.put("name",username);
+        //   params.put("userName",userName);
+        params.put("name",userName);
 
 
-        GUser user = userService.querListByName(username);
+        GUser user = userService.querListByName(userName);
         if(user!=null)
         {
 
@@ -85,32 +85,31 @@ public class LoginController extends BaseController {
                 if(passwdCheck.equalsIgnoreCase(user.getPasswd()))
                 {
 
-                    if(rememberMe != null && "1".equals(rememberMe)){
-                        Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
-                        int seconds=60*60;
-                        userCookie.setMaxAge(seconds);
-                        response.addCookie(userCookie);
-                    }else{
-                        Cookie[] cookies = request.getCookies();
-                        if(cookies != null&&cookies.length>0){
-                            for(Cookie cookie : cookies){
-                                String cookieName = cookie.getName();
-                                if("syslinkUser".equals(cookieName)){
-                                    Cookie new_cookie = new Cookie(cookieName, null);
-                                    new_cookie.setMaxAge(0);
-                                    response.addCookie(new_cookie);
-                                }
-                            }
-                        }
-                    }
+//                    if(rememberMe != null && "1".equals(rememberMe)){
+//                        Cookie userCookie = new Cookie("syslinkUser",userName + "==" + password);
+//                        int seconds=60*60;
+//                        userCookie.setMaxAge(seconds);
+//                        response.addCookie(userCookie);
+//                    }else{
+//                        Cookie[] cookies = request.getCookies();
+//                        if(cookies != null&&cookies.length>0){
+//                            for(Cookie cookie : cookies){
+//                                String cookieName = cookie.getName();
+//                                if("syslinkUser".equals(cookieName)){
+//                                    Cookie new_cookie = new Cookie(cookieName, null);
+//                                    new_cookie.setMaxAge(0);
+//                                    response.addCookie(new_cookie);
+//                                }
+//                            }
+//                        }
+//                    }
                     HttpSession session = request.getSession();
 
 
                     session.setAttribute("user", user);
                     session.setAttribute("uid",user.getID());
                     session.setAttribute("uname",user.getName());
-                    //session.setAttribute("user", user);
-                    //   session.setAttribute("base_path", request.getContextPath());
+                    session.setAttribute("loginIp",IpUtil.getIpAddr(request));
                     String lginIp = IpUtil.getIpAddr(request);
                     Date loginDate = DateUtil.getTimestamp();
 //                userService.updateLoginstate(user.getID(),lginIp,loginDate);
@@ -118,27 +117,9 @@ public class LoginController extends BaseController {
 
                     LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
                     setSessionUser(request,loginedUser);
-
-                    logService.addLog("登录","登录系统",request);
-
-
-
-                    Cookie c = new Cookie("gogs_awesome",username);
-                    c.setDomain(".modelica-china.com");
-                    c.setMaxAge(-1);
-                    c.setPath("/");
-                    response.addCookie(c);
-
-
-                    Cookie[] cookies = request.getCookies();
-                    for (int i =0;i<cookies.length;i++)
-                    {
-                        System.out.println(cookies[i].getName());
-                        System.out.println(cookies[i].getValue());
-                    }
-                    System.out.println(session.getAttribute("uid"));
-                    System.out.println(session.getAttribute("uname"));
-
+                    String title = "登录";
+                    String content = "用户:"+userName+"登录系统";
+                    logService.addLog(title,content);
 
 
                     //return "redirect:/model/getMyIndex";
@@ -159,76 +140,6 @@ public class LoginController extends BaseController {
             map.put("result","0");
             map.put("errormsg","登录失败，请输入正确的用户！");
         }
-
-
-
-
-
-
-
-
-        /**
-         Subject currentUser = ShiroKit.getSubject();
-         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-         currentUser.login(token);
-         ShiroUser shiroUser = ShiroKit.getUser();
-         **/
-        /**
-         if(user != null){
-         if(user != null && password.equals(user.getPassWord())){
-         if(rememberMe != null && "1".equals(rememberMe)){
-         Cookie userCookie = new Cookie("syslinkUser",username + "==" + password);
-         int seconds=60*60;
-         userCookie.setMaxAge(seconds);
-         response.addCookie(userCookie);
-         }else{
-         Cookie[] cookies = request.getCookies();
-         if(cookies != null&&cookies.length>0){
-         for(Cookie cookie : cookies){
-         String cookieName = cookie.getName();
-         if("syslinkUser".equals(cookieName)){
-         Cookie new_cookie = new Cookie(cookieName, null);
-         new_cookie.setMaxAge(0);
-         response.addCookie(new_cookie);
-         }
-         }
-         }
-         }
-         HttpSession session = request.getSession();
-         session.setAttribute("user", user);
-         session.setAttribute("base_path", request.getContextPath());
-         String lginIp = IpUtil.getIpAddr(request);
-         Date loginDate =DateUtil.getTimestamp();
-         userService.updateLoginstate(user.getId(),lginIp,loginDate);
-
-         LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
-         setSessionUser(request,loginedUser);
-
-         logService.addLog("登录","登录系统",request);
-
-
-
-         Cookie c = new Cookie("gogs_awesome",username);
-         c.setDomain(".modelica-china.com");
-         c.setMaxAge(60);
-         c.setPath("/");
-         response.addCookie(c);
-         //             return "redirect:/model/getMyIndex";
-         map.put("result","1");
-         map.put("errormsg","登陆成功！");
-         }else{
-         request.setAttribute("loginFlag",1);
-         //             return "login";
-         map.put("result","1");
-         map.put("errormsg","登陆成功！");
-         }
-         }else{
-         request.setAttribute("loginFlag", -1);
-         //  return "login";
-         map.put("result","0");
-         map.put("errormsg","登陆失败，请输入正确的用户！");
-         }
-         **/
 
         return map;
     }

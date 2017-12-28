@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public interface LogService {
     public boolean add(Log log);
-    public boolean addLog(String title,String content,HttpServletRequest request);
+    public boolean addLog(String title,String content);
     public boolean delete(long id);
     public List<Log> findAllLog();
 

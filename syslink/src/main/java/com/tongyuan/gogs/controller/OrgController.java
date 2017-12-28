@@ -52,7 +52,7 @@ public class OrgController extends BaseController {
             jo.put("msg","该名称已存在");
             return jo;
         }
-        long uid = getCurrentUserId(request);
+        long uid = getUserId();
         map.put("uid",uid);
 
 

@@ -34,11 +34,11 @@ public class LogServiceImpl implements LogService {
 
 
     @Override
-    public boolean addLog(String title,String content,HttpServletRequest request){
+    public boolean addLog(String title,String content){
         Log log = new Log();
         {
 
-            com.tongyuan.model.domainmodel.Log log2 =new com.tongyuan.model.domainmodel.Log(request);
+            com.tongyuan.model.domainmodel.Log log2 =new com.tongyuan.model.domainmodel.Log();
             log.setUserId(log2.getUserId1());
             log.setUserIp(log2.getUserIp());
             log.setUserName(log2.getUserName1());

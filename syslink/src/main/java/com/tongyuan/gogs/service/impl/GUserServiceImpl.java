@@ -427,7 +427,11 @@ public class GUserServiceImpl implements GUserService {
             directoryAuth.setUid(uid);
             directoryAuth.setDirectoryId(directoryIds.get(i).getLongValue("id"));
             directoryAuth.setMode(directoryIds.get(i).getIntValue("mode"));
-            b = b & directoryAuthMapper.add(directoryAuth);
+            if(directoryAuth.getMode()>0)
+            {
+                b = b & directoryAuthMapper.add(directoryAuth);
+            }
+
         }
         return a & b;
     }

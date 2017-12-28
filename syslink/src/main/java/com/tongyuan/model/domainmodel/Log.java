@@ -15,12 +15,11 @@ public class Log extends BaseController {
 
 
 
-	public Log(HttpServletRequest request) {
-		userId=getCurrentUserId(request);
-		realName=getCurrentRealName(request);
-		 userIp = IpUtil.getIpAddr(request);
-		 userName=getCurrentUserName(request);
-
+	public Log() {
+		userId=getUserId();
+		realName=getFullName();
+		userIp = getLoginIp();
+		userName=getUserName();
 	}
 
 	public long getUserId1() {

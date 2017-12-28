@@ -426,7 +426,7 @@ public class UserController extends BaseController {
         JSONObject jo = new JSONObject();
 
 
-        long uerId  = getCurrentUserId(request);
+        long uerId  = getUserId();
         jo.put("userId",uerId);
         return (JSONObject) JSONObject.toJSON(jo);
     }
@@ -494,8 +494,9 @@ public class UserController extends BaseController {
         Date loginDate = DateUtil.getTimestamp();
         userService.updateLoginstate(user.getID(),lginIp,loginDate);
 
-
-        logService.addLog("登录","登录系统",request);
+        String title = "登录";
+        String content = "用户:"+userName+"登录系统";
+        logService.addLog(title,content);
 
 
 
@@ -765,6 +766,7 @@ public class UserController extends BaseController {
         session.setAttribute("uid",user.getID());
         session.setAttribute("uname",user.getName());
         session.setAttribute("user",user);
+        session.setAttribute("loginIp",IpUtil.getIpAddr(request));
 
         jo.put("session",true);
 

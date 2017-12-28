@@ -168,7 +168,7 @@ public class TeamController extends BaseController {
     public JSONObject addOrgUser(@RequestBody String para, HttpServletRequest request) {
         JSONObject jo=new JSONObject();
         JSONObject map = JSON.parseObject(para);
-        map.put("uid",getCurrentUserId(request));
+        map.put("uid",getUserId());
 
         try{
             teamService.addTeamUser(map);
@@ -204,7 +204,7 @@ public class TeamController extends BaseController {
                 return jo;
             }
         }
-        map.put("uid",getCurrentUserId(request));
+        map.put("uid",getUserId());
         try{
             teamService.deleteTeamUser(map);
         }
@@ -278,7 +278,7 @@ public class TeamController extends BaseController {
         Long uid = map.getLongValue("uid");
         if(uid==null)
         {
-            map.put("uid",getCurrentUserId(request));
+            map.put("uid",getUserId());
         }
 
         Map<String ,Object>team = teamService.queryByTeamId(Long.parseLong(map.get("teamId").toString()));
