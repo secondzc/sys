@@ -1,51 +1,132 @@
-//package com.tongyuan.model.service.impl;
-//
-//import com.tongyuan.gogs.domain.GUser;
-//import com.tongyuan.gogs.service.GUserService;
-//import com.tongyuan.model.domain.ReviewMsg;
-//import com.tongyuan.model.service.MailService;
-//import com.tongyuan.model.service.ReviewMsgService;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.mail.SimpleMailMessage;
-//import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.stereotype.Component;
-//
-//@Component
-//public class MailServiceImpl implements MailService{
-//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-//    @Autowired
-//    private JavaMailSender mailSender;
-//    @Autowired
-//    private GUserService gUserService;
-//    @Autowired
-//    private ReviewMsgService reviewMsgService;
-//
-//    @Value("${mail.fromMail.addr}")
-//    private String from;
-//    @Override
-//    public void sendSimpleMail(Long toUserId,Long fromUserId) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        GUser toUser = gUserService.queryById(toUserId);
-//        String toUserEmail = toUser.getEmail();
-//        String subject = "审签流程提醒";
-//        String content = "您好，您有一个待查看的审签流程任务需要您确认，请尽快登录办理。";
-//
-//        message.setFrom(from);
-//        message.setTo(toUserEmail);
-//        message.setSubject(subject);
-//        message.setText(content);
-//
-//        try{
-//            //发送邮件并以消息的形式进行提示
-//            ReviewMsg reviewMsg = new ReviewMsg(fromUserId,toUserId,content,subject);
-//            reviewMsgService.add(reviewMsg);
-//            mailSender.send(message);
-//            logger.info("简单邮件已经发送。");
-//        }catch(Exception e) {
-//            logger.error("发送简单邮件时发送异常！", e);
-//        }
-//    }
-//}
+package com.tongyuan.model.service.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+
+
+
+@Service
+public class MailServiceImpl implements com.tongyuan.model.service.MailService{
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private JavaMailSender sender;
+
+    @Value("${spring.mail.username}")
+    private String from;
+
+    /**
+     * 发送纯文本的简单邮件
+     * @param to
+     * @param subject
+     * @param content
+     */
+    public void sendSimpleMail(String to, String subject, String content){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(content);
+
+        try {
+            sender.send(message);
+            logger.info("简单邮件已经发送。");
+        } catch (Exception e) {
+            logger.error("发送简单邮件时发生异常！", e);
+        }
+    }
+
+    /**
+     * 发送html格式的邮件
+     * @param to
+     * @param subject
+     * @param content
+     */
+    public void sendHtmlMail(String to, String subject, String content){
+        MimeMessage message = sender.createMimeMessage();
+
+        try {
+            //true表示需要创建一个multipart message
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+
+            sender.send(message);
+            logger.info("html邮件已经发送。");
+        } catch (MessagingException e) {
+            logger.error("发送html邮件时发生异常！", e);
+        }
+    }
+
+    /**
+     * 发送带附件的邮件
+     * @param to
+     * @param subject
+     * @param content
+     * @param filePath
+     */
+    public void sendAttachmentsMail(String to, String subject, String content, String filePath){
+        MimeMessage message = sender.createMimeMessage();
+
+        try {
+            //true表示需要创建一个multipart message
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+
+            FileSystemResource file = new FileSystemResource(new File(filePath));
+            String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
+            helper.addAttachment(fileName, file);
+
+            sender.send(message);
+            logger.info("带附件的邮件已经发送。");
+        } catch (MessagingException e) {
+            logger.error("发送带附件的邮件时发生异常！", e);
+        }
+    }
+
+    /**
+     * 发送嵌入静态资源（一般是图片）的邮件
+     * @param to
+     * @param subject
+     * @param content 邮件内容，需要包括一个静态资源的id，比如：<img src=\"cid:rscId01\" >
+     * @param rscPath 静态资源路径和文件名
+     * @param rscId 静态资源id
+     */
+    public void sendInlineResourceMail(String to, String subject, String content, String rscPath, String rscId){
+        MimeMessage message = sender.createMimeMessage();
+
+        try {
+            //true表示需要创建一个multipart message
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+
+            FileSystemResource res = new FileSystemResource(new File(rscPath));
+            helper.addInline(rscId, res);
+
+            sender.send(message);
+            logger.info("嵌入静态资源的邮件已经发送。");
+        } catch (MessagingException e) {
+            logger.error("发送嵌入静态资源的邮件时发生异常！", e);
+        }
+    }
+}

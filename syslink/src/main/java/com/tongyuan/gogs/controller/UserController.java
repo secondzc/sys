@@ -8,10 +8,7 @@ import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
-import com.tongyuan.model.service.DepartService;
-import com.tongyuan.model.service.DirectoryService;
-import com.tongyuan.model.service.LogService;
-import com.tongyuan.model.service.RoleService;
+import com.tongyuan.model.service.*;
 import com.tongyuan.model.wrapper.DepartWarpper;
 import com.tongyuan.model.wrapper.GUserWarpper;
 import com.tongyuan.util.DateUtil;
@@ -51,8 +48,12 @@ public class UserController extends BaseController {
     private RoleService roleService;
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private MailService mailService;
     @Value("${defaultPassWord}")
     private String defaultPassWord;
+
+
 
 
 
@@ -287,17 +288,18 @@ public class UserController extends BaseController {
 
             userService.addGUser(map);
             directoryService.createPersonalModelRoot(map);
+            mailService.sendSimpleMail(map.get("email").toString(),"Syslink注册成功通知","您的账号已完成注册,初始密码是'111111',请尽快登录修改！");
 
-            for(int i=1;i<100;i++)
-            {
-                map.put("id",Long.parseLong(map.get("id").toString())+i);
-                map.put("name","test"+i);
-                map.put("fullName","测试"+i);
-                map.put("departId",map.get("departId"));
-                map.put("email","test"+i+"@syslink.com");
-                userService.addGUser(map);
-
-            }
+//            for(int i=1;i<100;i++)
+//            {
+//                map.put("id",Long.parseLong(map.get("id").toString())+i);
+//                map.put("name","test"+i);
+//                map.put("fullName","测试"+i);
+//                map.put("departId",map.get("departId"));
+//                map.put("email","test"+i+"@syslink.com");
+//                userService.addGUser(map);
+//
+//            }
 
 
 
