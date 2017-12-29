@@ -479,9 +479,8 @@ public class UserController extends BaseController {
         String lginIp = IpUtil.getIpAddr(request);
         Date loginDate = DateUtil.getTimestamp();
         userService.updateLoginstate(user.getID(),lginIp,loginDate);
-
         String title = "登录";
-        String content = "用户:"+userName+"登录系统";
+        String content = "用户:"+jsonObject.getString("userName")+"登录系统";
         logService.addLog(title,content);
 
 
