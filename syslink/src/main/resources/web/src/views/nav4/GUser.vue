@@ -1109,8 +1109,7 @@
             }
            if(a.children)
            {
-            console.log(a.children);
-            this.setMode(a.children,directoryAuth);
+             this.setMode(a.children,directoryAuth);
            }
          }
       },
@@ -1119,6 +1118,7 @@
       
          this.modelVisible = true;
          this.modelTree=[];
+         this.setMode(this.data3,[]);
 
       },
       //显示新增界面
