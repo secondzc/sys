@@ -13,6 +13,7 @@
                     <el-header style="height: 40px;">
                         <div style="display: inline-block;">
                             <el-button type="primary" plain   @click="upFloor">上一层</el-button>
+                            <a id="download" style="display: none;" :href = fileUrl download="file" >asdfsd</a>
                         </div>
                         <div style="display: inline-block;">
                             <!--工具条-->
@@ -145,6 +146,7 @@
                     pageSize: 10,
                     pageIndex: 1,
                 },
+                fileUrl : '',
             };
         },
     computed: {
@@ -217,10 +219,14 @@
             handleDownload(index, row){
                 console.log(index, row);
                 var _this = this;
-                var url = '/api/model/download?modelId=' + row.index;
+                var url = '/api/model/downloadAttach?attachmentId=' + row.id;
                 _this.$http.post(url)
                     .then(function (response) {
-                        location.href = response.data.data;
+//                        location.href = response.data.data;
+                        _this.fileUrl = response.data.data
+                        document.getElementById('download').setAttribute('href',_this.fileUrl);
+                        document.getElementById('download').click(function(){
+                        })
                     }).catch(function (error) {
                     console.log(error);
                 });
