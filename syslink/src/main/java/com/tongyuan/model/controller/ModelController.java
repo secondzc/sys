@@ -924,8 +924,10 @@ public class ModelController extends  BaseController {
         String realUrl ="";
         try{
             Model model = modelService.queryModelById(modelId);
-            String name = modelUtil.splitName(model.getName());
+//            String name = modelUtil.splitName(model.getName());
 //             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getModelFilePath().substring(7);
+            List<Attachment> attachmentList = attachmentService.getAttachmentsByModelId(modelId);
+             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,model).substring(7);
             }catch(Exception e) {
                 e.printStackTrace();
                 return returnErrorInfo(jo);
@@ -944,7 +946,7 @@ public class ModelController extends  BaseController {
         String realUrl ="";
         try{
             Attachment attachment = attachmentService.queryById(attachmentId);
-             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath() + attachment.getFilePath();
+             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachment.getFilePath();
         }catch(Exception e) {
             e.printStackTrace();
             return returnErrorInfo(jo);

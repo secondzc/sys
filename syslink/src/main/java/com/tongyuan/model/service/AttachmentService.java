@@ -3,6 +3,7 @@ package com.tongyuan.model.service;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.domain.Attachment;
+import com.tongyuan.model.domain.Model;
 import com.tongyuan.pageModel.VariableTreeObj;
 
 import java.util.List;
@@ -31,4 +32,8 @@ public interface AttachmentService {
     public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId);
     //获取查询id（Attachment）
     public Attachment queryById(Long attachmentId);
+    //查找model的所有文件
+    public List<Attachment> getAttachmentsByModelId(Long modelId);
+    //复制attachList到用户下载文件夹下
+    public String getZipUrl(List<Attachment> attachmentList,Model model);
 }

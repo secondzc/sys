@@ -73,4 +73,9 @@
         FROM  attachment
         WHERE id = #{attachmentId}
     </select>
+    <select id="getAttachmentsByModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        where model_id = #{modelId}
+    </select>
 </mapper>
