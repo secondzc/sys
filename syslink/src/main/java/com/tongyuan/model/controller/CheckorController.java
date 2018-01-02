@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.pagehelper.PageInfo;
 import com.tongyuan.exception.SqlNumberException;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.*;
 import com.tongyuan.pageModel.CheckorPage;
@@ -35,6 +37,8 @@ public class CheckorController extends BaseController{
     private ReviewModelService reviewModelService;
     @Autowired
     private NodeInstanceService nodeInstanceService;
+    @Autowired
+    private GUserService gUserService;
 
     @RequestMapping("")
     public String checkor(){
@@ -96,8 +100,12 @@ public class CheckorController extends BaseController{
         Long modelId = reviewFlowInstance.getModelId();
         //ReviewModel reviewModel = reviewModelService.queryByModelId(modelId);
         Model reviewModel = reviewModelService.queryByModelId(modelId);
+        Long userId = reviewModel.getUserId();
+        GUser guser = gUserService.queryById(userId);
+        String userName = guser.getName();
         JSONObject js = new JSONObject();
         js.put("reviewModel",reviewModel);
+        js.put("userName",userName);
         js.put("flag",true);
         //ServletUtil.createSuccessResponse(200,js,response);
         String joString = JSONObject.toJSONStringWithDateFormat(js,"yyyy-MM-dd HH:mm:ss", SerializerFeature.PrettyFormat);

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		
-		<sapn style="font-size: 16px;text-decoration: underline;" v-if="isCheckor">协同</sapn>
+		<sapn style="font-size: 16px;text-decoration: underline;" v-if="isCheckor">意见</sapn>
 		<el-card style="width:660px;margin-left:20px;"  v-if="isCheckor">
 			<el-form>
 			<el-form-item label="是否通过:">

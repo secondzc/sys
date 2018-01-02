@@ -23,6 +23,11 @@
     			  <div style="width:100px;"><p>创建时间:</p></div>
     		      <div >{{this.reviewModel.createTime}}</div>
     		  </div>
+
+    		  <div style="display:flex">
+    			  <div style="width:100px;"><p>提交者:</p></div>
+    		      <div >{{this.userName}}</div>
+    		  </div>
     	</el-card>
        </div>
     <!-- <div style="width:300px;">
@@ -53,6 +58,7 @@
 				listLoading: false,
 				downloading:false,
 				isModelica: false,
+				userName:'',
 			}
 		},
 		// props: {
@@ -83,6 +89,7 @@
 				this.func.ajaxPost(url,{instanceId:this.instanceId},res=>{
 					if(res.data.flag==true){
 						this.reviewModel = res.data.reviewModel;
+						this.userName = res.data.userName;
 						this.isModelica = (res.data.reviewModel.type==='Modelica'?true:false);
 						this.listLoading = false;
 					}
