@@ -29,4 +29,6 @@ public interface AttachmentService {
     //查找刚插入的数据和刚插入的文件夹数据
     public List<Attachment> queryNullModelId(Long modelId);
     public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId);
+    //获取查询id（Attachment）
+    public Attachment queryById(Long attachmentId);
 }

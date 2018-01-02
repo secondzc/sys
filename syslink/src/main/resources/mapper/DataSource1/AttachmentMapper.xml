@@ -68,4 +68,9 @@
         from attachment
         where model_id = -1 or model_id = #{modelId}
     </select>
+    <select id="queryById" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        WHERE id = #{attachmentId}
+    </select>
 </mapper>

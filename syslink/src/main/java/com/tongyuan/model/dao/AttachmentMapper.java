@@ -20,4 +20,5 @@ public interface AttachmentMapper {
     public Attachment getParentAttach(Long attachmentId);
     public List<Attachment> getAllFiles();
     public List<Attachment> queryNullModelId(Long modelId);
+    public Attachment queryById(Long attachmentId);
 }

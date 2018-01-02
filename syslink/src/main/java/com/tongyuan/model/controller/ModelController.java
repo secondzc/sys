@@ -928,18 +928,35 @@ public class ModelController extends  BaseController {
 //             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getModelFilePath().substring(7);
             }catch(Exception e) {
                 e.printStackTrace();
-                jo.put("status","1");
-                jo.put("code",0);
-                jo.put("msg","error");
-                return jo;
+                return returnErrorInfo(jo);
             }
-                jo.put("status",1);
-                jo.put("code",0);
-                jo.put("msg","ok");
                 jo.put("data",realUrl);
-                return (JSONObject) JSONObject.toJSON(jo);
+                return returnSuccessInfo(jo);
 
             }
+
+    @RequestMapping(value = "/downloadAttach",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject downloadAttach(@RequestParam(value = "attachmentId",required = false)Long attachmentId,
+                               HttpServletRequest request , HttpServletResponse response){
+
+        JSONObject jo=new JSONObject();
+        String realUrl ="";
+        try{
+            Attachment attachment = attachmentService.queryById(attachmentId);
+             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath() + attachment.getFilePath();
+        }catch(Exception e) {
+            e.printStackTrace();
+            return returnErrorInfo(jo);
+        }
+        jo.put("data",realUrl);
+        return returnSuccessInfo(jo);
+
+    }
+
+
+
+
     @RequestMapping(value = "/deleted",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject deleted(@RequestParam(value = "modelId",required = false)Long modelId,

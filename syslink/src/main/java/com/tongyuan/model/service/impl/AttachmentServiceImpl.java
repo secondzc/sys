@@ -187,6 +187,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachment.setName(fileName);
         attachment.setExt(ModelUtil.splitName(fileName));
         attachment.setFloder(false);
+        attachment.setFilePath(filePath);
         attachment.setCreateTime(DateUtil.getTimestamp());
         attachment.setSize(fileSize);
         attachment.setTempRelativePath(tempRelativePath);
@@ -209,6 +210,11 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachment.setSize(0);
         attachment.setTempRelativePath(fileJsonArrayDto.getPath());
         this.attachmentMapper.add(attachment);
+    }
+
+    @Override
+    public Attachment queryById(Long attachmentId) {
+        return this.attachmentMapper.queryById(attachmentId);
     }
 
     public void getModelChild(List<Attachment> modelFiles,Long modelId,List<VariableTreeObj> childList){
