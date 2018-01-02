@@ -133,6 +133,7 @@
         data() {
             return {
                 repositories: [],
+                details : [],
                 parentAttach : '',
                 catalog : 0,
                 name : this.$store.state.userInfo.profile.name,
@@ -162,6 +163,7 @@
             _this.$http.post(url)
                 .then(function (response) {
 //                    _this.repositories = response.data.data;
+                    _this.details = response.data.data;
                     _this.pager.total = response.data.data.length;
                     var filterModel = response.data.data.filter(
                         (u, index) => {
@@ -182,7 +184,7 @@
             handleSizeChange(val){
                 console.log(`每页 ${val} 条`);
                 this.pager.pageSize = val;
-                var filterModel = this.repositories.filter(
+                var filterModel = this.details.filter(
                     (u, index) => {
                         if (index < this.pager.pageIndex * val && index >= val * (this.pager.pageIndex - 1)) {
                             return true
@@ -197,7 +199,7 @@
                     pageIndex: this.pager.pageIndex
                 };
                 console.log(`当前页: ${val}`);
-                var filterModel = this.repositories.filter(
+                var filterModel = this.details.filter(
                     (u, index) => {
                         if (index < val * para.pageSize && index >= para.pageSize * (val - 1)) {
                             return true
@@ -245,6 +247,7 @@
                 var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
                 _this.$http.post(url)
                     .then(function (response) {
+                        _this.details = response.data.data;
                         var searchModel = response.data.data.filter(model => {
                             if (para.name && model.name.indexOf(para.name) == -1) {
                                 return false
@@ -285,6 +288,7 @@
                     _this.$http.post(url)
                         .then(function (response) {
                             _this.parentAttach = response.data.parentAttach;
+                            _this.details = response.data.data;
                             _this.pager.total = response.data.data.length;
                             var filterModel = response.data.data.filter(
                                 (u, index) => {
@@ -316,6 +320,7 @@
                 var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
                 _this.$http.post(url)
                     .then(function (response) {
+                        _this.details = response.data.data;
                         _this.repositories = response.data.data;
                         for(var i= 0;i < _this.repositories.length;i++){
                             if(data.filePath == _this.repositories[i].filePath){

@@ -127,10 +127,21 @@
                     url:'api/model/uploadFloder?name='+this.name +"&directoryId="+this.bmsg + "&scope=" + true,
                     data:para})
                     .then(function (response) {
-
+                            if(response.data.msg == "ok"){
+                                _this.$message({
+                                    message: '上传成功！',
+                                    type: 'success',
+                                    duration: 2000
+                                });
+                            }
                     })
                     .catch(function (error) {
                         console.log(error);
+                        _this.$message({
+                            message: '上传失败！',
+                            type: 'error',
+                            duration: 2000
+                        });
                     });
             },
             getModelTypeList() {
