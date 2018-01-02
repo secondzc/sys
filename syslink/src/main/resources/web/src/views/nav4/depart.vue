@@ -364,6 +364,10 @@
         });
       },
       handleDel(index,row){
+
+            this.$confirm('确认删除该组织吗?', '提示', {
+          type: 'warning'
+        }).then(() => {
             let para = {id :''};
             para.id = row.id;
             this.$http({method:'post',url:'api/depart/delete',data:para})
@@ -384,6 +388,14 @@
                 }
                 this.getDeparts();
             })
+        }).catch(() => {
+
+        });
+
+
+
+
+          
        },
       getDeparts()
       {
