@@ -47,6 +47,9 @@ public class Attachment {
     @Column
     //模型id
     private long modelId;
+    //web端相对路径
+    @Column
+    private String tempRelativePath;
 
     public long getId() {
         return id;
@@ -134,5 +137,13 @@ public class Attachment {
 
     public void setModelId(long modelId) {
         this.modelId = modelId;
+    }
+
+    public String getTempRelativePath() {
+        return tempRelativePath;
+    }
+
+    public void setTempRelativePath(String tempRelativePath) {
+        this.tempRelativePath = tempRelativePath;
     }
 }

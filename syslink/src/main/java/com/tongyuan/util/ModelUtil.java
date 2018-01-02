@@ -15,7 +15,7 @@ import static com.tongyuan.support.CollectionKit.join;
 @Component
 public class ModelUtil {
     //获取组件名称（点后面的名字）
-    public String splitName(String name){
+    public static String splitName(String name){
         String splitName[] = name.split("\\.");
         if(splitName.length >1) {
             return splitName[splitName.length-1];
@@ -39,6 +39,19 @@ public class ModelUtil {
         }
         return parentName;
     }
+
+    public static String getParentNameByPara(String childName,String parameter){
+        String [] childModelArr = childName.split(parameter);
+        String parentName = "";
+        if(childModelArr.length >1){
+            for (int i= 0; i<childModelArr.length -1; i++){
+                parentName += childModelArr[i] + parameter;
+            }
+            return parentName.substring(0,parentName.length());
+        }
+        return parentName;
+    }
+
 
 
     /***
@@ -350,6 +363,22 @@ public class ModelUtil {
             }
         }
     }
+
+    public String getFileContent(FileInputStream fileInputStream){
+        String  relativePath =new String();
+        try {
+            byte[] b=new byte[fileInputStream.available()];//新建一个字节数组
+            fileInputStream.read(b);//将文件中的内容读取到字节数组中
+            fileInputStream.close();
+            relativePath = new String(b);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //再将字节数组中的内容转化成字符串形式输出
+        System.out.println(relativePath);
+        return  relativePath;
+    }
+
 
 
 

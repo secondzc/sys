@@ -13,22 +13,22 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="is_floder" property="isFloder" jdbcType="BOOLEAN"/>
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
-
+        <result column="temp_relative_path" property="tempRelativePath" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="baseColumnList" >
-        id,parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id
+        id,parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id,temp_relative_path
     </sql>
 
     <insert id="add" parameterType="com.tongyuan.model.domain.Attachment" useGeneratedKeys="true" keyProperty="id">
-         INSERT INTO attachment (parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id) VALUES
+         INSERT INTO attachment (parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id,temp_relative_path) VALUES
          (#{parentId}, #{name}, #{ext},#{iconUrl}, #{size}, #{filePath},#{httpPath}, #{createTime}, #{isFloder},
-        #{modelId})
+        #{modelId},#{tempRelativePath})
     </insert>
 
     <update id="update">
-         UPDATE model SET
+         UPDATE attachment SET
         parent_id = #{parentId},name = #{name},ext = #{ext},icon_url = #{iconUrl},size = #{size}, file_path = #{filePath}, http_path = #{httpPath},
-        create_time = #{createTime},is_floder = #{isFloder}, model_id = #{modelId}
+        create_time = #{createTime},is_floder = #{isFloder}, model_id = #{modelId},temp_relative_path = #{tempRelativePath}
         WHERE id = #{id}
     </update>
     <select id="queryListByPath" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
@@ -62,5 +62,10 @@
         SELECT <include refid="baseColumnList" />
         from attachment
         where 1= 1 AND is_floder = false and icon_url is null or trim(icon_url)= ''
+    </select>
+    <select id="queryNullModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT *
+        from attachment
+        where model_id = -1 or model_id = #{modelId}
     </select>
 </mapper>

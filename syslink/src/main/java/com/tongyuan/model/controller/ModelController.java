@@ -1,5 +1,6 @@
 package com.tongyuan.model.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
@@ -11,6 +12,7 @@ import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.gogs.service.StarService;
 import com.tongyuan.gogs.service.WatchService;
 import com.tongyuan.model.DTO.AttachmentDto;
+import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
@@ -33,8 +35,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -1204,6 +1208,15 @@ public class ModelController extends  BaseController {
         String relativePath = "";
         //绝对路径
         String absolutePath = "";
+        //web端相对路径
+        String tempRelativePath = "";
+        try {
+            tempRelativePath = modelUtil.getFileContent((FileInputStream) multiRequest.getPart("relativePath").getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
         relativePath = resourceUtil.getStorePath(name,fileName);
         //把文件写入绝对路径
         absolutePath = resourceUtil.getunzipPath() + relativePath;
@@ -1211,7 +1224,7 @@ public class ModelController extends  BaseController {
             bytes = map.get("file").get(0).getBytes();
             resourceUtil.writeFile(absolutePath,0,fileSize,bytes);
             //创建一个attachment对象
-            attachmentService.addIconOfModel(fileName,relativePath,fileSize);
+            attachmentService.addFileOfModel(fileName,relativePath,fileSize,tempRelativePath);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("文件写入出错!");
@@ -1220,12 +1233,49 @@ public class ModelController extends  BaseController {
 
     @RequestMapping(value = "/uploadFloder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public void uploadFloder(@RequestParam(value = "name", required = false) String name,
+    public JSONObject uploadFloder(@RequestParam(value = "name", required = false) String name,
                                   @RequestParam(value = "directoryId", required = false) Long directoryId,
                                   @RequestParam(value = "scope", required = false) Boolean scope,
                              @RequestBody Map<String,Object> map,
                                   HttpServletRequest request, HttpServletResponse response) {
         System.out.print("11111");
+        JSONObject jo = new JSONObject();
+        try {
+            GUser user = gUserService.querListByName(name);
+            Long modelId = modelService.addOneModel(user, directoryId, scope, map);
+            List<FileJsonArrayDto> fileJsonArrayDtoList = JSONArray.parseArray(map.get("fileLists").toString(), FileJsonArrayDto.class);
+            for (FileJsonArrayDto fileJsonDto : fileJsonArrayDtoList) {
+                if (fileJsonDto.getFolder()) {
+                    attachmentService.addFileJsonDto(fileJsonDto, modelId);
+                }
+            }
+            //查询刚插入的attachments
+            List<Attachment> attachmentFileList = attachmentService.queryNullModelId(modelId);
+            System.out.print("22222222");
+            for (Attachment attachmentChild : attachmentFileList) {
+                for (Attachment attachmentParent : attachmentFileList) {
+                    if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
+                        attachmentChild.setParentId(attachmentParent.getId());
+                        attachmentChild.setModelId(modelId);
+                        attachmentService.update(attachmentChild);
+                        continue;
+                    }
+                }
+            }
+            if (scope) {
+                try {
+                    Long instanceId = reviewFlowInstanceService.startInstance(modelId);
+                    statusChangeService.updateNextStatus(instanceId, "1");
+                } catch (SqlNumberException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("模型目录更新失败");
+            return returnErrorInfo(jo);
+        }
+        return  returnSuccessInfo(jo);
     }
 
     @RequestMapping(value = "/treeModelCatalog",method = RequestMethod.POST,produces="application/json;charset=UTF-8")

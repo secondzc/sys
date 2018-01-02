@@ -1,11 +1,13 @@
 package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.DTO.AttachmentDto;
+import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.dao.AttachmentMapper;
 import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.model.service.AttachmentService;
 import com.tongyuan.pageModel.VariableTreeObj;
 import com.tongyuan.util.DateUtil;
+import com.tongyuan.util.ModelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -177,6 +179,36 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public List<Attachment> getAllFiles() {
         return this.attachmentMapper.getAllFiles();
+    }
+
+    @Override
+    public void addFileOfModel(String fileName, String filePath, Long fileSize, String tempRelativePath) {
+        Attachment attachment = new Attachment();
+        attachment.setName(fileName);
+        attachment.setExt(ModelUtil.splitName(fileName));
+        attachment.setFloder(false);
+        attachment.setCreateTime(DateUtil.getTimestamp());
+        attachment.setSize(fileSize);
+        attachment.setTempRelativePath(tempRelativePath);
+        attachment.setModelId(-1);
+        this.attachmentMapper.add(attachment);
+    }
+
+    @Override
+    public List<Attachment> queryNullModelId(Long modelId) {
+        return this.attachmentMapper.queryNullModelId(modelId);
+    }
+
+    @Override
+    public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId) {
+        Attachment attachment = new Attachment();
+        attachment.setModelId(modelId);
+        attachment.setCreateTime(DateUtil.getTimestamp());
+        attachment.setFloder(true);
+        attachment.setName(fileJsonArrayDto.getName());
+        attachment.setSize(0);
+        attachment.setTempRelativePath(fileJsonArrayDto.getPath());
+        this.attachmentMapper.add(attachment);
     }
 
     public void getModelChild(List<Attachment> modelFiles,Long modelId,List<VariableTreeObj> childList){

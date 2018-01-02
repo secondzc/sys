@@ -1,9 +1,11 @@
 package com.tongyuan.model.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.dao.ModelMapper;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.ModelService;
+import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +92,26 @@ public class ModelServiceImpl implements ModelService{
     @Override
     public List<Model> getNullParId() {
         return this.modelMapper.getNullParId();
+    }
+
+    @Override
+    public Long  addOneModel(GUser user, Long directoryId, Boolean scope, Map<String, Object> map) {
+        Model model = new Model();
+        model.setParentId(0);
+        model.setName((String) map.get("name"));
+        model.setClasses("Package");
+        model.setType((String) map.get("region"));
+        model.setDirectoryId(directoryId);
+        model.setDiscription((String) map.get("desc"));
+        model.setDeleted(false);
+        model.setUserId(user.getID());
+        model.setCreateTime(DateUtil.getTimestamp());
+        model.setLastUpdateTime(DateUtil.getTimestamp());
+        model.setScope(scope);
+        this.modelMapper.add(model);
+        Long modelId = model.getId();
+        return modelId;
+
     }
 
 

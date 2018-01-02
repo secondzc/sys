@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domain.Model;
 
 import java.util.List;
@@ -26,4 +27,5 @@ public interface ModelService {
   //  public void insertModelData(String modelDir,String modelName,String modelPath,String description);
     public Model queryByNameAndDirId(Map<String, Object> params);
     public List<Model> getNullParId();
+    public Long addOneModel(GUser user, Long directoryId, Boolean scope, Map<String,Object> map);
 }

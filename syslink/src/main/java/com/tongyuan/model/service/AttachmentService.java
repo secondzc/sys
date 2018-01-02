@@ -1,6 +1,7 @@
 package com.tongyuan.model.service;
 
 import com.tongyuan.model.DTO.AttachmentDto;
+import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.pageModel.VariableTreeObj;
 
@@ -24,4 +25,8 @@ public interface AttachmentService {
     public List<AttachmentDto> transformDtoList(List<Attachment> attachmentList);
     public Attachment getParentAttach(Long attachmentId);
     public List<Attachment> getAllFiles();
+    public void addFileOfModel(String fileName,String filePath,Long fileSize,String tempRelativePath);
+    //查找刚插入的数据和刚插入的文件夹数据
+    public List<Attachment> queryNullModelId(Long modelId);
+    public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId);
 }
