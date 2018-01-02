@@ -60,7 +60,7 @@
                 </el-aside>
             <el-container>
                 <el-main>
-                    <uploadFile></uploadFile>
+                    <uploadFile @sendFiles="sendFiles" @sendFileLists="sendFileLists"></uploadFile>
                 </el-main>
             <el-footer>
                 <div style="float: right;height: 30px;width: 100%" >
@@ -79,6 +79,8 @@
     import uploadPicture from '../nav3/UploadPicuter.vue'
     import uploadFile from '../nav3/UploadFile.vue'
     import global_ from '../global.vue'
+    import { mapState,mapGetters} from 'vuex'
+    import {mapActions} from 'vuex'
     export default {
         components: {
             upload_breadcrumb,
@@ -93,7 +95,8 @@
                     region: '',
                     desc: '',
                     photoList : [],
-                    fileList : [],
+                    files : [],
+                    fileLists : [],
                 },
                 photoUrl: '',
                 modelType: [],
@@ -102,15 +105,29 @@
                 name : this.$store.state.userInfo.profile.name,
             }
         },
+        computed: {
+            ...mapState({
+                modelId: state => state.modelId,
+                a: state => state.a
+            }),
+            ...mapGetters(['modelId', 'bmsg', 'treeModelId']),
+        },
         methods: {
+            sendFiles(data){
+               this.form.files = data;
+            },
+            sendFileLists(data){
+                this.form.fileLists = data;
+            },
             onSubmit() {
                 console.log('submit!');
                 var _this = this;
                 let para = Object.assign({}, _this.form);
                 _this.$http({method:'post',
-                    url:'api/model/uploadFloder',
+                    url:'api/model/uploadFloder?name='+this.name +"&directoryId="+this.bmsg + "&scope=" + true,
                     data:para})
                     .then(function (response) {
+
                     })
                     .catch(function (error) {
                         console.log(error);

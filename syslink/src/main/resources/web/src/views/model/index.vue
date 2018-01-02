@@ -30,6 +30,7 @@
                                   width="80%"
                                   center
                                   ref="singleDialog"
+                                  @DomReady = "DomReady()"
                           >
                               <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
                           </el-dialog>
@@ -49,7 +50,8 @@
                                   :visible.sync="packageDetailDialog.dialogVisible"
                                   width="80%"
                                   center
-
+                                    ref="DetailDialog"
+                                  @DetailReady="DetailReady"
                           >
                             <packageDetail ref="packageDetail"></packageDetail>
                           </el-dialog>
@@ -115,17 +117,17 @@
 
                   <div style="position: absolute;right: 50px;">
                              <el-button-group  >
-                                 <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
+                                 <el-tooltip class="item" effect="dark" content="列表视图" placement="top-start">
                     <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"
                     :class="{buttonFocus:listStatus}"></el-button>
                 </el-tooltip>
-                 <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
+                 <el-tooltip class="item" effect="dark" content="卡片视图" placement="top-start">
                     <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
                    :class="{buttonFocus:!listStatus}" ></el-button>
                 </el-tooltip>
 
                 </el-button-group>
-                 <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
+                 <el-tooltip class="item" effect="dark" content="详细信息" placement="top-start">
                 <el-button icon="el-icon-info"    size ="small"
                            @click="info=!info" :class="{buttonFocus:info}"></el-button>
                        </el-tooltip>
@@ -259,30 +261,20 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary"
                                             size="small"
-                                                  @click="handleEdit(scope.$index, scope.row)"
-                                                     >
-                                                      <i class="iconfont icon-chakan" style="font-size: 12px;"></i>  
-
-                                                     </el-button>
+                                                    icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" ></el-button>
                                           </el-tooltip>
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
                                          <el-button type="info"
                                                    size="small"
-                                             @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)">
-                                                      <i class="iconfont icon-xiazai" style="font-size: 12px;"></i>  
+                                                   icon="el-icon-download"   @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)"></el-button>
+                                        </el-tooltip>
 
-                                                   </el-button>
-                                        </el-tooltip>
-                                    <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
-                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
-                                        </el-tooltip>
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" @click="handleDeleted(scope.$index, scope.row)" 
-                                  >
-                                    <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
-                                  </el-button>
+                                  <el-button   size="small" type="danger" icon="el-icon-delete"  @click="handleDeleted(scope.$index, scope.row)" v-if="func.authJudge('management_model_delete')"></el-button>
                                     </el-tooltip>
-                                        
+                                        <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                                            <el-button   size="small" type="danger" icon="el-icon-delete"  @click="moveModel(scope.$index, scope.row)" ></el-button>
+                                        </el-tooltip>
                                      </el-button-group>
                                     </template>
                                 </el-table-column>
@@ -884,6 +876,10 @@
             console.log(val);
         },
         handleCurrent(val) {
+            let para = {
+                pageSize: this.pager.pageSize,
+                pageIndex: this.pager.pageIndex
+            };
             console.log(`当前页: ${val}`);
             var filterModel = this.repositories.filter(
                 (u, index) => {
@@ -1208,13 +1204,27 @@
             },
             seachFiles(){
                 this.packageDetailDialog.SearchDialog =true;
+                this.$refs.singleDialog.$nextTick(function(){
+                    console.log("dom渲染完了");
+                    this.$emit("DomReady")
+                });
+            },
+            DomReady(){
                 this.$refs.getSearchList.getFileList(this.filters.name);
             },
             showModel(data){
                 this.packageDetailDialog.SearchDialog =false;
                 this.packageDetailDialog.dialogVisible = true;
+                this.$refs.DetailDialog.$nextTick(function(){
+                    console.log("dom渲染完了");
+                    this.$emit("DetailReady",data)
+                });
+            },
+            DetailReady(data){
+                this.$store.dispatch('sendTreeModelId', data.modelId);
                 this.$refs.packageDetail.showFile(data);
-            }
+            },
+
 //            handleClose(done) {
 //                this.$confirm('确认关闭？')
 //                    .then(_ => {

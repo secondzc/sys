@@ -36,8 +36,9 @@
                             ref="singleTable"
                             :data="repositories"
                             height="100%"
-
                             @current-change="handleCurrentChange"
+                            highlight-current-row
+                            :row-class-name="tableRowClassName"
                             :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
                             style="width: 100%">
                         <el-table-column
@@ -47,44 +48,34 @@
 
                                 <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
 
-
-
                             </template>
                         </el-table-column>
 
                         <el-table-column  label="名称"
                                           prop="name"
-                                          min-width=100
-                        sortable>
+                                          min-width=100 sortable>
 
                         </el-table-column>
                         <el-table-column
                                 label="创建日期"
                                 prop="createTime"
-                                min-width=100
-                        sortable>
-
-
+                                min-width=100 sortable>
                         </el-table-column>
 
 
                         <el-table-column
                                 label="类型"
                                 prop="ext"
-                                min-width=100
-                        >
+                                min-width=100>
 
                         </el-table-column>
 
                         <el-table-column
                                 label="文件大小"
                                 prop="size"
-                                min-width=100
-                        >
-
+                                min-width=100>
                         </el-table-column>
 
-                        </el-table-column>
 
                         <el-table-column min-width=150 label="操作">
                             <template scope="scope">
@@ -201,6 +192,10 @@
                 this.repositories = filterModel;
             },
             handleCurrent(val) {
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
                 console.log(`当前页: ${val}`);
                 var filterModel = this.repositories.filter(
                     (u, index) => {
@@ -215,7 +210,7 @@
                 if(val == null){
                     return
                 }
-                console.log(val);
+                this.$refs.singleTable.setCurrentRow(val);
             },
             handleDownload(index, row){
                 console.log(index, row);
@@ -309,6 +304,45 @@
             showFile(data){
                 console.log(data);
                 this.$refs.setTreeNode.getCatalog(data.modelId);
+                this.selectCurrentFile(data);
+            },
+            selectCurrentFile(data){
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
+                var currentRow ;
+                var _this = this;
+                var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
+                _this.$http.post(url)
+                    .then(function (response) {
+                        _this.repositories = response.data.data;
+                        for(var i= 0;i < _this.repositories.length;i++){
+                            if(data.filePath == _this.repositories[i].filePath){
+                                _this.pager.pageIndex = (i+1) % _this.pager.pageSize;
+                                currentRow = _this.repositories[i];
+                            }
+                        }
+                        _this.pager.total = response.data.data.length;
+                        var filterModel = response.data.data.filter(
+                            (u, index) => {
+                                if (index < _this.pager.pageIndex * _this.pager.pageSize && index >= _this.pager.pageSize * (_this.pager.pageIndex - 1)) {
+                                    return true
+                                }
+                            }
+                        )
+                        _this.repositories = filterModel;
+                        _this.handleCurrentChange(currentRow);
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 0) {
+                    return 'warning-row';
+                }
+                return '';
             }
 
         }
@@ -378,6 +412,13 @@
         url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.woff') format('woff'),
         url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.ttf') format('truetype'),
         url('//at.alicdn.com/t/font_445633_4mr7tossw8gjh5mi.svg#iconfont') format('svg');
+    }
+    .el-table.warning-row {
+        background: #f0f9eb!important;
+    }
+
+    .el-table.success-row {
+        background: #f0f9eb;
     }
 
 </style>
