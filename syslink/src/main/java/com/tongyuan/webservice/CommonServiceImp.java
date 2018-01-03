@@ -432,7 +432,6 @@ public class CommonServiceImp implements CommonService {
 //					Directory oneDirectory = rootDirectoryList.get(0);
 //					modelController.getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
 //					directoryIdList.add(oneDirectory.getId());
-//					//authService.directoryFilter(directoryIdList,getCurrentUserId(request));
 //				}
 //				for (Long id : directoryIdList) {
 //					for (Model model: allModelList) {
