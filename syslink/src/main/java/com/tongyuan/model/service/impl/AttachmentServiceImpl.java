@@ -38,6 +38,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
+    public void delete(Long attachmentId) {
+        this.attachmentMapper.delete(attachmentId);
+    }
+
+    @Override
     public Attachment queryListByPath(String parentPath) {
         return this.attachmentMapper.queryListByPath(parentPath);
     }
@@ -51,6 +56,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachment.setFloder(false);
         attachment.setIconUrl(iconUrl);
         attachment.setParentId(0);
+        attachment.setSize(size);
+        attachment.setModelId(-1);
         this.attachmentMapper.add(attachment);
     }
 
@@ -238,6 +245,36 @@ public class AttachmentServiceImpl implements AttachmentService {
         String downloadDirPath = resourceUtil.getunzipPath()+ modelName;
         ZipDir.createZip(downloadDirPath,downloadDirPath+".zip");
         return downloadDirPath + ".zip";
+    }
+
+    @Override
+    public List<Attachment> getInsertIcon() {
+        return this.attachmentMapper.getInsertIcon();
+    }
+
+    @Override
+    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId) {
+        for (Attachment attachmentChild : attachmentFileList) {
+            for (Attachment attachmentParent : attachmentFileList) {
+                if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
+                    attachmentChild.setParentId(attachmentParent.getId());
+                    attachmentChild.setModelId(modelId);
+                    this.attachmentMapper.update(attachmentChild);
+                    continue;
+                }
+            }
+        }
+        for (Attachment attachment : attachmentFileList){
+            if(attachment.getModelId() != modelId){
+                attachment.setModelId(modelId);
+                this.attachmentMapper.update(attachment);
+            }
+        }
+    }
+
+    @Override
+    public List<Attachment> getDeleteAttach() {
+        return this.attachmentMapper.getDeleteAttach();
     }
 
     public void getModelChild(List<Attachment> modelFiles,Long modelId,List<VariableTreeObj> childList){

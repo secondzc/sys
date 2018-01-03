@@ -14,6 +14,7 @@ import java.util.List;
 public interface AttachmentService {
     Long add(Attachment attachment);
     int update(Attachment attachment);
+    public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
     public void addIconOfModel(String fileName,String iconUrl,Long size);
     public List<Attachment> getModelFiles(Long modelId);
@@ -36,4 +37,10 @@ public interface AttachmentService {
     public List<Attachment> getAttachmentsByModelId(Long modelId);
     //复制attachList到用户下载文件夹下
     public String getZipUrl(List<Attachment> attachmentList,Model model);
+    //查找刚上传的icon图片List
+    public List<Attachment> getInsertIcon();
+    //更新上传文件的modelId和parentId
+    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId);
+    //获取要删除的数据
+    public List<Attachment> getDeleteAttach();
 }

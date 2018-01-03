@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface ModelTypeService {
     public List<ModelTypeDto> getModelTypeList();
+    //根据类型名获取modeltype对象
+    public ModelType getByType(String typeName);
 }

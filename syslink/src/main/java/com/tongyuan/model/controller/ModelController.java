@@ -84,6 +84,8 @@ public class ModelController extends  BaseController {
     private StatusChangeService statusChangeService;
     @Autowired
     private AttachmentService attachmentService;
+    @Autowired
+    private ModelTypeService modelTypeService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -1186,12 +1188,13 @@ public class ModelController extends  BaseController {
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
         Long fileSize = map.get("file").get(0).getSize();
-        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
+//        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
         String fileName = "";
         byte[] bytes = new byte[0];
-        if (fileNames2.length >= 1) {
-            fileName = fileNames2[0];
-        }
+//        if (fileNames2.length >= 1) {
+//            fileName = fileNames2[0];
+//        }
+        fileName = map.get("file").get(0).getOriginalFilename();
         //相对地址
         String relativePath = "";
         //绝对路径
@@ -1257,11 +1260,24 @@ public class ModelController extends  BaseController {
                                   @RequestParam(value = "scope", required = false) Boolean scope,
                              @RequestBody Map<String,Object> map,
                                   HttpServletRequest request, HttpServletResponse response) {
-        System.out.print("11111");
         JSONObject jo = new JSONObject();
         try {
             GUser user = gUserService.querListByName(name);
-            Long modelId = modelService.addOneModel(user, directoryId, scope, map);
+            long iconUrlId = 0;
+            boolean iconUpdate = (boolean) map.get("showPicture");
+            String modelType = (String) map.get("region");
+            if(iconUpdate){
+                ModelType type = modelTypeService.getByType(modelType);
+                iconUrlId = type.getId();
+            }else{
+                List<Attachment> iconList = attachmentService.getInsertIcon();
+                for (Attachment icon: iconList) {
+                    if(map.get("photoName").equals(icon.getName())){
+                        iconUrlId = icon.getId();
+                    }
+                }
+            }
+            Long modelId = modelService.addOneModel(user, directoryId, scope, map,iconUrlId);
             List<FileJsonArrayDto> fileJsonArrayDtoList = JSONArray.parseArray(map.get("fileLists").toString(), FileJsonArrayDto.class);
             for (FileJsonArrayDto fileJsonDto : fileJsonArrayDtoList) {
                 if (fileJsonDto.getFolder()) {
@@ -1270,16 +1286,12 @@ public class ModelController extends  BaseController {
             }
             //查询刚插入的attachments
             List<Attachment> attachmentFileList = attachmentService.queryNullModelId(modelId);
-            System.out.print("22222222");
-            for (Attachment attachmentChild : attachmentFileList) {
-                for (Attachment attachmentParent : attachmentFileList) {
-                    if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
-                        attachmentChild.setParentId(attachmentParent.getId());
-                        attachmentChild.setModelId(modelId);
-                        attachmentService.update(attachmentChild);
-                        continue;
-                    }
-                }
+            //更新上传文件的modelId和parentId
+            attachmentService.UpdateModelFrame(attachmentFileList,modelId);
+            //删除不必要的文件
+            List<Attachment> deleteFileList = attachmentService.getDeleteAttach();
+            for (Attachment deleteFile: deleteFileList) {
+                attachmentService.delete(deleteFile.getId());
             }
             if (scope) {
                 try {
@@ -1371,6 +1383,9 @@ public class ModelController extends  BaseController {
         try{
             //模型目录下的文件和文件
             parentAttach = attachmentService.getParentAttach(catalogId);
+            if(parentAttach == null){
+                return returnSuccessInfo(jo);
+            }
             List<Attachment> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
             modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,parentAttach.getId());
             modelDetailDto = attachmentService.transformDtoList(modelDetail);

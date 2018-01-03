@@ -22,4 +22,9 @@
         LEFT JOIN  attachment
         on model_type.icon = attachment.id
     </select>
+    <select id="getByType" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.ModelType">
+        SELECT *
+        from model_type
+        where name = #{name}
+    </select>
 </mapper>

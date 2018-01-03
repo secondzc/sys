@@ -12,4 +12,5 @@ import java.util.List;
 @Mapper
 public interface ModelTypeMapper {
     public List<ModelTypeDto> getModelTypeList();
+    public ModelType getByType(String typeName);
 }
