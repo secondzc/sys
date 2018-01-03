@@ -126,7 +126,8 @@ public class RoleServiceImpl implements RoleService {
             b = b&userRoleMapper.add(userRole);
         }
 
-        Set<Auth>userAuths = authService.getAuthByUserAuth(uid);
+//        Set<Auth>userAuths = authService.getAuthByUserAuth(uid);
+        List<Auth>userAuths = authService.queryAuthByUid(uid);
         for(Auth auth : userAuths)
         {
             if(auth.getAuthCode().equalsIgnoreCase("management_repo_add"))

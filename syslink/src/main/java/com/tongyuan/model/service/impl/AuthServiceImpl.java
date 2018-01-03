@@ -59,48 +59,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    @Override
-    public void directoryFilter(List<Long> directoryIdList,long uid)
-    {
-        List<DirectoryAuth> list = directoryAuthMapper.queryByUid(uid);
-        List<Long> filter = new ArrayList<>();
-        List<Long> remove = new ArrayList<>();
-        for(DirectoryAuth directoryAuth : list)
-        {
-            filter.add(directoryAuth.getDirectoryId());
-        }
-        for(Long directoryId : directoryIdList)
-        {
-            if(!filter.contains(directoryId))
-            {
-               remove.add(directoryId);
-            }
-        }
-        directoryIdList.removeAll(remove);
 
-    }
 
-    @Override
-    public Set<Auth> getAuthByUserAuth(Long uid)
-    {
-        Set<Auth> allAuths = new HashSet<>();
-        List<UserAuth> userAuths = userAuthMapper.queryByUid(uid);
-        if(userAuths.size()>0)
-        {
-            for(UserAuth userAuth:userAuths)
-            {
-                Auth auth = authMapper.queryById(userAuth.getAuthId());
-                allAuths.add(auth);
-            }
-        }
-        return allAuths;
-    }
 
 
     @Override
     public List<Auth>queryAuthByRoleId(Integer roleId)
     {
         return this.authMapper.queryAuthByRoleId(roleId);
+    }
+
+    @Override
+    public List<Auth>queryAuthByUid(long uid)
+    {
+        return this.authMapper.queryAuthByUid(uid);
     }
 
 

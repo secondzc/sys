@@ -89,10 +89,15 @@ public class GUserServiceImpl implements GUserService {
         //      LoginStateModel loginState = new LoginStateModel(loginStateDao.get(
         //              Loginstate.class, new LoginstateId(user.getId(), systemId)));
 
-        List<UserAuth> userAuths = userAuthMapper.queryByUid(user.getID());
+//        List<UserAuth> userAuths = userAuthMapper.queryByUid(user.getID());
+//        Set<String> auths = new HashSet<>();
+//        for (UserAuth userAuth : userAuths) {
+//            Auth auth = authMapper.queryById(userAuth.getAuthId());
+//            auths.add(auth.getAuthCode());
+//        }
+        List<Auth> userAuths = authMapper.queryAuthByUid(user.getID());
         Set<String> auths = new HashSet<>();
-        for (UserAuth userAuth : userAuths) {
-            Auth auth = authMapper.queryById(userAuth.getAuthId());
+        for (Auth auth : userAuths) {
             auths.add(auth.getAuthCode());
         }
         List<UserRole> userRoles = userRoleMapper.query(user.getID());

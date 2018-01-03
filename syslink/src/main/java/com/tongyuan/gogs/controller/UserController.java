@@ -7,6 +7,7 @@ import com.github.pagehelper.Page;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.controller.BaseController;
+import com.tongyuan.model.domain.Auth;
 import com.tongyuan.model.domainmodel.LoginedUserModel;
 import com.tongyuan.model.service.*;
 import com.tongyuan.model.wrapper.DepartWarpper;
@@ -50,6 +51,8 @@ public class UserController extends BaseController {
     private DirectoryService directoryService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private AuthService authService;
     @Value("${defaultPassWord}")
     private String defaultPassWord;
 
@@ -95,7 +98,7 @@ public class UserController extends BaseController {
 
 
             Page<Map<String,Object>> users = new Page<>();
-             List<Integer>departIds =new ArrayList<>();
+            List<Integer>departIds =new ArrayList<>();
             map.put("id",map.get("departId"));
             List<Map<String,Object>>children =  new DepartWarpper(map).getChildren(map);
             for(Map<String,Object>child:children)
@@ -110,9 +113,6 @@ public class UserController extends BaseController {
             {
                 map.put("name","");
             }
-
-
-
 
             try
             {
@@ -389,7 +389,6 @@ public class UserController extends BaseController {
             {
                 userService.deleteUser(ids.getIntValue(i));
             }
-            //   userService.delete(id);
         }
         catch (Exception e)
         {
@@ -516,6 +515,7 @@ public class UserController extends BaseController {
 
         JSONArray authIds = jsonObject.getJSONArray("authIds");
         JSONArray uids = jsonObject.getJSONArray("uids");
+        List<Auth>  userAuths =  new ArrayList<>();
 
         if(uids.size()>0)
         {
@@ -523,6 +523,12 @@ public class UserController extends BaseController {
            {
                try {
                    userService.updateAuth(uids.getLongValue(i),authIds);
+                   userAuths= authService.queryAuthByUid(uids.getLongValue(i));
+
+
+//                  String title = "分配权限";
+//                  String content = "用户:"+getUserName()+"给用户:"
+
                }
                catch (Exception e)
                {

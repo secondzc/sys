@@ -86,6 +86,8 @@ public class ModelController extends  BaseController {
     private AttachmentService attachmentService;
     @Autowired
     private ModelTypeService modelTypeService;
+	@Autowired
+    private LogService logService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -452,7 +454,7 @@ public class ModelController extends  BaseController {
                     Directory oneDirectory = rootDirectoryList.get(0);
                     getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
                      directoryIdList.add(oneDirectory.getId());
-                     //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
+
                 }
                 for (Long id : directoryIdList) {
                     for (Model model: allModelList) {
@@ -971,6 +973,9 @@ public class ModelController extends  BaseController {
             Model model = modelService.queryModelById(modelId);
             model.setDeleted(true);
             modelService.update(model);
+            String title = "删除模型";
+            String content = "用户\t"+getUserName()+"\t删除模型\t"+model.getName();
+            logService.addLog(title,content);
         }catch(Exception e) {
             e.printStackTrace();
             jo.put("status","1");
@@ -1297,6 +1302,9 @@ public class ModelController extends  BaseController {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                     statusChangeService.updateNextStatus(instanceId, "1");
+                    String title = "上传模型";
+                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name");
+                    logService.addLog(title,content);
                 } catch (SqlNumberException e) {
                     e.printStackTrace();
                 }
@@ -1407,7 +1415,13 @@ public class ModelController extends  BaseController {
         try{
             Model model = modelService.queryModelById(CurrentNodeId);
             model.setDirectoryId(SelectedNodeId);
+            Map<String,Object> oldDirectory = directoryService.queryMapById(model.getDirectoryId());
+            Map<String,Object> newDirectory = directoryService.queryMapById(SelectedNodeId);
             modelService.update(model);
+            String title = "移动模型";
+            String content = "用户\t"+getUserName()+"\t将模型\t"+model.getName()+"\t从\t"+oldDirectory.get("name").toString()+"\t移动到\t"+newDirectory.get("name").toString();
+            logService.addLog(title,content);
+
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");

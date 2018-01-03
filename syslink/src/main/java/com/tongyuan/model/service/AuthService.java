@@ -19,9 +19,7 @@ public interface AuthService {
     public List<Map<String,Object>> getChildren(Map<String, Object> map);
 
 
-    public void directoryFilter(List<Long> dirctoryIdList, long uid);
-
-    public Set<Auth> getAuthByUserAuth(Long uid);
-
     public List<Auth>queryAuthByRoleId(Integer roleId);
+
+    public List<Auth>queryAuthByUid(long uid);
 }
