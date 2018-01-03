@@ -14,6 +14,7 @@
                 highlight-current
                 accordion
                 @node-click="treeNodeClick"
+                @current-change = "treeNodeChange"
                 :filter-node-method="filterNode"
                 ref="tree2">
         </el-tree>
@@ -56,21 +57,17 @@
                 if (!value) return true;
                 return data.name.indexOf(value) !== -1;
             },
-            treeNodeClick(arg){
-                this.$emit('catalog_id', arg.id);
+            treeNodeClick(arg,node,tree){
+                this.$emit('catalog_id', arg.id,node.parent.data);
             },
             updateNode(data){
-//                console.log(data);
-                this.$refs.tree2.setCheckedKeys([]);
-                this.$refs.tree2.setCheckedNodes([{
-                    id: data.id,
-                    label: data.name
-                }]);
-                var currNode;
-                currNode = this.$refs.tree2.getCurrentNode();
-//                this.$refs.tree2.setCurrentKey[7];
-//                currNode = this.$refs.tree2.getCurrentNode();
-                console.log(currNode);
+                this.$refs.tree2.setCurrentKey(data.id);
+                this.$refs.tree2.currentNode =data;
+                console.log(this.$refs.tree2.getCurrentNode());
+                this.$emit('catalog_id', data.id,this.$refs.tree2.$parent.$data.data2[0]);
+            },
+            treeNodeChange(arg1,arg2){
+                console.log(arg1);
             },
             getCatalog(data){
                 var _this = this;

@@ -28,10 +28,10 @@
                             <!--<uploadPicture ></uploadPicture>-->
                             <template>
                                 <section>
-                                    <div v-if="showPicture" class="avatar-uploader" style="margin-bottom: 17px">
+                                    <div v-if="form.showPicture" class="avatar-uploader" style="margin-bottom: 17px">
                                         <img v-bind:src="photoUrl" class="avatar"/>
                                     </div>
-                                    <div v-else="!showPicture">
+                                    <div v-else="!form.showPicture">
                                         <el-upload
                                                 ref="ModelTypePicture"
                                                 class="avatar-uploader"
@@ -43,8 +43,8 @@
                                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                         </el-upload>
                                     </div>
-                                    <el-button v-if="showPicture" size="small" @click="showPicture = !showPicture" type="primary" style="margin-left: 45px">点击修改</el-button>
-                                    <el-button v-else="showPicture" size="small" @click="showPicture = !showPicture" type="primary" style="margin-left: 45px">取消修改</el-button>
+                                    <el-button v-if="form.showPicture" size="small" @click="form.showPicture = !form.showPicture" type="primary" style="margin-left: 45px">点击修改</el-button>
+                                    <el-button v-else="form.showPicture" size="small" @click="form.showPicture = !form.showPicture" type="primary" style="margin-left: 45px">取消修改</el-button>
                                     <!--<el-button size="small" type="primary">点击上传</el-button>-->
 
                                 </section>
@@ -94,13 +94,13 @@
                     name: '',
                     region: '',
                     desc: '',
-                    photoList : [],
+                    photoName : '',
                     files : [],
                     fileLists : [],
+                    showPicture: true,
                 },
                 photoUrl: '',
                 modelType: [],
-                showPicture: true,
                 imageUrl: '',
                 name : this.$store.state.userInfo.profile.name,
             }
@@ -121,6 +121,9 @@
             },
             onSubmit() {
                 console.log('submit!');
+                if(!this.form.showPicture){
+                    this.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
+                }
                 var _this = this;
                 let para = Object.assign({}, _this.form);
                 _this.$http({method:'post',

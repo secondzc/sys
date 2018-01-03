@@ -137,6 +137,7 @@
                 details : [],
                 parentAttach : '',
                 catalog : 0,
+                treeParentNode : '',
                 name : this.$store.state.userInfo.profile.name,
                 filters: {
                     name: ""
@@ -231,13 +232,26 @@
                     console.log(error);
                 });
             },
-            getDetailList(data){
+            getDetailList(data,parentNode){
+                this.treeParentNode = parentNode;
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
                 var _this = this;
                 var url = '/api/model/getModelDetail?catalogId=' + data;
                 _this.catalog = data;
                 _this.$http.post(url)
                     .then(function (response) {
-                        _this.repositories = response.data.data;
+                        _this.details = response.data.data;
+                        var filterModel = response.data.data.filter(
+                            (u, index) => {
+                                if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
+                                    return true
+                                }
+                            }
+                        )
+                        _this.repositories = filterModel;
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -304,7 +318,7 @@
                                 }
                             )
                             _this.repositories = filterModel;
-                            this.$refs.setTreeNode.updateNode(this.catalog);
+                            _this.$refs.setTreeNode.updateNode(_this.treeParentNode);
                         })
                         .catch(function (error) {
                             console.log(error)
