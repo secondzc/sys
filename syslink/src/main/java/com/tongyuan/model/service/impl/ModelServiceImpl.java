@@ -95,7 +95,7 @@ public class ModelServiceImpl implements ModelService{
     }
 
     @Override
-    public Long  addOneModel(GUser user, Long directoryId, Boolean scope, Map<String, Object> map) {
+    public Long  addOneModel(GUser user, Long directoryId, Boolean scope, Map<String, Object> map,Long iconUrlId) {
         Model model = new Model();
         model.setParentId(0);
         model.setName((String) map.get("name"));
@@ -108,6 +108,7 @@ public class ModelServiceImpl implements ModelService{
         model.setCreateTime(DateUtil.getTimestamp());
         model.setLastUpdateTime(DateUtil.getTimestamp());
         model.setScope(scope);
+        model.setIconFileId(iconUrlId);
         this.modelMapper.add(model);
         Long modelId = model.getId();
         return modelId;

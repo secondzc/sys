@@ -27,5 +27,5 @@ public interface ModelService {
   //  public void insertModelData(String modelDir,String modelName,String modelPath,String description);
     public Model queryByNameAndDirId(Map<String, Object> params);
     public List<Model> getNullParId();
-    public Long addOneModel(GUser user, Long directoryId, Boolean scope, Map<String,Object> map);
+    public Long addOneModel(GUser user, Long directoryId, Boolean scope, Map<String,Object> map,Long iconUrlId);
 }

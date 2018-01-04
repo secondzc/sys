@@ -3,6 +3,7 @@ package com.tongyuan.model.service;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.domain.Attachment;
+import com.tongyuan.model.domain.Model;
 import com.tongyuan.pageModel.VariableTreeObj;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public interface AttachmentService {
     Long add(Attachment attachment);
     int update(Attachment attachment);
+    public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
     public void addIconOfModel(String fileName,String iconUrl,Long size);
     public List<Attachment> getModelFiles(Long modelId);
@@ -31,4 +33,14 @@ public interface AttachmentService {
     public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId);
     //获取查询id（Attachment）
     public Attachment queryById(Long attachmentId);
+    //查找model的所有文件
+    public List<Attachment> getAttachmentsByModelId(Long modelId);
+    //复制attachList到用户下载文件夹下
+    public String getZipUrl(List<Attachment> attachmentList,Model model);
+    //查找刚上传的icon图片List
+    public List<Attachment> getInsertIcon();
+    //更新上传文件的modelId和parentId
+    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId);
+    //获取要删除的数据
+    public List<Attachment> getDeleteAttach();
 }

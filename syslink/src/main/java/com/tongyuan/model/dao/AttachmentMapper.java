@@ -13,6 +13,7 @@ public interface AttachmentMapper {
 
     Long add(Attachment attachment);
     int update(Attachment attachment);
+    public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
     public List<Attachment> getModelFiles(Long modelId);
     public List<Attachment> getModelDetail(Long modelId);
@@ -21,4 +22,7 @@ public interface AttachmentMapper {
     public List<Attachment> getAllFiles();
     public List<Attachment> queryNullModelId(Long modelId);
     public Attachment queryById(Long attachmentId);
+    public List<Attachment> getAttachmentsByModelId(Long modelId);
+    public List<Attachment> getInsertIcon();
+    public List<Attachment> getDeleteAttach();
 }

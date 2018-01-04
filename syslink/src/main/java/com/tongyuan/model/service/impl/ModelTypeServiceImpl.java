@@ -22,4 +22,9 @@ public class ModelTypeServiceImpl implements ModelTypeService{
     public List<ModelTypeDto> getModelTypeList() {
         return this.modelTypeMapper.getModelTypeList();
     }
+
+    @Override
+    public ModelType getByType(String typeName) {
+        return this.modelTypeMapper.getByType(typeName);
+    }
 }

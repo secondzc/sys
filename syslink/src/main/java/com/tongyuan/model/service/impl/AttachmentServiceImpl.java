@@ -4,10 +4,10 @@ import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.dao.AttachmentMapper;
 import com.tongyuan.model.domain.Attachment;
+import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.AttachmentService;
 import com.tongyuan.pageModel.VariableTreeObj;
-import com.tongyuan.util.DateUtil;
-import com.tongyuan.util.ModelUtil;
+import com.tongyuan.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +24,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Autowired
     AttachmentMapper attachmentMapper;
+    @Autowired
+    ResourceUtil resourceUtil;
+
     @Override
     public Long add(Attachment attachment) {
         return this.attachmentMapper.add(attachment);
@@ -32,6 +35,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public int update(Attachment attachment) {
         return this.attachmentMapper.update(attachment);
+    }
+
+    @Override
+    public void delete(Long attachmentId) {
+        this.attachmentMapper.delete(attachmentId);
     }
 
     @Override
@@ -48,6 +56,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachment.setFloder(false);
         attachment.setIconUrl(iconUrl);
         attachment.setParentId(0);
+        attachment.setSize(size);
+        attachment.setModelId(-1);
         this.attachmentMapper.add(attachment);
     }
 
@@ -215,6 +225,56 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public Attachment queryById(Long attachmentId) {
         return this.attachmentMapper.queryById(attachmentId);
+    }
+
+    @Override
+    public List<Attachment> getAttachmentsByModelId(Long modelId) {
+        return this.attachmentMapper.getAttachmentsByModelId(modelId);
+    }
+
+    @Override
+    public String getZipUrl(List<Attachment> attachmentList, Model model) {
+        String modelName = model.getName();
+        for (Attachment attachment:attachmentList) {
+            if(!attachment.getFloder()){
+                //下载的相对路径
+                String downloadAbsolutePath = modelName +"/" + attachment.getTempRelativePath();
+                FileUtils.copyFile(resourceUtil.getunzipPath()+attachment.getFilePath(),resourceUtil.getunzipPath()+downloadAbsolutePath);
+            }
+        }
+        String downloadDirPath = resourceUtil.getunzipPath()+ modelName;
+        ZipDir.createZip(downloadDirPath,downloadDirPath+".zip");
+        return downloadDirPath + ".zip";
+    }
+
+    @Override
+    public List<Attachment> getInsertIcon() {
+        return this.attachmentMapper.getInsertIcon();
+    }
+
+    @Override
+    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId) {
+        for (Attachment attachmentChild : attachmentFileList) {
+            for (Attachment attachmentParent : attachmentFileList) {
+                if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
+                    attachmentChild.setParentId(attachmentParent.getId());
+                    attachmentChild.setModelId(modelId);
+                    this.attachmentMapper.update(attachmentChild);
+                    continue;
+                }
+            }
+        }
+        for (Attachment attachment : attachmentFileList){
+            if(attachment.getModelId() != modelId){
+                attachment.setModelId(modelId);
+                this.attachmentMapper.update(attachment);
+            }
+        }
+    }
+
+    @Override
+    public List<Attachment> getDeleteAttach() {
+        return this.attachmentMapper.getDeleteAttach();
     }
 
     public void getModelChild(List<Attachment> modelFiles,Long modelId,List<VariableTreeObj> childList){

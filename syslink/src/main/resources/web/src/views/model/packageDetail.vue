@@ -13,6 +13,7 @@
                     <el-header style="height: 40px;">
                         <div style="display: inline-block;">
                             <el-button type="primary" plain   @click="upFloor">上一层</el-button>
+                            <a id="download" style="display: none;" :href = fileUrl download="file" >asdfsd</a>
                         </div>
                         <div style="display: inline-block;">
                             <!--工具条-->
@@ -136,6 +137,7 @@
                 details : [],
                 parentAttach : '',
                 catalog : 0,
+                treeParentNode : '',
                 name : this.$store.state.userInfo.profile.name,
                 filters: {
                     name: ""
@@ -145,6 +147,7 @@
                     pageSize: 10,
                     pageIndex: 1,
                 },
+                fileUrl : '',
             };
         },
     computed: {
@@ -217,21 +220,38 @@
             handleDownload(index, row){
                 console.log(index, row);
                 var _this = this;
-                var url = '/api/model/download?modelId=' + row.index;
+                var url = '/api/model/downloadAttach?attachmentId=' + row.id;
                 _this.$http.post(url)
                     .then(function (response) {
-                        location.href = response.data.data;
+//                        location.href = response.data.data;
+                        _this.fileUrl = response.data.data
+                        document.getElementById('download').setAttribute('href',_this.fileUrl);
+                        document.getElementById('download').click(function(){
+                        })
                     }).catch(function (error) {
                     console.log(error);
                 });
             },
-            getDetailList(data){
+            getDetailList(data,parentNode){
+                this.treeParentNode = parentNode;
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
                 var _this = this;
                 var url = '/api/model/getModelDetail?catalogId=' + data;
                 _this.catalog = data;
                 _this.$http.post(url)
                     .then(function (response) {
-                        _this.repositories = response.data.data;
+                        _this.details = response.data.data;
+                        var filterModel = response.data.data.filter(
+                            (u, index) => {
+                                if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
+                                    return true
+                                }
+                            }
+                        )
+                        _this.repositories = filterModel;
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -298,7 +318,7 @@
                                 }
                             )
                             _this.repositories = filterModel;
-                            this.$refs.setTreeNode.updateNode(this.catalog);
+                            _this.$refs.setTreeNode.updateNode(_this.treeParentNode);
                         })
                         .catch(function (error) {
                             console.log(error)

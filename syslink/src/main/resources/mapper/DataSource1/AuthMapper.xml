@@ -62,6 +62,17 @@
         AND l.role_id=#{roleId}
         WHERE 1=1
     </select>
+    <select id="queryAuthByUid" resultMap="baseResultMap" parameterType="long">
+        SELECT
+        d.auth_id,d.auth_name,d.auth_code,d.create_date,d.description,d.url,d.parent_id,
+        l.auth_id
+        FROM
+        auth as d
+        INNER JOIN user_auth as l
+        ON d.auth_id=l.auth_id
+        AND l.uid=#{uid}
+        WHERE 1=1
+    </select>
 
     <delete id="deleteById" parameterType="INTEGER">
         delete from auth where auth_id=#{id}

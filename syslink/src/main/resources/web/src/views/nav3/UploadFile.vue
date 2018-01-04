@@ -46,7 +46,7 @@
             //解析文件arguments
             analysis(data){
                 if(data[0].isFolder == false && data[0].fileList.length == 0){
-                    this.fileLists.push(data);
+                    this.fileLists.push(data[0]);
                 }
                 if(data[0].isFolder == true){
                     this.fileLists.push(data[0]);

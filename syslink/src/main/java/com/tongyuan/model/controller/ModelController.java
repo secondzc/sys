@@ -84,6 +84,10 @@ public class ModelController extends  BaseController {
     private StatusChangeService statusChangeService;
     @Autowired
     private AttachmentService attachmentService;
+    @Autowired
+    private ModelTypeService modelTypeService;
+	@Autowired
+    private LogService logService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -450,7 +454,7 @@ public class ModelController extends  BaseController {
                     Directory oneDirectory = rootDirectoryList.get(0);
                     getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
                      directoryIdList.add(oneDirectory.getId());
-                     //authService.directoryFilter(directoryIdList,getCurrentUserId(request));
+
                 }
                 for (Long id : directoryIdList) {
                     for (Model model: allModelList) {
@@ -924,8 +928,10 @@ public class ModelController extends  BaseController {
         String realUrl ="";
         try{
             Model model = modelService.queryModelById(modelId);
-            String name = modelUtil.splitName(model.getName());
+//            String name = modelUtil.splitName(model.getName());
 //             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getModelFilePath().substring(7);
+            List<Attachment> attachmentList = attachmentService.getAttachmentsByModelId(modelId);
+             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,model).substring(7);
             }catch(Exception e) {
                 e.printStackTrace();
                 return returnErrorInfo(jo);
@@ -944,7 +950,7 @@ public class ModelController extends  BaseController {
         String realUrl ="";
         try{
             Attachment attachment = attachmentService.queryById(attachmentId);
-             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath() + attachment.getFilePath();
+             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachment.getFilePath();
         }catch(Exception e) {
             e.printStackTrace();
             return returnErrorInfo(jo);
@@ -967,6 +973,9 @@ public class ModelController extends  BaseController {
             Model model = modelService.queryModelById(modelId);
             model.setDeleted(true);
             modelService.update(model);
+            String title = "删除模型";
+            String content = "用户\t"+getUserName()+"\t删除模型\t"+model.getName();
+            logService.addLog(title,content);
         }catch(Exception e) {
             e.printStackTrace();
             jo.put("status","1");
@@ -1184,12 +1193,13 @@ public class ModelController extends  BaseController {
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
         Long fileSize = map.get("file").get(0).getSize();
-        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
+//        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
         String fileName = "";
         byte[] bytes = new byte[0];
-        if (fileNames2.length >= 1) {
-            fileName = fileNames2[0];
-        }
+//        if (fileNames2.length >= 1) {
+//            fileName = fileNames2[0];
+//        }
+        fileName = map.get("file").get(0).getOriginalFilename();
         //相对地址
         String relativePath = "";
         //绝对路径
@@ -1255,11 +1265,24 @@ public class ModelController extends  BaseController {
                                   @RequestParam(value = "scope", required = false) Boolean scope,
                              @RequestBody Map<String,Object> map,
                                   HttpServletRequest request, HttpServletResponse response) {
-        System.out.print("11111");
         JSONObject jo = new JSONObject();
         try {
             GUser user = gUserService.querListByName(name);
-            Long modelId = modelService.addOneModel(user, directoryId, scope, map);
+            long iconUrlId = 0;
+            boolean iconUpdate = (boolean) map.get("showPicture");
+            String modelType = (String) map.get("region");
+            if(iconUpdate){
+                ModelType type = modelTypeService.getByType(modelType);
+                iconUrlId = type.getId();
+            }else{
+                List<Attachment> iconList = attachmentService.getInsertIcon();
+                for (Attachment icon: iconList) {
+                    if(map.get("photoName").equals(icon.getName())){
+                        iconUrlId = icon.getId();
+                    }
+                }
+            }
+            Long modelId = modelService.addOneModel(user, directoryId, scope, map,iconUrlId);
             List<FileJsonArrayDto> fileJsonArrayDtoList = JSONArray.parseArray(map.get("fileLists").toString(), FileJsonArrayDto.class);
             for (FileJsonArrayDto fileJsonDto : fileJsonArrayDtoList) {
                 if (fileJsonDto.getFolder()) {
@@ -1268,21 +1291,20 @@ public class ModelController extends  BaseController {
             }
             //查询刚插入的attachments
             List<Attachment> attachmentFileList = attachmentService.queryNullModelId(modelId);
-            System.out.print("22222222");
-            for (Attachment attachmentChild : attachmentFileList) {
-                for (Attachment attachmentParent : attachmentFileList) {
-                    if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
-                        attachmentChild.setParentId(attachmentParent.getId());
-                        attachmentChild.setModelId(modelId);
-                        attachmentService.update(attachmentChild);
-                        continue;
-                    }
-                }
+            //更新上传文件的modelId和parentId
+            attachmentService.UpdateModelFrame(attachmentFileList,modelId);
+            //删除不必要的文件
+            List<Attachment> deleteFileList = attachmentService.getDeleteAttach();
+            for (Attachment deleteFile: deleteFileList) {
+                attachmentService.delete(deleteFile.getId());
             }
             if (scope) {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                     statusChangeService.updateNextStatus(instanceId, "1");
+                    String title = "上传模型";
+                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name");
+                    logService.addLog(title,content);
                 } catch (SqlNumberException e) {
                     e.printStackTrace();
                 }
@@ -1369,6 +1391,9 @@ public class ModelController extends  BaseController {
         try{
             //模型目录下的文件和文件
             parentAttach = attachmentService.getParentAttach(catalogId);
+            if(parentAttach == null){
+                return returnSuccessInfo(jo);
+            }
             List<Attachment> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
             modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,parentAttach.getId());
             modelDetailDto = attachmentService.transformDtoList(modelDetail);
@@ -1390,7 +1415,13 @@ public class ModelController extends  BaseController {
         try{
             Model model = modelService.queryModelById(CurrentNodeId);
             model.setDirectoryId(SelectedNodeId);
+            Map<String,Object> oldDirectory = directoryService.queryMapById(model.getDirectoryId());
+            Map<String,Object> newDirectory = directoryService.queryMapById(SelectedNodeId);
             modelService.update(model);
+            String title = "移动模型";
+            String content = "用户\t"+getUserName()+"\t将模型\t"+model.getName()+"\t从\t"+oldDirectory.get("name").toString()+"\t移动到\t"+newDirectory.get("name").toString();
+            logService.addLog(title,content);
+
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");

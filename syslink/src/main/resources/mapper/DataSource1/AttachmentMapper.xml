@@ -31,6 +31,9 @@
         create_time = #{createTime},is_floder = #{isFloder}, model_id = #{modelId},temp_relative_path = #{tempRelativePath}
         WHERE id = #{id}
     </update>
+    <delete id="delete">
+        DELETE FROM attachment where id = #{id}
+    </delete>
     <select id="queryListByPath" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT  <include refid="baseColumnList" />
         from attachment
@@ -72,5 +75,20 @@
         SELECT <include refid="baseColumnList" />
         FROM  attachment
         WHERE id = #{attachmentId}
+    </select>
+    <select id="getAttachmentsByModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        where model_id = #{modelId}
+    </select>
+    <select id="getInsertIcon"  resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        FROM  attachment
+        where model_id = -1 and icon_url is NOT NULL
+    </select>
+    <select id="getDeleteAttach" resultType="com.tongyuan.model.domain.Attachment">
+         SELECT *
+        from attachment
+        where model_id = -1
     </select>
 </mapper>
