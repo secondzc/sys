@@ -79,22 +79,7 @@ public class GUserServiceImpl implements GUserService {
 
     @Override
     public LoginedUserModel CreateLoginedUser(GUser user) {
-        // 个人角色
-        //   List<RoleModel> roles = roleService.getAllBySystemIdAndUserId(systemId,
-        //          user.getId());
-        // 个人权限
-        //   Map<String, PermissionValueModel> permissions = getUserPermissions(
-        //          systemId, user.getId(), roles);
-        // 登录情况
-        //      LoginStateModel loginState = new LoginStateModel(loginStateDao.get(
-        //              Loginstate.class, new LoginstateId(user.getId(), systemId)));
 
-//        List<UserAuth> userAuths = userAuthMapper.queryByUid(user.getID());
-//        Set<String> auths = new HashSet<>();
-//        for (UserAuth userAuth : userAuths) {
-//            Auth auth = authMapper.queryById(userAuth.getAuthId());
-//            auths.add(auth.getAuthCode());
-//        }
         List<Auth> userAuths = authMapper.queryAuthByUid(user.getID());
         Set<String> auths = new HashSet<>();
         for (Auth auth : userAuths) {
@@ -111,11 +96,6 @@ public class GUserServiceImpl implements GUserService {
         }
 
         List<String> modeAuths = new ArrayList<>();
-//        List<ModelAuth> modelAuthList = modelAuthMapper.queryByUid(user.getID());
-//        for(ModelAuth modelAuth :modelAuthList)
-//        {
-//            modeAuths.add(modelAuth.getNodeId());
-//        }
         List<Long> directoryAuths = new ArrayList<>();
         List<DirectoryAuth> directoryAuthList = directoryAuthMapper.queryByUid(user.getID());
         for (DirectoryAuth directoryAuth : directoryAuthList) {
@@ -136,9 +116,6 @@ public class GUserServiceImpl implements GUserService {
         loginedUserModel.setModelAuths(modeAuths);
         loginedUserModel.setDirectoryAuths(ttt);
         loginedUserModel.setRoles(roles);
-        //      loginedUserModel.setRoles(roles);
-        //      loginedUserModel.setPermissions(permissions);
-//        loginedUserModel.setLoginState(loginstate);
         return loginedUserModel;
     }
 
@@ -153,7 +130,6 @@ public class GUserServiceImpl implements GUserService {
             Date b = DateUtil.format(a);
             loginstate.setLoginCount(loginstate.getLoginCount() + 1);
             loginstate.setLastLoginIp(loginstate.getNowLoginIp());
-            //   loginstate.setLastLoginDate(loginstate.getNowLoginDate());
             loginstate.setLastLoginDate(b);
             loginstate.setNowLoginIp(loginIp);
             loginstate.setNowLoginDate(DateUtil.getTimestamp());
@@ -177,10 +153,6 @@ public class GUserServiceImpl implements GUserService {
     public boolean addGUser(Map<String, Object> map) {
 
         map.put("lowerName", map.get("name").toString().toLowerCase());
-//        map.put("fullName","");
-
-        //  map.put("email","");
-        //  map.put("passwd","");
         map.put("loginType", 0);
         map.put("loginSource", 0);
         map.put("loginName", "");
@@ -196,24 +168,23 @@ public class GUserServiceImpl implements GUserService {
         map.put("allowGitHook", 0);
         map.put("allowImportLocal", 0);
         map.put("prohibitLogin", 0);
-//
         map.put("useCustomAvatar", 1);
         map.put("numFollowers", 0);
         map.put("numFollowing", 0);
         map.put("numStars", 0);
         map.put("numRepos", 0);
         map.put("description", "");
-//
         map.put("numTeams", 1);
-//
         map.put("numMembers", 1);
         map.put("avatar", "");
         map.put("avatarEmail", "");
         boolean a = this.gUserMapper.add(map);
+
         UserDepart userDepart = new UserDepart();
         userDepart.setUid(Long.parseLong(map.get("id").toString()));
         userDepart.setDepartId(Integer.parseInt(map.get("departId").toString()));
         boolean b = this.userDepartMapper.add(userDepart);
+
         UserRole userRole = new UserRole();
         boolean c = true;
         if (map.get("roleId") != null) {
@@ -274,8 +245,6 @@ public class GUserServiceImpl implements GUserService {
 
     @Override
     public boolean deleteUser(long id) {
-
-
         boolean b = userDepartMapper.deleteByUid(id);
         boolean a = gUserMapper.delete(id);
         return a & b;

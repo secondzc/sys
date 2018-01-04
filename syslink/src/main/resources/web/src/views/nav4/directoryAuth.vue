@@ -57,7 +57,7 @@
         <template slot-scope="scope">
 
        
-   <el-radio-group v-model="scope.row.ttt" :disabled="!scope.row.fff" >
+   <el-radio-group v-model="scope.row.tempMode" :disabled="!scope.row.tempBool" >
     <el-radio :label="1" >可读</el-radio>
     <el-radio :label="2" >读/写</el-radio>
     <el-radio :label="3" >完全</el-radio>
@@ -65,10 +65,10 @@
 
     <el-button-group style="margin-left: 10px;">
          <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
-  <el-button type="primary" size="mini" icon="el-icon-edit" @click="scope.row.fff=!scope.row.fff" :disabled="scope.row.fff"></el-button>
+  <el-button type="primary" size="mini" icon="el-icon-edit" @click="scope.row.tempBool=!scope.row.tempBool" :disabled="scope.row.tempBool"></el-button>
 </el-tooltip>
    <el-tooltip class="item" effect="dark" content="提交" placement="bottom">
-  <el-button type="primary" size="mini" icon="el-icon-upload2" :disabled="!scope.row.fff" @click="editSubmit(scope.$index, scope.row)" ></el-button>
+  <el-button type="primary" size="mini" icon="el-icon-upload2" :disabled="!scope.row.tempBool" @click="editSubmit(scope.$index, scope.row)" ></el-button>
 </el-tooltip>
 </el-button-group>
 
@@ -140,7 +140,7 @@
         <template slot-scope="scope">
 
        
-   <el-radio-group v-model="scope.row.ttt"  >
+   <el-radio-group v-model="scope.row.tempMode"  >
     <el-radio :label="1" >可读</el-radio>
     <el-radio :label="2" >读/写</el-radio>
     <el-radio :label="3" >完全</el-radio>
@@ -310,7 +310,7 @@
        filterTag(value, row) {
         console.log(value);
         console.log(row);
-        return row.ttt === value;
+        return row.tempMode === value;
       },
 
         
@@ -402,13 +402,12 @@
                     {
                       if (c.directoryId== _this.filters1.directoryId)
                       {
-                        a.ttt=c.mode;
+                        a.tempMode=c.mode;
                       }
                     }
-                    a.fff=false;
+                    a.tempBool=false;
                   }
                    console.log(_this.users1);
-                  // console.log(_this.pager.total);
 
                 
           })
@@ -601,7 +600,7 @@
                let c = {uid:'',directoryId:'',mode:''};
                c.uid= a.id;
                c.directoryId= this.filters1.directoryId;
-               c.mode = a.ttt;
+               c.mode = a.tempMode;
                b.push(c);
             }
             console.log(b);
@@ -643,7 +642,7 @@
          para.uid = row.id;
          let node = this.$refs.tree1.getCheckedNodes();
          para.directoryId= this.filters1.directoryId;
-         para.mode=row.ttt;
+         para.mode=row.tempMode;
            this.$http({
             url:'/api/DirectoryAuth/update',
             method:'post',
@@ -668,7 +667,7 @@
             }
            
             // this.getUsers();
-            row.fff=!row.fff;
+            row.tempBool=!row.tempBool;
           });
      
       },

@@ -54,41 +54,18 @@ public class GUserWarpper extends BaseControllerWarpper {
           Collections.reverse(path);
           path.add(Integer.parseInt(depart.get("id").toString()));
           path.remove(0);
-
           map.put("departId",path);
           map.put("departName",depart.get("name"));
 
       }
-//        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
-//        List<Map<String,Object>> modelAuths = new ArrayList<>();
-//        for(DirectoryAuth directoryAuth:directoryAuths)
-//        {
-//            Map<String,Object> directory = directoryMapper.queryMapById(directoryAuth.getDirectoryId());
-//            modelAuths.add(directory);
-//        }
-//
-//        map.put("modelAuth",modelAuths);
+
         List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(uid);
         map.put("modelAuth",modelAuths);
         List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(uid);
         map.put("directoryAuth",directoryAuths);
-
-
-//      map.remove("");
-//      map.remove("");
-//      map.remove("");
-//      map.remove("");
-//      map.remove("");
-        List<UserAuth>userAuths = userAuthMapper.queryByUid(Long.parseLong(map.get("id").toString()));
         List<Auth>auths = new ArrayList<>();
-        for(UserAuth userAuth:userAuths)
-        {
-            Auth auth =  authMapper.queryById(userAuth.getAuthId());
-            auths.add(auth);
-        }
-
-        map.put("auths",auths);
-
+        auths=authMapper.queryAuthByUid(uid);
+         map.put("auths",auths);
         List<UserRole> userRoles = userRoleMapper.query(uid);
         List<Integer>roles = new ArrayList<>();
         for(UserRole userRole : userRoles)
@@ -96,8 +73,8 @@ public class GUserWarpper extends BaseControllerWarpper {
             roles.add(userRole.getRoleId());
         }
         map.put("roles",roles);
-        map.put("ttt",0);
-        map.put("fff",false);
+        map.put("tempMode",0);
+        map.put("tempBool",false);
 
 
     }

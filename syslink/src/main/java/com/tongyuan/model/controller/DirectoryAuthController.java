@@ -30,10 +30,6 @@ public class DirectoryAuthController extends BaseController{
     @Autowired
     DirectoryAuthService directoryAuthService;
 
-
-
-
-
     @RequestMapping(value = "/add",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject add(@RequestBody String para, HttpServletRequest request)
@@ -50,13 +46,11 @@ public class DirectoryAuthController extends BaseController{
                 DirectoryAuth directoryAuth = new DirectoryAuth();
                 directoryAuth.setUid(jsonObject.getLongValue("uid"));
                 directoryAuth.setDirectoryId(jsonObject.getLongValue("directoryId"));
-
                 if(jsonObject.getIntValue("mode")>0)
                 {
                     directoryAuth.setMode(jsonObject.getIntValue("mode"));
                     directoryAuthService.add(directoryAuth);
                 }
-
             }
 
         }
@@ -81,18 +75,13 @@ public class DirectoryAuthController extends BaseController{
     {
         JSONObject jo = new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
-
         List<Map<String,Object>> users = new ArrayList<>();
         long uid = jsonObject.getLongValue("uid");
         long directoryId = jsonObject.getLongValue("directoryId");
         Integer mode = jsonObject.getIntValue("mode");
-
-
         try
         {
-
               directoryAuthService.update(uid,directoryId,mode);
-
         }
         catch (Exception e)
         {
@@ -115,9 +104,6 @@ public class DirectoryAuthController extends BaseController{
     {
         JSONObject jo = new JSONObject();
         JSONArray jsonArray = JSON.parseArray(para);
-
-
-
         try
         {
 
@@ -138,10 +124,7 @@ public class DirectoryAuthController extends BaseController{
         }
         jo.put("flag",true);
         jo.put("msg","删除成功");
-
         return (JSONObject) JSONObject.toJSON(jo);
-
-
     }
 
 
@@ -156,12 +139,9 @@ public class DirectoryAuthController extends BaseController{
         Integer roleId = jsonObject.getIntValue("roleId");
         JSONObject directory = jsonObject.getJSONArray("directoryAuth").getJSONObject(0);
         List<JSONObject>ttt = new UserController().bbb(directory);
-
         try
         {
-
            directoryAuthService.roleAdd(roleId,ttt);
-
         }
         catch (Exception e)
         {
@@ -172,9 +152,6 @@ public class DirectoryAuthController extends BaseController{
         }
         jo.put("flag",true);
         jo.put("msg","添加成功");
-
         return (JSONObject) JSONObject.toJSON(jo);
-
-
     }
 }

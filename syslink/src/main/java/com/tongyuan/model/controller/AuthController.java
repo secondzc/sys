@@ -61,10 +61,8 @@ public class AuthController {
     {
         JSONObject jo = new JSONObject();
         map.put("createDate", DateUtil.getCurrentTime());
-     //   permissionGroup.setCreateDate(DateUtil.getCurrentTime());
         try
         {
-           // permissionService.addGroup(permissionGroup);
             authService.add(map);
         }
         catch (Exception e)
@@ -88,7 +86,6 @@ public class AuthController {
         try
         {
             authService.update(map);
-      //      permissionService.updateGroup(permissionGroup);
         }
         catch (Exception e)
         {
