@@ -3,6 +3,7 @@ package com.tongyuan.model.controller.ReviewController;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.Helper.RequestHelper;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
@@ -121,15 +122,14 @@ public class CheckorController extends BaseController {
     @PostMapping(value="/queryAllByReviewer")
     public void queryAllByReviewer(HttpServletRequest request, HttpServletResponse response){
         Long userId = getUserId();
-        String page = request.getParameter("page");
-        String rows = request.getParameter("rows");
-        String modelName = request.getParameter("modelName");
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("page",page);
-        map.put("rows",rows);
-        map.put("modelName",modelName);
-        //测试用
-        //Long userId = 4L;
+//        String page = request.getParameter("page");
+//        String rows = request.getParameter("rows");
+//        String modelName = request.getParameter("modelName");
+//        Map<String,Object> map = new HashMap<String,Object>();
+//        map.put("page",page);
+//        map.put("rows",rows);
+//        map.put("modelName",modelName);
+        Map<String,Object> map = RequestHelper.createRequestMap(request,"page","rows","modelName");
         map.put("userId",userId);
 
         List<CheckorPage> chekorPages = checkorService.queryAllByReviewer(map);

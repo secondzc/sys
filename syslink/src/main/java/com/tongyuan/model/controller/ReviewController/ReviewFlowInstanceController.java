@@ -9,6 +9,7 @@ import com.tongyuan.model.service.ReviewService.NodeInstanceService;
 import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
 import com.tongyuan.model.service.ReviewService.ReviewModelService;
 import com.tongyuan.model.service.ReviewService.StatusChangeService;
+import com.tongyuan.Helper.RequestHelper;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -126,13 +127,14 @@ public class ReviewFlowInstanceController extends BaseController {
     @RequestMapping(value="/queryByModelName",method = RequestMethod.POST)
     @ResponseBody
     public void queryByModelName(HttpServletRequest request, HttpServletResponse response){
-        String modelName = request.getParameter("modelName");
-        String page = request.getParameter("page");
-        String rows = request.getParameter("rows");
-        Map<String,Object> map =new  HashMap<String,Object>();
-        map.put("page",page);
-        map.put("rows",rows);
-        map.put("modelName",modelName);
+//        String modelName = request.getParameter("modelName");
+//        String page = request.getParameter("page");
+//        String rows = request.getParameter("rows");
+//        Map<String,Object> map =new  HashMap<String,Object>();
+//        map.put("page",page);
+//        map.put("rows",rows);
+//        map.put("modelName",modelName);
+        Map<String,Object> map = RequestHelper.createRequestMap(request,"modelName","page","rows");
         List<Model> reviewModels = reviewModelService.queryByModelName(map);
         PageInfo<Model> pageInfo = new PageInfo<Model>(reviewModels);
         JSONObject jo = new JSONObject();

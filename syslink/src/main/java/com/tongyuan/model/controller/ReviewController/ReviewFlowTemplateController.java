@@ -7,6 +7,7 @@ import com.tongyuan.model.domain.ReviewFlowTemplate;
 import com.tongyuan.model.service.ReviewService.ReviewFlowTemplateService;
 import com.tongyuan.tools.CurdUtil;
 import com.tongyuan.tools.DateUtil;
+import com.tongyuan.Helper.JsonObjectHelper;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,8 +56,8 @@ public class ReviewFlowTemplateController extends BaseController {
         String templateName = request.getParameter("templateName");
         String description = request.getParameter("description");
         String assure = request.getParameter("assure");
-        Long userId = getUserId();
         Boolean defaultTemplate = Boolean.valueOf(request.getParameter("defaultTemplate"));
+        Long userId = getUserId();
         Timestamp timestamp = DateUtil.getCurrentTime();
         //存在的默认模板的id，若之前不存在则为null
         Long existDefault = -1L;
@@ -102,7 +103,8 @@ public class ReviewFlowTemplateController extends BaseController {
      * @return
      */
     @PostMapping ("/queryReviewFlowTemplateByName")
-    public void queryReviewFlowTemplateByName(
+    @ResponseBody
+    public JSONObject queryReviewFlowTemplateByName(
             HttpServletRequest request, HttpServletResponse response) throws  Exception{
         String page = request.getParameter("page"); // 取得当前页数,注意这是jqgrid自身的参数
         String rows = request.getParameter("rows"); // 取得每页显示行数，,注意这是jqgrid自身的参数
@@ -114,12 +116,14 @@ public class ReviewFlowTemplateController extends BaseController {
 
         List<ReviewFlowTemplate> reviewFlowTemplates = reviewFlowTemplateService.queryByName(map);
         PageInfo<ReviewFlowTemplate> pageInfo = new PageInfo<ReviewFlowTemplate>(reviewFlowTemplates);
-        JSONObject jo = new JSONObject();
+        //JSONObject jo = new JSONObject();
         //records 结果 pages总页数  total总个数
-        jo.put("records", reviewFlowTemplates);
-        jo.put("pages", pageInfo.getPages());
-        jo.put("total", pageInfo.getTotal());
-        ServletUtil.createSuccessResponse(200, jo, response);
+        //jo.put("records", reviewFlowTemplates);
+        //jo.put("pages", pageInfo.getPages());
+        //jo.put("total", pageInfo.getTotal());
+        JSONObject jo = JsonObjectHelper.create(reviewFlowTemplates,pageInfo.getPages(),pageInfo.getTotal());
+        return jo;
+        //ServletUtil.createSuccessResponse(200, jo, response);
 
     }
 
