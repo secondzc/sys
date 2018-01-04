@@ -1,9 +1,10 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.ReviewFlowTemplate;
-import com.tongyuan.model.service.ReviewFlowTemplateService;
+import com.tongyuan.model.service.ReviewService.ReviewFlowTemplateService;
 import com.tongyuan.tools.CurdUtil;
 import com.tongyuan.tools.DateUtil;
 import com.tongyuan.tools.ServletUtil;

@@ -1,4 +1,4 @@
-package com.tongyuan.model.service.impl;
+package com.tongyuan.model.service.ReviewImpl;
 
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
@@ -6,7 +6,7 @@ import com.tongyuan.model.dao.DepartMapper;
 import com.tongyuan.model.dao.UserDepartMapper;
 import com.tongyuan.model.domain.ReviewUserNode;
 import com.tongyuan.model.domain.UserDepart;
-import com.tongyuan.model.service.ReviewUserNodeService;
+import com.tongyuan.model.service.ReviewService.ReviewUserNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.tongyuan.model.service;
+package com.tongyuan.model.service.ReviewService;
 
 import com.tongyuan.model.domain.Model;
 

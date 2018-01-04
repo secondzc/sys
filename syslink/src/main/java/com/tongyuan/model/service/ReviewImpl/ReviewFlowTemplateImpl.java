@@ -1,10 +1,10 @@
-package com.tongyuan.model.service.impl;
+package com.tongyuan.model.service.ReviewImpl;
 
 import com.github.pagehelper.PageHelper;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.dao.ReviewFlowTemplateMapper;
 import com.tongyuan.model.domain.ReviewFlowTemplate;
-import com.tongyuan.model.service.ReviewFlowTemplateService;
+import com.tongyuan.model.service.ReviewService.ReviewFlowTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

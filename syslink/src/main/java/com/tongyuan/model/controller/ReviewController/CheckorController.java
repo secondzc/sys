@@ -1,4 +1,4 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -6,8 +6,13 @@ import com.github.pagehelper.PageInfo;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.*;
+import com.tongyuan.model.service.ReviewService.NodeInstanceService;
+import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
+import com.tongyuan.model.service.ReviewService.ReviewModelService;
+import com.tongyuan.model.service.ReviewService.StatusChangeService;
 import com.tongyuan.pageModel.CheckorPage;
 import com.tongyuan.model.domain.ReviewFlowInstance;
 import com.tongyuan.tools.ServletUtil;
@@ -26,7 +31,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/checkor")
-public class CheckorController extends BaseController{
+public class CheckorController extends BaseController {
     @Autowired
     private StatusChangeService statusChangeService;
     @Autowired

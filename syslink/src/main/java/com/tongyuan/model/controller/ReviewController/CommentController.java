@@ -1,8 +1,9 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.tongyuan.model.service.NodeInstanceService;
+import com.tongyuan.model.controller.BaseController;
+import com.tongyuan.model.service.ReviewService.NodeInstanceService;
 import com.tongyuan.pageModel.CommentPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/comment")
-public class CommentController extends BaseController{
+public class CommentController extends BaseController {
     @Autowired
     private NodeInstanceService nodeInstanceService;
 

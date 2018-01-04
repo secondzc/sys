@@ -1,8 +1,9 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.ReviewMsg;
-import com.tongyuan.model.service.ReviewMsgService;
+import com.tongyuan.model.service.ReviewService.ReviewMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/msg")
-public class ReviewMsgController extends BaseController{
+public class ReviewMsgController extends BaseController {
     @Autowired
     private ReviewMsgService reviewMsgService;
 

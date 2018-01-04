@@ -1,17 +1,15 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.domain.ReviewFlowInstance;
-import com.tongyuan.model.domain.ReviewNodeInstance;
-import com.tongyuan.model.domain.enums.ConstReviewFlowInstanceStatus;
-import com.tongyuan.model.service.NodeInstanceService;
-import com.tongyuan.model.service.ReviewFlowInstanceService;
-import com.tongyuan.model.service.ReviewModelService;
-import com.tongyuan.model.service.StatusChangeService;
+import com.tongyuan.model.service.ReviewService.NodeInstanceService;
+import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
+import com.tongyuan.model.service.ReviewService.ReviewModelService;
+import com.tongyuan.model.service.ReviewService.StatusChangeService;
 import com.tongyuan.tools.ServletUtil;
-import jdk.nashorn.internal.scripts.JO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.tongyuan.model.service.impl;
+package com.tongyuan.model.service.ReviewImpl;
 
 import com.github.pagehelper.PageHelper;
 import com.tongyuan.gogs.domain.GUser;

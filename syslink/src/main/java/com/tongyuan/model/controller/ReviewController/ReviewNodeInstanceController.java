@@ -1,8 +1,8 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.pageModel.DetailPage;
-import com.tongyuan.model.service.NodeInstanceService;
+import com.tongyuan.model.service.ReviewService.NodeInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

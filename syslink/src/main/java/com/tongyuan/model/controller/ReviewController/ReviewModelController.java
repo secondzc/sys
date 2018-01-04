@@ -1,9 +1,10 @@
-package com.tongyuan.model.controller;
+package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.Model;
-import com.tongyuan.model.service.ReviewModelService;
+import com.tongyuan.model.service.ReviewService.ReviewModelService;
 import com.tongyuan.tools.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

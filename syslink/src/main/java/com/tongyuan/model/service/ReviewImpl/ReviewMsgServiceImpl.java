@@ -1,8 +1,8 @@
-package com.tongyuan.model.service.impl;
+package com.tongyuan.model.service.ReviewImpl;
 
 import com.tongyuan.model.dao.ReviewMsgMapper;
 import com.tongyuan.model.domain.ReviewMsg;
-import com.tongyuan.model.service.ReviewMsgService;
+import com.tongyuan.model.service.ReviewService.ReviewMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

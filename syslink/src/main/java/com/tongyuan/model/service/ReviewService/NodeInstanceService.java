@@ -1,4 +1,4 @@
-package com.tongyuan.model.service;
+package com.tongyuan.model.service.ReviewService;
 
 import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
