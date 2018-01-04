@@ -138,10 +138,10 @@ public class DirectoryAuthController extends BaseController{
         JSONObject jsonObject = JSON.parseObject(para);
         Integer roleId = jsonObject.getIntValue("roleId");
         JSONObject directory = jsonObject.getJSONArray("directoryAuth").getJSONObject(0);
-        List<JSONObject>ttt = new UserController().bbb(directory);
+        List<JSONObject>directoryAuth = new UserController().getDirectoryAuthList(directory);
         try
         {
-           directoryAuthService.roleAdd(roleId,ttt);
+           directoryAuthService.roleAdd(roleId,directoryAuth);
         }
         catch (Exception e)
         {

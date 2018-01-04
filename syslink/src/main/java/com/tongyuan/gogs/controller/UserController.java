@@ -593,7 +593,7 @@ public class UserController extends BaseController {
         JSONArray uids = jsonObject.getJSONArray("uids");
         JSONArray directoryIds = jsonObject.getJSONArray("directoryIds");
         JSONObject directory = jsonObject.getJSONArray("directoryAuth").getJSONObject(0);
-        List<JSONObject>ttt = bbb(directory);
+        List<JSONObject>ttt = getDirectoryAuthList(directory);
 
         if(uids.size()>0)
         {
@@ -641,24 +641,24 @@ public class UserController extends BaseController {
 
 
 
-    public List<JSONObject> bbb(JSONObject t)
+    public List<JSONObject> getDirectoryAuthList(JSONObject directory)
     {
-        List<JSONObject> ttt = new ArrayList<>();
-        ttt.add(t);
-        if(t.getJSONArray("children")!=null)
+        List<JSONObject> directoryAuth = new ArrayList<>();
+        directoryAuth.add(directory);
+        if(directory.getJSONArray("children")!=null)
         {
-            JSONArray c = t.getJSONArray("children");
+            JSONArray c = directory.getJSONArray("children");
             if(c.size()>0)
             {
                 for(int i=0;i<c.size();i++)
                 {
-                    ttt.addAll(bbb(c.getJSONObject(i)));
+                    directoryAuth.addAll(getDirectoryAuthList(c.getJSONObject(i)));
                     ;
                 }
             }
         }
 
-        return ttt;
+        return directoryAuth;
     }
 
 

@@ -73,8 +73,8 @@ public class GUserWarpper extends BaseControllerWarpper {
             roles.add(userRole.getRoleId());
         }
         map.put("roles",roles);
-        map.put("tempMode",0);
-        map.put("tempBool",false);
+//        map.put("tempMode",0);
+//        map.put("tempBool",false);
 
 
     }

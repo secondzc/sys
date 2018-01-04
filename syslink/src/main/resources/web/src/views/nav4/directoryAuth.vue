@@ -392,21 +392,32 @@
             url:'/api/user/list1',
             data:para})
               .then(function (response) {
-                  _this.users1 = response.data.users;
+                  // _this.users1 = response.data.users;
                   _this.pager1.total=response.data.total;
 
-                  for(var a of _this.users1)
+
+                  for(let i = 0 ; i<response.data.users.length;i++)
                   {
-                    let b = a.directoryAuth;
-                    for(var c of b)
+                      let b =  response.data.users[i].directoryAuth;
+                       for(var c of b)
                     {
                       if (c.directoryId== _this.filters1.directoryId)
                       {
-                        a.tempMode=c.mode;
+                        // a.tempMode=c.mode;
+                       response.data.users[i]  = Object.assign({},response.data.users[i] ,{
+                      tempMode : c.mode
+                    });
                       }
                     }
-                    a.tempBool=false;
+
+                    response.data.users[i]  = Object.assign({},response.data.users[i] ,{
+                      tempBool : false
+                    });
                   }
+                  _this.users1 = response.data.users;
+
+
+                 
                    console.log(_this.users1);
 
                 
