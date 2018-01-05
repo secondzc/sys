@@ -51,10 +51,11 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
         return reviewFlowInstanceMapper.deleteByInstanceIds(instanceIds);
     };
 
+    //返回修改的数目，返回1修改成功，返回0修改失败。map的key为status和instanceId
     @Override
     public int setStatus(Map<String,Object> map){
         return reviewFlowInstanceMapper.setStatus(map);
-    }; //返回修改的数目，返回1修改成功，返回0修改失败。map的key为status和instanceId
+    };
 
     @Override
     public List<ReviewFlowInstance> queryByNameAndStatus(Map<String,Object> map){
@@ -73,7 +74,7 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
     }
 
     /**
-     * 开始审签流程
+     * 开始审签流程(还未激活第一个节点）
      * 返回的是开始的流程的id
      * @param modelId
      */
@@ -130,9 +131,9 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
         reviewFlowInstance.setTemplateId(templateId);
         reviewFlowInstance.setCreateTime(timestamp);
         reviewFlowInstance.setLastUpdateTime(timestamp);
-        reviewFlowInstance.setStatus(new Byte("1"));
+        reviewFlowInstance.setStatus(ConstReviewFlowInstanceStatus.INUSE);
 
-        int index =  reviewFlowInstanceService.add(reviewFlowInstance);
+        reviewFlowInstanceService.add(reviewFlowInstance);
         Long instanceId = reviewFlowInstance.getInstanceId();
         return instanceId;
     }
@@ -140,8 +141,8 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
     /**
      * 填充节点实例表
      */
-    public void CompleteNodeInstance(Long iinstanceId) throws SqlNumberException{
-        Long instanceId = iinstanceId;
+    public void CompleteNodeInstance(Long instanceId) throws SqlNumberException{
+        //Long instanceId = iinstanceId;
         //得到默认模板的templateId
         ReviewFlowTemplate reviewFlowTemplate = reviewFlowTemplateService.getTemplateByDefault();
         Long templateId = reviewFlowTemplate.getTemplateId();
