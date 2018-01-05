@@ -3,6 +3,7 @@ package com.tongyuan.model.controller.ReviewController;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.pagehelper.PageInfo;
+import com.tongyuan.Helper.JsonObjectHelper;
 import com.tongyuan.Helper.RequestHelper;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
@@ -52,43 +53,45 @@ public class CheckorController extends BaseController {
     }
 
     @PostMapping(value="/agree")
-    public void agree(HttpServletRequest request, HttpServletResponse response) throws SqlNumberException{
+    @ResponseBody
+    public JSONObject agree(HttpServletRequest request, HttpServletResponse response) throws SqlNumberException{
         Long id = Long.valueOf(request.getParameter("id"));
         statusChangeService.agree(id);
 
-        JSONObject result = new JSONObject();
-        result.put("message","操作成功!");
-        result.put("flag",true);
-        ServletUtil.createSuccessResponse(200,result,response);
+        return JsonObjectHelper.create("操作成功！");
     }
 
     @PostMapping(value="/disagree")
-    public void disagree(HttpServletRequest request, HttpServletResponse response){
+    @ResponseBody
+    public JSONObject disagree(HttpServletRequest request, HttpServletResponse response){
         Long id = Long.valueOf(request.getParameter("id"));
         statusChangeService.disagree(id);
 
-        JSONObject result = new JSONObject();
-        result.put("message","操作成功!");
-        result.put("flag",true);
-        ServletUtil.createSuccessResponse(200,result,response);
+        return JsonObjectHelper.create("操作成功！");
     }
 
     //展示给审签者的review_node_instance列表
     @PostMapping(value="/queryByReviewer")
-    public void queryByReviewer(HttpServletRequest request, HttpServletResponse response){
-        Long userId = getUserId();
-        String page = request.getParameter("page");
-        String rows = request.getParameter("rows");
-        String modelName = request.getParameter("modelName");
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("page",page);
-        map.put("rows",rows);
-        map.put("modelName",modelName);
-        //测试用
-        //Long userId = 4L;
-        map.put("userId",userId);
+    public void queryTodoByReviewer(HttpServletRequest request, HttpServletResponse response){
+        queryByReviewer(request,response,false);
+    }
 
-        List<CheckorPage> chekorPages = checkorService.queryByReviewer(map);
+    //于上面queryByReviewer方法的区别是，这个方法是查看所有的记录，包括历史记录
+    @PostMapping(value="/queryAllByReviewer")
+    public void queryAllByReviewer(HttpServletRequest request, HttpServletResponse response){
+        queryByReviewer(request,response,true);
+    }
+
+    public void queryByReviewer(HttpServletRequest request, HttpServletResponse response,Boolean isAll){
+        Long userId = getUserId();
+        Map<String,Object> map = RequestHelper.createRequestMap(request,"page","rows","modelName");
+        map.put("userId",userId);
+        List<CheckorPage> chekorPages = new ArrayList<>();
+        if(isAll){
+            chekorPages = checkorService.queryAllByReviewer(map);
+        }else{
+            chekorPages = checkorService.queryByReviewer(map);
+        }
         PageInfo<CheckorPage> pageInfo = new PageInfo<>(chekorPages);
         JSONObject jo = new JSONObject();
         jo.put("records", chekorPages);
@@ -96,6 +99,7 @@ public class CheckorController extends BaseController {
         jo.put("total", pageInfo.getTotal());
         ServletUtil.createSuccessResponse(200, jo, response);
     }
+
 
     //点击详细信息，可查看审签实例对应的模型信息
     @PostMapping(value="/showModelDetails")
@@ -113,65 +117,38 @@ public class CheckorController extends BaseController {
         js.put("reviewModel",reviewModel);
         js.put("userName",userName);
         js.put("flag",true);
-        //ServletUtil.createSuccessResponse(200,js,response);
         String joString = JSONObject.toJSONStringWithDateFormat(js,"yyyy-MM-dd HH:mm:ss", SerializerFeature.PrettyFormat);
         return JSONObject.parseObject(joString);
     }
 
-    //于上面queryByReviewer方法的区别是，这个方法是查看所有的记录，包括历史记录
-    @PostMapping(value="/queryAllByReviewer")
-    public void queryAllByReviewer(HttpServletRequest request, HttpServletResponse response){
-        Long userId = getUserId();
-//        String page = request.getParameter("page");
-//        String rows = request.getParameter("rows");
-//        String modelName = request.getParameter("modelName");
-//        Map<String,Object> map = new HashMap<String,Object>();
-//        map.put("page",page);
-//        map.put("rows",rows);
-//        map.put("modelName",modelName);
-        Map<String,Object> map = RequestHelper.createRequestMap(request,"page","rows","modelName");
-        map.put("userId",userId);
 
-        List<CheckorPage> chekorPages = checkorService.queryAllByReviewer(map);
-        PageInfo<CheckorPage> pageInfo = new PageInfo<>(chekorPages);
-        JSONObject jo = new JSONObject();
-        jo.put("records", chekorPages);
-        jo.put("pages", pageInfo.getPages());
-        jo.put("total", pageInfo.getTotal());
-        ServletUtil.createSuccessResponse(200, jo, response);
-    }
 
-    @PostMapping("/disagreeWithComment")
-    @ResponseBody
-    public JSONObject disagreeWithComment(HttpServletRequest request)throws NumberFormatException{
+    public JSONObject handleComment(HttpServletRequest request,Boolean isAgree) throws SqlNumberException {
         Long id = Long.valueOf(request.getParameter("id"));
         String comment = request.getParameter("comment");
-        statusChangeService.disagree(id);
+        if(isAgree){
+            statusChangeService.agree(id);
+        }else{
+            statusChangeService.disagree(id);
+        }
         Map<String,Object> commentMap = new HashMap<>();
         commentMap.put("id",id);
         commentMap.put("comment",comment);
         nodeInstanceService.updateComment(commentMap);
 
-        JSONObject result = new JSONObject();
-        result.put("message","操作成功!");
-        result.put("flag",true);
-        return result;
+        return JsonObjectHelper.create("操作成功!");
+    }
+
+
+    @PostMapping("/disagreeWithComment")
+    @ResponseBody
+    public JSONObject disagreeWithComment(HttpServletRequest request) throws SqlNumberException {
+        return handleComment(request,false);
     }
 
     @PostMapping("/agreeWithComment")
     @ResponseBody
-    public JSONObject agreeWithComment(HttpServletRequest request) throws NumberFormatException,SqlNumberException{
-        Long id = Long.valueOf(request.getParameter("id"));
-        String comment = request.getParameter("comment");
-        statusChangeService.agree(id);
-        Map<String,Object> commentMap = new HashMap<>();
-        commentMap.put("id",id);
-        commentMap.put("comment",comment);
-        nodeInstanceService.updateComment(commentMap);
-
-        JSONObject result = new JSONObject();
-        result.put("message","操作成功!");
-        result.put("flag",true);
-        return result;
+    public JSONObject agreeWithComment(HttpServletRequest request) throws SqlNumberException{
+        return handleComment(request,true);
     }
 }
