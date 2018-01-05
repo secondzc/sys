@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.model.dao.ReviewFlowInstanceMapper;
 import com.tongyuan.model.domain.*;
+import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.domain.enums.ConstReviewFlowInstanceStatus;
 import com.tongyuan.model.service.ReviewService.*;
 import com.tongyuan.tools.DateUtil;
@@ -158,7 +159,7 @@ public class ReviewFlowInstanceImpl implements ReviewFlowInstanceService {
             Timestamp timestamp = DateUtil.getCurrentTime();
             reviewNodeInstance.setCreateTime(timestamp);
             reviewNodeInstance.setLastUpdateTime(timestamp);
-            reviewNodeInstance.setStatus(new Byte("1"));
+            reviewNodeInstance.setStatus(new Byte(ConstNodeInstanceStatus.NOT_ACTIVE));
             //向数据库中添加一条reviwNodeInstance
             nodeInstanceService.add(reviewNodeInstance);
         }

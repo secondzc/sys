@@ -14,6 +14,7 @@ import com.tongyuan.gogs.service.WatchService;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.domain.*;
+import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.enums.VariableType;
 import com.tongyuan.model.service.*;
@@ -1035,7 +1036,7 @@ public class ModelController extends  BaseController {
         this.getCAEVariable(xmlMap,type,modelId);
         try {
             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            statusChangeService.updateNextStatus(instanceId, "1");
+            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
         } catch (SqlNumberException e) {
             e.printStackTrace();
         }
@@ -1064,7 +1065,7 @@ public class ModelController extends  BaseController {
         this.getCAEVariable(xmlMap,type,modelId);
         try {
             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            statusChangeService.updateNextStatus(instanceId, "1");
+            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
         } catch (SqlNumberException e) {
             e.printStackTrace();
         }
@@ -1302,7 +1303,7 @@ public class ModelController extends  BaseController {
             if (scope) {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                    statusChangeService.updateNextStatus(instanceId, "1");
+                    statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
                     String title = "上传模型";
                     String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name");
                     logService.addLog(title,content);

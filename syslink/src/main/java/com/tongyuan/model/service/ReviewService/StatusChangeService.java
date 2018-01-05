@@ -9,5 +9,5 @@ import com.tongyuan.exception.SqlNumberException;
 public interface StatusChangeService {
     void agree(Long id) throws SqlNumberException;
     void disagree(Long id);
-    void updateNextStatus(Long instanceId, String sequence) throws SqlNumberException;
+    Boolean updateStatus(Long instanceId,String sequence,Byte newStatus) throws SqlNumberException;
 }

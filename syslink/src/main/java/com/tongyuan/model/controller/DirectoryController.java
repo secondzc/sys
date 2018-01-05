@@ -9,6 +9,7 @@ import com.tongyuan.gogs.domain.Repository;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.model.domain.*;
+import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.*;
 import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
@@ -745,7 +746,7 @@ public class DirectoryController extends BaseController{
             if (scope) {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                    statusChangeService.updateNextStatus(instanceId, "1");
+                    statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
                 } catch (SqlNumberException e) {
                     e.printStackTrace();
                 }
@@ -764,7 +765,7 @@ public class DirectoryController extends BaseController{
                     if (scope) {
                         try {
                             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                            statusChangeService.updateNextStatus(instanceId, "1");
+                            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
                         } catch (SqlNumberException e) {
                             e.printStackTrace();
                         }
@@ -817,7 +818,7 @@ public class DirectoryController extends BaseController{
         //下面两行都有异常要抛出
         try {
             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            statusChangeService.updateNextStatus(instanceId, "1");
+            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
         } catch (SqlNumberException e) {
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.tongyuan.model.controller.BaseController;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.domain.ReviewFlowInstance;
+import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.service.ReviewService.NodeInstanceService;
 import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
 import com.tongyuan.model.service.ReviewService.ReviewModelService;
@@ -67,7 +68,7 @@ public class ReviewFlowInstanceController extends BaseController {
         Long modelId = Long.valueOf(request.getParameter("modelId"));
         Long instanceId = reviewFlowInstanceService.startInstance(modelId);
         //将nodeInstance表中的第一个节点标志位从1变为2
-        statusChangeService.updateNextStatus(instanceId,"1");
+        statusChangeService.updateStatus(instanceId,"1", ConstNodeInstanceStatus.ACTIVE);
         JSONObject jo = new JSONObject();
         jo.put("message","新增审签流程成功！");
         jo.put("flag",true);
