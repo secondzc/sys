@@ -1,6 +1,7 @@
 package com.tongyuan.model.service;
 
 import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.domain.Model;
 
 import java.util.List;

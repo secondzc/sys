@@ -56,6 +56,17 @@ public class Variable {
     //针对其他模型，是否为输入变量，是为1，不是为0
     private int IsVariable;
 
+    //父类名称
+    private String parentName;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
     public int getIsVariable() {
         return IsVariable;
     }

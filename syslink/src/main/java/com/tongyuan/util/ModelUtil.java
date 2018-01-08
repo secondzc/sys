@@ -33,6 +33,20 @@ public class ModelUtil {
         }
     }
 
+    /**
+     * 获取文件的后缀
+     * @param name 文件名
+     * @return 后缀
+     */
+    public static String getFileExt(String name){
+        String splitName[] = name.split("\\.");
+        if (splitName.length > 1) {
+            return splitName[splitName.length - 1];
+        } else {
+            return "";
+        }
+    }
+
     //获取模型的父类名
 
     /**

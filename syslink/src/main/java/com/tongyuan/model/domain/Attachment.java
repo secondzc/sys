@@ -51,6 +51,17 @@ public class Attachment {
     @Column
     private String tempRelativePath;
 
+    //模型名称
+    private String modelName;
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
     public long getId() {
         return id;
     }

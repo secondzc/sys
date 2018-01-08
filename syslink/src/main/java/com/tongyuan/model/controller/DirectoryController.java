@@ -131,10 +131,10 @@ public class DirectoryController extends BaseController{
         try {
             //获取当前的路径
             //  String currentPath=parentF.getAbsolutePath().replace('\\', '/');
-            String relativePath = parentF.getAbsolutePath().replace('\\', '/');
+            String AbsolutePath = parentF.getAbsolutePath().replace('\\', '/')+"/";
             String unzipPath = ResourceUtil.getFileDriectory();
             //获取实际路径
-            String currentPath = relativePath.substring(unzipPath.length(), relativePath.length());
+            String currentPath = AbsolutePath.substring(unzipPath.length(), AbsolutePath.length());
             //TODO 文件删除
             Attachment directory = new Attachment();
             directory.setName(parentF.getName());
@@ -142,18 +142,22 @@ public class DirectoryController extends BaseController{
             directory.setCreateTime(DateUtil.getTimestamp());
 
             //如果当前的路径就是根目录
-            if (currentPath.equals(rootPath)) {
-                // directory.setParentId();
+            if (AbsolutePath.equals(rootPath)) {
+                 directory.setParentId(0);
+                 directory.setFilePath(currentPath);
             } else {
                 //吧父目录id插入到子目录表当中
                 //获取父目录地址
                 String parentPath = parentF.getParent().replace('\\', '/');
+                String parentAbsolutePath = parentPath.substring(unzipPath.length(), parentPath.length())+"/";
                 //创建一个父类目录对象
                 //TODO 文件删除
                 Attachment parentDirectory = new Attachment();
-                Attachment directoryParent = attachmentService.queryListByPath(parentPath);
+                Attachment directoryParent = attachmentService.queryListByPath(parentAbsolutePath);
                 directory.setParentId(directoryParent.getId());
+                directory.setFilePath(currentPath);
             }
+            directory.setModelId(-1);
             attachmentService.add(directory);
             result = true;
         } catch (Exception e) {
@@ -244,7 +248,7 @@ public class DirectoryController extends BaseController{
             e.printStackTrace();
         }
         //查找到项目所在的位置
-        Attachment directory = attachmentService.queryListByPath(fileName);
+        Attachment directory = attachmentService.queryListByPath(modelDir+fileName+"/");
         //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
         //文件所在位置
         String fileXmlPath = directory.getFilePath();
@@ -252,7 +256,7 @@ public class DirectoryController extends BaseController{
         String xmlPath = "";
         //获取cae模型xml所在职位
         String caePath = "";
-        xmlPath = resourceUtil.getXmlPath(fileXmlPath, xmlPath);
+        xmlPath = resourceUtil.getXmlPath(resourceUtil.getunzipPath()+fileXmlPath, xmlPath);
         //对xml进行解析,遍历xml文件下所有文件
         if (StringUtil.isNull(xmlPath)) {
             //       result = false;

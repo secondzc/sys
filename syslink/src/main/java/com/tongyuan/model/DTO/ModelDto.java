@@ -1,100 +1,64 @@
-package com.tongyuan.model.domain;
+package com.tongyuan.model.DTO;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.sql.Timestamp;
-import java.util.Date;
-
 
 /**
- * 模型基本表
- * Created by Xieyx on 2017-6-17.
+ * Created by Administrator on 2018-1-5.
  */
-@Entity
-public class Model {
-    @Id
-    @GeneratedValue
-    @Column(name = "id", unique = true, nullable = false)
-    //目录ID
+public class ModelDto {
     private long id;
 
-    @Column(name = "parentId")
     //父类目录ID
     private long parentId;
 
-    @Column(name = "name", length = 128)
     //模型名称
     private String name;
 
-    @Column(name = "classes", nullable = false, length = 32)
     //模型受限类型
     private String classes;
 
-    @Column(name = "type", length = 32)
     //模型类型
     private String type;
 
-    @Column(name = "directoryId")
     //模型目录ID
     private long directoryId;
 
-    @Column(name = "discription", length = 256)
     //模型描述
     private String discription;
 
-    @Column(name = "Import", length = 128)
     //导入包名
     private String Import;
 
-    @Column(name = "Extends", length = 128)
     //基类名
     private String Extends;
 
-    @Column
     //删除标记为
     private Boolean isDeleted;
 
-    @Column(name = "userId" ,nullable = false)
     //作者Id
     private long userId;
 
-    @Column
     //创建时间
     private Timestamp createTime;
 
-    @Column
     //最后修改时间
     private Timestamp lastUpdateTime;
 
-    @Column( nullable = false)
     //是否为公共的模型 0；非公共的
     private Boolean scope;
 
-    @Column
     //icon文件id
     private long iconFileId;
-    @Column
     //diagram文件id
     private long diagramFileId;
-    @Column
     //info文件id
     private long infoFileId;
 
     //modeltext信息（.mo文件）
-    @Column
     private String modelText;
+
     //iconUrl
     private String iconUrl;
-
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
 
     public long getId() {
         return id;
@@ -238,5 +202,13 @@ public class Model {
 
     public void setModelText(String modelText) {
         this.modelText = modelText;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 }

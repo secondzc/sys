@@ -1,5 +1,6 @@
 package com.tongyuan.model.dao;
 
+import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.domain.Model;
 import org.apache.ibatis.annotations.Mapper;
 

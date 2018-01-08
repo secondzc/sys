@@ -7,6 +7,7 @@ import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.AttachmentService;
 import com.tongyuan.pageModel.VariableTreeObj;
+import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -169,6 +170,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachmentDto.setParentId(attachment.getParentId());
         attachmentDto.setModelId(attachment.getModelId());
         attachmentDto.setCreateTime(DateUtil.format(attachment.getCreateTime(),"yyyy-MM-dd"));
+        attachmentDto.setModelName(attachment.getModelName());
         return attachmentDto;
     }
 
@@ -195,7 +197,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     public void addFileOfModel(String fileName, String filePath, Long fileSize, String tempRelativePath) {
         Attachment attachment = new Attachment();
         attachment.setName(fileName);
-        attachment.setExt(ModelUtil.splitName(fileName));
+        attachment.setExt(ModelUtil.getFileExt(fileName));
         attachment.setFloder(false);
         attachment.setFilePath(filePath);
         attachment.setCreateTime(DateUtil.getTimestamp());
@@ -256,11 +258,13 @@ public class AttachmentServiceImpl implements AttachmentService {
     public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId) {
         for (Attachment attachmentChild : attachmentFileList) {
             for (Attachment attachmentParent : attachmentFileList) {
-                if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
-                    attachmentChild.setParentId(attachmentParent.getId());
-                    attachmentChild.setModelId(modelId);
-                    this.attachmentMapper.update(attachmentChild);
-                    continue;
+                if(!StringUtil.isNull(attachmentChild.getTempRelativePath()) && !StringUtil.isNull(attachmentParent.getTempRelativePath())) {
+                    if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
+                        attachmentChild.setParentId(attachmentParent.getId());
+                        attachmentChild.setModelId(modelId);
+                        this.attachmentMapper.update(attachmentChild);
+                        continue;
+                    }
                 }
             }
         }

@@ -25,6 +25,8 @@ public class AttachmentDto {
     private long parentId;
     //模型id
     private long modelId;
+    //模型名称
+    private String modelName;
 
     public long getId() {
         return id;
@@ -112,5 +114,13 @@ public class AttachmentDto {
 
     public void setModelId(long modelId) {
         this.modelId = modelId;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 }

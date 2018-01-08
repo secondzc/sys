@@ -260,7 +260,7 @@ public class ResourceUtil {
         String renametaskName = getNowTime();
         //输出文件的路径
         String outputDirectory = getunzipPath() + userName + "/"
-                + renametaskName + "/" + fileName;
+                + renametaskName + "/";
 //        String outputDirectory = getunzipPath() + userName + "/"
 //                + renametaskName ;
         try {

@@ -3,6 +3,7 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.gogs.controller.RepositoryController;
+import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.domain.Component;
 import com.tongyuan.model.domain.Directory;
 import com.tongyuan.model.domain.Model;
@@ -122,7 +123,7 @@ public class VariableController {
     /*
     *获取这个package下的所有model
      */
-     public void getSearchModel(Long modelId,List<Model> allModel,List<VariableTreeObj> modelTreeList,List<VariableTreeObj> modelList){
+     public void getSearchModel(Long modelId, List<Model> allModel, List<VariableTreeObj> modelTreeList, List<VariableTreeObj> modelList){
 
          for(int i=0; i<allModel.size(); i++){
              if(allModel.get(i).getParentId() == modelId) {

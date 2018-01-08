@@ -746,7 +746,7 @@ public class ModelController extends  BaseController {
             //判断这个组件是否需要插入到数据库
             doSet(xmlData,variable);
 //          int variableAdd = variableService.add(variable);
-//           variableName.put(variable.getParentName(), (long) -1);
+           variableName.put(variable.getParentName(), (long) -1);
             for (Map.Entry<String,Long> varName : variableName.entrySet()) {
                 String variableArr[] = varName.getKey().split("\\;");
                 //用来比较的变量父类名
@@ -822,9 +822,9 @@ public class ModelController extends  BaseController {
                 variable.setIsParam(0);
             }
         }
-//        if (xmlData.get("parentName") != null) {
-//            variable.setParentName((String) xmlData.get("parentName"));
-//        }
+        if (xmlData.get("parentName") != null) {
+            variable.setParentName((String) xmlData.get("parentName"));
+        }
         variable.setCreateTime(new Date());
     }
 
@@ -837,10 +837,6 @@ public class ModelController extends  BaseController {
             type = decideType(map.get("component"), type);
             if("Map".equals(type)){
                 analysisComponentVar(map, model, compName, variableId);
-//               Map<String,Object> stringObjectMap = (Map<String, Object>) map.get("componentVar");
-//               if(stringObjectMap.get("parentName") != null){
-//                   analysis(stringObjectMap, model, compName, variableId);
-//               }
             }
             if ("List".equals(type)) {
                 componentList = (List<HashMap<String, Object>>) map.get("component");
@@ -1168,9 +1164,9 @@ public class ModelController extends  BaseController {
 //        modelWeb.setTextInfo(reviewOfModel.get(i).getTextInfo());
         modelWeb.setDirectoryId(reviewOfModel.get(i).getDirectoryId());
         modelWeb.setType(reviewOfModel.get(i).getType());
-//        if(reviewOfModel.get(i).getIconSvgPath() != null && reviewOfModel.get(i).getIconSvgPath() != ""){
-//            modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+reviewOfModel.get(i).getIconSvgPath().substring(7));
-//        }
+        if(!StringUtil.isNull(reviewOfModel.get(i).getIconUrl())){
+            modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+resourceUtil.getMappedPackage()+resourceUtil.getunzipPath().substring(7)+reviewOfModel.get(i).getIconUrl());
+        }
         modelWeb.setUploadTime(reviewOfModel.get(i).getCreateTime().getTime());
         modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
         if(reviewOfModel.get(i).getLastUpdateTime() != null){
