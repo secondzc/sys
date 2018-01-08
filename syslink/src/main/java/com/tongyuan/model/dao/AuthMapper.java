@@ -28,5 +28,7 @@ public interface AuthMapper {
 
     public List<Auth> queryAuthByRoleId(Integer roleId);
 
+    public List<Auth> queryAuthByRoleIds(List<Integer> roleIds);
+
     public List<Auth> queryAuthByUid(long uid);
 }

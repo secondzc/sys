@@ -72,7 +72,36 @@
         <id column="description" property="description" jdbcType="VARCHAR"  />
         <id column="num_teams" property="numTeams" jdbcType="INTEGER"  />
         <id column="num_members" property="numMembers" jdbcType="INTEGER"  />
+        <collection property="auths" javaType="ArrayList" column="id"  select="selectUserAuth"/>
+        <collection property="directoryAuth" javaType="ArrayList" column="id"  select="selectDirectoryAuths"/>
+        <collection property="roles" javaType="ArrayList" column="id"  select="selectUserRole"/>
     </resultMap>
+
+
+    <select id="selectUserRole" resultType="INTEGER">
+        SELECT role_id
+        FROM syslink.user_role
+        WHERE  uid=#{id}
+    </select>
+
+    <select id="selectUserAuth" resultType="map">
+     SELECT
+        d.auth_id,d.auth_name,d.auth_code,d.create_date,d.description,d.url,d.parent_id,
+        l.auth_id
+        FROM
+        syslink.auth as d
+        INNER JOIN syslink.user_auth as l
+        ON d.auth_id=l.auth_id
+        AND l.uid=#{id}
+        WHERE 1=1
+    </select>
+
+
+    <select id="selectDirectoryAuths"  resultType="map" >
+        SELECT directory_id,uid,mode
+        FROM syslink.directory_auth
+        WHERE uid = #{id}
+    </select>
 
 
     <sql id="baseColumnList" >
