@@ -5,10 +5,10 @@
 		<el-col :span="24"  style="padding-bottom: 0px;margin-top: 10px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="模板名"></el-input>
+					<el-input v-model="filters.name" placeholder="模板名" @keyup.enter.native="getTemplates"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" size="small"  v-on:click="getTemplates">查询</el-button>
+					<el-button type="primary" size="small"  v-on:click="getTemplates" >查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" size="small"  @click="handleAdd">新增</el-button>

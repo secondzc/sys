@@ -14,11 +14,7 @@ public interface LogService {
     public boolean add(Log log);
     public boolean addLog(String title,String content);
     public boolean delete(long id);
-    public List<Log> findAllLog();
-
-   public List<Log> query(Map<String,Object> map) ;
-
-   public Page<Log>find (Map<String,Object>map);
+   public Page<Log> query (Map<String,Object>map);
 
 
 }

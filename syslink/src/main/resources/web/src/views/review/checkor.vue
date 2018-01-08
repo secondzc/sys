@@ -5,7 +5,7 @@
 		<el-col :span="24"  style="padding-bottom: 0px;">
 			<el-form :inline="true" >
 				<el-form-item>
-					<el-input v-model="modelName" placeholder="模型名"></el-input>
+					<el-input v-model="modelName" placeholder="模型名" @keyup.enter.native="getDetail"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" size="small" v-on:click="getDetail">查询</el-button>

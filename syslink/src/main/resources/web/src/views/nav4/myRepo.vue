@@ -203,27 +203,7 @@
                 }
       },
      
-       batchRemove: function () {
-        var ids = this.sels.map(item => item.id);
-
-        this.$confirm('确认删除选中记录吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          let para = { ids: ids };
-          this.$http({url:'/api/operationlog/deleteLogs',method:'post',data:para})
-          .then((res) => {
-            this.listLoading = false;
-            //NProgress.done();
-           
-           
-            this.getLogs();
-          });
-        }).catch(() => {
-
-        });
-      }
+      
 
  
     },

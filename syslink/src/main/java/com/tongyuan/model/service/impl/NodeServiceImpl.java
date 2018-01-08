@@ -2,7 +2,7 @@ package com.tongyuan.model.service.impl;
 
 import com.tongyuan.model.dao.ReviewNodeMapper;
 import com.tongyuan.model.domain.ReviewNode;
-import com.tongyuan.model.service.NodeService;
+import com.tongyuan.model.service.ReviewService.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

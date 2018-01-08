@@ -22,7 +22,7 @@
           
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="query" size="small" >查询</el-button>
+          <el-button type="primary" v-on:click="getLogs" size="small" >查询</el-button>
         </el-form-item>
          <el-form-item>
           <el-button type="primary" v-on:click="reset"  size="small" >重置</el-button>
@@ -181,7 +181,7 @@
       },
       reset(){
            this.filters=[];
-           this.query();
+           this.getLogs();
       },
       //获取日志列表
       getLogs() {
@@ -189,7 +189,7 @@
           var _this = this;
             let para = Object.assign({},this.filters,this.pager);
            _this.$http({
-            url:'/api/operationlog/query',
+            url:'/api/log/list',
             method:'POST',
             data:para
 
@@ -203,26 +203,6 @@
               console.log(error);
           });
       },
-      query(){
-          var _this = this;
-            let para = Object.assign({},this.filters,this.pager);
-           _this.$http({
-            url:'/api/operationlog/query',
-            method:'POST',
-            data:para
-
-           })
-              .then((response)=> {
-                  _this.logs = response.data.logs;
-                   _this.pager.total=response.data.total;
-                 // _this.$router.push({path: '/druid2'});
-
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
-      },
-     
        batchRemove: function () {
         var ids = this.sels.map(item => item.id);
 
@@ -232,7 +212,7 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { ids: ids };
-          this.$http({url:'/api/operationlog/deleteLogs',method:'post',data:para})
+          this.$http({url:'/api/log/deleteLogs',method:'post',data:para})
           .then((res) => {
             this.listLoading = false;
             //NProgress.done();

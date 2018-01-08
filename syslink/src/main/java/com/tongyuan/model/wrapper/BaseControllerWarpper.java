@@ -22,13 +22,9 @@ public abstract class BaseControllerWarpper {
     private AuthMapper authMapper =SpringContextHolder.getBean(AuthMapper.class);
 
 
-
-
-
     public List<Map<String,Object>> getPermissionItem(Map<String,Object>map)
     {
-   //    List<Map<String,Object>> list = permissionItemMapper.query(map);
-        List<Map<String,Object>> list = authMapper.getChildren(map);
+         List<Map<String,Object>> list = authMapper.getChildren(map);
        for (Map<String,Object> objectMap : list)
        {
            objectMap.put("createDate",objectMap.get("createDate").toString());
