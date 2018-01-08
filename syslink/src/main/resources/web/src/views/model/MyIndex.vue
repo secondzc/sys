@@ -22,22 +22,59 @@
                       min-width: 200px;">
                          <!--<upload-file ></upload-file>-->
                           <!--<myUpload></myUpload>-->
-                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件<i class="el-icon-upload"></i></el-button>
+                          <!--<el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件<i class="el-icon-upload"></i></el-button>-->
+
+                          <!--<el-dialog-->
+                                  <!--title="上传模型文件"-->
+                                  <!--:visible.sync="file.dialogVisible"-->
+                                  <!--width="30%"-->
+                                  <!--&gt;-->
+                              <!--&lt;!&ndash;<span>这是一段信息</span>&ndash;&gt;-->
+                              <!--<myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></myUpload>-->
+                          <!--</el-dialog>-->
+                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>
+                          <el-dialog
+                                  title="文件列表"
+                                  :visible.sync="packageDetailDialog.SearchDialog"
+                                  width="80%"
+                                  center
+                                  ref="singleDialog"
+                                  @DomReady = "DomReady()"
+                          >
+                              <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
+                          </el-dialog>
+                          <el-dialog
+                                  :title="uploadFileTitle"
+                                  :visible.sync="file.dialogVisible"
+                                  v-if="file.dialogVisible"
+                                  width="80%"
+                                  center
+                          >
+                              <privateUpload @closeDialog="closeDialog"></privateUpload>
+                          </el-dialog>
+                          <el-dialog
+                                  title="模型详细信息"
+                                  :visible.sync="packageDetailDialog.dialogVisible"
+                                  width="80%"
+                                  center
+                                  ref="DetailDialog"
+                                  @DetailReady="DetailReady"
+                          >
+                              <packageDetail ref="packageDetail"></packageDetail>
+                          </el-dialog>
+
 
                           <el-dialog
-                                  title="上传模型文件"
-                                  :visible.sync="file.dialogVisible"
-                                  width="30%"
-                                  >
-                              <!--<span>这是一段信息</span>-->
-                              <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></myUpload>
-                              <!--<span slot="footer" class="dialog-footer">-->
-                              <!--<el-button @click="file.dialogVisible = false">取 消</el-button>-->
-                              <!--<el-button type="primary" @click="file.dialogVisible = false">确 定</el-button>-->
-                              <!--</span>-->
-                            <!--   <div v-if="allowToReviewFlag">是否跳转到审签页?</div>
- 
-                              <el-button type="primary"  @click="toReview" style="margin-left:120px" v-if="allowToReviewFlag">跳转</el-button> -->
+                                  title="移动模型"
+                                  :visible.sync="move.dialogVisible"
+                                  width="60%"
+                                  center
+                          >
+                              <selectDirectory :data="tree" style="min-height: 500px;"  @selectNode="getSelectedNode" ></selectDirectory>
+                              <div slot="footer" class="dialog-footer">
+                                  <el-button @click.native="move.dialogVisible = !move.dialogVisible">取消</el-button>
+                                  <el-button type="primary" @click.native="editSubmit" >提交</el-button>
+                              </div>
                           </el-dialog>
 
                       </div>
@@ -89,21 +126,38 @@
 
                <div style="display: inline-block;height: 50px; overflow: hidden;" id="searchMoudle">
                   <!--<p>aaaa</p>-->
-                  <div style="display: inline-block;">
-                      <!--工具条-->
-                      <!--<el-col :span="24" class="toolbar" >-->
-                      <el-form :inline="true" :model="filters">
-                         
-                          <el-form-item style="margin-top: 5px;margin-left: 10px;">
-                            
-                              <el-input placeholder="模型名称" v-model="filters.name" class="input-with-select">
-  
-                        <el-button slot="append" icon="el-icon-search"  v-on:click="getModel"></el-button>
-                       </el-input>
-                      </el-form-item>
-                      </el-form>
-                      <!--</el-col>-->
-                  </div>
+                   <div v-if="filters.Model" style="display: inline-block;">
+                       <!--工具条-->
+                       <!--<el-col :span="24" class="toolbar" >-->
+                       <el-form :inline="true" :model="filters">
+
+                           <el-form-item style="margin-top: 5px;margin-left: 10px;">
+
+                               <el-input placeholder="模型名称" v-model="filters.name" class="input-with-select">
+
+                                   <el-button slot="append" icon="el-icon-search"  v-on:click="getModel"></el-button>
+                                   <el-button slot="append" icon="el-icon-d-caret"  v-on:click="transformFile"></el-button>
+                               </el-input>
+                           </el-form-item>
+                       </el-form>
+                       <!--</el-col>-->
+                   </div>
+                   <div v-else="filters.Model" style="display: inline-block;">
+                       <!--工具条-->
+                       <!--<el-col :span="24" class="toolbar" >-->
+                       <el-form :inline="true" :model="filters">
+
+                           <el-form-item style="margin-top: 5px;margin-left: 10px;">
+
+                               <el-input placeholder="文件名称" v-model="filters.name" class="input-with-select">
+
+                                   <el-button slot="append" icon="el-icon-search"  v-on:click="seachFiles"></el-button>
+                                   <el-button slot="append" icon="el-icon-d-caret"  v-on:click="transformFile"></el-button>
+                               </el-input>
+                           </el-form-item>
+                       </el-form>
+                       <!--</el-col>-->
+                   </div>
               </div>
 
                 <kz-tree :data="tree" @node-click="hanldeNodeClick" class="left-tree" ></kz-tree>
@@ -205,7 +259,7 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
                                          <el-button type="primary" 
                                      size="small"
-                                       @click="handleEdit(scope.$index, scope.row)" :disabled="!validateCAE(scope.row,scope.$index)">
+                                       @click="handleEdit(scope.$index, scope.row)" >
                                            <i class="iconfont icon-chakan" style="font-size: 12px;"></i>  
                                        </el-button>
                                     </el-tooltip>
@@ -215,6 +269,9 @@
                                                        @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)">
                                                            <i class="iconfont icon-xiazai" style="font-size: 12px;"></i>  
                                                        </el-button>
+                                        </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
+                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
                                         </el-tooltip>
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
@@ -290,7 +347,7 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
-                                    <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="validateCAE(o)"> </i>
+                                    <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)"> </i>
     
                                  </div>
                              
@@ -309,14 +366,14 @@
                                                   
                                                 
                                                
-                                                    <div style="display: inline-block">
+                                                    <div :style="{display: style.watch}">
                                                         <a class="ui basic button" @click="addWatch(item)">
                                                             <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
                                                             <i v-else="o.alreadyWatch == false" class="iconfont icon-quxiaoguanzhu01"  ></i>
                                                             {{o.numberWatch}}
                                                         </a>
                                                     </div>
-                                                    <div style="display:inline-block;">
+                                                    <div :style="{display: style.watch}">
                                                         <a class="ui basic button" @click="addStar(item)">
                                                             <i v-if="o.alreadyStar == true" class="iconfont icon-guanzhu3" ></i>
                                                             <i v-else="o.alreadyStar == false" class="iconfont icon-guanzhu4"  ></i>
@@ -409,14 +466,14 @@
                            
                          
                             <div class="card-column">
-                                <div style="display: inline-block">
+                                <div :style="{display: style.watch}">
                                     <a class="ui basic button" @click="addWatch(o)">
                                     <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
                                     <i v-else="o.alreadyWatch == false" class="iconfont icon-quxiaoguanzhu01"  ></i>
                                         {{o.numberWatch}}
                                     </a>
                                 </div>
-                                <div style="display:inline-block;">
+                                <div :style="{display: style.watch}">
                                     <a class="ui basic button" @click="addStar(o)">
                                       <i v-if="o.alreadyStar == true" class="iconfont icon-guanzhu3" ></i>
                                       <i v-else="o.alreadyStar == false" class="iconfont icon-guanzhu4"  ></i>
@@ -483,9 +540,13 @@
 <script >
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directory.vue';
-//    import uploadFile from  '../nav3/Page6.vue'
-    import myUpload from '../nav3/myUpload.vue'
+    import upload from './Upload.vue'
+    import packageDetail from './packageDetail.vue'
+    import selectDirectory from './selectDirectory.vue'
+    import searchFileList from './SearchFileList.vue'
+    import uploadFile from  '../nav3/Page6.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
+    import privateUpload from './PrivateUpload.vue'
     import sortableList from './sortable-list'
     import { mapState,mapGetters} from 'vuex'
     import {mapActions} from 'vuex'
@@ -494,10 +555,14 @@
     export default {
         components: {
             kzTree,
-//            uploadFile,
-            myUpload,
             breadcrumb,
             sortableList,
+            uploadFile,
+            upload,
+            packageDetail,
+            selectDirectory,
+            searchFileList,
+            privateUpload,
         },
         data() {
             this.__currentNode = null;
@@ -510,7 +575,10 @@
             };
             return {
               toReviewFlag:false,
- 
+                breadcrumbArray:[],
+                uploadFileTitle : '',
+                allowToReviewFlag:false,
+                uploadCheckFlag:false,
                        url: {
                       C: '',
                       U: '',
@@ -564,30 +632,42 @@
                         isBusy: false,
                         align: 'center',
                         repositories: [],
+                        allrepositorie : [],
                           dialog: {
-                  title: '增加分类',
-                  dialogVisible: false,
-                  submiting: false,
-                  form: {
-                    name: '',
-                    id: '',
-                    parent_id: 0
-                  },
-                  rules: {
-                    name: {
-                      required: true,
-                        validator : validateName,
-//                      message: '请输入分类名称',
-                      trigger: 'blur'
-                    }
-                  }
+                          title: '增加分类',
+                          dialogVisible: false,
+                          submiting: false,
+                          form: {
+                            name: '',
+                            id: '',
+                            parent_id: 0
+                            },
+                          rules: {
+                            name: {
+                              required: true,
+                                validator : validateName,
+        //                      message: '请输入分类名称',
+                              trigger: 'blur'
+                            }
+                          }
+                },
+                packageDetailDialog:{
+                    dialogVisible: false,
+                    SearchDialog : false,
+                },
+                move :{
+                    dialogVisible: false,
                 },
                 file:{
                     dialogVisible: false,
                 },
+                SelectedNode : '',
+                CurrentNode : '',
                 name : this.$store.state.userInfo.profile.name,
                 privateDirId : this.$store.getters.privateDirId.data.id,
-
+                style :{
+                    watch : 'inline-block',
+                },
             };
         },
         computed: {
@@ -610,7 +690,7 @@
                 console.log(url);
                 _this.$http.post(url)
                     .then(function (response) {
-//                    _this.repositories = response.data.repositories;
+                        _this.allrepositorie = response.data.repositories;
                         _this.pager.total = response.data.repositories.length;
                         _this.modelTotal = response.data.repositories.length;
                         _this.varLength = _this.variable.length;
@@ -723,6 +803,7 @@
             }
             _this.$http.post(url)
                 .then(function (response) {
+                    _this.allrepositorie = response.data.repositories;
                     var searchModel = response.data.repositories.filter(model => {
                         if (para.name && model.name.indexOf(para.name) == -1) {
                             return false
@@ -785,7 +866,7 @@
         },
         handleCurrent(val) {
             console.log(`当前页: ${val}`);
-            var filterModel = this.repositories.filter(
+            var filterModel = this.allrepositorie.filter(
                 (u, index) => {
                     if (index < val * para.pageSize && index >= para.pageSize * (val - 1)) {
                         return true
@@ -797,7 +878,7 @@
         handleSizeChange(val){
             console.log(`每页 ${val} 条`);
             this.pager.pageSize = val;
-            var filterModel = this.repositories.filter(
+            var filterModel = this.allrepositorie.filter(
                 (u, index) => {
                     if (index < this.pager.pageIndex * val && index >= val * (this.pager.pageIndex - 1)) {
                         return true
@@ -810,7 +891,12 @@
             console.log(index, row);
             this.$store.dispatch('sendModelId', row.index);
             this.$store.dispatch('sendTreeModelId', row.index);
-            this.$router.push({path: '/model/myPackageDiagram'});
+            if(row.type == "Modelica"){
+                this.$router.push({path: '/model/packageDiagram'});
+            }
+            else{
+                this.packageDetailDialog.dialogVisible = true;
+            }
         },
         handleDownload(index, row){
             console.log(index, row);
@@ -1042,6 +1128,9 @@
                     });
                 }
             },
+            uploadFile(){
+                this.file.dialogVisible = true;
+            },
             validateCAE(o){
                 if(o.type == 'Modelica'){
                     return true;
@@ -1052,17 +1141,85 @@
             },
             validateCAEDownload(o){
                 if(o.type == 'Modelica'){
+                    this.style.watch = 'inline-block';
                     return true;
                 }
                 else{
+                    this.style.watch = 'none';
                     return false;
                 }
-            }
+            },
+            uplaodTitle(breadcrumbArray){
+                console.log(breadcrumbArray);
+                this.uploadFileTitle = "上传到:"
+                for(var i=0; i<breadcrumbArray.length;i++){
+                    this.uploadFileTitle += breadcrumbArray[i].name + "/"
+                }
+                this.uploadFileTitle = this.uploadFileTitle.substring(0,this.uploadFileTitle.length-1)
+            },
+            closeDialog(){
+                this.file.dialogVisible =false;
+                this.getModel();
+            },
+            moveModel(index, row){
+                this.move.dialogVisible =true;
+                this.CurrentNode = row;
+            },
+            editSubmit(){
+                var _this = this;
+                var url = '/api/model/moveModel?CurrentNodeId=' + _this.CurrentNode.index+ "&SelectedNodeId=" + _this.SelectedNode
+                _this.$http.post(url)
+                    .then(function (response) {
+                        if (response.data.msg == "ok") {
+                            _this.$message({
+                                message: '移动成功！',
+                                type: 'success',
+                                duration: 2000
+                            });
+                        }
+                    }).catch(function (error) {
+                    _this.$message({
+                        message: '移动失败！',
+                        type: 'error',
+                        duration: 2000
+                    });
+                    console.log(error);
+                });
+            },
+            getSelectedNode(data){
+                this.SelectedNode = data;
+            },
+            transformFile(){
+                this.filters.Model = !this.filters.Model;
+            },
+            seachFiles(){
+                this.packageDetailDialog.SearchDialog =true;
+                this.$refs.singleDialog.$nextTick(function(){
+                    console.log("dom渲染完了");
+                    this.$emit("DomReady")
+                });
+            },
+            DomReady(){
+                this.$refs.getSearchList.getFileList(this.filters.name);
+            },
+            showModel(data){
+                this.packageDetailDialog.SearchDialog =false;
+                this.packageDetailDialog.dialogVisible = true;
+                this.$refs.DetailDialog.$nextTick(function(){
+                    console.log("dom渲染完了");
+                    this.$emit("DetailReady",data)
+                });
+            },
+            DetailReady(data){
+                this.$store.dispatch('sendTreeModelId', data.modelId);
+                this.$refs.packageDetail.showFile(data);
+            },
     },
 
 
         mounted() {
             this.$store.dispatch('sendA',this.$store.getters.privateDirId.data.id);
+            this.$store.dispatch('sendB',this.$store.getters.privateDirId.data.id);
         }
     };
 

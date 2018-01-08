@@ -1,6 +1,6 @@
 <template>
     <section>
-        <el-container  class="main-container" style="min-height: 400px">
+        <el-container  class="main-container" style="min-height: 500px">
 
             <!--<el-aside class="left-aside" style="overflow: hidden">-->
                 <!--<div style="height: 100%">-->
@@ -10,6 +10,7 @@
                 <!--</div>-->
             <!--</el-aside>-->
             <el-main style="height: inherit;overflow-y: hidden">
+                <a id="download" style="display: none;" :href = fileUrl download="file" >asdfsd</a>
                 <!--<el-container style="height: 100%;">-->
                     <!--<el-header style="height: 40px;">-->
                         <!--<div style="display: inline-block;">-->
@@ -55,6 +56,11 @@
 
                         <el-table-column  label="名称"
                                           prop="name"
+                                          min-width= 100 sortable>
+
+                        </el-table-column>
+                        <el-table-column  label="模型"
+                                          prop="modelName"
                                           min-width= 100 sortable>
 
                         </el-table-column>
@@ -150,6 +156,7 @@
                     pageSize: 10,
                     pageIndex: 1,
                 },
+                fileUrl : '',
             };
         },
     computed: {
@@ -224,10 +231,13 @@
             handleDownload(index, row){
                 console.log(index, row);
                 var _this = this;
-                var url = '/api/model/download?modelId=' + row.index;
+                var url = '/api/model/downloadAttach?attachmentId=' + row.id;
                 _this.$http.post(url)
                     .then(function (response) {
-                        location.href = response.data.data;
+                        _this.fileUrl = response.data.data
+                        document.getElementById('download').setAttribute('href',_this.fileUrl);
+                        document.getElementById('download').click(function(){
+                        })
                     }).catch(function (error) {
                     console.log(error);
                 });

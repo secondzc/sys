@@ -1,5 +1,5 @@
 <template>
-        <el-container  class="main-container" style="min-height: 400px">
+        <el-container  class="main-container" style="min-height: 500px">
 
             <el-aside class="left-aside" style="overflow: hidden">
                 <div style="height: 100%">
@@ -8,7 +8,7 @@
                     <modelCatalog @catalog_id="getDetailList"  ref="setTreeNode" style="height: 100%;overflow-y: auto"></modelCatalog>
                 </div>
             </el-aside>
-            <el-main style="height: inherit;overflow-y: hidden">
+            <el-main style="overflow-y: hidden">
                 <el-container style="height: 100%;">
                     <el-header style="height: 40px;">
                         <div style="display: inline-block;">
@@ -344,7 +344,7 @@
                         _this.repositories = response.data.data;
                         for(var i= 0;i < _this.repositories.length;i++){
                             if(data.filePath == _this.repositories[i].filePath){
-                                _this.pager.pageIndex = (i+1) % _this.pager.pageSize;
+                                _this.pager.pageIndex = parseInt((i+1) / _this.pager.pageSize)+1;
                                 currentRow = _this.repositories[i];
                             }
                         }

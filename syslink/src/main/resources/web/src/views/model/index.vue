@@ -33,16 +33,15 @@
                                   @DomReady = "DomReady()"
                           >
                               <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
-                          </el-dialog>
-                          <el-dialog
+                              </el-dialog>
+                              <el-dialog
                                   :title="uploadFileTitle"
-                          :visible.sync="file.dialogVisible"
-                          v-if="file.dialogVisible"
-                          width="80%"
-                          center
-                          >
-                              <upload @closeDialog="closeDialog"></upload>
-
+                                  :visible.sync="file.dialogVisible"
+                                  v-if="file.dialogVisible"
+                                  width="80%"
+                                  center
+                              >
+                                  <upload @closeDialog="closeDialog" @returnToModel="returnToModel"></upload>
 
                           </el-dialog>
                           <el-dialog
@@ -63,30 +62,28 @@
                                   width="60%"
                                   center
                           >
-                              <selectDirectory :data="tree" style="min-height: 400px;"  @selectNode="getSelectedNode" ></selectDirectory>
+                              <selectDirectory :data="tree" style="min-height: 500px;"  @selectNode="getSelectedNode" ></selectDirectory>
                               <div slot="footer" class="dialog-footer">
                                   <el-button @click.native="move.dialogVisible = !move.dialogVisible">取消</el-button>
                                   <el-button type="primary" @click.native="editSubmit" >提交</el-button>
                               </div>
                           </el-dialog>
-                          <!--<el-dialog-->
-                                  <!--title="上传模型文件"-->
-                                  <!--:visible.sync="file.dialogVisible"-->
-                                  <!--v-if="file.dialogVisible"-->
-                                  <!--width="30%"-->
-                                  <!--&gt;-->
-                              <!--&lt;!&ndash;<span>这是一段信息</span>&ndash;&gt;-->
-                              <!--<upload-file  style="text-align: center;" -->
-                              <!--@uploadFileSuccess="uploadFileSuccess"-->
-                               <!--&gt;</upload-file>-->
+                          <el-dialog
+                                  title="上传模型文件"
+                                  :visible.sync="file.modelDialog"
+                                  v-if="file.modelDialog"
+                                  width="30%"
+                                  >
+                              <!--<span>这是一段信息</span>-->
+                              <upload-file  style="text-align: center;"
+                              @uploadFileSuccess="uploadFileSuccess"
+                               ></upload-file>
 
-                                 <!--<span slot="footer" class="dialog-footer">-->
-   <!---->
-               <!--<el-button size="small"  type="primary" :disabled="!uploadCheckFlag"  @click="uploadCheck">确定</el-button>-->
-               <!--</span>-->
-                              <!---->
-                               <!---->
-                          <!--</el-dialog>-->
+                                 <span slot="footer" class="dialog-footer">
+
+                           <el-button size="small"  type="primary" :disabled="!uploadCheckFlag"  @click="uploadCheck">确定</el-button>
+                           </span>
+                          </el-dialog>
 
 
 
@@ -372,14 +369,14 @@
 
 
 
-                                                    <div style="display: inline-block">
+                                                    <div :style="{display: style.watch}">
                                                         <a class="ui basic button" @click="addWatch(item)">
                                                             <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
                                                             <i v-else="o.alreadyWatch == false" class="iconfont icon-quxiaoguanzhu01"  ></i>
                                                             {{o.numberWatch}}
                                                         </a>
                                                     </div>
-                                                    <div style="display:inline-block;">
+                                                    <div :style="{display: style.watch}">
                                                         <a class="ui basic button" @click="addStar(item)">
                                                             <i v-if="o.alreadyStar == true" class="iconfont icon-guanzhu3" ></i>
                                                             <i v-else="o.alreadyStar == false" class="iconfont icon-guanzhu4"  ></i>
@@ -474,14 +471,14 @@
 
 
                             <div class="card-column">
-                                <div style="display: inline-block">
+                                <div :style="{display: style.watch}">
                                     <a class="ui basic button" @click="addWatch(o)">
                                     <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
                                     <i v-else="o.alreadyWatch == false" class="iconfont icon-quxiaoguanzhu01"  ></i>
                                         {{o.numberWatch}}
                                     </a>
                                 </div>
-                                <div style="display:inline-block;">
+                                <div :style="{display: style.watch}">
                                     <a class="ui basic button" @click="addStar(o)">
                                       <i v-if="o.alreadyStar == true" class="iconfont icon-guanzhu3" ></i>
                                       <i v-else="o.alreadyStar == false" class="iconfont icon-guanzhu4"  ></i>
@@ -548,10 +545,10 @@
 <script >
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directoryPublic.vue';
-    import upload from './Upload.vue'
-    import uploadFile from  '../nav3/Page6.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
+    import uploadFile from  '../nav3/Page6.vue'
+    import upload from './Upload.vue'
     import packageDetail from './packageDetail.vue'
     import selectDirectory from './selectDirectory.vue'
     import searchFileList from './SearchFileList.vue'
@@ -564,13 +561,13 @@
         components: {
             ElForm,
             kzTree,
-            uploadFile,
             breadcrumb,
             sortableList,
-            upload,
+            uploadFile,
             packageDetail,
             selectDirectory,
-            searchFileList
+            searchFileList,
+            upload,
         },
         data() {
             this.__currentNode = null;
@@ -641,6 +638,7 @@
                 isBusy: false,
                 align: 'center',
                 repositories: [],
+                allrepositorie : [],
                   dialog: {
                       title: '增加分类',
                       dialogVisible: false,
@@ -668,11 +666,15 @@
                 },
                 file:{
                     dialogVisible: false,
+                    modelDialog: false,
                 },
                 SelectedNode : '',
                 CurrentNode : '',
                 name : this.$store.state.userInfo.profile.name,
                 publicDirId : this.$store.getters.publicDirId.data.id,
+                style :{
+                  watch : 'inline-block',
+                },
             };
         },
         computed: {
@@ -698,6 +700,7 @@
                         _this.pager.total = response.data.repositories.length;
                         _this.modelTotal = response.data.repositories.length;
                         _this.varLength = _this.variable.length;
+                        _this.allrepositorie = response.data.repositories;
                         var filterModel = response.data.repositories.filter(
                             (u, index) => {
                                 if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
@@ -825,6 +828,7 @@
             }
             _this.$http.post(url)
                 .then(function (response) {
+                    _this.allrepositorie = response.data.repositories;
                     var searchModel = response.data.repositories.filter(model => {
                         if (para.name && model.name.indexOf(para.name) == -1) {
                             return false
@@ -891,19 +895,19 @@
                 pageIndex: this.pager.pageIndex
             };
             console.log(`当前页: ${val}`);
-            var filterModel = this.repositories.filter(
+            var filterModel = this.allrepositorie.filter(
                 (u, index) => {
                     if (index < val * para.pageSize && index >= para.pageSize * (val - 1)) {
                         return true
                     }
                 }
             )
-            _this.repositories = filterModel;
+            this.repositories = filterModel;
         },
         handleSizeChange(val){
             console.log(`每页 ${val} 条`);
             this.pager.pageSize = val;
-            var filterModel = this.repositories.filter(
+            var filterModel = this.allrepositorie.filter(
                 (u, index) => {
                     if (index < this.pager.pageIndex * val && index >= val * (this.pager.pageIndex - 1)) {
                         return true
@@ -1151,7 +1155,6 @@
 //
 //            },
             uploadFile(){
-//                this.$router.push({path: '/model/upload'});
                 this.file.dialogVisible = true;
             },
             validateCAE(o){
@@ -1164,9 +1167,11 @@
             },
             validateCAEDownload(o){
                 if(o.type == 'Modelica'){
+                    this.style.watch = 'inline-block';
                     return true;
                 }
                 else{
+                    this.style.watch = 'none';
                     return false;
                 }
             },
@@ -1174,12 +1179,17 @@
                 console.log(breadcrumbArray);
                 this.uploadFileTitle = "上传到:"
                 for(var i=0; i<breadcrumbArray.length;i++){
-                    this.uploadFileTitle += breadcrumbArray[0].name + "/"
+                    this.uploadFileTitle += breadcrumbArray[i].name + "/"
                 }
                 this.uploadFileTitle = this.uploadFileTitle.substring(0,this.uploadFileTitle.length-1)
             },
             closeDialog(){
-                this.file.dialogVisible =false
+                this.file.dialogVisible =false;
+                this.getModel();
+            },
+            returnToModel(){
+                this.file.dialogVisible =false;
+                this.file.modelDialog = true;
             },
             moveModel(index, row){
                 this.move.dialogVisible =true;
@@ -1246,6 +1256,7 @@
     },
         mounted() {
             this.$store.dispatch('sendA',this.$store.getters.publicDirId.data.id);
+            this.$store.dispatch('sendB',this.$store.getters.publicDirId.data.id);
         }
     };
 

@@ -66,7 +66,6 @@
                 <div style="float: right;height: 30px;width: 100%" >
                     <el-button style="float: right;margin-left: 10px" @click="closeDia">取消</el-button>
                     <el-button style="float: right" type="primary" @click.native="onSubmit">提交</el-button>
-                    <el-button style="float: right" type="primary" @click.native="returnToUploadModel">上传模型</el-button>
                 </div>
             </el-footer>
             </el-container>
@@ -128,7 +127,7 @@
                 var _this = this;
                 let para = Object.assign({}, _this.form);
                 _this.$http({method:'post',
-                    url:'api/model/uploadFloder?name='+this.name +"&directoryId="+this.bmsg + "&scope=" + true,
+                    url:'api/model/uploadFloder?name='+this.name +"&directoryId="+this.bmsg + "&scope=" + false,
                     data:para})
                     .then(function (response) {
                             if(response.data.msg == "ok"){
@@ -175,9 +174,6 @@
             },
             closeDia(){
                 this.$emit("closeDialog")
-            },
-            returnToUploadModel(){
-                this.$emit("returnToModel")
             },
             refreshTable(){
                 this.$refs['form'].resetFields();
