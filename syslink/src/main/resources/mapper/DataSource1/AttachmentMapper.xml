@@ -14,6 +14,7 @@
         <result column="is_floder" property="isFloder" jdbcType="BOOLEAN"/>
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
         <result column="temp_relative_path" property="tempRelativePath" jdbcType="VARCHAR"/>
+        <result column="modelName" property="modelName" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="baseColumnList" >
         id,parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id,temp_relative_path
@@ -47,7 +48,7 @@
     <select id="getModelDetail" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />
         FROM  attachment
-        WHERE model_id = #{modelId}
+        WHERE model_id = #{modelId} and temp_relative_path is not null
     </select>
     <select id="getAttachByParentId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />
@@ -62,9 +63,14 @@
         on m.parent_id = n.id
     </select>
     <select id="getAllFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
-        SELECT <include refid="baseColumnList" />
-        from attachment
-        where 1= 1 AND is_floder = false and icon_url is null or trim(icon_url)= ''
+        SELECT *,m.name AS modelName
+            from attachment a
+            LEFT JOIN
+            (SELECT *
+            FROM model
+            where 1=1) m
+            on
+            1= 1 AND a.is_floder = false  and m.id = a.model_id and a.icon_url is null or trim(a.icon_url)= ''
     </select>
     <select id="queryNullModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT *

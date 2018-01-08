@@ -20,8 +20,9 @@
         <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="model_text" property="modelText" jdbcType="LONGVARCHAR"/>
+        <result column="iconUrl" property="iconUrl" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="mapResultMap" type="map">
+    <resultMap id="mapResultMap" type="com.tongyuan.model.DTO.ModelDto">
         <id column="id" property="id" jdbcType="BIGINT"  />
         <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
@@ -40,6 +41,7 @@
         <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="model_text" property="modelText" jdbcType="LONGVARCHAR"/>
+        <result column="iconUrl" property="iconUrl" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="baseColumnList" >
@@ -79,17 +81,15 @@
         where name = #{name} and is_deleted = "0"
     </select>
     <select id="findAllModel" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
-        <!--SELECT-->
-        <!--<include refid="baseColumnList" ></include> FROM-->
-        <!--(-->
-        SELECT
-        <include refid="baseColumnList" ></include>
-        FROM  model
-        WHERE
-        is_deleted = "0"
-        order by create_time desc
---         ) m
---         where  1=1 GROUP BY NAME
+        SELECT m.*,a.icon_url as iconUrl
+        from attachment a
+        RIGHT JOIN
+        (SELECT
+        *
+        from model
+        where 1=1 and is_deleted = '0' and classes = 'Package'
+        order by create_time desc) m
+        on  a.id = m.icon_file_id
     </select>
     <select id="findAllModelMap" resultMap="mapResultMap" resultType="map">
         <!--SELECT-->
