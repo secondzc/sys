@@ -19,45 +19,20 @@ import java.util.*;
  */
 
 @Controller
-@RequestMapping("/api/operationlog")
-public class OperationlogController extends BaseController{
+@RequestMapping("/api/log")
+public class LogController extends BaseController{
 
     @Autowired
     private LogService logService;
 
+
+
+
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject finAllLog()
-    {
-        JSONObject jo = new JSONObject();
-        List<Log> logList = new ArrayList<>();
-        try
-        {
-            List <Log> logs = logService.findAllLog();
-            logList.addAll(logs);
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","获取列表失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","获取列表成功");
-        jo.put("logs", logList);
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
-
-
-    @RequestMapping(value = "/query",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject queryLog(@RequestBody String para)
     {
         JSONObject jo = new JSONObject();
-
-//        List<Log> operationlogList = new ArrayList<>();
         Page<Log>page = new Page<>();
         JSONObject jsonObject = JSON.parseObject(para);
         Map<String,Object> map = new HashMap<String ,Object>();
@@ -71,21 +46,9 @@ public class OperationlogController extends BaseController{
             map.put("endTime",jsonObject.getJSONArray("time").getString(1));
         }
 
-
-
-
         try
         {
-//            List <Log>operationlogs = logService.query(map);
-
-//            operationlogList.addAll(operationlogs);
-            page = logService.find(map);
-
-
-            Map<String,Object> params = new HashMap<String,Object>();
-
-
-
+            page = logService.query(map);
         }
         catch (Exception e)
         {
@@ -96,17 +59,11 @@ public class OperationlogController extends BaseController{
         }
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-
-//        PageInfo<Log> pageInfo =new PageInfo<Log>(operationlogList);
         jo.put("logs",page);
         jo.put("total",page.getTotal());
 
         return (JSONObject) JSONObject.toJSON(jo);
     }
-
-
-
-
 
     @RequestMapping(value = "/deleteLogs",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
@@ -115,9 +72,6 @@ public class OperationlogController extends BaseController{
         JSONObject jo = new JSONObject();
         JSONObject jsonObject = JSON.parseObject(para);
         JSONArray logs = jsonObject.getJSONArray("ids");
-
-
-
         try
         {
             for(int i=0;i<logs.size();i++)
@@ -134,19 +88,7 @@ public class OperationlogController extends BaseController{
         }
         jo.put("flag",true);
         jo.put("msg","删除成功");
-
-
-
         return (JSONObject) JSONObject.toJSON(jo);
     }
-
-
-
-
-
-
-
-
-
 
 }

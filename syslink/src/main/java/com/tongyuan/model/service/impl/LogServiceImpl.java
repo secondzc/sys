@@ -43,9 +43,7 @@ public class LogServiceImpl implements LogService {
             log.setUserIp(log2.getUserIp());
             log.setUserName(log2.getUserName1());
             log.setRealName(log2.getRealName());
-
             log.setCreateDate(DateUtil.getCurrentTime());
-
             //设置标题
             log.setTitle(title);
             //设置日志内容
@@ -54,24 +52,10 @@ public class LogServiceImpl implements LogService {
         return  this.logMapper.add(log);
     }
 
-    @Override
-    public List<Log> findAllLog()
-    {
-
-        return this.logMapper.findAllLog();
-    }
 
 
     @Override
-    public List<Log> query(Map<String,Object> map)
-    {
-        PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
-
-        return this.logMapper.queryLog(map);
-    }
-
-    @Override
-    public Page<Log>find(Map<String,Object>map)
+    public Page<Log> query(Map<String,Object>map)
     {
         Page<Log>page = PageHelper.startPage(Integer.parseInt(map.get("pageIndex").toString()), Integer.parseInt(map.get("pageSize").toString()));
         logMapper.queryLog(map);

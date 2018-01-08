@@ -72,7 +72,6 @@ public class UserController extends BaseController {
         long uid = Long.parseLong(map.get("uid").toString());
         try
         {
-
             userRoles = roleService.queryUserRoleByUid(uid);
         }
         catch (Exception e)
@@ -95,47 +94,41 @@ public class UserController extends BaseController {
     public JSONObject list(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
+        Page<Map<String,Object>> users = new Page<>();
+        List<Integer>departIds =new ArrayList<>();
+        map.put("id",map.get("departId"));
+        List<Map<String,Object>>children =  new DepartWarpper(map).getChildren(map);
+        for(Map<String,Object>child:children)
+        {
+            departIds.add(Integer.parseInt(child.get("id").toString()));
+        }
+        departIds.add(Integer.parseInt(map.get("departId").toString()));
 
+        map.put("departIds",departIds);
+        if(map.get("name")==null)
+        {
+            map.put("name","");
+        }
 
-            Page<Map<String,Object>> users = new Page<>();
-            List<Integer>departIds =new ArrayList<>();
-            map.put("id",map.get("departId"));
-            List<Map<String,Object>>children =  new DepartWarpper(map).getChildren(map);
-            for(Map<String,Object>child:children)
-            {
-                departIds.add(Integer.parseInt(child.get("id").toString()));
-
-            }
-            departIds.add(Integer.parseInt(map.get("departId").toString()));
-
-            map.put("departIds",departIds);
-            if(map.get("name")==null)
-            {
-                map.put("name","");
-            }
-
-            try
-            {
-                users=userService.queryUserByDepartId(map);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                jo.put("flag",false);
-                jo.put("msg","获取用户列表失败");
-                return jo;
-            }
-            jo.put("flag",true);
-            jo.put("msg","获取用户列表成功");
-            jo.put("users",new GUserWarpper(users).warp());
-            jo.put("total",users.getTotal());
-//        jo.put("users",new GUserWarpper(users).warp());
-//        jo.put("total",users.getTotal());
-            return (JSONObject) JSONObject.toJSON(jo);
-
-
+        try
+        {
+            users=userService.queryUserByDepartId(map);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            jo.put("flag",false);
+            jo.put("msg","获取用户列表失败");
+            return jo;
+        }
+        jo.put("flag",true);
+        jo.put("msg","获取用户列表成功");
+        jo.put("users",new GUserWarpper(users).warp());
+        jo.put("total",users.getTotal());
+//       jo.put("users",new GUserWarpper(users).warp());
+//       jo.put("total",users.getTotal());
+        return (JSONObject) JSONObject.toJSON(jo);
     }
-
     @RequestMapping(value = "/list1",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject list1(@RequestBody Map<String,Object> map, HttpServletRequest request)
@@ -239,20 +232,12 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/addGuser",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject addGUser(@RequestBody Map<String,Object> map,HttpServletRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
         JSONObject jo = new JSONObject();
-
-
-
         String a = UUID.randomUUID().toString().replaceAll("-","");
         String b = UUID.randomUUID().toString().replaceAll("-","");
         map.put("rands",a.substring(0,10));
         map.put("salt",b.substring(0,10));
-
-
-
-
-
-
         String passwd ="";
         if(map.get("passwd")==null)
         {
@@ -402,19 +387,6 @@ public class UserController extends BaseController {
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
-
-
-    @RequestMapping(value = "/getUserId",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject getUserId(HttpServletRequest request)
-    {
-        JSONObject jo = new JSONObject();
-
-
-        long uerId  = getUserId();
-        jo.put("userId",uerId);
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
     @RequestMapping(value = "/querySimpleUser",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject querySimpleUser(@RequestBody String para, HttpServletRequest request)
@@ -556,14 +528,6 @@ public class UserController extends BaseController {
             }
         }
 
-//
-//        for(int i=0;i<jsonArray.size();i++)
-//        {
-//            authIds[i]=jsonArray.getJSONObject(i).getIntValue("authId");
-//        }
-
-
-
         jo.put("flag",true);
         jo.put("msg","分配权限成功");
         return (JSONObject) JSONObject.toJSON(jo);
@@ -576,8 +540,6 @@ public class UserController extends BaseController {
     {
         JSONObject jo = new JSONObject();
         JSONObject jsonObject = JSONObject.parseObject(para);
-
-
         JSONArray roles = jsonObject.getJSONArray("assigned");
         JSONArray uids = jsonObject.getJSONArray("uids");
         if(uids.size()>0)
@@ -631,7 +593,7 @@ public class UserController extends BaseController {
         JSONArray uids = jsonObject.getJSONArray("uids");
         JSONArray directoryIds = jsonObject.getJSONArray("directoryIds");
         JSONObject directory = jsonObject.getJSONArray("directoryAuth").getJSONObject(0);
-        List<JSONObject>ttt = bbb(directory);
+        List<JSONObject>ttt = getDirectoryAuthList(directory);
 
         if(uids.size()>0)
         {
@@ -679,24 +641,24 @@ public class UserController extends BaseController {
 
 
 
-    public List<JSONObject> bbb(JSONObject t)
+    public List<JSONObject> getDirectoryAuthList(JSONObject directory)
     {
-        List<JSONObject> ttt = new ArrayList<>();
-        ttt.add(t);
-        if(t.getJSONArray("children")!=null)
+        List<JSONObject> directoryAuth = new ArrayList<>();
+        directoryAuth.add(directory);
+        if(directory.getJSONArray("children")!=null)
         {
-            JSONArray c = t.getJSONArray("children");
+            JSONArray c = directory.getJSONArray("children");
             if(c.size()>0)
             {
                 for(int i=0;i<c.size();i++)
                 {
-                    ttt.addAll(bbb(c.getJSONObject(i)));
+                    directoryAuth.addAll(getDirectoryAuthList(c.getJSONObject(i)));
                     ;
                 }
             }
         }
 
-        return ttt;
+        return directoryAuth;
     }
 
 
@@ -729,18 +691,15 @@ public class UserController extends BaseController {
         JSONObject jo = new JSONObject();
 
         HttpSession session = request.getSession(false);
-//      if(session.getAttribute("uid")!=null)
         Long a = getUserId();
         if(getUserId()>0)
         {
-
             jo.put("session",true);
         }
         else
         {
             jo.put("session",false);
         }
-//        jo.put("abc",session);
         jo.put("uid",session.getAttribute("uid"));
         return (JSONObject) JSONObject.toJSON(jo);
     }
@@ -854,11 +813,6 @@ public class UserController extends BaseController {
         }
         jo.put("flag",exist);
         jo.put("msg","");
-
-
-
-
-
         return (JSONObject) JSONObject.toJSON(jo);
     }
 

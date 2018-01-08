@@ -35,12 +35,10 @@ public class RoleController {
     public JSONObject queryRole()
     {
         JSONObject jo = new JSONObject();
-        List<Map<String,Object>> list = new ArrayList<>();
+        List<Map<String,Object>> rolelist = new ArrayList<>();
         try
         {
-            List <Map<String,Object>>rolelist = roleService.query();
-            list.addAll(rolelist);
-
+            rolelist = roleService.query();
         }
         catch (Exception e)
         {
@@ -51,7 +49,7 @@ public class RoleController {
         }
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-        jo.put("role",new RoleWarpper(list).warp());
+        jo.put("role",new RoleWarpper(rolelist).warp());
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
@@ -60,7 +58,6 @@ public class RoleController {
     public JSONObject add(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
         map.put("createDate", DateUtil.getCurrentTime());
         try
         {
@@ -85,8 +82,6 @@ public class RoleController {
     public JSONObject edit(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
-
         try
         {
             roleService.update(map);
@@ -109,10 +104,7 @@ public class RoleController {
     public JSONObject assign(@RequestBody String para, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-       // JSONObject jsonObject = JSON.parseObject(para);
         JSONObject jsonObject = JSONObject.parseObject(para);
-
-      //  JSONArray jsonArray = JSONArray.parseArray(para);
         JSONArray jsonArray = jsonObject.getJSONArray("authIds");
         Integer []authIds = new Integer[jsonArray.size()];
 
@@ -121,13 +113,8 @@ public class RoleController {
             authIds[i]=jsonArray.getJSONObject(i).getIntValue("authId");
         }
 
-     //   map.put("permissions",map.get("permissionId").toString());
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
-
-  //      String a = map.get("permissionId").toString();
-   //     a=a.substring(1,a.length()-1);
           Integer roleId = jsonObject.getIntValue("roleId");
-   //     Integer []authIds =   Convert.toIntArray(",",a);
+
 
         try
         {

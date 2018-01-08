@@ -126,7 +126,6 @@ public class RoleServiceImpl implements RoleService {
             b = b&userRoleMapper.add(userRole);
         }
 
-//        Set<Auth>userAuths = authService.getAuthByUserAuth(uid);
         List<Auth>userAuths = authService.queryAuthByUid(uid);
         for(Auth auth : userAuths)
         {
@@ -141,14 +140,10 @@ public class RoleServiceImpl implements RoleService {
             gUserMapper.update(user);
         }
         else
-
         {
             user.setAdmin(false);
             gUserMapper.update(user);
         }
-
-
-
 
         return  a&b;
     }

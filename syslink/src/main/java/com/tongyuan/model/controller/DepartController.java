@@ -33,12 +33,10 @@ public class DepartController {
     public JSONObject queryDepart()
     {
         JSONObject jo = new JSONObject();
-        List<Map<String,Object>> list = new ArrayList<>();
+        List<Map<String,Object>> depart = new ArrayList<>();
         try
         {
-            List <Map<String,Object>>depart = departService.query();
-            list.addAll(depart);
-
+         depart = departService.query();
         }
         catch (Exception e)
         {
@@ -49,8 +47,7 @@ public class DepartController {
         }
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-        jo.put("depart",new DepartWarpper(list).warp());
-     //   jo.put("role",new RoleWarpper(list).warp());
+        jo.put("depart",new DepartWarpper(depart).warp());
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
@@ -62,7 +59,6 @@ public class DepartController {
     public JSONObject add(@RequestBody Map<String,Object> map, HttpServletRequest request)
     {
         JSONObject jo = new JSONObject();
-//        permissionItem.setCreateDate(DateUtil.getCurrentTime());
         map.put("createDate", DateUtil.getCurrentTime());
         try
         {
