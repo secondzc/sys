@@ -1090,7 +1090,7 @@
 
              for(var b of directoryAuth)
             {
-              if(a.id==b.directoryId)
+              if(a.id==b.directory_id)
               {
                  f= true;
                 if(b.mode>0)

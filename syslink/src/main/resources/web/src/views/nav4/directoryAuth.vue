@@ -382,7 +382,7 @@
       {
         
          var _this = this;
-          console.log(_this.filters1.directoryId);
+      
          if(node)
          {
             _this.filters1.directoryId=node.id;
@@ -401,10 +401,12 @@
                       let b =  response.data.users[i].directoryAuth;
                        for(var c of b)
                     {
-                      if (c.directoryId== _this.filters1.directoryId)
+
+                      if (c.directory_id == _this.filters1.directoryId)
                       {
                         // a.tempMode=c.mode;
                        response.data.users[i]  = Object.assign({},response.data.users[i] ,{
+                      // tempMode : c.mode
                       tempMode : c.mode
                     });
                       }
@@ -418,7 +420,7 @@
 
 
                  
-                   console.log(_this.users1);
+               
 
                 
           })
