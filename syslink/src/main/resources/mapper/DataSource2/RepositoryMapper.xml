@@ -75,7 +75,6 @@
     <result column="fork_id" property="forkID" jdbcType="BIGINT"/>
     <result column="created_unix" property="createdUnix" jdbcType="BIGINT"/>
     <result column="updated_unix" property="updatedUnix" jdbcType="BIGINT"/>
-      <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
   </resultMap>
 
   <sql id="baseColumnList" >
