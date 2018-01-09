@@ -159,7 +159,7 @@ public class DirectoryController extends BaseController{
                 directory.setParentId(directoryParent.getId());
                 directory.setFilePath(currentPath);
             }
-            directory.setModelId(-1);
+            directory.setModelId(-2);
             attachmentService.add(directory);
             result = true;
         } catch (Exception e) {

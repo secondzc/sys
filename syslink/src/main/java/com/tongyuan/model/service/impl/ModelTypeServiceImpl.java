@@ -27,4 +27,19 @@ public class ModelTypeServiceImpl implements ModelTypeService{
     public ModelType getByType(String typeName) {
         return this.modelTypeMapper.getByType(typeName);
     }
+
+    @Override
+    public Long add(ModelType modelType) {
+        return this.modelTypeMapper.add(modelType);
+    }
+
+    @Override
+    public void update(ModelType modelType) {
+        this.modelTypeMapper.update(modelType);
+    }
+
+    @Override
+    public void delete(String modelTypeName) {
+        this.modelTypeMapper.delete(modelTypeName);
+    }
 }

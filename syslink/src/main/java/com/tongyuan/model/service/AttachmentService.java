@@ -16,7 +16,7 @@ public interface AttachmentService {
     int update(Attachment attachment);
     public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
-    public void addIconOfModel(String fileName,String iconUrl,Long size);
+    public Long addIconOfModel(String fileName,String iconUrl,Long size);
     public List<Attachment> getModelFiles(Long modelId);
     public List<VariableTreeObj> getModelCatalog(List<VariableTreeObj> modelCatalogList,List<Attachment> modelFiles);
     public List<Attachment> getModelDetail(Long modelId);

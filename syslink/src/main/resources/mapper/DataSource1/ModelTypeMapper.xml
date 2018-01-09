@@ -14,8 +14,19 @@
     </resultMap>
 
     <sql id="baseColumnList" >
-    id,icon,name
+      id,icon,name
     </sql>
+    <insert id="add" parameterType="com.tongyuan.model.domain.ModelType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO model_type (icon, name) VALUES (#{icon},#{name})
+    </insert>
+    <update id="update" parameterType="com.tongyuan.model.domain.ModelType" >
+        UPDATE model_type SET icon = #{icon},name = #{name}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="com.tongyuan.model.domain.ModelType">
+        DELETE FROM model_type
+        where name = #{name}
+    </delete>
     <select id="getModelTypeList" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.ModelTypeDto">
         SELECT  *
         from model_type

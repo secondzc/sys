@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongyuan.model.dao.FileTypeMapper">
+    <resultMap id="baseResultMap" type="com.tongyuan.model.domain.FileType">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="attachment_id" property="attachmentId" jdbcType="BIGINT"/>
+        <result column="ext" property="ext" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="DtoMap" type="com.tongyuan.model.DTO.FileTypeDto">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="attachment_id" property="attachmentId" jdbcType="BIGINT"/>
+        <result column="ext" property="ext" jdbcType="VARCHAR"/>
+        <result column="icon_path" property="iconPath" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="baseColumnList" >
+        id,ext,name
+    </sql>
+    <insert id="add" parameterType="com.tongyuan.model.domain.FileType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO file_type (attachment_id, ext) VALUES (#{attachmentId},#{ext})
+    </insert>
+    <update id="update" parameterType="com.tongyuan.model.domain.FileType">
+        UPDATE file_type SET attachment_id = #{attachmentId},ext = #{ext}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="com.tongyuan.model.domain.FileType">
+        DELETE FROM file_type
+        where ext = #{ext}
+    </delete>
+
+    <select id="getFileTypeList" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.FileTypeDto">
+        SELECT  *,attachment.icon_url as icon_path
+        from file_type
+        LEFT JOIN  attachment
+        on file_type.attachment_id = attachment.id
+    </select>
+    <select id="getByExt" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.FileType">
+        SELECT *
+        from file_type
+        where ext = #{ext}
+    </select>
+</mapper>

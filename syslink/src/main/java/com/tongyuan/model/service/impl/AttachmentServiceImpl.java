@@ -49,17 +49,20 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public void addIconOfModel(String fileName, String iconUrl, Long size) {
+    public Long addIconOfModel(String fileName, String iconUrl, Long size) {
         Attachment attachment = new Attachment();
         attachment.setName(fileName);
         attachment.setCreateTime(DateUtil.getTimestamp());
-        attachment.setExt(".png");
+        attachment.setExt("png");
         attachment.setFloder(false);
         attachment.setIconUrl(iconUrl);
+        attachment.setFilePath(iconUrl);
         attachment.setParentId(0);
         attachment.setSize(size);
         attachment.setModelId(-1);
         this.attachmentMapper.add(attachment);
+        Long attachmentId = attachment.getId();
+        return  attachmentId;
     }
 
     @Override
