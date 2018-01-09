@@ -17,6 +17,8 @@ import GUser from './views/nav4/GUser.vue'
 import log from   './views/nav4/log.vue'
 import permission from './views/nav4/permission.vue'
 import role from './views/nav4/role.vue'
+import modelType from './views/nav4/modelType.vue'
+import fileType from './views/nav4/fileType.vue'
 
 import team from './views/nav4/team.vue'
 import OrgMange from './views/nav4/OrgMange.vue'
@@ -251,13 +253,16 @@ export let limitRoutes=[
              { path: '',component:blankPage,  name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]}, children: [
             { path: '/permission', component: permission, name: '系统权限',iconCls:'iconfont icon-xitong'},
              { path: '/directoryAuth', component: directoryAuth, name: '目录控制',iconCls:'iconfont icon-guize'}
-          
         ] },
          //   { path: 'user', component: user, name: '应用监控' },
             { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{auth:['management_log_list'],role:[1]}},
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
-            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban',meta:{auth:['management_template_list'],role:[1]}}, 
+            {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban',meta:{auth:['management_template_list'],role:[1]}},
+            { path: '',component:blankPage,  name: '类型管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]}, children: [
+                { path: '/modelType', component: modelType, name: '模型类型',iconCls:'iconfont icon-xitong'},
+                { path: '/fileType', component: fileType, name: '文件类型',iconCls:'iconfont icon-guize'}
+            ] },
         ]
     },
     {
