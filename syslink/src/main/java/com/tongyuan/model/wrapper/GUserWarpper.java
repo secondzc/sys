@@ -59,22 +59,24 @@ public class GUserWarpper extends BaseControllerWarpper {
 
       }
 
-        List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(uid);
-        map.put("modelAuth",modelAuths);
-        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(uid);
-        map.put("directoryAuth",directoryAuths);
-        List<Auth>auths = new ArrayList<>();
-        auths=authMapper.queryAuthByUid(uid);
-         map.put("auths",auths);
-        List<UserRole> userRoles = userRoleMapper.query(uid);
-        List<Integer>roles = new ArrayList<>();
-        for(UserRole userRole : userRoles)
-        {
-            roles.add(userRole.getRoleId());
-        }
-        map.put("roles",roles);
-//        map.put("tempMode",0);
-//        map.put("tempBool",false);
+//        List<ModelAuth> modelAuths = modelAuthMapper.queryByUid(uid);
+//        map.put("modelAuth",modelAuths);
+//        List<DirectoryAuth> directoryAuths = directoryAuthMapper.queryByUid(uid);
+//        map.put("directoryAuth",directoryAuths);
+
+
+//        List<Auth>auths =authMapper.queryAuthByUid(uid);
+//         map.put("auths",auths);
+
+
+//        List<UserRole> userRoles = userRoleMapper.query(uid);
+//        List<Integer>roles = new ArrayList<>();
+//        for(UserRole userRole : userRoles)
+//        {
+//            roles.add(userRole.getRoleId());
+//        }
+//        map.put("roles",roles);
+
 
 
     }

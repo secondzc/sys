@@ -108,6 +108,7 @@
     FROM repository
     where name = #{Name}
   </select>
+
     <select id="findAllRepository" resultMap="baseResultMap" resultType="com.tongyuan.gogs.domain.Repository">
       SELECT <include refid="baseColumnList" ></include>
       FROM repository

@@ -32,7 +32,7 @@
                                   ref="singleDialog"
                                   @DomReady = "DomReady()"
                           >
-                              <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
+                              <searchFileList   ref="getSearchList" @showModel="showModel" ></searchFileList>
                               </el-dialog>
                               <el-dialog
                                   :title="uploadFileTitle"

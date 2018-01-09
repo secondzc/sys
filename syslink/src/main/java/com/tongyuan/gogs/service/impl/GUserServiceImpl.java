@@ -96,13 +96,13 @@ public class GUserServiceImpl implements GUserService {
         }
 
         List<String> modeAuths = new ArrayList<>();
-        List<Long> directoryAuths = new ArrayList<>();
-        List<DirectoryAuth> directoryAuthList = directoryAuthMapper.queryByUid(user.getID());
-        for (DirectoryAuth directoryAuth : directoryAuthList) {
-            directoryAuths.add(directoryAuth.getDirectoryId());
-        }
+//        List<Long> directoryAuths = new ArrayList<>();
+//        List<DirectoryAuth> directoryAuthList = directoryAuthMapper.queryByUid(user.getID());
+//        for (DirectoryAuth directoryAuth : directoryAuthList) {
+//            directoryAuths.add(directoryAuth.getDirectoryId());
+//        }
 
-        List<Map<String,Object>>ttt = queryUserDirectoryAuths(user.getID());
+        List<Map<String,Object>>directoryAuths = queryUserDirectoryAuths(user.getID());
 
         List<Integer> roles = new ArrayList<>();
         roles = roleService.queryUserRoleByUid(user.getID());
@@ -114,7 +114,7 @@ public class GUserServiceImpl implements GUserService {
         loginedUserModel.setProfile(user);
         loginedUserModel.setAuths(auths);
         loginedUserModel.setModelAuths(modeAuths);
-        loginedUserModel.setDirectoryAuths(ttt);
+        loginedUserModel.setDirectoryAuths(directoryAuths);
         loginedUserModel.setRoles(roles);
         return loginedUserModel;
     }

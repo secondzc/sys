@@ -39,15 +39,32 @@
     	    	<sapn style="font-size: 16px;text-decoration: underline;">查看/下载</sapn>
     	    </div>
     	    </el-popover>
-            <el-button type="primary" @click="toTree" style="margin-left:20px;margin-top: 20px;" :disabled="!isModelica">查看</el-button>
-            <el-button type="primary" @click="download" :loading="downloading">下载</el-button> 
+            <el-button type="primary" @click="toTree" style="margin-left:20px;margin-top: 20px;" :disabled="isModelica">查看</el-button>
+            <el-button type="primary" @click="download" :loading="downloading">下载</el-button>
+
+           </el-dialog>
+                          <el-dialog
+                                  title="模型详细信息"
+                                  :visible.sync="dialogVisible"
+                                  width="80%"
+                                  center
+                                    ref="DetailDialog"
+                             
+                          >
+                            <packageDetail ref="packageDetail"></packageDetail>
+                          </el-dialog> 
   </section> 
 </template>
 
 <script>
+    import packageDetail from '../model/packageDetail';
 	export default{
+		components: {
+			packageDetail,
+		},
 		data(){
 			return {
+				dialogVisible: false,
 				reviewModel:{
 					id:0,
 					name:'',
@@ -97,10 +114,11 @@
 				console.log(this.reviewModel);
 			},
 			toTree(){ 
-	            console.log('12.10'+this.reviewModel.id); 
+	            //console.log('12.10'+this.reviewModel.id); 
 	            this.$store.dispatch('sendModelId',this.reviewModel.id); 
 	            this.$store.dispatch('sendTreeModelId',this.reviewModel.id); 
-	            this.$router.push({path:'/model/packageDiagram'}); 
+	            //this.$router.push({path:'/model/packageDiagram'}); 
+	            this.dialogVisible = true;
 	        }, 
 		},
 		mounted(){
