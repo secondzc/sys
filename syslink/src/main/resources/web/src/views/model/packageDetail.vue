@@ -47,7 +47,7 @@
                                 width="80" >
                             <template scope="scope">
 
-                                <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
+                                <img v-bind:src="scope.row.fileIconUrl" style="width: 60px;height: 40px;"/>
 
                             </template>
                         </el-table-column>
@@ -73,7 +73,7 @@
 
                         <el-table-column
                                 label="文件大小"
-                                prop="size"
+                                prop="fileSize"
                                 min-width=100>
                         </el-table-column>
 
