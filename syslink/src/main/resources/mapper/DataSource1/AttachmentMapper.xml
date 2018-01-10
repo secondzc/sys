@@ -16,6 +16,23 @@
         <result column="temp_relative_path" property="tempRelativePath" jdbcType="VARCHAR"/>
         <result column="modelName" property="modelName" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <resultMap id="DtoMap" type="com.tongyuan.model.DTO.AttachmentDto">
+        <id column="id" property="id" jdbcType="BIGINT"  />
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="ext" property="ext" jdbcType="VARCHAR"/>
+        <result column="icon_url" property="iconUrl" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="BIGINT"/>
+        <result column="file_path" property="filePath" jdbcType="VARCHAR"/>
+        <result column="http_path" property="httpPath" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="is_floder" property="isFloder" jdbcType="BOOLEAN"/>
+        <result column="model_id" property="modelId" jdbcType="BIGINT"/>
+        <result column="temp_relative_path" property="tempRelativePath" jdbcType="VARCHAR"/>
+        <result column="modelName" property="modelName" jdbcType="VARCHAR"/>
+        <result column="fileIconUrl" property="fileIconUrl" jdbcType="VARCHAR"/>
+    </resultMap>
     <sql id="baseColumnList" >
         id,parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id,temp_relative_path
     </sql>
@@ -45,16 +62,45 @@
         FROM  attachment
         WHERE model_id = #{modelId}
     </select>
-    <select id="getModelDetail" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
-        SELECT <include refid="baseColumnList" />
-        FROM  attachment
-        WHERE model_id = #{modelId} and temp_relative_path is not null
+    <select id="getModelDetail" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
+        <!--SELECT <include refid="baseColumnList" />-->
+        <!--FROM  attachment-->
+        <!--WHERE model_id = #{modelId} and temp_relative_path is not null-->
+        SELECT *
+        FROM  attachment a
+        LEFT JOIN
+        (
+        SELECT b.*,c.fileIconUrl
+        from file_type b
+        LEFT JOIN
+        (SELECT icon_url,id,icon_url as fileIconUrl
+        from attachment
+        where 1=1 )c
+        on  b.attachment_id = c.id
+        ) f
+        on  a.ext = f.ext
+        where a.temp_relative_path is not null AND a.model_id = #{modelId}
     </select>
-    <select id="getAttachByParentId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
-        SELECT <include refid="baseColumnList" />
-        FROM  attachment
-        where parent_id = #{parentId} or id = #{parentId}
+    <select id="getAttachByParentId" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
+        <!--SELECT <include refid="baseColumnList" />-->
+        <!--FROM  attachment-->
+        <!--where parent_id = #{parentId} or id = #{parentId}-->
+        SELECT *
+        FROM  attachment a
+        LEFT JOIN
+        (
+        SELECT b.*,c.fileIconUrl
+        from file_type b
+        LEFT JOIN
+        (SELECT icon_url,id,icon_url as fileIconUrl
+        from attachment
+        where 1=1 )c
+        on  b.attachment_id = c.id
+        ) f
+        on  a.ext = f.ext
+        where a.parent_id = #{parentId} or a.id = #{parentId}
     </select>
+
     <select id="getParentAttach" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
        SELECT * from  attachment n
         JOIN

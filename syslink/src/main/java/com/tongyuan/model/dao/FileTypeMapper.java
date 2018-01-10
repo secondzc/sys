@@ -18,4 +18,5 @@ public interface FileTypeMapper {
     public Long add(FileType fileType);
     public void update(FileType fileType);
     public void delete(String fileType);
+    public FileTypeDto getDefaultIcon();
 }

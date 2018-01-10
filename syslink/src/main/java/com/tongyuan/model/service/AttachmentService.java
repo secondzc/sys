@@ -19,10 +19,12 @@ public interface AttachmentService {
     public Long addIconOfModel(String fileName,String iconUrl,Long size);
     public List<Attachment> getModelFiles(Long modelId);
     public List<VariableTreeObj> getModelCatalog(List<VariableTreeObj> modelCatalogList,List<Attachment> modelFiles);
-    public List<Attachment> getModelDetail(Long modelId);
-    public List<Attachment> getModelDetailList(List<Attachment> modelFiles,Long modelId,List<Attachment> modelDetail);
-    public List<Attachment> getDetailListByAttachId(List<Attachment> modelFiles,List<Attachment> modelDetail,Long catalogId);
-    public List<Attachment> getAttachByParentId(Long attachId);
+    //获取该目录下的所有文件
+    public List<AttachmentDto> getModelDetail(Long modelId);
+    public List<AttachmentDto> getModelDetailList(List<AttachmentDto> modelFiles,Long modelId,List<AttachmentDto> modelDetail);
+    public List<AttachmentDto> getDetailListByAttachId(List<AttachmentDto> modelFiles,List<AttachmentDto> modelDetail,Long catalogId);
+    //获取模型文件目录下的所有文件
+    public List<AttachmentDto> getAttachByParentId(Long attachId);
     public AttachmentDto transformToDto (Attachment attachment);
     public List<AttachmentDto> transformDtoList(List<Attachment> attachmentList);
     public Attachment getParentAttach(Long attachmentId);

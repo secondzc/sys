@@ -42,4 +42,9 @@ public class FileTypeServiceImpl implements FileTypeService {
     public void delete(String fileType) {
         this.fileTypeMapper.delete(fileType);
     }
+
+    @Override
+    public FileTypeDto getDefaultIcon() {
+        return this.fileTypeMapper.getDefaultIcon();
+    }
 }
