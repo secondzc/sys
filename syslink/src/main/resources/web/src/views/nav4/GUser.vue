@@ -12,7 +12,7 @@
           <el-form :inline="true" :model="filters" >
       
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="用户名/全名/邮箱"></el-input>
+          <el-input v-model="filters.name" placeholder="用户名/真实姓名/邮箱"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" v-on:click="query">查询</el-button>
@@ -35,7 +35,7 @@
      <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="max-width: 200px;"></el-tree>
      
       <!--列表-->
-    <el-table :data="users" highlight-current-row  center    height="100%"@selection-change="selsChange" class="tableWrapper">
+    <el-table :data="users" highlight-current-row  center    height="100%"@selection-change="selsChange" class="tableWrapper" ref="userTable">
       <el-table-column type="selection" width="55">
       </el-table-column>
           
@@ -1035,8 +1035,8 @@
          
         this.userRole.assigned = row.roles;
         this.userRole.uid=row.id;
-  
         this.roleVisble=true;
+        this.$refs.userTable.clearSelection();
        
       },
       handleRoleBatch:function(){
@@ -1058,6 +1058,7 @@
          row.auths.forEach(x=>temp.push(x.auth_id));
          console.log(temp);
          this.authTree=temp;
+         this.$refs.userTable.clearSelection();
       },
      handleAuthBatch()
       {
@@ -1080,6 +1081,7 @@
          this.modelTree=temp;
          this.setMode(this.data3,row.directoryAuth);
          console.log(this.data3);
+         this.$refs.userTable.clearSelection();
       
 
       },

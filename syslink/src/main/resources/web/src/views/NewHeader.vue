@@ -316,12 +316,12 @@ import SylTitle from '@/assets/systitle.png'
             // console.log(abc);
             }
 
-            console.log(window.location.href);
-            console.log(window.location.protocol);
-            console.log(window.location.host);
-            console.log(window.location.port);
-            console.log(window.location.pathname);
-            console.log(window.location.hash);
+            // console.log(window.location.href);
+            // console.log(window.location.protocol);
+            // console.log(window.location.host);
+            // console.log(window.location.port);
+            // console.log(window.location.pathname);
+            // console.log(window.location.hash);
 
             // const uid = JSON.parse(localStorage.getItem('uid'));
             // console.log(uid);

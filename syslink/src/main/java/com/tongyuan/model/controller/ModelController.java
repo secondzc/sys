@@ -36,6 +36,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.ServletException;
@@ -1226,6 +1227,11 @@ public class ModelController extends  BaseController {
                                   @RequestParam(value = "directoryId", required = false) Long directoryId,
                                   @RequestParam(value = "scope", required = false) Boolean scope,
                                   HttpServletRequest request, HttpServletResponse response) {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+        if(multipartResolver.isMultipart(request))
+        {
+            String a = "aaa";
+        }
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
         Long fileSize = map.get("file").get(0).getSize();
