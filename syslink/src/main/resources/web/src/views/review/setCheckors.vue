@@ -154,15 +154,27 @@
 				let index1=this.addItemsDialog.reviewNodeName.indexOf(str);
 				let index2=str.indexOf(this.addItemsDialog.description);
 				let index3 = str.indexOf(this.addItemsDialog.userName);
+				let curSequence = this.items.length+1;
+				if(this.func.isNull(this.addItemsDialog.userName)){
+					this.$message({
+						message:'人员不能为空',
+					})
+				}else{
 				if(index1>0 ||index2>0 ||index3>0){
 					this.$message({
 						message:'配置中不能含有英文逗号，请重新输入',
 					})
 				}else{
+					if(this.func.isNull(this.addItemsDialog.reviewNodeName)){
+						this.addItemsDialog.reviewNodeName = '节点'+curSequence;
+					}
+					if(this.func.isNull(this.addItemsDialog.description)){
+						this.addItemsDialog.description = '这是节点'+curSequence;
+					}
 					this.items.push(this.addItemsDialog);
 					this.addItemsDialogVisible = false;		
 				}
-
+			    }
 			},
 			submitAll(){
 				if(this.items.length===0){
@@ -225,6 +237,12 @@
 			},
 			//修改时将scope取得的index记录于sequence中，提交修改时删除原来的，并加上新的
 			submitEdit() {
+				if(this.func.isNull(this.editItemsDialog.reviewNodeName)){
+					this.editItemsDialog.reviewNodeName = '节点'+(this.sequence+1);
+				}
+				if(this.func.isNull(this.editItemsDialog.description)){
+					this.editItemsDialog.description = '这是节点'+(this.sequence+1);
+				}
 				this.items.splice(this.sequence,1,this.editItemsDialog);
 				this.editItemsDialogVisible = false;
 			},
