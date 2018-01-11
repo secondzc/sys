@@ -1,9 +1,9 @@
 <template>
 	<div>
 		
-		<sapn style="font-size: 16px;text-decoration: underline;" v-if="isCheckor">意见</sapn>
+		<sapn style="font-size: 16px;text-decoration: underline;" v-if="isCheckor && isActive">意见</sapn>
 
-		<el-card style="width:660px;margin-left:20px;margin-top: 20px;"  v-if="isCheckor">
+		<el-card style="width:660px;margin-left:20px;margin-top: 20px;"  v-if="isCheckor && isActive">
 			<el-form>
 			<el-form-item label="是否通过:">
 				<el-radio-group v-model="isAgree">
@@ -67,6 +67,7 @@
 	export default{
 		data(){
 			return {
+				isActive,
 				instanceId:0,
 			    commentPages:[],
 			    isAgree:"",
@@ -77,6 +78,16 @@
 		},
 		props:['isCheckor'],
 		methods:{
+			judgeActive(){
+				let url = "/api/nodeInstance";
+				this.func.ajaxPost(url,{id:this.id},res=>{
+					if(res.data.flag === true){
+						if(res.data.msg.status === 2){
+							this.isActive = true;
+						}
+					}
+				})
+			},
 			getCommentPages(id){
 				let url="/api/comment/queryCommentPages";
 			    this.func.ajaxPost(url,{instanceId:id},res=>{
@@ -115,6 +126,7 @@
 			this.instanceId = sessionStorage.getItem('instanceId');
 			this.id = sessionStorage.getItem('id');
 			this.getCommentPages(this.instanceId);
+			this.judegeActive();
 		},
 	}
 </script>

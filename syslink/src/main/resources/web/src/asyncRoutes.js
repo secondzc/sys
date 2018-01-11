@@ -15,7 +15,7 @@ import upload from './views/model/Upload.vue'
 import GUser from './views/nav4/GUser.vue'
 
 import log from   './views/nav4/log.vue'
-import permission from './views/nav4/permission.vue'
+//import permission from './views/nav4/permission.vue'
 import role from './views/nav4/role.vue'
 import modelType from './views/nav4/modelType.vue'
 import fileType from './views/nav4/fileType.vue'
@@ -251,7 +251,7 @@ export let limitRoutes=[
             { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{auth:['management_role_list'],role:[1]}},
             // { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]} },
              { path: '',component:blankPage,  name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]}, children: [
-            { path: '/permission', component: permission, name: '系统权限',iconCls:'iconfont icon-xitong'},
+            //{ path: '/permission', component: permission, name: '系统权限',iconCls:'iconfont icon-xitong'},
              { path: '/directoryAuth', component: directoryAuth, name: '目录控制',iconCls:'iconfont icon-guize'}
         ] },
          //   { path: 'user', component: user, name: '应用监控' },
