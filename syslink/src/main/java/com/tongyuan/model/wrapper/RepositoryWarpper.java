@@ -32,11 +32,5 @@ public class RepositoryWarpper extends BaseControllerWarpper {
             map.put("updatedUnix",date);
         }
 
-
-
-        GUser user = userMapper.queryById(Long.parseLong(map.get("ownerId").toString()));
-        map.put("userName",user.getName());
-
-
     }
 }

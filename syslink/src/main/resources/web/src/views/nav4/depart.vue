@@ -45,7 +45,7 @@
         </el-form-item>
 
          <el-form-item label="父级部门" prop="parentId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.parentId"   change-on-select   :show-all-levels="false"  expand-trigger="hover">
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="editForm.parentId"   change-on-select :clearable="true"  :show-all-levels="false"  expand-trigger="hover">
         </el-cascader>
         </el-form-item>
 
@@ -69,7 +69,7 @@
         </el-form-item>
             
          <el-form-item label="父级部门" prop="parentId"   >
-         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.parentId"   change-on-select   :show-all-levels="false" expand-trigger="hover">
+         <el-cascader    :options="options"  :props="props"  @change="handleChange" v-model="addForm.parentId"   change-on-select   :clearable="true" :show-all-levels="false" expand-trigger="hover">
         </el-cascader>
         </el-form-item>
 
@@ -256,7 +256,7 @@
     methods: {
 
         handleChange(value) {
-        console.log(value);
+        // console.log(value);
       },
         //显示编辑界面
       handleEdit(index,row) {
@@ -264,11 +264,31 @@
         console.log(row);
         this.departName=row.name;
         this.editForm = Object.assign({}, row);
-        let a = this.$refs.table.getCheckedProp('id');
-        console.log(a);
+        this.departCheck(this.options,row.name);
+        console.log(this.options);
+
+        // let a = this.$refs.table.getCheckedProp('id');
+        // console.log(a);
      //   console.log(this.sels);
        // console.log(this.editForm);
       
+      },
+      departCheck(departTree,departName)
+      {
+         for(let i = 0;i<departTree.length;i++)
+         {
+          if(departTree[i].name==departName)
+          {
+            departTree[i]=Object.assign({},departTree[i],{disabled:true});
+            break;
+          }
+          if(departTree[i].children)
+          {
+            this.departCheck(departTree[i].children);
+          }
+
+
+         }
       },
     
       //显示新增界面
@@ -286,7 +306,7 @@
             
               let para = Object.assign({}, this.addForm);
               console.log(this.addForm.parentId);
-              if(this.addForm.parentId)
+              if(this.addForm.parentId&&this.addForm.parentId.length>0)
               {
                   para.parentId=para.parentId[para.parentId.length-1];
               }
@@ -331,7 +351,14 @@
               this.editLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
-              para.parentId = para.parentId[para.parentId.length-1];
+              if(this.editForm.parentId&&this.editForm.parentId.length>0)
+              {
+                 para.parentId = para.parentId[para.parentId.length-1];
+              }
+             else
+             {
+                para.parentId = 0 ;
+             }
               this.$http({
                 url:'/api/depart/update',
                 method:'post',
