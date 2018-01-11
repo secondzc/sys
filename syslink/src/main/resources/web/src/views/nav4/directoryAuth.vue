@@ -38,7 +38,7 @@
     </el-tree>
      
       <!--列表-->
-    <el-table :data="users1" highlight-current-row  center    height="100%"@selection-change="selsChange1" class="tableWrapper">
+    <el-table :data="users1" highlight-current-row  center    height="100%" @selection-change="selsChange1" class="tableWrapper" row-key="id" >
       <el-table-column type="selection" width="55">
       </el-table-column>
   
@@ -125,9 +125,9 @@
         <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="max-width: 200px;"></el-tree>
      
       <!--列表-->
-        <el-table :data="users" highlight-current-row  center   height="100%" @selection-change="selsChange">
-         <el-table-column type="selection" width="55">
-         </el-table-column>
+        <el-table :data="users" highlight-current-row  center   height="100%" @selection-change="selsChange"  @cell-click="cellClick"  ref="directoryAuthTable">
+        <!--  <el-table-column type="selection" width="55">
+         </el-table-column> -->
       
       <!--    <el-table-column prop="id" label="ID" width="80" sortable>
         </el-table-column> -->
@@ -145,6 +145,8 @@
     <el-radio :label="2" >读/写</el-radio>
     <el-radio :label="3" >完全</el-radio>
   </el-radio-group>
+
+   <el-button  size="small" type="text" icon="el-icon-close" @click="scope.row.tempMode=0" style="margin-left:5px;"></el-button>
 
 
    
@@ -306,14 +308,19 @@
       }
     },
     methods: {
-
-       filterTag(value, row) {
-        console.log(value);
-        console.log(row);
-        return row.tempMode === value;
+      modeClear()
+      {
+         console.log(111);
       },
 
-        
+       filterTag(value, row) {
+
+        return row.tempMode === value;
+      },
+     cellClick(row, column, cell, event)
+     {
+         this.$refs.directoryAuthTable.toggleRowSelection(row,true);
+     },
 
       nodeRender (h, { _self, node, data }) {
         // @todo: 使用jsx插件更好理解
