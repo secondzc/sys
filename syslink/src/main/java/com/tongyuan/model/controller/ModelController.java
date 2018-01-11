@@ -1227,11 +1227,6 @@ public class ModelController extends  BaseController {
                                   @RequestParam(value = "directoryId", required = false) Long directoryId,
                                   @RequestParam(value = "scope", required = false) Boolean scope,
                                   HttpServletRequest request, HttpServletResponse response) {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
-        if(multipartResolver.isMultipart(request))
-        {
-            String a = "aaa";
-        }
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
         Long fileSize = map.get("file").get(0).getSize();
