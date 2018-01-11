@@ -48,7 +48,7 @@ public class ModelTypeController extends  BaseController{
             modelTypeList = modelTypeService.getModelTypeList();
             modelTypeDtoList.addAll(modelTypeList);
             for (ModelTypeDto modelType :modelTypeDtoList) {
-                modelType.setFilePath("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + modelType.getFilePath());
+                modelType.setFilePath( modelType.getFilePath());
             }
         }catch (Exception e){
             e.printStackTrace();

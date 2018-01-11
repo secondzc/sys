@@ -57,12 +57,12 @@
         <el-form ref="editForm"   :model="editForm" label-width="80px" class="demo-form-inline">
 
 
-            <el-form-item label="模型名">
+            <el-form-item label="模型类型名称">
                 <el-col :span="6">
                     <el-input  v-model="editForm.name" disabled="disabled"></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="模型图标">
+            <el-form-item label="模型类型图标">
                 <template>
                     <section>
                         <el-upload
@@ -306,6 +306,7 @@
                 });
         },
         addModelType(){
+          console.log(this.$refs.ModelTypePicture.uploadFiles[0]);
             this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
             var _this = this;
             let para = Object.assign({}, _this.form);

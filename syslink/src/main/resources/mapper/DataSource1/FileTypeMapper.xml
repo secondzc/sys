@@ -38,4 +38,11 @@
         from file_type
         where ext = #{ext}
     </select>
+    <select id="getDefaultIcon" resultMap="DtoMap" resultType="com.tongyuan.model.domain.FileType">
+        SELECT  *,attachment.icon_url as icon_path
+        from file_type
+        LEFT JOIN  attachment
+        on file_type.attachment_id = attachment.id
+        where  file_type.ext = 'default'
+    </select>
 </mapper>

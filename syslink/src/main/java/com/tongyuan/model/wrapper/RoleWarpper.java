@@ -31,9 +31,9 @@ public class RoleWarpper extends BaseControllerWarpper {
         Integer roleId = Integer.parseInt(map.get("id").toString());
         String createDate = map.get("createDate").toString();
         map.put("createDate",createDate);
-        List<Auth> roleAuths = authMapper.queryAuthByRoleId(roleId);
-        map.put("permissions",roleAuths);
-        List<RoleDirectoryAuth> roleDirectoryAuths = roleDirectoryAuthMapper.queryByRoleId(Integer.parseInt(map.get("id").toString()));
-        map.put("directoryAuth",roleDirectoryAuths);
+//        List<Auth> roleAuths = authMapper.queryAuthByRoleId(roleId);
+//        map.put("permissions",roleAuths);
+//        List<RoleDirectoryAuth> roleDirectoryAuths = roleDirectoryAuthMapper.queryByRoleId(Integer.parseInt(map.get("id").toString()));
+//        map.put("directoryAuth",roleDirectoryAuths);
     }
 }

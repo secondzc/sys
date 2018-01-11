@@ -1,5 +1,6 @@
 package com.tongyuan.model.dao;
 
+import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.domain.Attachment;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,8 +17,8 @@ public interface AttachmentMapper {
     public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
     public List<Attachment> getModelFiles(Long modelId);
-    public List<Attachment> getModelDetail(Long modelId);
-    public List<Attachment> getAttachByParentId(Long attachId);
+    public List<AttachmentDto> getModelDetail(Long modelId);
+    public List<AttachmentDto> getAttachByParentId(Long attachId);
     public Attachment getParentAttach(Long attachmentId);
     public List<Attachment> getAllFiles();
     public List<Attachment> queryNullModelId(Long modelId);

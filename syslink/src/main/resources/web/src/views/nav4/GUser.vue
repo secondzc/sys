@@ -794,6 +794,9 @@
           email:[
           { required:true,validator:validateEmail1,trigger:'blur'}
           ],
+            fullName:[
+          { required:true,validator:validateFullName,trigger:'blur'}
+          ],
       
               passwd:[
           { validator:validatePass3,trigger:'blur'}
@@ -1052,7 +1055,7 @@
          this.permissionVisible=true;
          let temp =  [];
 
-         row.auths.forEach(x=>temp.push(x.authId));
+         row.auths.forEach(x=>temp.push(x.auth_id));
          console.log(temp);
          this.authTree=temp;
       },

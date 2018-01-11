@@ -67,7 +67,7 @@ public class FileTypeController extends  BaseController{
             for (Attachment attachment : iconList) {
                 if (attachment.getName().equals(iconName)) {
                     fileType.setAttachmentId(attachment.getId());
-                    fileType.setExt(fileName);
+                    fileType.setExt(fileName.toLowerCase().trim());
                     fileTypeService.add(fileType);
                     attachment.setModelId(-2);
                     attachmentService.update(attachment);

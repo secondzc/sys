@@ -57,12 +57,12 @@
         <el-form ref="editForm"   :model="editForm" label-width="80px" class="demo-form-inline">
 
 
-            <el-form-item label="文件名">
+            <el-form-item label="文件类型名称">
                 <el-col :span="6">
                     <el-input  v-model="editForm.name" disabled="disabled"></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="文件图标">
+            <el-form-item label="文件图标类型">
                 <template>
                     <section>
                         <el-upload

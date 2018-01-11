@@ -13,6 +13,8 @@ public class AttachmentDto {
     private String iconUrl;
     //文件大小
     private long size;
+    private String fileSize;
+
     //本地相对路径
     private String filePath ;
     //Url相对路径
@@ -27,6 +29,32 @@ public class AttachmentDto {
     private long modelId;
     //模型名称
     private String modelName;
+    private String tempRelativePath;
+    private String fileIconUrl;
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getTempRelativePath() {
+        return tempRelativePath;
+    }
+
+    public void setTempRelativePath(String tempRelativePath) {
+        this.tempRelativePath = tempRelativePath;
+    }
+
+    public String getFileIconUrl() {
+        return fileIconUrl;
+    }
+
+    public void setFileIconUrl(String fileIconUrl) {
+        this.fileIconUrl = fileIconUrl;
+    }
 
     public long getId() {
         return id;

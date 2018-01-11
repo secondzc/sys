@@ -195,11 +195,11 @@
 
                 if(gogsPort.length>0)
                 {
-                  window.location.href="http://"+domain+gogsPort+"/"+row.userName+"/"+row.name;
+                  window.location.href="http://"+domain+gogsPort+"/"+row.ownerName+"/"+row.name;
                 }
                 else
                 {
-                  window.location.href="http://"+domain+'/'+gogsDomain+"/"+row.userName+"/"+row.name;
+                  window.location.href="http://"+domain+'/'+gogsDomain+"/"+row.ownerName+"/"+row.name;
                 }
       },
      

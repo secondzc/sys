@@ -13,6 +13,7 @@ import com.tongyuan.gogs.service.StarService;
 import com.tongyuan.gogs.service.WatchService;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
+import com.tongyuan.model.DTO.FileTypeDto;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.enums.ModelClasses;
@@ -90,6 +91,8 @@ public class ModelController extends  BaseController {
     private ModelTypeService modelTypeService;
 	@Autowired
     private LogService logService;
+	@Autowired
+    private FileTypeService fileTypeService;
 
     public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId){
         Map<String,Object> xmlMap = entry.getValue();
@@ -1300,8 +1303,9 @@ public class ModelController extends  BaseController {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                     statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
+                    Map<String,Object> directory = directoryService.queryMapById(directoryId);
                     String title = "上传模型";
-                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name");
+                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name")+"\t到分类\t"+directory.get("name");
                     logService.addLog(title,content);
                 } catch (SqlNumberException e) {
                     e.printStackTrace();
@@ -1339,23 +1343,32 @@ public class ModelController extends  BaseController {
                                      @RequestParam(value = "catalogId",required = false)Long catalogId,
                                      HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
-        List<Attachment> modelDetail = new ArrayList<>();
-        List<AttachmentDto> modelDetailDto = new ArrayList<>();
+        List<AttachmentDto> modelDetail = new ArrayList<>();
+        FileTypeDto fileTypeDto = new FileTypeDto();
         try{
+            //查找默认的fileType图标
+            fileTypeDto = fileTypeService.getDefaultIcon();
             //模型目录下的文件和文件
             if(catalogId == null){
-                List<Attachment> modelFiles = attachmentService.getModelDetail(modelId);
+                List<AttachmentDto> modelFiles = attachmentService.getModelDetail(modelId);
                 modelDetail = attachmentService.getModelDetailList(modelFiles,modelId,modelDetail);
             }else{
-                List<Attachment> modelFiles = attachmentService.getAttachByParentId(catalogId);
+                List<AttachmentDto> modelFiles = attachmentService.getAttachByParentId(catalogId);
                 modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,catalogId);
             }
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-        modelDetailDto = attachmentService.transformDtoList(modelDetail);
-        jo.put("data",modelDetailDto);
+        for (AttachmentDto attachmentDto:modelDetail) {
+            if(StringUtil.isNull(attachmentDto.getFileIconUrl())){
+                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + fileTypeDto.getIconPath());
+            }else{
+                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
+            }
+            attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
+        }
+        jo.put("data",modelDetail);
         return returnSuccessInfo(jo);
     }
 
@@ -1364,17 +1377,16 @@ public class ModelController extends  BaseController {
     public JSONObject getModelFiles(@RequestParam(value = "modelId",required = false)Long modelId,
                                      HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
-        List<AttachmentDto> modelDetailDto = new ArrayList<>();
+        List<AttachmentDto> modelFiles = new ArrayList<>();
         try{
             //模型目录下的文件和文件
-                List<Attachment> modelFiles = attachmentService.getModelDetail(modelId);
-                modelDetailDto = attachmentService.transformDtoList(modelFiles);
+            modelFiles = attachmentService.getModelDetail(modelId);
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
 
-        jo.put("data",modelDetailDto);
+        jo.put("data",modelFiles);
         return returnSuccessInfo(jo);
     }
 
@@ -1383,24 +1395,22 @@ public class ModelController extends  BaseController {
     public JSONObject getParentFiles(@RequestParam(value = "catalogId",required = false)Long catalogId,
                                     HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
-        List<AttachmentDto> modelDetailDto = new ArrayList<>();
         Attachment parentAttach = new Attachment();
-        List<Attachment> modelDetail = new ArrayList<>();
+        List<AttachmentDto> modelDetail = new ArrayList<>();
         try{
             //模型目录下的文件和文件
             parentAttach = attachmentService.getParentAttach(catalogId);
             if(parentAttach == null){
                 return returnSuccessInfo(jo);
             }
-            List<Attachment> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
+            List<AttachmentDto> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
             modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,parentAttach.getId());
-            modelDetailDto = attachmentService.transformDtoList(modelDetail);
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
         jo.put("parentAttach",parentAttach);
-        jo.put("data",modelDetailDto);
+        jo.put("data",modelDetail);
         return returnSuccessInfo(jo);
     }
 
@@ -1412,8 +1422,8 @@ public class ModelController extends  BaseController {
         JSONObject jo = new JSONObject();
         try{
             Model model = modelService.queryModelById(CurrentNodeId);
-            model.setDirectoryId(SelectedNodeId);
             Map<String,Object> oldDirectory = directoryService.queryMapById(model.getDirectoryId());
+            model.setDirectoryId(SelectedNodeId);
             Map<String,Object> newDirectory = directoryService.queryMapById(SelectedNodeId);
             modelService.update(model);
             String title = "移动模型";

@@ -21,4 +21,6 @@ public interface FileTypeService {
     public void update(FileType fileType);
     //删除fileType
     public void delete(String fileType);
+    //获取默认的icon
+    public FileTypeDto getDefaultIcon();
 }

@@ -382,6 +382,18 @@ public class ModelUtil {
         return relativePath;
     }
 
-
+    public static String getFileSize(Long size){
+        String fileSize = "";
+        if (size < 1024) {
+            fileSize = size + "BT";
+        } else if (size < 1048576) {
+            fileSize =  size / 1024 + "KB";
+        } else if (size < 1073741824) {
+            fileSize =  size / 1048576 + "MB";
+        } else {
+            fileSize = size / 1073741824 +"GB";
+        }
+        return  fileSize;
+    }
 
 }

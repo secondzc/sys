@@ -2,7 +2,8 @@
 	<div>
 		
 		<sapn style="font-size: 16px;text-decoration: underline;" v-if="isCheckor">意见</sapn>
-		<el-card style="width:660px;margin-left:20px;"  v-if="isCheckor">
+
+		<el-card style="width:660px;margin-left:20px;margin-top: 20px;"  v-if="isCheckor">
 			<el-form>
 			<el-form-item label="是否通过:">
 				<el-radio-group v-model="isAgree">
@@ -19,7 +20,7 @@
 		    </el-form>
 		</el-card>
 
-		<div style="margin-top: 20px;">
+		<div style="margin-top: 20px;margin-bottom: 20px;">
 			<sapn style="font-size: 16px;text-decoration: underline;">处理人意见区</sapn>
 		</div>
 					
