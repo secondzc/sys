@@ -20,7 +20,7 @@ public interface AttachmentMapper {
     public List<AttachmentDto> getModelDetail(Long modelId);
     public List<AttachmentDto> getAttachByParentId(Long attachId);
     public Attachment getParentAttach(Long attachmentId);
-    public List<Attachment> getAllFiles();
+    public List<AttachmentDto> getAllFiles(Boolean scope);
     public List<Attachment> queryNullModelId(Long modelId);
     public Attachment queryById(Long attachmentId);
     public List<Attachment> getAttachmentsByModelId(Long modelId);

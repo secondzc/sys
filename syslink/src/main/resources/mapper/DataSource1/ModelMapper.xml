@@ -66,6 +66,9 @@
             #{idItem}
         </foreach>
     </delete>
+    <delete id="delete">
+        DELETE FROM model WHERE id = #{id}
+    </delete>
     <select id="queryModelList" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
         SELECT
         <include refid="baseColumnList"></include>

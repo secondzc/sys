@@ -91,7 +91,7 @@ public class FileTypeController extends  BaseController{
         try {
             fileTypeList = fileTypeService.getFileTypeList();
             for (FileTypeDto fileTypeDto : fileTypeList) {
-                if(fileTypeDto.getExt().equals(fileTypeName)){
+                if(fileTypeDto.getExt().equals(fileTypeName.toLowerCase())){
                     return  returnErrorInfo(jo);
                 }
             }

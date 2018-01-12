@@ -2,6 +2,7 @@ package com.tongyuan.model.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
@@ -27,6 +28,7 @@ import com.tongyuan.pageModel.VariableTreeObj;
 import com.tongyuan.tools.ServletUtil;
 import com.tongyuan.tools.StringUtil;
 import com.tongyuan.util.DateUtil;
+import com.tongyuan.util.DeleteFileUtil;
 import com.tongyuan.util.ModelUtil;
 import com.tongyuan.util.ResourceUtil;
 import org.slf4j.Logger;
@@ -931,8 +933,15 @@ public class ModelController extends  BaseController {
             Model model = modelService.queryModelById(modelId);
 //            String name = modelUtil.splitName(model.getName());
 //             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getModelFilePath().substring(7);
+            //下载之前先清除上次下载存在的同名文件
+            String modelDir = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + model.getName();
+            String modelZip = modelDir+".zip";
+            DeleteFileUtil.delete(modelDir);
+            DeleteFileUtil.delete(modelZip);
             List<Attachment> attachmentList = attachmentService.getAttachmentsByModelId(modelId);
-             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,model).substring(7);
+            if(attachmentList.size() >0){
+                realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,model).substring(7);
+            }
             }catch(Exception e) {
                 e.printStackTrace();
                 return returnErrorInfo(jo);
@@ -1238,8 +1247,10 @@ public class ModelController extends  BaseController {
         String absolutePath = "";
         //web端相对路径
         String tempRelativePath = "";
+        String uniqueIdentifier = "" ;
         try {
             tempRelativePath = modelUtil.getFileContent((FileInputStream) multiRequest.getPart("relativePath").getInputStream());
+            uniqueIdentifier = modelUtil.getFileContent((FileInputStream) multiRequest.getPart("identifier").getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ServletException e) {
@@ -1252,7 +1263,7 @@ public class ModelController extends  BaseController {
             bytes = map.get("file").get(0).getBytes();
             resourceUtil.writeFile(absolutePath,0,fileSize,bytes);
             //创建一个attachment对象
-            attachmentService.addFileOfModel(fileName,relativePath,fileSize,tempRelativePath);
+            attachmentService.addFileOfModel(fileName,relativePath,fileSize,tempRelativePath,uniqueIdentifier);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("文件写入出错!");
@@ -1292,6 +1303,8 @@ public class ModelController extends  BaseController {
             }
             //查询刚插入的attachments
             List<Attachment> attachmentFileList = attachmentService.queryNullModelId(modelId);
+            //过滤掉没有提交到表单的文件
+            attachmentFileList = attachmentService.getRealFileList(attachmentFileList,fileJsonArrayDtoList);
             //更新上传文件的modelId和parentId
             attachmentService.UpdateModelFrame(attachmentFileList,modelId);
             //删除不必要的文件
@@ -1439,20 +1452,72 @@ public class ModelController extends  BaseController {
 
     @RequestMapping(value = "/getAllFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getAllFiles(HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject getAllFiles(@RequestParam(value = "scope",required = false)Boolean scope,
+            HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
-        List<AttachmentDto> allFilesDto = new ArrayList<>();
+        List<AttachmentDto> allFiles = new ArrayList<>();
         try{
-            List<Attachment> allFiles = attachmentService.getAllFiles();
-            allFilesDto = attachmentService.transformDtoList(allFiles);
+            allFiles = attachmentService.getAllFiles(scope);
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
             return  returnErrorInfo(jo);
         }
-        jo.put("data", allFilesDto);
+        jo.put("data", allFiles);
         return returnSuccessInfo(jo);
     }
+
+    @RequestMapping(value = "/checkName", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject checkName(@RequestParam(value = "checkModelName", required = false) String checkModelName,
+                                @RequestParam(value = "directoryId", required = false) String directoryId,
+                                HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        Model model = new Model();
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("fileName", checkModelName);
+            params.put("directoryId", directoryId);
+            model = modelService.queryByNameAndDirId(params);
+            if (model == null){
+                return returnSuccessInfo(jo);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            logger.error("获取模型类型列表失败");
+            return returnErrorInfo(jo);
+        }
+        return returnErrorInfo(jo);
+    }
+
+    @RequestMapping(value = "/deleteModel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject deleteModel(@RequestParam(value = "modelName", required = false) String modelName,
+                                @RequestParam(value = "directoryId", required = false) String directoryId,
+                                HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        Model model = new Model();
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("fileName", modelName);
+            params.put("directoryId", directoryId);
+            model = modelService.queryByNameAndDirId(params);
+            if (model == null){
+                return returnErrorInfo(jo);
+            }else{
+                modelService.delete(model.getId());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            logger.error("获取模型类型列表失败");
+            return returnErrorInfo(jo);
+        }
+        return returnSuccessInfo(jo);
+    }
+
+
 
 
 

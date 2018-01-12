@@ -14,7 +14,7 @@
         <result column="is_floder" property="isFloder" jdbcType="BOOLEAN"/>
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
         <result column="temp_relative_path" property="tempRelativePath" jdbcType="VARCHAR"/>
-        <result column="modelName" property="modelName" jdbcType="VARCHAR"/>
+        <result column="identifier" property="identifier" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="DtoMap" type="com.tongyuan.model.DTO.AttachmentDto">
@@ -30,6 +30,7 @@
         <result column="is_floder" property="isFloder" jdbcType="BOOLEAN"/>
         <result column="model_id" property="modelId" jdbcType="BIGINT"/>
         <result column="temp_relative_path" property="tempRelativePath" jdbcType="VARCHAR"/>
+        <result column="identifier" property="identifier" jdbcType="VARCHAR"/>
         <result column="modelName" property="modelName" jdbcType="VARCHAR"/>
         <result column="fileIconUrl" property="fileIconUrl" jdbcType="VARCHAR"/>
     </resultMap>
@@ -38,15 +39,15 @@
     </sql>
 
     <insert id="add" parameterType="com.tongyuan.model.domain.Attachment" useGeneratedKeys="true" keyProperty="id">
-         INSERT INTO attachment (parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id,temp_relative_path) VALUES
+         INSERT INTO attachment (parent_id,name,ext,icon_url,size,file_path,http_path,create_time,is_floder,model_id,temp_relative_path,identifier) VALUES
          (#{parentId}, #{name}, #{ext},#{iconUrl}, #{size}, #{filePath},#{httpPath}, #{createTime}, #{isFloder},
-        #{modelId},#{tempRelativePath})
+        #{modelId},#{tempRelativePath},#{identifier})
     </insert>
 
     <update id="update">
          UPDATE attachment SET
         parent_id = #{parentId},name = #{name},ext = #{ext},icon_url = #{iconUrl},size = #{size}, file_path = #{filePath}, http_path = #{httpPath},
-        create_time = #{createTime},is_floder = #{isFloder}, model_id = #{modelId},temp_relative_path = #{tempRelativePath}
+        create_time = #{createTime},is_floder = #{isFloder}, model_id = #{modelId},temp_relative_path = #{tempRelativePath},identifier = #{identifier}
         WHERE id = #{id}
     </update>
     <delete id="delete">
@@ -60,7 +61,7 @@
     <select id="getModelFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />
         FROM  attachment
-        WHERE model_id = #{modelId}
+        WHERE model_id = #{modelId} and icon_url is null or trim(icon_url)= ''
     </select>
     <select id="getModelDetail" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
         <!--SELECT <include refid="baseColumnList" />-->
@@ -108,7 +109,7 @@
         where id = #{attachmentId}) m
         on m.parent_id = n.id
     </select>
-    <select id="getAllFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+    <select id="getAllFiles" resultMap="DtoMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT *,m.name AS modelName
             from attachment a
             LEFT JOIN
@@ -116,7 +117,8 @@
             FROM model
             where 1=1) m
             on
-            1= 1 AND a.is_floder = false  and m.id = a.model_id and a.icon_url is null or trim(a.icon_url)= ''
+             m.id = a.model_id
+          where a.is_floder = false and m.scope = #{scope} and a.icon_url is null or trim(a.icon_url)= ''
     </select>
     <select id="queryNullModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT *
@@ -131,7 +133,7 @@
     <select id="getAttachmentsByModelId" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />
         FROM  attachment
-        where model_id = #{modelId}
+        where model_id = #{modelId} and icon_url is null or trim(icon_url)= ''
     </select>
     <select id="getInsertIcon"  resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />

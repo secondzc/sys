@@ -15,6 +15,7 @@ public interface ModelMapper {
     Long add(Model model);
     int update(Model model);
     int deleteByIds(String[] ids);
+    public void delete(Long id);
     public List<Model> queryModelList(Map<String, Object> params);
     public Model queryModelByName(String name);
     //根据Name和模型分类Id查找非package模型

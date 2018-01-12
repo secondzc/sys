@@ -74,6 +74,11 @@ public class ResourceUtil {
         return getString("exportFileUrl");
     }
 
+    public static final String getXiaZai(){
+        return getString("xiazai");
+    }
+
+
     /**
      * 获取文件仓目录
      * @return
@@ -114,6 +119,14 @@ public class ResourceUtil {
     }
     public String getMappedPackage(){
         String path = ResourceUtil.getMapped();
+        if(StringUtil.isNull(path)){
+            path = "";
+        }
+        return  path;
+    }
+
+    public String getXiaZaiPath(){
+        String path = ResourceUtil.getXiaZai();
         if(StringUtil.isNull(path)){
             path = "";
         }

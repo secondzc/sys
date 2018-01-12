@@ -195,7 +195,6 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachmentDto.setParentId(attachment.getParentId());
         attachmentDto.setModelId(attachment.getModelId());
         attachmentDto.setCreateTime(DateUtil.format(attachment.getCreateTime(),"yyyy-MM-dd"));
-        attachmentDto.setModelName(attachment.getModelName());
         return attachmentDto;
     }
 
@@ -218,8 +217,8 @@ public class AttachmentServiceImpl implements AttachmentService {
      * @return
      */
     @Override
-    public List<Attachment> getAllFiles() {
-        return this.attachmentMapper.getAllFiles();
+    public List<AttachmentDto> getAllFiles(Boolean scope) {
+        return this.attachmentMapper.getAllFiles(scope);
     }
 
     /**
@@ -230,7 +229,7 @@ public class AttachmentServiceImpl implements AttachmentService {
      * @param tempRelativePath
      */
     @Override
-    public void addFileOfModel(String fileName, String filePath, Long fileSize, String tempRelativePath) {
+    public void addFileOfModel(String fileName, String filePath, Long fileSize, String tempRelativePath,String uniqueIdentifier) {
         Attachment attachment = new Attachment();
         attachment.setName(fileName);
         attachment.setExt(ModelUtil.getFileExt(fileName));
@@ -240,6 +239,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachment.setSize(fileSize);
         attachment.setTempRelativePath(tempRelativePath);
         attachment.setModelId(-1);
+        attachment.setIdentifier(uniqueIdentifier);
         this.attachmentMapper.add(attachment);
     }
 
@@ -292,11 +292,11 @@ public class AttachmentServiceImpl implements AttachmentService {
         for (Attachment attachment:attachmentList) {
             if(!attachment.getFloder()){
                 //下载的相对路径
-                String downloadAbsolutePath = modelName +"/" + attachment.getTempRelativePath();
+                String downloadAbsolutePath = ResourceUtil.getXiaZai() +modelName +"/" + attachment.getTempRelativePath();
                 FileUtils.copyFile(resourceUtil.getunzipPath()+attachment.getFilePath(),resourceUtil.getunzipPath()+downloadAbsolutePath);
             }
         }
-        String downloadDirPath = resourceUtil.getunzipPath()+ modelName;
+        String downloadDirPath = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + modelName;
         ZipDir.createZip(downloadDirPath,downloadDirPath+".zip");
         return downloadDirPath + ".zip";
     }
@@ -336,6 +336,22 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public List<Attachment> getDeleteAttach() {
         return this.attachmentMapper.getDeleteAttach();
+    }
+
+    @Override
+    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList, List<FileJsonArrayDto> fileJsonArrayDtoList) {
+        List<Attachment> fileList = new ArrayList<>();
+        for (FileJsonArrayDto fileJsonDto: fileJsonArrayDtoList) {
+            for (Attachment attachment: attachmentFileList) {
+                if(!StringUtil.isNull(fileJsonDto.getUniqueIdentifier())){
+                    if(fileJsonDto.getUniqueIdentifier().equals(attachment.getIdentifier())){
+                        fileList.add(attachment);
+                        continue;
+                    }
+                }
+            }
+        }
+        return fileList;
     }
 
     /**

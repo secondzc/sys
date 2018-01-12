@@ -39,6 +39,11 @@ public class ModelServiceImpl implements ModelService{
     }
 
     @Override
+    public void delete(Long id) {
+        this.modelMapper.delete(id);
+    }
+
+    @Override
     public List<Model> queryModelList(Map<String, Object> params) {
         PageHelper.startPage(Integer.parseInt(params.get("page").toString()), Integer.parseInt(params.get("rows").toString()));
         return this.modelMapper.queryModelList(params);

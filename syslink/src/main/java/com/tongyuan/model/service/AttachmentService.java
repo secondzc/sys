@@ -28,8 +28,8 @@ public interface AttachmentService {
     public AttachmentDto transformToDto (Attachment attachment);
     public List<AttachmentDto> transformDtoList(List<Attachment> attachmentList);
     public Attachment getParentAttach(Long attachmentId);
-    public List<Attachment> getAllFiles();
-    public void addFileOfModel(String fileName,String filePath,Long fileSize,String tempRelativePath);
+    public List<AttachmentDto> getAllFiles(Boolean scope);
+    public void addFileOfModel(String fileName,String filePath,Long fileSize,String tempRelativePath,String uniqueIdentifier);
     //查找刚插入的数据和刚插入的文件夹数据
     public List<Attachment> queryNullModelId(Long modelId);
     public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId);
@@ -45,4 +45,6 @@ public interface AttachmentService {
     public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId);
     //获取要删除的数据
     public List<Attachment> getDeleteAttach();
+    //过滤掉不存在表单的文件
+    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList,List<FileJsonArrayDto> fileJsonArrayDtoList);
 }

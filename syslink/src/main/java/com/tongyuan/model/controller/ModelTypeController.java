@@ -48,7 +48,7 @@ public class ModelTypeController extends  BaseController{
             modelTypeList = modelTypeService.getModelTypeList();
             modelTypeDtoList.addAll(modelTypeList);
             for (ModelTypeDto modelType :modelTypeDtoList) {
-                modelType.setFilePath( modelType.getFilePath());
+                modelType.setFilePath( "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) +modelType.getFilePath());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class ModelTypeController extends  BaseController{
         try {
             modelTypeList = modelTypeService.getModelTypeList();
             for (ModelTypeDto modelTypeDto : modelTypeList) {
-                if(modelTypeDto.getName().equals(modelTypeName)){
+                if(modelTypeDto.getName().equals(modelTypeName.toLowerCase())){
                     return  returnErrorInfo(jo);
                 }
             }

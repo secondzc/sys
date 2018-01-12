@@ -31,6 +31,15 @@ public class AttachmentDto {
     private String modelName;
     private String tempRelativePath;
     private String fileIconUrl;
+    private String identifier;
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
     public String getFileSize() {
         return fileSize;

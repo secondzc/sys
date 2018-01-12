@@ -14,6 +14,7 @@ public interface ModelService {
     Long add(Model model);
     int update(Model model);
     int deleteByIds(String[] ids);
+    public void delete(Long id);
     public List<Model> queryModelList(Map<String, Object> params);
      Model queryModelByName(String name);
      //根据Name和模型分类Id查找非package模型
@@ -26,6 +27,7 @@ public interface ModelService {
     List<Model> queryModelByParId(Long id);
     //model解析文件目录，插入数据库
   //  public void insertModelData(String modelDir,String modelName,String modelPath,String description);
+    //查看是否在目录下重名
     public Model queryByNameAndDirId(Map<String, Object> params);
     public List<Model> getNullParId();
     public Long addOneModel(GUser user, Long directoryId, Boolean scope, Map<String,Object> map,Long iconUrlId);
