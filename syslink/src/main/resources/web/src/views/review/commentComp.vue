@@ -67,7 +67,7 @@
 	export default{
 		data(){
 			return {
-				isActive,
+				isActive: false,
 				instanceId:0,
 			    commentPages:[],
 			    isAgree:"",
@@ -126,7 +126,7 @@
 			this.instanceId = sessionStorage.getItem('instanceId');
 			this.id = sessionStorage.getItem('id');
 			this.getCommentPages(this.instanceId);
-			this.judegeActive();
+			this.judgeActive();
 		},
 	}
 </script>

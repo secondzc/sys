@@ -119,11 +119,11 @@
 			},
 			handleCurrentChange(val){
                 this.page = val;
-                this.getInstance();
+                this.getDetail();
             },
             handleSizeChange(val) {
                 this.pageSize = val;
-                this.getInstance();
+                this.getDetail();
             },
 			selsChange(sels){
 				this.sels = sels;
