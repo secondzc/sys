@@ -41,7 +41,18 @@
                                   width="80%"
                                   center
                               >
-                                  <upload @closeDialog="closeDialog" @returnToModel="returnToModel"></upload>
+                                  <el-dialog
+                                          width="30%"
+                                          title="是否覆盖之前的模型"
+                                          :visible.sync="file.innerVisible"
+                                          append-to-body
+                                          center>
+                                      <div slot="footer" class="dialog-footer">
+                                          <el-button @click.native="file.innerVisible= !file.innerVisible">取消</el-button>
+                                          <el-button type="primary" @click.native="cover" >覆盖</el-button>
+                                      </div>
+                                  </el-dialog>
+                                  <upload ref="uploadModel" @closeDialog="closeDialog" @returnToModel="returnToModel" @openInnerVisible="openInnerVisible"></upload>
 
                           </el-dialog>
                           <el-dialog
@@ -667,6 +678,8 @@
                 file:{
                     dialogVisible: false,
                     modelDialog: false,
+                    innerVisible :false,
+                    name : '',
                 },
                 SelectedNode : '',
                 CurrentNode : '',
@@ -1230,7 +1243,7 @@
                 });
             },
             DomReady(){
-                this.$refs.getSearchList.getFileList(this.filters.name);
+                this.$refs.getSearchList.getFileList(this.filters.name,true);
             },
             showModel(data){
                 this.packageDetailDialog.SearchDialog =false;
@@ -1244,6 +1257,14 @@
                 this.$store.dispatch('sendTreeModelId', data.modelId);
                 this.$refs.packageDetail.showFile(data);
             },
+            openInnerVisible(data){
+                this.file.innerVisible =true;
+                this.file.name = data;
+            },
+            cover(){
+                this.file.innerVisible = false;
+                this.$refs.uploadModel.coverModel(this.file.name);
+            }
 
 //            handleClose(done) {
 //                this.$confirm('确认关闭？')

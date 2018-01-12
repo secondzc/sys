@@ -57,12 +57,12 @@
         <el-form ref="editForm"   :model="editForm" label-width="80px" class="demo-form-inline">
 
 
-            <el-form-item label="模型类型名称">
+            <el-form-item label="模型名">
                 <el-col :span="6">
                     <el-input  v-model="editForm.name" disabled="disabled"></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="模型类型图标">
+            <el-form-item label="模型图标">
                 <template>
                     <section>
                         <el-upload
@@ -88,17 +88,17 @@
 
 
     <!--新增角色界面-->
-    <el-dialog title="新建模型类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog title="新建一模型类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
         <!--<ModelTypePicture></ModelTypePicture>-->
         <el-form ref="form" :rules="form.rules"  :model="form" label-width="80px" class="demo-form-inline">
 
 
-            <el-form-item label="模型名">
+            <el-form-item label="模型类型名称" prop="name">
                 <el-col :span="6">
                     <el-input  v-model="form.name" ></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="模型图标">
+            <el-form-item label="模型类型图标">
                 <template>
                     <section>
                         <el-upload
@@ -138,10 +138,23 @@
       },
     data() {
         var validateName = (rule, value, callback) => {
-            if (value.trim() == '') {
-                callback(new Error('不能全为空格和空值'));
-            }else {
-                callback();
+            let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+            console.log(value);
+
+            if(!value)
+            {
+                callback(new Error('请输入模型分类名称'));
+            }
+            else
+            {
+                if (re.test(value))
+                {
+                    callback();
+                }
+                else
+                {
+                    callback(new Error('只允许输入中文、字母、数字'));
+                }
             }
         };
       return {
@@ -306,7 +319,6 @@
                 });
         },
         addModelType(){
-          console.log(this.$refs.ModelTypePicture.uploadFiles[0]);
             this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
             var _this = this;
             let para = Object.assign({}, _this.form);

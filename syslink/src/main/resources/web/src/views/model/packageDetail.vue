@@ -73,7 +73,7 @@
 
                         <el-table-column
                                 label="文件大小"
-                                prop="fileSize"
+                                prop=""
                                 min-width=100>
                         </el-table-column>
 

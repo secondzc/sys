@@ -1,10 +1,13 @@
 <template>
     <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader"
-              @file-complete="fileComplete" @complete="complete"></uploader>
+              @file-complete="fileComplete" @complete="complete"  @file-added="fileAdded" ></uploader>
+    <!--@files-submitted="filesAdd"-->
+
 </template>
 
 <script>
     import uploader from 'vue-simple-uploader'
+    import util from '../../common/js/util'
     import global_ from '../global.vue'
     export default {
         components: {
@@ -17,9 +20,11 @@
 // '//jsonplaceholder.typicode.com/posts/',
                     testChunks: false,
                     relativePath :true,
+                    chunkSize : 400*1024*1024,
                 },
                 attrs: {
                     accept: 'image/*',
+                    ignore : false,
                 },
                 statusText: {
                     success: '成功了',
@@ -66,7 +71,19 @@
                         }
                     }
                 }
-            }
+            },
+            fileAdded(file){
+                console.log("11111");
+                if (file.size > 400*1024*1024) {
+                    this.$message({
+                        message: '存在单文件400M以上文件,从文件列表中已删除，请重新选择文件！',
+                        type: 'error',
+                        duration: 2000
+                    });
+                    file.ignored = true;
+                }
+                file.uniqueIdentifier = util.UUID.uuid(8,16);
+            },
         },
         mounted () {
             this.$nextTick(() => {

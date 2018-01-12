@@ -2,10 +2,10 @@
     <section>
         <el-container>
                 <el-aside :span="16">
-                    <el-form ref="form"  :model="form" label-width="80px" class="demo-form-inline">
+                    <el-form ref="form"  :model="form" :rules="form.rules" label-width="80px" class="demo-form-inline">
 
 
-                        <el-form-item label="模型名">
+                        <el-form-item label="模型名" prop="name">
                             <el-col >
                                 <el-input  v-model="form.name"></el-input>
                             </el-col>
@@ -90,6 +90,26 @@
             global_
         },
         data() {
+            var validateName = (rule, value, callback) => {
+                let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+                console.log(value);
+
+                if(!value)
+                {
+                    callback(new Error('请输入模型名称'));
+                }
+                else
+                {
+                    if (re.test(value))
+                    {
+                        callback();
+                    }
+                    else
+                    {
+                        callback(new Error('只允许输入中文、字母、数字'));
+                    }
+                }
+            };
             return {
                 form: {
                     name: '',
@@ -99,11 +119,19 @@
                     files : [],
                     fileLists : [],
                     showPicture: true,
+                    rules: {
+                        name: {
+                            required: true,
+                            validator : validateName,
+                            trigger: 'blur'
+                        }
+                    }
                 },
                 photoUrl: '',
                 modelType: [],
                 imageUrl: '',
                 name : this.$store.state.userInfo.profile.name,
+
             }
         },
         computed: {
@@ -120,17 +148,18 @@
             sendFileLists(data){
                 this.form.fileLists = data;
             },
-            onSubmit() {
-                console.log('submit!');
-                if(!this.form.showPicture){
-                    this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
-                }
-                var _this = this;
-                let para = Object.assign({}, _this.form);
-                _this.$http({method:'post',
-                    url:'api/model/uploadFloder?name='+this.name +"&directoryId="+this.bmsg + "&scope=" + true,
-                    data:para})
-                    .then(function (response) {
+            submit(){
+                if(this.form.fileLists.length >0){
+                    console.log('submit!');
+                    if(!this.form.showPicture){
+                        this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
+                    }
+                    var _this = this;
+                    let para = Object.assign({}, _this.form);
+                    _this.$http({method:'post',
+                        url:'api/model/uploadFloder?name='+this.name +"&directoryId="+this.bmsg + "&scope=" + true,
+                        data:para})
+                        .then(function (response) {
                             if(response.data.msg == "ok"){
                                 _this.$message({
                                     message: '上传成功！',
@@ -139,15 +168,52 @@
                                 });
                                 _this.closeDia();
                             }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        _this.$message({
-                            message: '上传失败！',
-                            type: 'error',
-                            duration: 2000
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            _this.$message({
+                                message: '上传失败！',
+                                type: 'error',
+                                duration: 2000
+                            });
                         });
+                }
+                else{
+                    this.$message({
+                        message: '请上传文件！',
+                        type: 'error',
+                        duration: 2000
                     });
+                }
+            },
+            onSubmit() {
+                this.$refs.form.validate((valid) => {
+                    if (valid) { // 验证通过
+                        var checkModelName = '/api/model/checkName?checkModelName=' + this.form.name +"&directoryId="+this.bmsg
+                        var _this = this;
+                        _this.$http.post(checkModelName)
+                            .then(function (response) {
+                                if (response.data.msg == "ok") {
+                                    _this.submit();
+                                }else{
+//                                    _this.$message({
+//                                        message: '请重新输入模型分类名称！',
+//                                        type: 'warning',
+//                                        duration: 2000
+//                                    });
+                                    _this.$emit("openInnerVisible",_this.form.name)
+                                }
+                            }).catch(function (error) {
+                            console.log(error)
+                            _this.$message({
+                                message: '请重新输入模型分类名称！',
+                                type: 'warning',
+                                duration: 2000
+                            });
+                        })
+                    }
+                })
+
             },
             getModelTypeList() {
                 var _this = this;
@@ -157,7 +223,7 @@
                         _this.modelType = response.data.modelTypeList;
                         if(_this.modelType.length != 0){
                             _this.form.region = _this.modelType[0].name;
-                            _this.photoUrl ="http://"+ global_.HostPath +global_.mappedPackage + _this.modelType[0].filePath
+                            _this.photoUrl = _this.modelType[0].filePath
                         }
                     })
                     .catch(function (error) {
@@ -168,7 +234,7 @@
                 if (this.modelType.length != 0 && this.form.region != "") {
                     for (var i = 0; i < this.modelType.length; i++) {
                         if (this.modelType[i].name == this.form.region) {
-                            this.photoUrl ="http://"+ global_.HostPath +global_.mappedPackage + this.modelType[i].filePath
+                            this.photoUrl =this.modelType[i].filePath
                         }
                     }
                 }
@@ -183,6 +249,26 @@
                 this.$refs['form'].resetFields();
                 this.getModelTypeList();
                 this.getPhotoUrl();
+            },
+            coverModel(data){
+                this.deleteModel(data);
+            },
+            deleteModel(data){
+                var _this = this;
+                _this.$http.post('/api/model/deleteModel?modelName='+data +"&directoryId="+this.bmsg)
+                    .then(function (response) {
+                        if (response.data.msg == "ok") {
+                            _this.submit();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        _this.$message({
+                            message: '上传失败！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                    });
             },
             //---------------------------------------------------上传图片
             handleAvatarSuccess(res, file) {

@@ -225,7 +225,7 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                      if(data.name == _self.$store.state.privateDirId.data.name || data.name == _self.$store.state.publicDirId.data.name){
+                      if(data.id == _self.$store.state.privateDirId.data.id || data.id == _self.$store.state.publicDirId.data.id){
                           _self.$message({ message: '该模型分类不允许删除', type: 'warning',duration: 2000 })
                       }else{
                           typeof _self.treeDelete === 'function' && _self.treeDelete(data, event, node)

@@ -77,6 +77,16 @@
                               </div>
                           </el-dialog>
 
+
+                          <el-dialog
+                          title="上传模型文件"
+                          :visible.sync="file.dialogVisible"
+                          width="30%"
+                          >
+                          <!--<span>这是一段信息</span>-->
+                          <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></myUpload>
+                          </el-dialog>
+
                       </div>
 
                       <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
@@ -626,7 +636,8 @@
                             treeItem: "",
                         },
                         filters: {
-                            name: ""
+                            name: "",
+                            Model : true,
                         },
                         loading: false,
                         isBusy: false,
@@ -660,6 +671,9 @@
                 },
                 file:{
                     dialogVisible: false,
+                    modelDialog: false,
+                    innerVisible :false,
+                    name : '',
                 },
                 SelectedNode : '',
                 CurrentNode : '',
@@ -773,7 +787,7 @@
           this.$router.push({path:'/brief'});
  
          },
- 
+
 
         hanldeNodeClick (data) {
             //该目录下的模型列表
@@ -1176,6 +1190,8 @@
                                 type: 'success',
                                 duration: 2000
                             });
+                            _this.move.dialogVisible = false;
+                            _this.getModel();
                         }
                     }).catch(function (error) {
                     _this.$message({
@@ -1183,6 +1199,7 @@
                         type: 'error',
                         duration: 2000
                     });
+                    _this.move.dialogVisible = false;
                     console.log(error);
                 });
             },
@@ -1200,7 +1217,7 @@
                 });
             },
             DomReady(){
-                this.$refs.getSearchList.getFileList(this.filters.name);
+                this.$refs.getSearchList.getFileList(this.filters.name,false);
             },
             showModel(data){
                 this.packageDetailDialog.SearchDialog =false;
@@ -1214,6 +1231,14 @@
                 this.$store.dispatch('sendTreeModelId', data.modelId);
                 this.$refs.packageDetail.showFile(data);
             },
+            openInnerVisible(data){
+                this.file.innerVisible =true;
+                this.file.name = data;
+            },
+            cover(){
+                this.file.innerVisible = false;
+                this.$refs.uploadModel.coverModel(this.file.name);
+            }
     },
 
 

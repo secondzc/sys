@@ -198,7 +198,7 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                      if(data.name == _self.$store.state.privateDirId.data.name || data.name == _self.$store.state.publicDirId.data.name){
+                      if(data.id == _self.$store.state.privateDirId.data.id || data.id == _self.$store.state.publicDirId.data.id){
                           _self.$message({ message: '该模型分类不允许修改', type: 'warning',duration: 2000 })
                       }else {
                           typeof _self.treeEdit === 'function' && _self.treeEdit(data, event, node)
@@ -368,7 +368,7 @@
                           _this.fetchAddTreeNode()
                       }else{
                           _this.$message({
-                              message: '请重新输入模型分类名称！',
+                              message: '名称重复,请重新输入模型分类名称！',
                               type: 'warning',
                               duration: 2000
                           });
