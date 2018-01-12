@@ -27,8 +27,8 @@
 
 			<el-table-column label="操作" width="300" >
                 <template scope="scope">
-                    <el-button size="small" @click="detail(scope.$index,scope.row)" :disabled="scope.row.status==4">查看详情</el-button>
-                    <el-button size="small" @click="cancel(scope.$index,scope.row)" :disabled="scope.row.status==4">撤销流程</el-button>
+                    <el-button size="small" @click="detail(scope.$index,scope.row)" >查看详情</el-button>
+                    <el-button size="small" @click="cancel(scope.$index,scope.row)" :disabled="scope.row.status!=1">撤销流程</el-button>
                     <el-button type="danger" size="small" @click="remove(scope.row)">删除记录</el-button>
                 </template>
             </el-table-column>

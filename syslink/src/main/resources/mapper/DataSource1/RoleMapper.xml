@@ -4,12 +4,33 @@
 
     <resultMap id="mapResultMap" type="map">
         <id column="id" property="id" jdbcType="BIGINT"  />
-
         <result column="name" property="name" jdbcType="VARCHAR"/>
-
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
+        <collection property="auths" javaType="ArrayList" column="id"  select="selectRoleAuth"/>
+        <collection property="directoryAuth" javaType="ArrayList" column="id"  select="selectDirectoryAuths"/>
+
     </resultMap>
+    <select id="selectRoleAuth" resultType="map">
+          SELECT
+        d.auth_id,d.auth_name,d.auth_code,d.create_date,d.description,d.url,d.parent_id,
+        l.auth_id
+        FROM
+        auth as d
+        INNER JOIN role_auth as l
+        ON d.auth_id=l.auth_id
+        AND l.role_id=#{roleId}
+        WHERE 1=1
+    </select>
+
+
+    <select id="selectDirectoryAuths"  resultType="map" >
+       SELECT directory_id,role_id,mode
+        FROM role_directory_auth
+        WHERE role_id = #{roleId}
+    </select>
+
+
     <sql id="baseColumnList" >
         id,name,create_date,description
     </sql>

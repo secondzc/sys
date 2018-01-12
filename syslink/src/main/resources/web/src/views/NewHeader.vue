@@ -149,7 +149,7 @@
         <div style="height: 20px;" v-if="this.func.isLogin()">
          
           <el-breadcrumb separator="/">
-     <el-breadcrumb-item :to="{ path: '/Myspace' }"><i class="el-icon-location-outline"></i>
+     <el-breadcrumb-item :to="{ path: '/brief' }"><i class="el-icon-location-outline"></i>
      </el-breadcrumb-item>
        <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
           {{ item.name }}
@@ -316,12 +316,12 @@ import SylTitle from '@/assets/systitle.png'
             // console.log(abc);
             }
 
-            console.log(window.location.href);
-            console.log(window.location.protocol);
-            console.log(window.location.host);
-            console.log(window.location.port);
-            console.log(window.location.pathname);
-            console.log(window.location.hash);
+            // console.log(window.location.href);
+            // console.log(window.location.protocol);
+            // console.log(window.location.host);
+            // console.log(window.location.port);
+            // console.log(window.location.pathname);
+            // console.log(window.location.hash);
 
             // const uid = JSON.parse(localStorage.getItem('uid'));
             // console.log(uid);

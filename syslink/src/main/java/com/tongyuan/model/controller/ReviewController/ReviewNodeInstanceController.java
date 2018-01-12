@@ -1,6 +1,8 @@
 package com.tongyuan.model.controller.ReviewController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.Helper.JsonObjectHelper;
+import com.tongyuan.model.domain.ReviewNodeInstance;
 import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.service.ReviewService.NodeInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +40,12 @@ public class ReviewNodeInstanceController {
         jo.put("records",reviewNodeInstanceList);
         jo.put("sequence",sequence);
         return jo;
+    }
+
+    @PostMapping("")
+    @ResponseBody
+    public JSONObject getNodeInstanceById(@RequestParam("id") Long id){
+        ReviewNodeInstance nodeInstance = nodeInstanceService.queryById(id);
+        return JsonObjectHelper.create(nodeInstance);
     }
 }

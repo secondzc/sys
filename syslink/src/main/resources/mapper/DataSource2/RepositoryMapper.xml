@@ -75,7 +75,14 @@
     <result column="fork_id" property="forkID" jdbcType="BIGINT"/>
     <result column="created_unix" property="createdUnix" jdbcType="BIGINT"/>
     <result column="updated_unix" property="updatedUnix" jdbcType="BIGINT"/>
-  </resultMap>
+      <association property="ownerName" javaType="String" column="owner_id" select="selectUserRole" />
+    </resultMap>
+
+    <select id="selectUserRole" resultType="String">
+        SELECT name
+        FROM user
+        WHERE  id=#{id}
+    </select>
 
   <sql id="baseColumnList" >
     id, owner_id, lower_name,name,description,website,default_branch,size,num_watches,num_stars,num_forks,

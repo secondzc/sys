@@ -374,6 +374,10 @@
 
       
       },
+       modeClear(data)
+      {
+          data.mode=0;
+      },
         modelAuth(index,row)
       {
         
@@ -384,7 +388,7 @@
 
          let temp =  [];
 
-         row.directoryAuth.forEach(x=>temp.push(x.directoryId));
+         row.directoryAuth.forEach(x=>temp.push(x.directory_id));
          this.modelTree=temp;
          this.setMode(this.data3,row.directoryAuth);
          // console.log(this.data3);
@@ -530,7 +534,7 @@
 
              for(var b of directoryAuth)
             {
-              if(a.id==b.directoryId)
+              if(a.id==b.directory_id)
               {
                  f= true;
                 if(b.mode>0)
@@ -596,9 +600,8 @@
         
             let temp =  [];
 
-         row.permissions.forEach(x=>temp.push(x.authId));
-         console.log(temp);
-         this.roleTree=temp;
+         row.auths.forEach(x=>temp.push(x.auth_id));
+        this.roleTree=temp;
       //   this.setCheckedNodes(row.permissions);
        
       },

@@ -38,6 +38,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.ServletException;
@@ -1316,8 +1317,9 @@ public class ModelController extends  BaseController {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                     statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
+                    Map<String,Object> directory = directoryService.queryMapById(directoryId);
                     String title = "上传模型";
-                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name");
+                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name")+"\t到分类\t"+directory.get("name");
                     logService.addLog(title,content);
                 } catch (SqlNumberException e) {
                     e.printStackTrace();
@@ -1434,8 +1436,8 @@ public class ModelController extends  BaseController {
         JSONObject jo = new JSONObject();
         try{
             Model model = modelService.queryModelById(CurrentNodeId);
-            model.setDirectoryId(SelectedNodeId);
             Map<String,Object> oldDirectory = directoryService.queryMapById(model.getDirectoryId());
+            model.setDirectoryId(SelectedNodeId);
             Map<String,Object> newDirectory = directoryService.queryMapById(SelectedNodeId);
             modelService.update(model);
             String title = "移动模型";

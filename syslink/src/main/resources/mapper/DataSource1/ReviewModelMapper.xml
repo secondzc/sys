@@ -20,8 +20,8 @@
         <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="model_text" property="modelText" jdbcType="LONGVARCHAR"/>
+        <result column="iconUrl" property="iconUrl" jdbcType="VARCHAR"/>
     </resultMap>
-
     <sql id="baseColumnList" >
         id,parent_id,name,classes,type,directory_id,discription,Import,Extends,icon_file_id,diagram_file_id,
         info_file_id,is_deleted,user_id,create_time,last_update_time,scope,model_text
