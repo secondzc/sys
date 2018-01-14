@@ -251,7 +251,12 @@
 					})
 				});
 			},
+			//设为默认之前先检查配置的人员不能为空
+			checkNull(row){
+				 //todo
+			},
 			setDefault: function(index,row){
+				checkNull(row);
 				let param = {templateId: row.templateId};
 				let url = '/api/reviewFlowTemplate/setDefault';
 				param.assure = "no";
