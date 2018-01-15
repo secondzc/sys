@@ -36,7 +36,7 @@
 			<el-table-column label="操作" width="300">
 				<template scope="scope">
 				    <el-button size="small" @click="setDefault(scope.$index,scope.row)">设为默认</el-button>
-					<el-button size="small" @click="handleEdit(scope.$index,scope.row)">配置</el-button>
+					<el-button size="small" @click="handleEdit(scope.row)">配置</el-button>
 					<el-button type="danger" size="small" @click="remove(scope.$index,scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -114,7 +114,8 @@
 			formatDefault: function(row,column){
 				return row.defaultTemplate == false ? '否' : '是';
 			},
-			getTemplates() {
+			//needToSetPerson表示刷新后是否需要跳转到人员编辑页面
+			getTemplates(needToSetPerson) {
 				let param = {
 					page: this.page,
 					rows: this.pageSize,
@@ -127,6 +128,10 @@
 					this.pages = res.data.pages;
 					this.total = res.data.total;
 					this.listLoading = false;
+					if(needToSetPerson){
+						let item = this.templates[this.templates.length-1];
+						this.handleEdit(item);
+					}
 				});
 			},
 			handleAdd() {
@@ -140,7 +145,7 @@
 			selsChange(sels) {
 				this.sels = sels;
 			},
-			handleEdit: function(index,row){
+			handleEdit: function(row){
 				//let templateId = row.templateId;
 				//sessionStorage.setItem('templateId',this.sels[0].templateId);
 				sessionStorage.setItem('templateId',row.templateId);
@@ -163,18 +168,18 @@
 							type: 'success'
 						    });
 						    this.listLoading = false;
-						    this.getTemplates();
+						    this.getTemplates(false);
 						}
 					})
 				})
 			},
 			handleCurrentChange(val){
 				this.page = val;
-				this.getTemplates();
+				this.getTemplates(false);
 			},
 			handleSizeChange(val) {
 				this.pageSize = val;
-				this.getTemplates();
+				this.getTemplates(false);
 			},
 			addSubmit: function(){
 				let param = Object.assign({},this.addTemplate);
@@ -199,7 +204,12 @@
 			        				message: '提交成功！',
 			        				type: 'success',
 			        			})
-			        			this.getTemplates();
+			        			if(this.addTemplate.defaultTemplate){
+			        				this.getTemplates(true);
+			        			}else{
+			        				this.getTemplates(false);
+			        			}
+			        	
 			        		}else{
 			        			this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
 			        				param.assure = "yes";
@@ -211,8 +221,11 @@
 			        							message: '提交成功！',
 			        							type: 'success',
 			        						})
-			        						this.getTemplates();
-			        					}
+                                if(this.addTemplate.defaultTemplate){
+			        				this.getTemplates(true);
+			        			}else{
+			        				this.getTemplates(false);
+			        			}			        									        					}
 			        				})
 			        			})
 			        			.catch(()=>{
@@ -246,17 +259,17 @@
 							type: 'success'
 						    });
 						    this.listLoading = false;
-						    this.getTemplates();
+						    this.getTemplates(false);
 						}
 					})
 				});
 			},
-			//设为默认之前先检查配置的人员不能为空
-			checkNull(row){
-				 //todo
-			},
 			setDefault: function(index,row){
-				checkNull(row);
+				if(!row.alreadyConfig){
+					this.$message({
+						message:'未配置人员，不能设为默认模板',
+					})
+				}else{
 				let param = {templateId: row.templateId};
 				let url = '/api/reviewFlowTemplate/setDefault';
 				param.assure = "no";
@@ -268,7 +281,7 @@
 							type: 'success'
 						    });
 						    this.listLoading = false;
-						    this.getTemplates();
+						    this.getTemplates(false);
 						}else{
 							this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
 								param.assure = "yes";
@@ -279,17 +292,17 @@
 											type: 'success'
 										});
 										this.listLoading = false;
-										this.getTemplates();
+										this.getTemplates(false);
 									}
 								})
 							})
 						}
 					}
-				})
+				})}
 			},
 		},
 		mounted() {
-			this.getTemplates();
+			this.getTemplates(false);
 		}
 	}
 </script>

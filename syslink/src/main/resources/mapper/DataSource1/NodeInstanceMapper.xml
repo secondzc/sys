@@ -93,7 +93,7 @@
         FROM review_node_instance A
         INNER JOIN review_node ON A.node_id = review_node.node_id
         WHERE A.instance_id = #{instanceId}
-        AND (A.status=3 OR A.status=4)
+        AND (A.status=3 OR A.status=4 OR A.status=7 OR A.status=8)
         ORDER BY
         review_node.sequence
     </select>
