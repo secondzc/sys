@@ -3,6 +3,7 @@ package com.tongyuan.model.service.ReviewImpl;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.service.GUserService;
 import com.tongyuan.model.dao.NodeInstanceMapper;
+import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.pageModel.CommentPage;
 import com.tongyuan.pageModel.DetailPage;
 import com.tongyuan.model.domain.ReviewNodeInstance;
@@ -56,12 +57,13 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
     @Override
     public List<CommentPage> queryCommentPages(Long instanceId) {
         //按照review_node的sequence由小到大的顺序 查询instanceId下的commentPages,只查询审核过的，
-        //也就是3同意，4不同意
+        //也就是3同意，4不同意 ,7同意后取消，8不同意后取消
         List<CommentPage> commentPages = nodeInstanceMapper.queryCommentPages(instanceId);
         for(CommentPage commentPage:commentPages){
-            if(commentPage.getStatus()==3){
+            if(commentPage.getStatus()== ConstNodeInstanceStatus.AGREE||commentPage.getStatus()==ConstNodeInstanceStatus.AGREE_AND_CANCEL){
                 commentPage.setShowStatus("同意");
-            }else{
+            }else if(commentPage.getStatus()==ConstNodeInstanceStatus.NOT_AGREE
+                    ||commentPage.getStatus()==ConstNodeInstanceStatus.NOT_AGREE_AND_CANCEL){
                 commentPage.setShowStatus("不同意");
             }
             //查询gogs库，添加user属性,因为guser分库了，所以不能联合查询，

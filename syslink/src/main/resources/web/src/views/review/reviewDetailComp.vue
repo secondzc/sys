@@ -59,10 +59,10 @@
 					this.detailPages = res.data.records;
 					this.sequence = res.data.sequence;
 					for(var i=0;i<this.detailPages.length;i++){
-						if(this.detailPages[i].status===3){
+						if(this.detailPages[i].status===3 || this.detailPages[i].status===7){
 							this.reviewTitle.push('审核成功');
 							this.reviewStatus.push('success')
-						}else if(this.detailPages[i].status===4){
+						}else if(this.detailPages[i].status===4 || this.detailPages[i].status===8){
 							this.reviewTitle.push('审核失败');
 							this.reviewStatus.push('error')
 						}else if(this.detailPages[i].status ===2){
