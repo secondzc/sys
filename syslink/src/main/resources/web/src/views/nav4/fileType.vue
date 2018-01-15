@@ -54,15 +54,15 @@
 
     <!--编辑角色界面-->
     <el-dialog title="编辑文件类型" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false">
-        <el-form ref="editForm"   :model="editForm" label-width="80px" class="demo-form-inline">
+        <el-form ref="editForm"   :model="editForm" label-width="110px" class="demo-form-inline">
 
 
-            <el-form-item label="文件名">
+            <el-form-item label="文件类型名称"  >
                 <el-col :span="6">
                     <el-input  v-model="editForm.name" disabled="disabled"></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="文件图标">
+            <el-form-item label="文件类型图标"  >
                 <template>
                     <section>
                         <el-upload
@@ -90,15 +90,15 @@
     <!--新增角色界面-->
     <el-dialog title="新建一文件类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
         <!--<ModelTypePicture></ModelTypePicture>-->
-        <el-form ref="form" :rules="form.rules"  :model="form" label-width="80px" class="demo-form-inline">
+        <el-form ref="form" :rules="form.rules"  :model="form" label-width="110px" class="demo-form-inline">
 
 
-            <el-form-item label="文件类型名称" prop="name">
+            <el-form-item label="文件类型名称" prop="name"  >
                 <el-col :span="6">
                     <el-input  v-model="form.name" ></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="文件类型图标">
+            <el-form-item label="文件类型图标" >
                 <template>
                     <section>
                         <el-upload
@@ -198,6 +198,8 @@
     methods: {
         handleAdd(){
             this.addFormVisible = true;
+            this.form={};
+            this.imageUrl = '';
         },
         handleEdit(val){
             this.editForm.name = val.ext;

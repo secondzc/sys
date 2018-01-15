@@ -50,7 +50,7 @@
                                   width="80%"
                                   center
                           >
-                              <privateUpload @closeDialog="closeDialog"></privateUpload>
+                              <privateUpload @closeDialog="closeDialog"  @returnToModel="returnToModel"></privateUpload>
                           </el-dialog>
                           <el-dialog
                                   title="模型详细信息"
@@ -80,11 +80,11 @@
 
                           <el-dialog
                           title="上传模型文件"
-                          :visible.sync="file.dialogVisible"
+                          :visible.sync="file.modelDialog"
                           width="30%"
                           >
                           <!--<span>这是一段信息</span>-->
-                          <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></myUpload>
+                          <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview" > </myUpload>
                           </el-dialog>
 
                       </div>
@@ -551,6 +551,7 @@
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directory.vue';
     import upload from './Upload.vue'
+    import myUpload from '../nav3/myUpload.vue'
     import packageDetail from './packageDetail.vue'
     import selectDirectory from './selectDirectory.vue'
     import searchFileList from './SearchFileList.vue'
@@ -569,6 +570,7 @@
             sortableList,
             uploadFile,
             upload,
+            myUpload,
             packageDetail,
             selectDirectory,
             searchFileList,
@@ -775,17 +777,17 @@
                     resolve(data);
                 }, 500);
             },
-        
+
          allowToReview(){
- 
+
           this.allowToReviewFlag = true;
- 
+
          },
- 
+
          toReview(){
- 
+
           this.$router.push({path:'/brief'});
- 
+
          },
 
 
@@ -1238,7 +1240,11 @@
             cover(){
                 this.file.innerVisible = false;
                 this.$refs.uploadModel.coverModel(this.file.name);
-            }
+            },
+            returnToModel(){
+                this.file.dialogVisible =false;
+                this.file.modelDialog = true;
+            },
     },
 
 
