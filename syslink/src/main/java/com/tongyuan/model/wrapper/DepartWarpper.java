@@ -19,11 +19,14 @@ public class DepartWarpper extends BaseControllerWarpper {
     @Override
     public void warpTheMap(Map<String, Object> map) {
        setChildren(map);
+
+
     }
 
 
     public void setChildren (Map<String,Object>map)
     {
+        map.put("childrenIds",getChildrenIds(map));
 
         Map<String,Object> parent = departMapper.queryById(Integer.parseInt(map.get("parentId").toString()));
         if(parent!=null)
@@ -84,5 +87,24 @@ public class DepartWarpper extends BaseControllerWarpper {
         return allChildren;
 
     }
+
+    public List<Integer> getChildrenIds (Map<String,Object>map)
+    {
+        List<Integer>allChildren = new ArrayList<>();
+        List<Map<String,Object>> children = departMapper.queryByPid(Integer.parseInt(map.get("id").toString()));
+        for(Map<String,Object> child : children)
+        {
+            allChildren.add(Integer.parseInt(child.get("id").toString()));
+        }
+//        allChildren.addAll(children);
+        Iterator<Map<String,Object>> iterator = children.iterator();
+        while (iterator.hasNext())
+        {
+            allChildren.addAll(getChildrenIds(iterator.next()));
+        }
+        return allChildren;
+
+    }
+
 
 }

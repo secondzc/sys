@@ -138,7 +138,6 @@
       };
       //编辑部门时名称验证，同上
         var validateName1 = (rule, value, callback) => {
-        console.log(this.editForm.name);
         let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
         console.log(value);
 
@@ -180,10 +179,7 @@
               });
           
             }
-             
-            
-
-               
+                                      
           } 
           else
           {
@@ -191,17 +187,55 @@
           }
         }
       };
+        var validateParentId = (rule, value, callback) => {
+          console.log(value);
+          let parentId = value[value.length-1];
+          console.log(parentId);
+          console.log(this.selectedDepart);
+          if(!value||value.length==0)
+          {
+            callback();
+          }
+          else
+          {
+
+             if(this.selectedDepart.childrenIds.length==0&&this.selectedDepart.id!=parentId)
+             {
+              console.log(1);
+              callback();
+             }
+             else
+             {
+               if(this.selectedDepart.childrenIds.indexOf(parentId)>=0||this.selectedDepart.id==parentId)
+                {
+                  callback(new Error('父级部门不可选择该部门或该部门的子部门'));
+                }
+               else
+               {
+                 console.log(2);
+                 callback();
+               }
+             }
+            
+          }
+         
+        
+       
+      };
       return {
 
         departName:'',
         addFormRules:{
           name:[
-            {validator:validateName,trigger:'blur'}
+            {required:true, validator:validateName,trigger:'blur'}
           ]
         },
          editFormRules:{
           name:[
-            {validator:validateName1,trigger:'blur'}
+            {required:true,validator:validateName1,trigger:'blur'}
+          ],
+          parentId:[
+            {validator:validateParentId,trigger:'blur'}
           ]
         },
      //   data:[],
@@ -209,6 +243,8 @@
         departs:[],
         options:[],
         selectedOptions:[],
+        selectedDepart:{},
+        childrenIds:[],
         addFormVisible: false,//新增界面是否显示
         addLoading: false,
         addForm:{
@@ -261,11 +297,10 @@
         //显示编辑界面
       handleEdit(index,row) {
         this.editFormVisible = true;
-        console.log(row);
+        this.selectedDepart=row;
         this.departName=row.name;
         this.editForm = Object.assign({}, row);
-        this.departCheck(this.options,row.name);
-        console.log(this.options);
+ 
 
         // let a = this.$refs.table.getCheckedProp('id');
         // console.log(a);
@@ -273,23 +308,7 @@
        // console.log(this.editForm);
       
       },
-      departCheck(departTree,departName)
-      {
-         for(let i = 0;i<departTree.length;i++)
-         {
-          if(departTree[i].name==departName)
-          {
-            departTree[i]=Object.assign({},departTree[i],{disabled:true});
-            break;
-          }
-          if(departTree[i].children)
-          {
-            this.departCheck(departTree[i].children);
-          }
-
-
-         }
-      },
+     
     
       //显示新增界面
       handleAdd: function () {
@@ -433,44 +452,14 @@
 
                 _this.departs = response.data.depart;
                 _this.options = response.data.depart;
-            
+
 
           })
           .catch(function (error) {
               console.log(error);
           });
       },
-       nameExist(value) {
-
-  
-              this.editLoading = true;
-              let para = {name:''};
-              para.name=value;
-            
-              this.$http({
-                url:'/api/depart/nameExist',
-                method:'post',
-                data:para
-              })
-               .then((res) => {
-                this.editLoading = false;
-                //NProgress.done();
-                if(res.data.flag)
-                {
-                  return true;
-                }
-                else
-                {
-                  return false;
-                }
-                
-              });
-          
-         
-        
-      },
-
-     
+       
 
      
 

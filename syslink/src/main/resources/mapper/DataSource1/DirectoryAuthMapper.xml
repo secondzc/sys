@@ -38,30 +38,68 @@
 
     <select id="queryUserDirectoryAuth" resultMap="baseResultMap1" >
 
-
-        SELECT directory_id, max(mode) as mode from
-        (
-
-        SELECT
-        directory_id,mode,uid
-        FROM
-        directory_auth
-        WHERE uid = #{param1}
-         UNION
-        SELECT
-        directory_id,mode,role_id
-        FROM
-        role_directory_auth
         <if test="param2 !=null and param2.size>0">
-            WHERE role_id in
-            <foreach collection="param2" index="index" item="id" open="(" separator="," close=")">
-                #{id}
-            </foreach>
+            SELECT directory_id, max(mode) as mode from
+             (
+
+            SELECT
+            directory_id,mode,uid
+            FROM
+            directory_auth
+            WHERE uid = #{param1}
+            UNION ALL
+            SELECT
+            directory_id,mode,role_id
+            FROM
+            role_directory_auth
+                         WHERE role_id in
+                <foreach collection="param2" index="index" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+
+            )as U
+            group BY  directory_id ORDER BY directory_id
         </if>
 
 
-        )as U
-        group BY  directory_id
+        <if test="param2 ==null or param2.size==0">
+            SELECT directory_id, mode as mode from
+            (
+
+            SELECT
+            directory_id,mode,uid
+            FROM
+            directory_auth
+            WHERE uid = #{param1}
+
+            )as U
+            ORDER BY directory_id
+        </if>
+
+        <!--SELECT directory_id, max(mode) as mode from-->
+<!--&#45;&#45;         SELECT directory_id, mode as mode from-->
+        <!--(-->
+
+        <!--SELECT-->
+        <!--directory_id,mode,uid-->
+        <!--FROM-->
+        <!--directory_auth-->
+        <!--WHERE uid = #{param1}-->
+         <!--UNION ALL-->
+        <!--SELECT-->
+        <!--directory_id,mode,role_id-->
+        <!--FROM-->
+        <!--role_directory_auth-->
+        <!--<if test="param2 !=null and param2.size>0">-->
+            <!--WHERE role_id in-->
+            <!--<foreach collection="param2" index="index" item="id" open="(" separator="," close=")">-->
+                <!--#{id}-->
+            <!--</foreach>-->
+        <!--</if>-->
+
+
+        <!--)as U-->
+        <!--group BY  directory_id-->
 
 
     </select>
