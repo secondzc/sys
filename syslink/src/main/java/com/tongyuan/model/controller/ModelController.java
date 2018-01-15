@@ -1281,6 +1281,8 @@ public class ModelController extends  BaseController {
         JSONObject jo = new JSONObject();
         try {
             GUser user = gUserService.querListByName(name);
+            //图标列表
+            List<Attachment> iconList = new ArrayList<>();
             long iconUrlId = 0;
             boolean iconUpdate = (boolean) map.get("showPicture");
             String modelType = (String) map.get("region");
@@ -1288,7 +1290,7 @@ public class ModelController extends  BaseController {
                 ModelType type = modelTypeService.getByType(modelType);
                 iconUrlId = type.getId();
             }else{
-                List<Attachment> iconList = attachmentService.getInsertIcon();
+                iconList = attachmentService.getInsertIcon();
                 for (Attachment icon: iconList) {
                     if(map.get("photoName").equals(icon.getName())){
                         iconUrlId = icon.getId();
@@ -1296,6 +1298,16 @@ public class ModelController extends  BaseController {
                 }
             }
             Long modelId = modelService.addOneModel(user, directoryId, scope, map,iconUrlId);
+            //把刚刚上传的图标修改modelId
+           if(iconList.size() >0){
+               for (Attachment icon: iconList) {
+                   if(icon.getId() == iconUrlId){
+                       icon.setModelId(modelId);
+                       attachmentService.update(icon);
+                       break;
+                   }
+               }
+           }
             List<FileJsonArrayDto> fileJsonArrayDtoList = JSONArray.parseArray(map.get("fileLists").toString(), FileJsonArrayDto.class);
             for (FileJsonArrayDto fileJsonDto : fileJsonArrayDtoList) {
                 if (fileJsonDto.getFolder()) {
