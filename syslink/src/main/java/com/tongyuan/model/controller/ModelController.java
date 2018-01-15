@@ -1388,7 +1388,7 @@ public class ModelController extends  BaseController {
         }
         for (AttachmentDto attachmentDto:modelDetail) {
             if(StringUtil.isNull(attachmentDto.getFileIconUrl())){
-                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + fileTypeDto.getIconPath());
+                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
             }else{
                 attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
             }

@@ -343,6 +343,10 @@ public class AttachmentServiceImpl implements AttachmentService {
         List<Attachment> fileList = new ArrayList<>();
         for (FileJsonArrayDto fileJsonDto: fileJsonArrayDtoList) {
             for (Attachment attachment: attachmentFileList) {
+                if(attachment.getFloder()){
+                    fileList.add(attachment);
+                    continue;
+                }
                 if(!StringUtil.isNull(fileJsonDto.getUniqueIdentifier())){
                     if(fileJsonDto.getUniqueIdentifier().equals(attachment.getIdentifier())){
                         fileList.add(attachment);
