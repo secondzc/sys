@@ -13,7 +13,7 @@
                     <el-header style="height: 40px;">
                         <div style="display: inline-block;">
                             <el-button type="primary" plain   @click="upFloor">上一层</el-button>
-                            <a id="download" style="display: none;" :href = fileUrl download="file" >asdfsd</a>
+                            <a id="download" style="display: none;" :href = fileUrl download="file" >下载</a>
                         </div>
                         <div style="display: inline-block;">
                             <!--工具条-->
@@ -73,7 +73,7 @@
 
                         <el-table-column
                                 label="文件大小"
-                                prop=""
+                                prop="size"
                                 min-width=100>
                         </el-table-column>
 
