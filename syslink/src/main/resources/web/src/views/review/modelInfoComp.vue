@@ -39,7 +39,7 @@
     	    	<sapn style="font-size: 16px;text-decoration: underline;">查看/下载</sapn>
     	    </div>
     	    </el-popover>
-            <el-button type="primary" @click="toTree" style="margin-left:20px;margin-top: 20px;" :disabled="isModelica">查看</el-button>
+            <el-button type="primary" @click="toTree" style="margin-left:20px;margin-top: 20px;" :disabled="!isModelica">查看</el-button>
             <el-button type="primary" @click="download" :loading="downloading">下载</el-button>
 
            </el-dialog>
