@@ -12,6 +12,7 @@ import com.tongyuan.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public int update(Attachment attachment) {
         return this.attachmentMapper.update(attachment);
+    }
+
+    @Override
+    public int batchUpdate(List<Attachment> attachmentList) {
+        return this.attachmentMapper.batchUpdate(attachmentList);
     }
 
     @Override
@@ -312,14 +318,16 @@ public class AttachmentServiceImpl implements AttachmentService {
      * @param modelId
      */
     @Override
-    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId) {
+    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId,List<Attachment> floderList) {
+        List<Attachment> batchUpdateList = new ArrayList<>();
         for (Attachment attachmentChild : attachmentFileList) {
-            for (Attachment attachmentParent : attachmentFileList) {
+            for (Attachment attachmentParent : floderList) {
                 if(!StringUtil.isNull(attachmentChild.getTempRelativePath()) && !StringUtil.isNull(attachmentParent.getTempRelativePath())) {
                     if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
                         attachmentChild.setParentId(attachmentParent.getId());
                         attachmentChild.setModelId(modelId);
-                        this.attachmentMapper.update(attachmentChild);
+//                        this.attachmentMapper.update(attachmentChild);
+                        batchUpdateList.add(attachmentChild);
                         continue;
                     }
                 }
@@ -328,9 +336,13 @@ public class AttachmentServiceImpl implements AttachmentService {
         for (Attachment attachment : attachmentFileList){
             if(attachment.getModelId() != modelId){
                 attachment.setModelId(modelId);
-                this.attachmentMapper.update(attachment);
+//                this.attachmentMapper.update(attachment);
+                batchUpdateList.add(attachment);
             }
         }
+        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "结果");
+        this.attachmentMapper.batchUpdate(batchUpdateList);
+        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "跟新");
     }
 
     @Override
@@ -339,12 +351,13 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList, List<FileJsonArrayDto> fileJsonArrayDtoList) {
+    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList, List<FileJsonArrayDto> fileJsonArrayDtoList,List<Attachment> floderList) {
         List<Attachment> fileList = new ArrayList<>();
         for (FileJsonArrayDto fileJsonDto: fileJsonArrayDtoList) {
             for (Attachment attachment: attachmentFileList) {
                 if(attachment.getFloder()){
                     fileList.add(attachment);
+                    floderList.add(attachment);
                     continue;
                 }
                 if(!StringUtil.isNull(fileJsonDto.getUniqueIdentifier())){

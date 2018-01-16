@@ -39,6 +39,7 @@ public class DefalutAction {
           Long attachmentId = attachmentService.addIconOfModel("default","/img/default.jpg", (long) 8931);
           Attachment attachment = attachmentService.queryById(attachmentId);
           attachment.setModelId(-2);
+          attachmentService.update(attachment);
           FileType fileType = new FileType();
           fileType.setAttachmentId(attachmentId);
           fileType.setExt("default");

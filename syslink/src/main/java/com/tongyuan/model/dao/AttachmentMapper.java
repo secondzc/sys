@@ -3,6 +3,7 @@ package com.tongyuan.model.dao;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.domain.Attachment;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface AttachmentMapper {
     public List<Attachment> getAttachmentsByModelId(Long modelId);
     public List<Attachment> getInsertIcon();
     public List<Attachment> getDeleteAttach();
+    //批量更新
+    public int batchUpdate(@Param("list") List<Attachment> attachmentList);
 }

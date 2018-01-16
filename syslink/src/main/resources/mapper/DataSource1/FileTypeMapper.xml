@@ -32,6 +32,7 @@
         from file_type
         LEFT JOIN  attachment
         on file_type.attachment_id = attachment.id
+        where file_type.ext != "default"
     </select>
     <select id="getByExt" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.FileType">
         SELECT *
