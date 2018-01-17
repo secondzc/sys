@@ -70,7 +70,7 @@ export default{
     SET_SESSION:(state,session)=>{
       state.session = session
     },
-    Set_ActiveTabIndex:(state,activeTabIndex)=>{
+    [types.Set_ActiveTabIndex](state,activeTabIndex){
       state.activeTabIndex = activeTabIndex;
     }
 }
