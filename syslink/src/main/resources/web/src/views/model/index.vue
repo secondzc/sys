@@ -76,7 +76,7 @@
                               <selectDirectory :data="tree" style="min-height: 500px;"  @selectNode="getSelectedNode" ></selectDirectory>
                               <div slot="footer" class="dialog-footer">
                                   <el-button @click.native="move.dialogVisible = !move.dialogVisible">取消</el-button>
-                                  <el-button type="primary" @click.native="editSubmit" >提交</el-button>
+                                  <el-button type="primary" @click.native="editSubmit1" >提交</el-button>
                               </div>
                           </el-dialog>
                           <el-dialog
@@ -124,21 +124,32 @@
 
 
                   <div style="position: absolute;right: 50px;">
-                             <el-button-group  >
-                                 <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
+                    <el-button-group  style="margin-right: 5px;">
+                     <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
+                      <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="!this.moveCheck()"
+                      ></el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
+                      <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1" :disabled="!this.deleteCheck()"
+                      ></el-button>
+                    </el-tooltip>
+
+                  </el-button-group>
+                  <el-button-group  >
+                   <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
                     <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"
                     :class="{buttonFocus:listStatus}"></el-button>
-                </el-tooltip>
-                 <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
                     <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
-                   :class="{buttonFocus:!listStatus}" ></el-button>
-                </el-tooltip>
+                    :class="{buttonFocus:!listStatus}" ></el-button>
+                  </el-tooltip>
 
                 </el-button-group>
-                 <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
-                <el-button icon="el-icon-info"    size ="small"
-                           @click="info=!info" :class="{buttonFocus:info}"></el-button>
-                       </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
+                  <el-button icon="el-icon-info"    size ="small"
+                  @click="info=!info" :class="{buttonFocus:info}"></el-button>
+                </el-tooltip>
                   </div>
 
             </div>
@@ -202,7 +213,7 @@
                                     ref="singleTable"
                                     :data="repositories"
                                     height="100%"
-
+                                    highlight-current-row
                                     @current-change="handleCurrentChange"
                                     :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
                                     style="width: 100%">
@@ -266,32 +277,32 @@
                                 <el-table-column min-width=150 label="操作">
                                     <template scope="scope">
                                     <el-button-group>
-                                        <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
+                                        <el-tooltip class="item" effect="dark" content="查看" placement="top-start" >
                                          <el-button type="primary"
                                             size="small"
-                                                  @click="handleEdit(scope.$index, scope.row)"
+                                                  @click="handleEdit(scope.$index, scope.row)"  :disabled="!func.directoryJudge(scope.row.userId,scope.directoryId,1)"
                                                      >
                                                       <i class="iconfont icon-chakan" style="font-size: 12px;"></i>  
 
                                                      </el-button>
                                           </el-tooltip>
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
-                                         <el-button type="info"
+                                         <el-button type="primary"
                                                    size="small"
                                              @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)">
-                                                      <i class="iconfont icon-xiazai" style="font-size: 12px;"></i>  
+                                                      <i class="el-icon-download" style="font-size: 12px;"></i>  
 
                                                    </el-button>
                                         </el-tooltip>
-                                    <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
-                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
+                               <!--      <el-tooltip class="item" effect="dark" content="移动" placement="top-start" >
+                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;" :disabled="!func.directoryJudge(scope.row.userId,scope.directoryId,2)"></i></el-button>
                                         </el-tooltip>
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" @click="handleDeleted(scope.$index, scope.row)" 
+                                  <el-button   size="small" type="danger" @click="handleDeleted(scope.$index, scope.row)"  :disabled="!func.directoryJudge(scope.row.userId,scope.directoryId,3)"
                                   >
                                     <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
                                   </el-button>
-                                    </el-tooltip>
+                                    </el-tooltip> -->
                                         
                                      </el-button-group>
                                     </template>
@@ -688,6 +699,7 @@
                 style :{
                   watch : 'inline-block',
                 },
+                currentRow:null,
             };
         },
         computed: {
@@ -895,6 +907,7 @@
             if(val == null){
                 return
             }
+            this.currentRow = val;
             this.$refs.singleTable.setCurrentRow(val);
             var modelVariable = new Array;
             modelVariable.push(val);
@@ -980,6 +993,35 @@
                     }).catch(function (error) {
                     console.log(error);
                 });
+            }).catch(() => {
+            });
+        },
+                 handleDeleted1(){
+               var _this = this;
+            this.$confirm('确认删除该模型吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
+            var url = '/api/model/deleted?modelId=' + this.currentRow.index;
+            _this.$http.post(url)
+                .then(function (response) {
+                    if (response.data.msg == "ok") {
+                        _this.$message({
+                            message: '删除成功！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        _this.getModel();
+                    }
+                    else {
+                        _this.$message({
+                            message: '删除失败！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                    }
+                }).catch(function (error) {
+                console.log(error);
+            });
             }).catch(() => {
             });
         },
@@ -1208,6 +1250,9 @@
                 this.move.dialogVisible =true;
                 this.CurrentNode = row;
             },
+              moveModel1(){
+                this.move.dialogVisible =true;
+             },
             editSubmit(){
                 var _this = this;
                 var url = '/api/model/moveModel?CurrentNodeId=' + _this.CurrentNode.index+ "&SelectedNodeId=" + _this.SelectedNode
@@ -1226,6 +1271,30 @@
                         type: 'error',
                         duration: 2000
                     });
+                    console.log(error);
+                });
+            },
+            editSubmit1(){
+                var _this = this;
+                var url = '/api/model/moveModel?CurrentNodeId=' + _this.currentRow.index+ "&SelectedNodeId=" + _this.SelectedNode
+                _this.$http.post(url)
+                    .then(function (response) {
+                        if (response.data.msg == "ok") {
+                            _this.$message({
+                                message: '移动成功！',
+                                type: 'success',
+                                duration: 2000
+                            });
+                            _this.move.dialogVisible = false;
+                            _this.getModel();
+                        }
+                    }).catch(function (error) {
+                    _this.$message({
+                        message: '移动失败！',
+                        type: 'error',
+                        duration: 2000
+                    });
+                    _this.move.dialogVisible = false;
                     console.log(error);
                 });
             },
@@ -1265,7 +1334,45 @@
                 this.file.innerVisible = false;
                 this.$refs.uploadModel.coverModel(this.file.name);
             }
-
+            ,
+            deleteCheck()
+            {
+              console.log(this.currentRow);
+              if(this.currentRow==null)
+              {
+                return false;
+              }
+              else
+              {
+                if(this.func.directoryJudge(this.currentRow.userId,this.currentRow.directoryId,3))
+                {
+                  return true;
+                }
+                else
+                {
+                  return false;
+                }
+               }
+            },
+            moveCheck()
+            {
+              console.log(this.currentRow);
+              if(this.currentRow==null)
+              {
+                return false;
+              }
+              else
+              {
+                if(this.func.directoryJudge(this.currentRow.userId,this.currentRow.directoryId,2))
+                {
+                  return true;
+                }
+                else
+                {
+                  return false;
+                }
+               }
+            }
 //            handleClose(done) {
 //                this.$confirm('确认关闭？')
 //                    .then(_ => {
@@ -1453,4 +1560,6 @@
     }
 
 
+
+   
 </style>

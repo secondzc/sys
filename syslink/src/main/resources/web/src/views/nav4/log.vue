@@ -53,7 +53,7 @@
     </el-table-column>
       <el-table-column prop="userName" label="用户名" min-width="120" >
       </el-table-column>
-      <el-table-column prop="realName" label="全名" min-width="120" >
+      <el-table-column prop="realName" label="真实姓名" min-width="120" >
        </el-table-column>
       <el-table-column prop="userIp" label="用户IP" min-width="160" >
        </el-table-column>

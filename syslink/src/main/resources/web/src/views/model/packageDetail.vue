@@ -13,7 +13,7 @@
                     <el-header style="height: 40px;">
                         <div style="display: inline-block;">
                             <el-button type="primary" plain   @click="upFloor">上一层</el-button>
-                            <a id="download" style="display: none;" :href = fileUrl download="file" >asdfsd</a>
+                            <a id="download" style="display: none;" :href = fileUrl download="file" >下载</a>
                         </div>
                         <div style="display: inline-block;">
                             <!--工具条-->
@@ -73,7 +73,7 @@
 
                         <el-table-column
                                 label="文件大小"
-                                prop=""
+                                prop="size"
                                 min-width=100>
                         </el-table-column>
 
@@ -244,6 +244,7 @@
                 _this.$http.post(url)
                     .then(function (response) {
                         _this.details = response.data.data;
+                        _this.pager.total = response.data.data.length;
                         var filterModel = response.data.data.filter(
                             (u, index) => {
                                 if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {

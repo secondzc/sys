@@ -14,6 +14,7 @@ import java.util.List;
 public interface AttachmentService {
     Long add(Attachment attachment);
     int update(Attachment attachment);
+    int batchUpdate(List<Attachment> attachmentList);
     public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
     public Long addIconOfModel(String fileName,String iconUrl,Long size);
@@ -42,9 +43,9 @@ public interface AttachmentService {
     //查找刚上传的icon图片List
     public List<Attachment> getInsertIcon();
     //更新上传文件的modelId和parentId
-    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId);
+    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId,List<Attachment> floderList);
     //获取要删除的数据
     public List<Attachment> getDeleteAttach();
     //过滤掉不存在表单的文件
-    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList,List<FileJsonArrayDto> fileJsonArrayDtoList);
+    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList,List<FileJsonArrayDto> fileJsonArrayDtoList,List<Attachment> floderList);
 }

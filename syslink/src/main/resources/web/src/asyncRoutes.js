@@ -15,7 +15,7 @@ import upload from './views/model/Upload.vue'
 import GUser from './views/nav4/GUser.vue'
 
 import log from   './views/nav4/log.vue'
-//import permission from './views/nav4/permission.vue'
+import auth from './views/nav4/auth.vue'
 import role from './views/nav4/role.vue'
 import modelType from './views/nav4/modelType.vue'
 import fileType from './views/nav4/fileType.vue'
@@ -76,7 +76,6 @@ export let  commonRoutes = [
               {path:'/brief',component:brief,name:'我的待办',iconCls: 'iconfont icon-daibanshixiang'}, 
               {path:'/checkorAll',component:checkorAll,name:'我的审核',iconCls: 'iconfont icon-page1'}, 
               {path:'/mySubmitAll',component:mySubmitAll,name:'我的提交',iconCls: 'iconfont icon-tijiao'}, 
-
               { path: '/setCheckors', component: setCheckors, name: '审核人员配置',hidden: true }, 
               { path: '/mySubmitDetail', component: mySubmitDetail, name: '我的提交详情',hidden: true }, 
               {path:'/checkorDetail',component:checkorDetail,name:'审核详情',hidden:true}, 
@@ -135,17 +134,17 @@ export let  commonRoutes = [
         
         ]
     },
-    {
-        path: '',
-        component: NewHeader,
-        name: '欢迎',
-        hidden: true,
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            {path:'/Myspace',component:error401,name:'我的通知'}
+    // {
+    //     path: '',
+    //     component: NewHeader,
+    //     name: '欢迎',
+    //     hidden: true,
+    //     children: [
+    //         // { path: '/main', component: Main, name: '项目', hidden: true },
+    //         {path:'/Myspace',component:error401,name:'我的通知'}
         
-        ]
-    },
+    //     ]
+    // },
     {
         path: '/Main',
         component: Main,
@@ -246,23 +245,21 @@ export let limitRoutes=[
            
             // { path: '/tree', component: tree, name: '组织管理' ,meta:{role:['management_org_list']}},
             { path: '/depart', component: depart, name: '组织管理' ,iconCls:'iconfont icon-zuzhijiagoujiekou', meta:{auth:['management_org_list'],role:[1]}},
-          //  { path: 'TreeGrid', component: TreeGrid, name: '用户管理' ,meta:{role:['management_user_list']}},
             { path: '/GUser', component: GUser, name: '用户管理' ,iconCls:'iconfont icon-hezuoguanxi', meta:{auth:['management_user_list'],role:[1]}},
             { path: '/role', component: role, name: '角色管理' ,iconCls:'iconfont icon-jiaosequnti', meta:{auth:['management_role_list'],role:[1]}},
             // { path: '/permission', component: permission, name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]} },
-             { path: '',component:blankPage,  name: '权限管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]}, children: [
-            //{ path: '/permission', component: permission, name: '系统权限',iconCls:'iconfont icon-xitong'},
-             { path: '/directoryAuth', component: directoryAuth, name: '目录控制',iconCls:'iconfont icon-guize'}
-        ] },
-         //   { path: 'user', component: user, name: '应用监控' },
+             { path: '',component:blankPage,  name: '权限管理' ,iconCls:'iconfont icon-suoding', children: [
+            { path: '/auth', component: auth, name: '系统权限',iconCls:'iconfont icon-xitong',  meta:{auth:['management_auth_system_list'],role:[1]}},
+             { path: '/directoryAuth', component: directoryAuth, name: '目录控制',iconCls:'iconfont icon-guize', meta:{auth:['management_auth_directory_list'],role:[1]}}
+        ]    ,meta:{auth:['management_auth_directory_list'],role:[1]}} ,
             { path: '/log', component: log, name: '日志管理' ,iconCls:'iconfont icon-rili', meta:{auth:['management_log_list'],role:[1]}},
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
             {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban',meta:{auth:['management_template_list'],role:[1]}},
-            { path: '',component:blankPage,  name: '类型管理' ,iconCls:'iconfont icon-suoding',  meta:{auth:['management_auth_list'],role:[1]}, children: [
-                { path: '/modelType', component: modelType, name: '模型类型',iconCls:'iconfont icon-xitong'},
-                { path: '/fileType', component: fileType, name: '文件类型',iconCls:'iconfont icon-guize'}
-            ] },
+            { path: '',component:blankPage,  name: '类型管理' ,iconCls:'iconfont icon-suoding', children: [
+                { path: '/modelType', component: modelType, name: '模型类型',iconCls:'iconfont icon-xitong',  meta:{auth:['management_type_model_list'],role:[1]}},
+                { path: '/fileType', component: fileType, name: '文件类型',iconCls:'iconfont icon-guize',  meta:{auth:['management_type_file_list'],role:[1]}}
+            ]  ,meta:{auth:['management_type'],role:[1]}},
         ]
     },
     {

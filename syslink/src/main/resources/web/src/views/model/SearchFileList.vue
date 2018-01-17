@@ -2,7 +2,7 @@
     <section>
         <el-container  class="main-container" style="min-height: 500px">
             <el-main style="height: inherit;overflow-y: hidden">
-                <a id="download" style="display: none;" :href = fileUrl download="file" >asdfsd</a>
+                <a id="download" style="display: none;" :href = fileUrl download="file" >下载</a>
                 <div style="height: 100%; overflow-y: hidden;display: flex;flex-direction: column;flex-wrap: nowrap;">
                     <el-table
                             ref="singleTable"

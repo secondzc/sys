@@ -49,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -1279,7 +1280,11 @@ public class ModelController extends  BaseController {
                              @RequestBody Map<String,Object> map,
                                   HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
+        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()));
+
         try {
+            //上传的文件夹列表
+            List<Attachment> floderList = new ArrayList<>();
             GUser user = gUserService.querListByName(name);
             //图标列表
             List<Attachment> iconList = new ArrayList<>();
@@ -1288,7 +1293,7 @@ public class ModelController extends  BaseController {
             String modelType = (String) map.get("region");
             if(iconUpdate){
                 ModelType type = modelTypeService.getByType(modelType);
-                iconUrlId = type.getId();
+                iconUrlId = type.getIcon();
             }else{
                 iconList = attachmentService.getInsertIcon();
                 for (Attachment icon: iconList) {
@@ -1297,9 +1302,10 @@ public class ModelController extends  BaseController {
                     }
                 }
             }
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()));
             Long modelId = modelService.addOneModel(user, directoryId, scope, map,iconUrlId);
             //把刚刚上传的图标修改modelId
-           if(iconList.size() >0){
+           if(iconList.size() >0 && !iconUpdate){
                for (Attachment icon: iconList) {
                    if(icon.getId() == iconUrlId){
                        icon.setModelId(modelId);
@@ -1314,17 +1320,22 @@ public class ModelController extends  BaseController {
                     attachmentService.addFileJsonDto(fileJsonDto, modelId);
                 }
             }
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()));
             //查询刚插入的attachments
             List<Attachment> attachmentFileList = attachmentService.queryNullModelId(modelId);
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "查询");
             //过滤掉没有提交到表单的文件
-            attachmentFileList = attachmentService.getRealFileList(attachmentFileList,fileJsonArrayDtoList);
+            attachmentFileList = attachmentService.getRealFileList(attachmentFileList,fileJsonArrayDtoList,floderList);
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date())+ "过滤");
             //更新上传文件的modelId和parentId
-            attachmentService.UpdateModelFrame(attachmentFileList,modelId);
+            attachmentService.UpdateModelFrame(attachmentFileList,modelId,floderList);
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date())+ "修改");
             //删除不必要的文件
             List<Attachment> deleteFileList = attachmentService.getDeleteAttach();
             for (Attachment deleteFile: deleteFileList) {
                 attachmentService.delete(deleteFile.getId());
             }
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "删除");
             if (scope) {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
