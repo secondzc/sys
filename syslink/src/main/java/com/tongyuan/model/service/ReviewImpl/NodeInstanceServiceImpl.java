@@ -60,10 +60,10 @@ public class NodeInstanceServiceImpl implements NodeInstanceService {
         //也就是3同意，4不同意 ,7同意后取消，8不同意后取消
         List<CommentPage> commentPages = nodeInstanceMapper.queryCommentPages(instanceId);
         for(CommentPage commentPage:commentPages){
-            if(commentPage.getStatus()== ConstNodeInstanceStatus.AGREE||commentPage.getStatus()==ConstNodeInstanceStatus.AGREE_AND_CANCEL){
+            if(commentPage.getStatus().equals( ConstNodeInstanceStatus.AGREE)||commentPage.getStatus().equals(ConstNodeInstanceStatus.AGREE_AND_CANCEL)){
                 commentPage.setShowStatus("同意");
-            }else if(commentPage.getStatus()==ConstNodeInstanceStatus.NOT_AGREE
-                    ||commentPage.getStatus()==ConstNodeInstanceStatus.NOT_AGREE_AND_CANCEL){
+            }else if(commentPage.getStatus().equals(ConstNodeInstanceStatus.NOT_AGREE)
+                    ||commentPage.getStatus().equals(ConstNodeInstanceStatus.NOT_AGREE_AND_CANCEL)){
                 commentPage.setShowStatus("不同意");
             }
             //查询gogs库，添加user属性,因为guser分库了，所以不能联合查询，
