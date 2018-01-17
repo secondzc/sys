@@ -23,7 +23,10 @@ export default new vuex.Store({
         publicDirId : '',
         opened:!+Cookies.get('sidebarStatus'),
         list:Cookies.get('bbb'),
-        session:false
+        session:false,
+        //保存分页的当前页数
+        //保存当前激活的tab页的索引
+        activeTabIndex: 0,
     },
     actions,
     mutations,
@@ -85,5 +88,8 @@ export default new vuex.Store({
         session(state){
             return state.session
         },
+        activeTabIndex(state){
+            return state.activeTabIndex;
+        }
     }
 })

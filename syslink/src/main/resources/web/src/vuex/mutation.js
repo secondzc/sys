@@ -69,6 +69,8 @@ export default{
       },
     SET_SESSION:(state,session)=>{
       state.session = session
+    },
+    setActiveTabIndex:(state,activeTabIndex)=>{
+      state.activeTabIndex = activeTabIndex;
     }
-
 }

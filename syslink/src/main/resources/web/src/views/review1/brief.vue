@@ -1,6 +1,6 @@
 <template>
 	<section>
-		<el-tabs v-model="activeTab">
+		<el-tabs v-model="activeTab" @tab-click="handleClick">
 			<el-tab-pane label="待审核的流程" name="checkor">
 				<checkor></checkor>
 			</el-tab-pane>
@@ -21,9 +21,22 @@
 		},
 		data(){
 			return{
-				activeTab:"checkor",
+				tabs:['checkor','mySubmit'],
+				activeTab:'',
+				activeTabIndex: 0,
 			};
 		},
+		methods:{
+			handleClick(tab,events){
+				//将tab的index存入vuex
+				this.$store.commit('setActiveTabIndex',tab.index);
+			}
+		},
+		created(){
+			 this.activeTabIndex = this.$store.getters.activeTabIndex;
+			 this.activeTab = this.tabs[this.activeTabIndex];
+			 //console.log('activeTab',this.activeTab);
+		}
 	}
 </script>
 
