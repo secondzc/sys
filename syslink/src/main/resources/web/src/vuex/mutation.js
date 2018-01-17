@@ -72,5 +72,10 @@ export default{
     },
     [types.Set_ActiveTabIndex](state,activeTabIndex){
       state.activeTabIndex = activeTabIndex;
+    },
+    //存储当前页数,为curPage动态增加属性，就是（id,page)的键值对
+    'setCurPage':(state,obj)=>{
+      state.curPage[obj.id]=obj.page;
+      //console.log('curpage',state.curPage);
     }
 }

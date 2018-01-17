@@ -25,6 +25,7 @@ export default new vuex.Store({
         list:Cookies.get('bbb'),
         session:false,
         //保存分页的当前页数
+        curPage:{},
         //保存当前激活的tab页的索引
         activeTabIndex: 0,
     },
@@ -90,6 +91,9 @@ export default new vuex.Store({
         },
         activeTabIndex(state){
             return state.activeTabIndex;
+        },
+        curPage(state){
+            return state.curPage;
         }
     }
 })
