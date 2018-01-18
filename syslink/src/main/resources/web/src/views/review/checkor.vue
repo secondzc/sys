@@ -47,6 +47,7 @@
 	export default{
 		data(){
 			return {
+				path: '/views/review/checkor',
 				total: 0,
                 pageSize: 10,
                 pageSizes: [10,20,30],
@@ -62,6 +63,8 @@
 		},
 		methods: {
 			toDetail(index,row){ 
+				this.$store.commit('setCurPage',{'path':this.path,'page':this.page});
+
 				console.log("AAAAAAA");
                 //转到详情页 
                 sessionStorage.setItem('instanceId',row.reviewNodeInstance.instanceId); 
@@ -129,6 +132,7 @@
 
 		},
 		mounted() {
+			this.page = this.func.freshPage(this.path,this.page);
 			this.getDetail();
 		}
 	}

@@ -81,6 +81,7 @@
 	export default{
 		data() {
 			return{
+				path:'/views/review/template',
 				/*	pageSize 实际的每页显示数
 				pageSizes  可选的每页显示数
 				page  当前页数
@@ -146,6 +147,8 @@
 				this.sels = sels;
 			},
 			handleEdit: function(row){
+				this.$store.commit('setCurPage',{'path':this.path,'page':this.page});
+				
 				//let templateId = row.templateId;
 				//sessionStorage.setItem('templateId',this.sels[0].templateId);
 				sessionStorage.setItem('templateId',row.templateId);
@@ -302,6 +305,7 @@
 			},
 		},
 		mounted() {
+			this.page = this.func.freshPage(this.path,this.page);
 			this.getTemplates(false);
 		}
 	}
