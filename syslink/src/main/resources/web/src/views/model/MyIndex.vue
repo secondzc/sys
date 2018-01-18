@@ -352,9 +352,9 @@
 
 
             <el-main class="card-main" v-show="!listStatus">
-                <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 30px;">
+                <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 47px;">
                     <!--<span>排序</span>-->
-                    <div style="display: inline-block;line-height: 30px;margin-left: 20px;"><p>排序：</p></div>
+                    <div style="display: inline-block;line-height: 30px;margin-left: 20px;margin-top: 9px;"><p>排序：</p></div>
                     <div id="appp" style="display: inline-block;">
 
                         <sortable-list
@@ -383,7 +383,7 @@
                     
 
                     
-                                    <el-card class="Card" style="height: 350px;width: 250px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0" 
+                                    <el-card class="Card" style="height: 300px;width: 190px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0"
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
@@ -393,7 +393,7 @@
                              
                                         <div :index="o.index"  @click="modelVariable(o)" >
                                             <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
-                                                <img v-bind:src="o.imageUrl" style="height: 160px;width: 200px;margin-bottom: 10px;">
+                                                <img v-bind:src="o.imageUrl" style="height: 140px;width: 160px;margin-bottom: 10px;">
                                             </div>
                                             <div style="margin-top: 10px;"   >
                                               <!--   <h4 >模型名称：{{o.name}}</h4> -->
@@ -449,7 +449,7 @@
                 <div v-if="varLength == 0" style="height: inherit;">
                     <div style="height: inherit;overflow-y: hidden;">
                     <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
-                    <div slot="header" class="clearfix">
+                    <div slot="header" class="clearfix" style="height: 10px">
                         <span style="font-weight: bold;">我的模型</span>
                         <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
                     </div>
@@ -464,7 +464,7 @@
 
                  <div v-else="this.varLength != 0" v-for="(o, index) in variable" :key="o.id" :offset="index > 0 ? 2 : 0" style="height: inherit;overflow-y: hidden;">
                         <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
-                          <div slot="header" class="clearfix">
+                          <div slot="header" class="clearfix" style="height: 10px">
                         <span style="font-weight: bold;">{{o.name}}</span>
                       <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
     
@@ -892,7 +892,12 @@
         modelVar: function (item) {
             this.$store.dispatch('sendModelId', item.index);
             this.$store.dispatch('sendTreeModelId', item.index);
-            this.$router.push({path: '/model/myPackageDiagram'});
+            if(item.type == "Modelica"){
+                this.$router.push({path: '/model/packageDiagram'});
+            }
+            else{
+                this.packageDetailDialog.dialogVisible = true;
+            }
         },
         modelVariable: function (model) {
             if(model == null){
