@@ -80,6 +80,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
+            <el-button @click="editResetForm()">重置</el-button>
             <el-button @click="editCancelSubmit">取 消</el-button>
             <el-button type="primary" @click="editSubmitForm" :loading="submitLoading" >确 定</el-button>
         </div>
@@ -117,6 +118,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
+            <el-button @click="resetForm()">重置</el-button>
             <el-button @click="cancelSubmit">取 消</el-button>
             <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
         </div>
@@ -325,11 +327,14 @@
         },
         addModelType(){
             this.submitLoading = true;
-            this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
-            if(this.form.photoName == ''|| this.form.photoName == null){
+            if(this.$refs.ModelTypePicture.uploadFiles.length >0){
+                var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[fileListEndPosition].name;
+            }
+            if(this.$refs.ModelTypePicture.uploadFiles.length <1){
                 this.submitLoading = false;
                 this.$message({
-                    message: '请添加文件图标！',
+                    message: '请添加文件类型图标！',
                     type: 'error',
                     duration: 2000
                 });
@@ -370,7 +375,10 @@
         },
         editSubmitForm(){
             this.submitLoading = true;
-            this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[0].name;
+            if(this.$refs.EditModelTypePicture.uploadFiles.length >0){
+                var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[fileListEndPosition].name;
+            }
             var _this = this;
             let para = Object.assign({}, _this.editForm);
             _this.$http({method:'post',
@@ -398,6 +406,16 @@
                         duration: 2000
                     });
                 });
+        },
+        editResetForm(){
+            this.editForm.photoName = '';
+            this.$refs.EditModelTypePicture.clearFiles();
+            this.imageUrl = '';
+        },
+        resetForm(){
+            this.$refs['form'].resetFields();
+            this.$refs.ModelTypePicture.clearFiles();
+            this.imageUrl = '';
         },
 
         //--------------------------------icon----------------------

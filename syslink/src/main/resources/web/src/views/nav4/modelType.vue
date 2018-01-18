@@ -66,7 +66,7 @@
                                 ref="EditModelTypePicture"
                                 class="avatar-uploader"
                                 :action = "photo()"
-                                :show-file-list="true"
+                                :show-file-list="false"
                                 :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload"
                                 >
@@ -104,7 +104,7 @@
                                 ref="ModelTypePicture"
                                 class="avatar-uploader"
                                 :action = "photo()"
-                                :show-file-list="true"
+                                :show-file-list="false"
                                 :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload"
                                 >
@@ -327,10 +327,13 @@
         },
         addModelType(){
             this.submitLoading = true;
-            this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
-            if(this.form.photoName == ''|| this.form.photoName == null){
+            if(this.$refs.ModelTypePicture.uploadFiles.length >0){
+                var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[fileListEndPosition].name;
+            }
+            if(this.$refs.ModelTypePicture.uploadFiles.length <1){
                 this.$message({
-                    message: '请添加模型图标！',
+                    message: '请添加模型类型图标！',
                     type: 'error',
                     duration: 2000
                 });
@@ -372,7 +375,10 @@
         },
         editSubmitForm(){
             this.submitLoading = true;
-            this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[0].name;
+            if(this.$refs.EditModelTypePicture.uploadFiles.length >0){
+                var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[fileListEndPosition].name;
+            }
             var _this = this;
             let para = Object.assign({}, _this.editForm);
             _this.$http({method:'post',
