@@ -926,6 +926,10 @@
             console.log(val);
         },
         handleCurrent(val) {
+            let para = {
+                pageSize: this.pager.pageSize,
+                pageIndex: this.pager.pageIndex
+            };
             console.log(`当前页: ${val}`);
             var filterModel = this.allrepositorie.filter(
                 (u, index) => {
@@ -934,7 +938,7 @@
                     }
                 }
             )
-            _this.repositories = filterModel;
+            this.repositories = filterModel;
         },
         handleSizeChange(val){
             console.log(`每页 ${val} 条`);
@@ -946,7 +950,7 @@
                     }
                 }
             )
-            _this.repositories = filterModel;
+            this.repositories = filterModel;
         },
         handleEdit(index, row) {
             console.log(index, row);
