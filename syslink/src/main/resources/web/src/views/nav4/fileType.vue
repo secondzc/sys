@@ -1,11 +1,11 @@
 <template>
-  <section>
+  <section style="overflow-y: hidden">
     <!--工具条-->
     <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
-      <el-form :inline="true" >
-        <el-form-item>
-          <el-button size="small" type="primary" @click="handleAdd"  >新建</el-button>
-        </el-form-item>
+      <el-form :inline="true"  style="height: 45px;" >
+          <el-form-item>
+              <el-button type="primary" @click="handleAdd" size="small" >新建<i class="el-icon-plus el-icon--right"></i></el-button>
+          </el-form-item>
       </el-form>
 
     <!-- </el-col> -->
@@ -20,7 +20,7 @@
 
 
 
-              <el-card class="Card" style="height: 265px;width: 250px; margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
+              <el-card class="Card" style="height: 265px;width: 240px; margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
               >
                   <div slot="header"  style="width: inherit;height: inherit;">
                       <span style="font-weight: bold;">{{o.ext}}</span>
@@ -53,12 +53,12 @@
 
 
     <!--编辑角色界面-->
-    <el-dialog title="编辑文件类型" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑文件类型" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false" width="40%">
         <el-form ref="editForm"   :model="editForm" label-width="110px" class="demo-form-inline">
 
 
             <el-form-item label="文件类型名称"  >
-                <el-col :span="6">
+                <el-col :span="10">
                     <el-input  v-model="editForm.name" disabled="disabled"></el-input>
                 </el-col>
             </el-form-item>
@@ -81,20 +81,20 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="editCancelSubmit">取 消</el-button>
-            <el-button type="primary" @click="editSubmitForm" >确 定</el-button>
+            <el-button type="primary" @click="editSubmitForm" :loading="submitLoading" >确 定</el-button>
         </div>
 
     </el-dialog>
 
 
     <!--新增角色界面-->
-    <el-dialog title="新建一文件类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog title="新建一文件类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"  width="40%" >
         <!--<ModelTypePicture></ModelTypePicture>-->
-        <el-form ref="form" :rules="form.rules"  :model="form" label-width="110px" class="demo-form-inline">
+        <el-form ref="form" :rules="rules"  :model="form" label-width="110px" class="demo-form-inline">
 
 
             <el-form-item label="文件类型名称" prop="name"  >
-                <el-col :span="6">
+                <el-col :span="10">
                     <el-input  v-model="form.name" ></el-input>
                 </el-col>
             </el-form-item>
@@ -118,7 +118,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="cancelSubmit">取 消</el-button>
-            <el-button type="primary" @click="submitForm" >确 定</el-button>
+            <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
         </div>
     </el-dialog>
 
@@ -168,13 +168,13 @@
           form: {
               name: '',
               photoName : '',
-              rules: {
-                  name: {
-                      required: true,
-                      validator : validateName,
-                      trigger: 'blur'
-                  }
-              }
+          },
+          rules: {
+              name: [{
+                  required: true,
+                  validator : validateName,
+                  trigger: 'blur'
+              }],
           },
           imageUrl: '',
           pager: {
@@ -185,7 +185,7 @@
           editFormVisible: false,//编辑界面是否显示
           addFormVisible : false,
           name : this.$store.state.userInfo.profile.name,
-
+          submitLoading :false,
       }
     },
       computed: {
@@ -279,7 +279,7 @@
                                 _this.getModelTypeList();
                             }else{
                                 _this.$message({
-                                    message: '请重新输入文件分类名称！',
+                                    message: '已存在,请重新输入文件分类名称！',
                                     type: 'warning',
                                     duration: 2000
                                 });
@@ -287,8 +287,8 @@
                         }).catch(function (error) {
                         console.log(error)
                         _this.$message({
-                            message: '请重新输入文件分类名称！',
-                            type: 'warning',
+                            message: '提交失败！',
+                            type: 'error',
                             duration: 2000
                         });
                     })
@@ -297,6 +297,7 @@
         },
         cancelSubmit () {
             this.$refs['form'].resetFields();
+            this.submitLoading = false;
             this.addFormVisible = false
 
         },
@@ -323,7 +324,17 @@
                 });
         },
         addModelType(){
+            this.submitLoading = true;
             this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
+            if(this.form.photoName == ''|| this.form.photoName == null){
+                this.submitLoading = false;
+                this.$message({
+                    message: '请添加文件图标！',
+                    type: 'error',
+                    duration: 2000
+                });
+                return ;
+            }
             var _this = this;
             let para = Object.assign({}, _this.form);
             _this.$http({method:'post',
@@ -331,6 +342,7 @@
                 data:para})
                 .then(function (response) {
                     if(response.data.msg == "ok"){
+                        _this.submitLoading = false;
                         _this.$message({
                             message: '添加成功！',
                             type: 'success',
@@ -343,6 +355,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    _this.submitLoading = false;
                     _this.$message({
                         message: '添加失败！',
                         type: 'error',
@@ -352,9 +365,11 @@
         },
         editCancelSubmit(){
             this.$refs['editForm'].resetFields();
+            this.submitLoading = false;
             this.editFormVisible = false;
         },
         editSubmitForm(){
+            this.submitLoading = true;
             this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[0].name;
             var _this = this;
             let para = Object.assign({}, _this.editForm);
@@ -363,6 +378,7 @@
                 data:para})
                 .then(function (response) {
                     if(response.data.msg == "ok"){
+                        _this.submitLoading = false;
                         _this.$message({
                             message: '修改成功！',
                             type: 'success',
@@ -375,6 +391,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    _this.submitLoading = false;
                     _this.$message({
                         message: '修改失败！',
                         type: 'error',
@@ -391,17 +408,17 @@
             return "http://"+global_.HostPath+ "/api/model/uploadModelIcon?name="+this.name
         },
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
+            const isJPG = file.type === 'image/jpeg'|| file.type === 'image/png' || file.type === 'image/webp';
             const isLt2M = file.size / 1024 / 1024 < 2;
 
             if (!isJPG) {
-                this.$message.error('上传图片只能是 JPG 格式!');
+                this.$message.error('上传图片只能是 JPG,PNG,WEBP 格式!');
             }
             if (!isLt2M) {
                 this.$message.error('上传图片大小不能超过 2MB!');
             }
             return isJPG && isLt2M;
-        },
+        }
         //---------------------icon-----------------------------
 
     },

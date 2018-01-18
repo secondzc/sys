@@ -120,11 +120,11 @@
                     fileLists : [],
                     showPicture: true,
                     rules: {
-                        name: {
+                        name: [{
                             required: true,
                             validator : validateName,
                             trigger: 'blur'
-                        }
+                        }],
                     }
                 },
                 photoUrl: '',
@@ -278,11 +278,11 @@
                 return "http://"+global_.HostPath+ "/api/model/uploadModelIcon?name="+this.name +"&directoryId="+this.bmsg + "&scope=" + true
             },
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
+                const isJPG = file.type === 'image/jpeg'|| file.type === 'image/png' || file.type === 'image/webp';
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
-                    this.$message.error('上传图片只能是 JPG 格式!');
+                    this.$message.error('上传图片只能是 JPG,PNG,WEBP 格式!');
                 }
                 if (!isLt2M) {
                     this.$message.error('上传图片大小不能超过 2MB!');
