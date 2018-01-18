@@ -1,6 +1,17 @@
 import axios from "axios";
 import store from '../../vuex/store';
 export default {
+  freshPage(path,page){
+    //页数只使用一次，用后销毁,起到‘只是详情后返回的时候记录页数’的作用，而没有记忆效果
+    let storedPage = store.getters.curPage;
+    if(storedPage[path] === undefined){
+      return page;
+    }else{
+      let temp = storedPage[path];
+      storedPage[path] = undefined;
+      return temp;
+    }
+  },
 	ajaxGet (api, cb) {
 		axios.get(api)
 		    .then(cb)
@@ -106,5 +117,4 @@ export default {
         return false;
       }
     }
-	
 }

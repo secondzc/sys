@@ -49,6 +49,7 @@
     export default{
     	data(){
     		return {
+                path:'/views/review/mySubmit',
                 total: 0,
                 pageSize: 10,
                 pageSizes: [10,20,30],
@@ -132,6 +133,8 @@
     			return msg;
     		},
     		detail(index,row){
+                this.$store.commit('setCurPage',{'path':this.path,'page':this.page});
+
                 sessionStorage.setItem('instanceId',row.instanceId);
                 //由instanceId得到modelId，存入vuex供modelTree使用
                 var url = 'api/reviewFlowInstance/getModelIdByInstanceId';
@@ -187,6 +190,7 @@
             },
     	},
     	mounted() {
+            this.page = this.func.freshPage(this.path,this.page);
     		this.getInstance();
     	}
     }

@@ -52,6 +52,7 @@
 
 		data(){
 			return {
+				path: '/views/review1/checkorAll',
 				total: 0,
                 pageSize: 10,
                 pageSizes: [10,20,30],
@@ -66,7 +67,9 @@
 			}
 		},
 		methods: {
-			toDetail(index,row){ 
+			toDetail(index,row){
+			    this.$store.commit('setCurPage',{'path':this.path,'page':this.page});
+			    console.log('curPage',this.$store.getters.curPage);
                 //转到详情页 
                 sessionStorage.setItem('instanceId',row.reviewNodeInstance.instanceId); 
                 sessionStorage.setItem('id',row.id);
@@ -95,7 +98,7 @@
 				})
 			},
 			passed(row){
-				console.log('检查是否审核过了',row);
+				//console.log('检查是否审核过了',row);
 				if(row.reviewNodeInstance.status===2){
 					return false;
 				}else{
@@ -168,6 +171,8 @@
 
 		},
 		mounted() {
+			this.page = this.func.freshPage(this.path,this.page);
+			console.log('page',this.page);
 			this.getDetail();
 		}
 	}

@@ -56,6 +56,7 @@
     export default{
     	data(){
     		return {
+                path:'/views/review1/mySubmitAll',
                 total: 0,
                 pageSize: 10,
                 pageSizes: [10,20,30],
@@ -129,6 +130,7 @@
     			return msg;
     		},
     		detail(index,row){
+                this.$store.commit('setCurPage',{'path':this.path,'page':this.page});
 				sessionStorage.setItem('instanceId',row.instanceId);
 				this.$router.push({path:'/mySubmitDetail'});
     		},
@@ -175,6 +177,8 @@
             },
     	},
     	mounted() {
+            this.page = this.func.freshPage(this.path,this.page);
+            console.log('page',this.page);
     		this.getInstance();
     	}
     }
