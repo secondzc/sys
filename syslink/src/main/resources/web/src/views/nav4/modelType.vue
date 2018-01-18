@@ -1,16 +1,15 @@
 <template>
-  <section>
+  <section style="overflow-y: hidden">
     <!--工具条-->
     <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
-      <el-form :inline="true" >
-        <el-form-item>
-          <el-button size="small" type="primary" @click="handleAdd"  >新建</el-button>
-        </el-form-item>
+      <el-form :inline="true"  style="height: 45px;">
+          <el-form-item>
+              <el-button type="primary" @click="handleAdd" size="small" >新建<i class="el-icon-plus el-icon--right"></i></el-button>
+          </el-form-item>
       </el-form>
 
     <!-- </el-col> -->
     <hr/>
-
     <!--列表-->
       <div  style="display: flex;flex-direction: column;height:92%;width: auto;">
 
@@ -20,7 +19,7 @@
 
 
 
-              <el-card class="Card" style="height: 265px;width: 250px; margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
+              <el-card class="Card" style="height: 265px;width: 230px; margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
               >
                   <div slot="header"  style="width: inherit;height: inherit;">
                       <span style="font-weight: bold;">{{o.name}}</span>
@@ -38,7 +37,6 @@
 
 
           </div>
-
           <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrent"
@@ -48,17 +46,16 @@
                   layout="total, sizes, prev, pager, next, jumper"
                   :total="pager.total"  style="min-height: 30px;max-height: 40px;">
           </el-pagination>
-
-      </div>
+        </div>
 
 
     <!--编辑角色界面-->
-    <el-dialog title="编辑模型类型" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑模型类型" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false" width="40%">
         <el-form ref="editForm"   :model="editForm" label-width="110px" class="demo-form-inline">
 
 
             <el-form-item label="模型类型名称" >
-                <el-col :span="6">
+                <el-col :span="10">
                     <el-input  v-model="editForm.name" disabled="disabled"></el-input>
                 </el-col>
             </el-form-item>
@@ -69,9 +66,10 @@
                                 ref="EditModelTypePicture"
                                 class="avatar-uploader"
                                 :action = "photo()"
-                                :show-file-list="false"
+                                :show-file-list="true"
                                 :on-success="handleAvatarSuccess"
-                                :before-upload="beforeAvatarUpload">
+                                :before-upload="beforeAvatarUpload"
+                                >
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
@@ -80,21 +78,22 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
+            <el-button @click="editResetForm()">重置</el-button>
             <el-button @click="editCancelSubmit">取 消</el-button>
-            <el-button type="primary" @click="editSubmitForm" >确 定</el-button>
+            <el-button type="primary" @click="editSubmitForm" :loading="submitLoading">确 定</el-button>
         </div>
 
     </el-dialog>
 
 
     <!--新增角色界面-->
-    <el-dialog title="新建一模型类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   >
+    <el-dialog title="新建一模型类型" :visible.sync="addFormVisible" v-if="addFormVisible" :close-on-click-modal="false"   width="40%">
         <!--<ModelTypePicture></ModelTypePicture>-->
-        <el-form ref="form" :rules="form.rules"  :model="form" label-width="110px" class="demo-form-inline">
+        <el-form ref="form" :rules="rules"  :model="form" label-width="110px" class="demo-form-inline">
 
 
-            <el-form-item label="模型类型名称" prop="name" >
-                <el-col :span="6">
+            <el-form-item prop="name" label="模型类型名称"  >
+                <el-col :span="10">
                     <el-input  v-model="form.name" ></el-input>
                 </el-col>
             </el-form-item>
@@ -105,9 +104,10 @@
                                 ref="ModelTypePicture"
                                 class="avatar-uploader"
                                 :action = "photo()"
-                                :show-file-list="false"
+                                :show-file-list="true"
                                 :on-success="handleAvatarSuccess"
-                                :before-upload="beforeAvatarUpload">
+                                :before-upload="beforeAvatarUpload"
+                                >
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
@@ -117,8 +117,9 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelSubmit">取 消</el-button>
-            <el-button type="primary" @click="submitForm" >确 定</el-button>
+            <el-button @click="resetForm()">重置</el-button>
+            <el-button @click="cancelSubmit" >取 消</el-button>
+            <el-button type="primary" @click="submitForm" :loading="submitLoading" >确 定</el-button>
         </div>
     </el-dialog>
 
@@ -131,8 +132,10 @@
   import ModelTypePicture from '../nav3/ModelTypePicture.vue'
   import { mapState,mapGetters} from 'vuex'
   import {mapActions} from 'vuex'
+  import ElContainer from "../../../node_modules/element-ui/packages/container/src/main";
   export default {
       components: {
+          ElContainer,
           global_,
           ModelTypePicture
       },
@@ -165,16 +168,16 @@
               name : '',
               photoName : '',
           },
-          form: {
+          form : {
               name: '',
               photoName : '',
-              rules: {
-                  name: {
-                      required: true,
-                      validator : validateName,
-                      trigger: 'blur'
-                  }
-              }
+          },
+          rules: {
+              name: [{
+                  required: true,
+                  validator : validateName,
+                  trigger: 'blur'
+              }],
           },
           imageUrl: '',
           pager: {
@@ -185,7 +188,7 @@
           editFormVisible: false,//编辑界面是否显示
           addFormVisible : false,
           name : this.$store.state.userInfo.profile.name,
-
+          submitLoading :false,
       }
     },
       computed: {
@@ -218,7 +221,7 @@
                         if (response.data.msg == "ok") {
                             _this.$message({
                                 message: '删除成功！',
-                                type: 'warning',
+                                type: 'success',
                                 duration: 2000
                             });
                             _this.getModelTypeList();
@@ -227,7 +230,7 @@
                         else {
                             _this.$message({
                                 message: '删除失败！',
-                                type: 'warning',
+                                type: 'error',
                                 duration: 2000
                             });
                         }
@@ -278,16 +281,17 @@
                                 _this.addModelType();
                             }else{
                                 _this.$message({
-                                    message: '请重新输入模型分类名称！',
+                                    message: '已存在,请重新输入模型分类名称！',
                                     type: 'warning',
                                     duration: 2000
                                 });
                             }
                         }).catch(function (error) {
                         console.log(error)
+                        _this.submitLoading = false;
                         _this.$message({
-                            message: '请重新输入模型分类名称！',
-                            type: 'warning',
+                            message: '添加失败！',
+                            type: 'error',
                             duration: 2000
                         });
                     })
@@ -296,8 +300,8 @@
         },
         cancelSubmit () {
             this.$refs['form'].resetFields();
-            this.addFormVisible = false
-
+            this.submitLoading = false;
+            this.addFormVisible = false;
         },
         getModelTypeList(){
             let para = {
@@ -322,7 +326,17 @@
                 });
         },
         addModelType(){
+            this.submitLoading = true;
             this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
+            if(this.form.photoName == ''|| this.form.photoName == null){
+                this.$message({
+                    message: '请添加模型图标！',
+                    type: 'error',
+                    duration: 2000
+                });
+                this.submitLoading = false;
+                return ;
+            }
             var _this = this;
             let para = Object.assign({}, _this.form);
             _this.$http({method:'post',
@@ -330,6 +344,7 @@
                 data:para})
                 .then(function (response) {
                     if(response.data.msg == "ok"){
+                        _this.submitLoading = false;
                         _this.$message({
                             message: '添加成功！',
                             type: 'success',
@@ -341,6 +356,7 @@
                     }
                 })
                 .catch(function (error) {
+                    _this.submitLoading = false;
                     console.log(error);
                     _this.$message({
                         message: '添加失败！',
@@ -351,10 +367,11 @@
         },
         editCancelSubmit(){
             this.$refs['editForm'].resetFields();
+            this.submitLoading = false;
             this.editFormVisible = false;
-
         },
         editSubmitForm(){
+            this.submitLoading = true;
             this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[0].name;
             var _this = this;
             let para = Object.assign({}, _this.editForm);
@@ -363,6 +380,7 @@
                 data:para})
                 .then(function (response) {
                     if(response.data.msg == "ok"){
+                        _this.submitLoading = false;
                         _this.$message({
                             message: '修改成功！',
                             type: 'success',
@@ -374,6 +392,7 @@
                     }
                 })
                 .catch(function (error) {
+                    _this.submitLoading = false;
                     console.log(error);
                     _this.$message({
                         message: '修改失败！',
@@ -382,6 +401,17 @@
                     });
                 });
         },
+        resetForm(){
+            this.$refs['form'].resetFields();
+            this.$refs.ModelTypePicture.clearFiles();
+            this.imageUrl = '';
+        },
+        editResetForm(){
+            this.editForm.photoName = '';
+            this.$refs.EditModelTypePicture.clearFiles();
+            this.imageUrl = '';
+        }
+        ,
 
         //--------------------------------icon----------------------
         handleAvatarSuccess(res, file) {
@@ -391,11 +421,11 @@
             return "http://"+global_.HostPath+ "/api/model/uploadModelIcon?name="+this.name
         },
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
+            const isJPG = file.type === 'image/jpeg'|| file.type === 'image/png' || file.type === 'image/webp';
             const isLt2M = file.size / 1024 / 1024 < 2;
 
             if (!isJPG) {
-                this.$message.error('上传图片只能是 JPG 格式!');
+                this.$message.error('上传图片只能是 JPG,PNG,WEBP格式!');
             }
             if (!isLt2M) {
                 this.$message.error('上传图片大小不能超过 2MB!');
