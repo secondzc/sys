@@ -1404,6 +1404,7 @@ public class ModelController extends  BaseController {
                 attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
             }
             attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
+            attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
         }
         jo.put("data",modelDetail);
         return returnSuccessInfo(jo);
@@ -1481,8 +1482,18 @@ public class ModelController extends  BaseController {
             HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<AttachmentDto> allFiles = new ArrayList<>();
+        FileTypeDto fileTypeDto = new FileTypeDto();
         try{
             allFiles = attachmentService.getAllFiles(scope);
+            fileTypeDto = fileTypeService.getDefaultIcon();
+            for (AttachmentDto attach: allFiles) {
+                if(StringUtil.isNull(attach.getFileIconUrl())){
+                    attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
+                }else{
+                    attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attach.getFileIconUrl());
+                }
+                attach.setFileSize(ModelUtil.getFileSize(attach.getSize()));
+            }
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");

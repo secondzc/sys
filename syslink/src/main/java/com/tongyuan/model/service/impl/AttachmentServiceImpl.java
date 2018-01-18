@@ -96,11 +96,9 @@ public class AttachmentServiceImpl implements AttachmentService {
      */
     @Override
     public List<VariableTreeObj> getModelCatalog(List<VariableTreeObj> modelCatalogList, List<Attachment> modelFiles) {
-        VariableTreeObj model = new VariableTreeObj();
-        //子文件列表
-        List<VariableTreeObj> childList = new ArrayList<>();
         for (Attachment modelRoot:modelFiles) {
             if(modelRoot.getParentId() == 0){
+                VariableTreeObj model = new VariableTreeObj();
                 model.setId(modelRoot.getId());
                 model.setName(modelRoot.getName());
                 List<VariableTreeObj> rootChild = new ArrayList<>();
@@ -108,8 +106,12 @@ public class AttachmentServiceImpl implements AttachmentService {
                 modelCatalogList.add(model);
             }
         }
-        this.getModelChild(modelFiles,model.getId(),childList);
-        model.setChildren(childList);
+        for (VariableTreeObj variableTreeObj : modelCatalogList) {
+            //子文件列表
+            List<VariableTreeObj> childList = new ArrayList<>();
+            this.getModelChild(modelFiles,variableTreeObj.getId(),childList);
+            variableTreeObj.setChildren(childList);
+        }
         return modelCatalogList;
     }
 
