@@ -17,7 +17,7 @@
                                 width="80" >
                             <template scope="scope">
 
-                                <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
+                                <img v-bind:src="scope.row.fileIconUrl" style="width: 60px;height: 40px;"/>
 
 
 
@@ -52,7 +52,7 @@
 
                         <el-table-column
                                 label="文件大小"
-                                prop="size"
+                                prop="fileSize"
                                 min-width=100>
                         </el-table-column>
 
@@ -177,6 +177,10 @@
             },
             handleCurrent(val) {
                 console.log(`当前页: ${val}`);
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
                 var filterModel = this.searchrepository.filter(
                     (u, index) => {
                         if (index < val * para.pageSize && index >= para.pageSize * (val - 1)) {

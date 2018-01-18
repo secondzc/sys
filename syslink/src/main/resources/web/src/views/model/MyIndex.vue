@@ -50,7 +50,18 @@
                                   width="80%"
                                   center
                           >
-                              <privateUpload @closeDialog="closeDialog"  @returnToModel="returnToModel"></privateUpload>
+                              <el-dialog
+                                      width="30%"
+                                      title="是否覆盖之前的模型"
+                                      :visible.sync="file.innerVisible"
+                                      append-to-body
+                                      center>
+                                  <div slot="footer" class="dialog-footer">
+                                      <el-button @click.native="file.innerVisible= !file.innerVisible">取消</el-button>
+                                      <el-button type="primary" @click.native="cover" >覆盖</el-button>
+                                  </div>
+                              </el-dialog>
+                              <privateUpload ref="privateUpload" @closeDialog="closeDialog"  @returnToModel="returnToModel" @openInnerVisible="openInnerVisible" ></privateUpload>
                           </el-dialog>
                           <el-dialog
                                   title="模型详细信息"
@@ -598,10 +609,23 @@
         data() {
             this.__currentNode = null;
             var validateName = (rule, value, callback) => {
-                if (value.trim() == '') {
-                    callback(new Error('不能全为空格和空值'));
-                }else {
-                    callback();
+                let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+                console.log(value);
+
+                if(!value)
+                {
+                    callback(new Error('请输入分类名称'));
+                }
+                else
+                {
+                    if (re.test(value))
+                    {
+                        callback();
+                    }
+                    else
+                    {
+                        callback(new Error('只允许输入中文、字母、数字'));
+                    }
                 }
             };
             return {
@@ -1088,7 +1112,7 @@
                           _this.fetchAddTreeNode()
                       }else{
                           _this.$message({
-                              message: '请重新输入模型分类名称！',
+                              message: '名称重复,请重新输入模型分类名称！',
                               type: 'warning',
                               duration: 2000
                           });
@@ -1097,7 +1121,7 @@
                   .catch(function (error) {
                       console.log(error)
                       _this.$message({
-                          message: '请重新输入模型分类名称！',
+                          message: '名称重复,请重新输入模型分类名称！',
                           type: 'warning',
                           duration: 2000
                       });
@@ -1318,7 +1342,7 @@
             },
             cover(){
                 this.file.innerVisible = false;
-                this.$refs.uploadModel.coverModel(this.file.name);
+                this.$refs.privateUpload.coverModel(this.file.name);
             },
             returnToModel(){
                 this.file.dialogVisible =false;

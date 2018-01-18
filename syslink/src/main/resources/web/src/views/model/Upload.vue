@@ -65,7 +65,7 @@
             <el-footer>
                 <div style="float: right;height: 30px;width: 100%" >
                     <el-button style="float: right;margin-left: 10px" @click="closeDia">取消</el-button>
-                    <el-button style="float: right" type="primary" @click.native="onSubmit">提交</el-button>
+                    <el-button style="float: right" type="primary" @click.native="onSubmit" :loading="submitLoading">提交</el-button>
                     <el-button style="float: right" type="primary" @click.native="returnToUploadModel">上传模型</el-button>
                 </div>
             </el-footer>
@@ -127,6 +127,7 @@
                         }],
                     }
                 },
+                submitLoading :false,
                 photoUrl: '',
                 modelType: [],
                 imageUrl: '',
@@ -150,6 +151,7 @@
             },
             submit(){
                 if(this.form.fileLists.length >0){
+                    this.submitLoading = true;
                     console.log('submit!');
                     if(!this.form.showPicture){
                         this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
@@ -161,16 +163,19 @@
                         data:para})
                         .then(function (response) {
                             if(response.data.msg == "ok"){
+                                _this.submitLoading = false;
                                 _this.$message({
                                     message: '上传成功！',
                                     type: 'success',
                                     duration: 2000
                                 });
                                 _this.closeDia();
+                                _this.$router.push('/mySubmitAll');
                             }
                         })
                         .catch(function (error) {
                             console.log(error);
+                            _this.submitLoading = false;
                             _this.$message({
                                 message: '上传失败！',
                                 type: 'error',
@@ -205,6 +210,7 @@
                                 }
                             }).catch(function (error) {
                             console.log(error)
+                            _this.submitLoading = false;
                             _this.$message({
                                 message: '请重新输入模型分类名称！',
                                 type: 'warning',

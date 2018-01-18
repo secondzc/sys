@@ -169,6 +169,7 @@
                                     duration: 2000
                                 });
                                 _this.closeDia();
+                                _this.$router.push('/mySubmitAll');
                             }
                         })
                         .catch(function (error) {
@@ -248,6 +249,26 @@
                 this.$refs['form'].resetFields();
                 this.getModelTypeList();
                 this.getPhotoUrl();
+            },
+            coverModel(data){
+                this.deleteModel(data);
+            },
+            deleteModel(data){
+                var _this = this;
+                _this.$http.post('/api/model/deleteModel?modelName='+data +"&directoryId="+this.bmsg)
+                    .then(function (response) {
+                        if (response.data.msg == "ok") {
+                            _this.submit();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        _this.$message({
+                            message: '上传失败！',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                    });
             },
             //---------------------------------------------------上传图片
             handleAvatarSuccess(res, file) {
