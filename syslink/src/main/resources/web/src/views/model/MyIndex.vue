@@ -926,6 +926,10 @@
             console.log(val);
         },
         handleCurrent(val) {
+            let para = {
+                pageSize: this.pager.pageSize,
+                pageIndex: this.pager.pageIndex
+            };
             console.log(`当前页: ${val}`);
             var filterModel = this.allrepositorie.filter(
                 (u, index) => {
