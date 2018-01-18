@@ -32,6 +32,15 @@ public class ModelUtil {
             return name;
         }
     }
+    //获取组件名称（点后面的名字）
+    public static String getFileName(String name) {
+        String splitName[] = name.split("\\.");
+        if (splitName.length > 1) {
+            return splitName[0];
+        } else {
+            return name;
+        }
+    }
 
     /**
      * 获取文件的后缀

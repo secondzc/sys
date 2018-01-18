@@ -1405,6 +1405,7 @@ public class ModelController extends  BaseController {
             }
             attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
             attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
+            attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
         }
         jo.put("data",modelDetail);
         return returnSuccessInfo(jo);
@@ -1423,7 +1424,9 @@ public class ModelController extends  BaseController {
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-
+        for (AttachmentDto attachmentDto:modelFiles) {
+            attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
+        }
         jo.put("data",modelFiles);
         return returnSuccessInfo(jo);
     }
@@ -1443,6 +1446,9 @@ public class ModelController extends  BaseController {
             }
             List<AttachmentDto> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
             modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,parentAttach.getId());
+            for (AttachmentDto attachmentDto:modelDetail) {
+                attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
+            }
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
@@ -1492,6 +1498,7 @@ public class ModelController extends  BaseController {
                 }else{
                     attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attach.getFileIconUrl());
                 }
+                attach.setName(ModelUtil.getFileName(attach.getName()));
                 attach.setFileSize(ModelUtil.getFileSize(attach.getSize()));
             }
         }catch(Exception e){
