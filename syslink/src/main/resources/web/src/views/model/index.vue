@@ -990,7 +990,7 @@
                         if (response.data.msg == "ok") {
                             _this.$message({
                                 message: '删除成功！',
-                                type: 'warning',
+                                type: 'success',
                                 duration: 2000
                             });
                             _this.getModel();
@@ -999,7 +999,7 @@
                         else {
                             _this.$message({
                                 message: '删除失败！',
-                                type: 'warning',
+                                type: 'error',
                                 duration: 2000
                             });
                         }
@@ -1020,7 +1020,7 @@
                     if (response.data.msg == "ok") {
                         _this.$message({
                             message: '删除成功！',
-                            type: 'warning',
+                            type: 'success',
                             duration: 2000
                         });
                         _this.getModel();
@@ -1028,7 +1028,7 @@
                     else {
                         _this.$message({
                             message: '删除失败！',
-                            type: 'warning',
+                            type: 'error',
                             duration: 2000
                         });
                     }

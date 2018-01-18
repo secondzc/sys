@@ -313,10 +313,10 @@
                                <!--          <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
                                             <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
                                         </el-tooltip> -->
-                                    
+
                                 <!--   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                                   <el-button   size="small" type="danger"    @click="handleDeleted(scope.$index, scope.row)">
-                                      <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>  
+                                      <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
                                   </el-button>
                                     </el-tooltip> -->
                                      </el-button-group>
@@ -982,7 +982,7 @@
                     if (response.data.msg == "ok") {
                         _this.$message({
                             message: '删除成功！',
-                            type: 'warning',
+                            type: 'success',
                             duration: 2000
                         });
                         _this.getModel();
@@ -990,7 +990,7 @@
                     else {
                         _this.$message({
                             message: '删除失败！',
-                            type: 'warning',
+                            type: 'error',
                             duration: 2000
                         });
                     }
@@ -1011,7 +1011,7 @@
                     if (response.data.msg == "ok") {
                         _this.$message({
                             message: '删除成功！',
-                            type: 'warning',
+                            type: 'success',
                             duration: 2000
                         });
                         _this.getModel();
@@ -1019,7 +1019,7 @@
                     else {
                         _this.$message({
                             message: '删除失败！',
-                            type: 'warning',
+                            type: 'error',
                             duration: 2000
                         });
                     }

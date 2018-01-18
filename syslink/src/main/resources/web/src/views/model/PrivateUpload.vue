@@ -265,7 +265,7 @@
                         console.log(error);
                         _this.$message({
                             message: '上传失败！',
-                            type: 'warning',
+                            type: 'error',
                             duration: 2000
                         });
                     });
