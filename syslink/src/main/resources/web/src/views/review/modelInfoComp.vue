@@ -39,7 +39,7 @@
     	    	<sapn style="font-size: 16px;text-decoration: underline;">查看/下载</sapn>
     	    </div>
     	    </el-popover>
-            <el-button type="primary" @click="toTree" style="margin-left:20px;margin-top: 20px;" :disabled="!isModelica">查看</el-button>
+            <el-button type="primary" @click="toTree" style="margin-left:20px;margin-top: 20px;">查看</el-button>
             <el-button type="primary" @click="download" :loading="downloading">下载</el-button>
 
            </el-dialog>
@@ -116,9 +116,12 @@
 			toTree(){ 
 	            //console.log('12.10'+this.reviewModel.id); 
 	            this.$store.dispatch('sendModelId',this.reviewModel.id); 
-	            this.$store.dispatch('sendTreeModelId',this.reviewModel.id); 
-	            //this.$router.push({path:'/model/packageDiagram'}); 
-	            this.dialogVisible = true;
+	            this.$store.dispatch('sendTreeModelId',this.reviewModel.id);
+	            if(this.isModelica){
+	               this.$router.push({path:'/model/packageDiagram'}); 	            	
+	            } else{
+	               this.dialogVisible = true;            	
+	            }
 	        }, 
 		},
 		mounted(){
