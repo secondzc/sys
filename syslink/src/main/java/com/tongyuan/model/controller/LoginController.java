@@ -71,7 +71,7 @@ public class LoginController extends BaseController {
 
 
         GUser user = userService.querListByName(userName);
-        if(user!=null)
+        if(user!=null&&user.getActive())
         {
 
             if(user.getProhibitLogin())

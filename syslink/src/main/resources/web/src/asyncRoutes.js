@@ -256,9 +256,9 @@ export let limitRoutes=[
             // { path: '/tree/:orgName', component: OrgMange, name: '组织管理',hidden:true},
             // { path: '/tree/:orgName/:teamName', component: team, name: '团队管理',hidden:true}
             {path:'/template',component:template,name:'模板管理',iconCls: 'iconfont icon-moban',meta:{auth:['management_template_list'],role:[1]}},
-            { path: '',component:blankPage,  name: '类型管理' ,iconCls:'iconfont icon-suoding', children: [
-                { path: '/modelType', component: modelType, name: '模型类型',iconCls:'iconfont icon-xitong',  meta:{auth:['management_type_model_list'],role:[1]}},
-                { path: '/fileType', component: fileType, name: '文件类型',iconCls:'iconfont icon-guize',  meta:{auth:['management_type_file_list'],role:[1]}}
+            { path: '',component:blankPage,  name: '类型管理' ,iconCls:'iconfont icon-17', children: [
+                { path: '/modelType', component: modelType, name: '模型类型',iconCls:'iconfont icon-weibiaoti13',  meta:{auth:['management_type_model_list'],role:[1]}},
+                { path: '/fileType', component: fileType, name: '文件类型',iconCls:'iconfont icon-wenjian2',  meta:{auth:['management_type_file_list'],role:[1]}}
             ]  ,meta:{auth:['management_type'],role:[1]}},
         ]
     },

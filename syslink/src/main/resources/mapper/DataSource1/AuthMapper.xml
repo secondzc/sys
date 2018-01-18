@@ -10,6 +10,7 @@
         <result column="url" property="url" jdbcType="VARCHAR"/>
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
+        <collection property="children" javaType="ArrayList" column="auth_id"  select="selectChildren"/>
     </resultMap>
     <resultMap id="baseResultMap" type="com.tongyuan.model.domain.Auth">
         <id column="auth_id" property="authId" jdbcType="BIGINT"  />
@@ -19,8 +20,22 @@
         <result column="url" property="url" jdbcType="VARCHAR"/>
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
+        <!--<collection property="children" javaType="ArrayList" column="auth_id"  select="selectChildren"/>-->
+     </resultMap>
 
-    </resultMap>
+    <select id="selectChildren" resultMap="mapResultMap"  resultType="map" >
+        SELECT *
+        FROM auth
+        WHERE parent_id =#{authId} ORDER BY create_date ASC
+    </select>
+
+
+    <select id="getChildren" resultMap="mapResultMap"  resultType="map" >
+        SELECT *
+        FROM auth
+        WHERE parent_id =#{authId} ORDER BY create_date ASC
+    </select>
+
     <sql id="baseColumnList" >
         auth_id,auth_name,auth_code,create_date,description,url,parent_id
     </sql>
@@ -44,12 +59,7 @@
         FROM auth
         WHERE auth_id = #{authId}
     </select>
-    <select id="getChildren" resultMap="mapResultMap" resultType="map" >
-        SELECT
-        <include refid="baseColumnList" />
-        FROM auth
-        WHERE parent_id =#{authId} ORDER BY create_date ASC
-    </select>
+
     <select id="queryAuthByRoleId" resultMap="baseResultMap" parameterType="INTEGER">
         SELECT
         d.auth_id,d.auth_name,d.auth_code,d.create_date,d.description,d.url,d.parent_id,

@@ -24,8 +24,8 @@
               >
                   <div slot="header"  style="width: inherit;height: inherit;">
                       <span style="font-weight: bold;">{{o.ext}}</span>
-                      <i class="iconfont icon-lajitong" style="max-width: 14px;float: right;font-size: 20px;" @click="handleDel(o)" > </i>
-                      <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;margin-right: 20px" @click="handleEdit(o)" > </i>
+                      <i class="el-icon-delete" style="max-width: 14px;float: right;font-size: 20px;" @click="handleDel(o)" > </i>
+                      <i class="el-icon-edit" style="max-width: 14px;float: right;font-size: 20px;margin-right: 20px" @click="handleEdit(o)" > </i>
                   </div>
 
                   <div :index="o.index"  >

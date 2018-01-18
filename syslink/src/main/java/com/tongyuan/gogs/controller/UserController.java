@@ -63,30 +63,30 @@ public class UserController extends BaseController {
 
 
 
-    @RequestMapping(value = "/queryUserRoles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public JSONObject queryUserRoles(@RequestBody Map<String,Object> map, HttpServletRequest request)
-    {
-        JSONObject jo = new JSONObject();
-        List<Integer> userRoles = new ArrayList<>();
-        long uid = Long.parseLong(map.get("uid").toString());
-        try
-        {
-            userRoles = roleService.queryUserRoleByUid(uid);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            jo.put("flag",false);
-            jo.put("msg","获取用户角色失败");
-            return jo;
-        }
-        jo.put("flag",true);
-        jo.put("msg","获取用户角色成功");
-        //   jo.put("userRoles",new UserRoleWarpper(list).warp());
-        jo.put("userRoles",userRoles);
-        return (JSONObject) JSONObject.toJSON(jo);
-    }
+//    @RequestMapping(value = "/queryUserRoles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public JSONObject queryUserRoles(@RequestBody Map<String,Object> map, HttpServletRequest request)
+//    {
+//        JSONObject jo = new JSONObject();
+//        List<Integer> userRoles = new ArrayList<>();
+//        long uid = Long.parseLong(map.get("uid").toString());
+//        try
+//        {
+//            userRoles = roleService.queryUserRoleByUid(uid);
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//            jo.put("flag",false);
+//            jo.put("msg","获取用户角色失败");
+//            return jo;
+//        }
+//        jo.put("flag",true);
+//        jo.put("msg","获取用户角色成功");
+//        //   jo.put("userRoles",new UserRoleWarpper(list).warp());
+//        jo.put("userRoles",userRoles);
+//        return (JSONObject) JSONObject.toJSON(jo);
+//    }
 
 
     @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -257,7 +257,7 @@ public class UserController extends BaseController {
 
             userService.addGUser(map);
             directoryService.createPersonalModelRoot(map);
-            mailService.sendSimpleMail(map.get("email").toString(),"Syslink注册成功通知","您的账号已完成注册,初始密码是'111111',请尽快登录修改！");
+//            mailService.sendSimpleMail(map.get("email").toString(),"Syslink注册成功通知","您的账号已完成注册,初始密码是'111111',请尽快登录修改！");
 
 //            for(int i=1;i<100;i++)
 //            {

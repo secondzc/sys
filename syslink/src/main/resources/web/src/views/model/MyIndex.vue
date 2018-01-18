@@ -129,11 +129,11 @@
                         
                          <el-button-group  style="margin-right: 5px;">
                            <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
-                            <el-button  icon="el-icon-rank" size="small"  @click="moveModel1"
+                            <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="this.currentRow==null"
                             ></el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                            <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1"
+                            <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1" :disabled="this.currentRow==null"
                              ></el-button>
                           </el-tooltip>
 
@@ -313,10 +313,10 @@
                                <!--          <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
                                             <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
                                         </el-tooltip> -->
-
+                                    
                                 <!--   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                                   <el-button   size="small" type="danger"    @click="handleDeleted(scope.$index, scope.row)">
-                                      <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
+                                      <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>  
                                   </el-button>
                                     </el-tooltip> -->
                                      </el-button-group>
@@ -399,7 +399,7 @@
                                               <!--   <h4 >模型名称：{{o.name}}</h4> -->
                                                <!--  <h4>模型库：{{o.repositoryName}}</h4>
                                                 <div >上传者：{{o.userName}}</div> -->
-                                                 <div><span>模型库：{{o.repositoryName}}</span></div>
+                                                 <div><span>模型名称：{{o.repositoryName}}</span></div>
                                                   <div><span>上传者：{{o.userName}}</span></div>
                                                    <div><span>上传日期：{{o.createTime}}</span></div>
                                                 <div>
@@ -473,7 +473,7 @@
                         <div style="padding: 14px;">
                            <!--  <h4>模型：{{o.name}}</h4> -->
                            <div class="card-column">
-                                   <h4 class="card-column-title">模型库</h4>
+                                   <h4 class="card-column-title">模型名称</h4>
                                <div class="card-column-content">
                                    <span >{{o.repositoryName}}</span>
                               </div>

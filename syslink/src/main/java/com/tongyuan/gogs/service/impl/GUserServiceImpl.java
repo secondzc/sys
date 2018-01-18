@@ -245,9 +245,10 @@ public class GUserServiceImpl implements GUserService {
 
     @Override
     public boolean deleteUser(long id) {
-        boolean b = userDepartMapper.deleteByUid(id);
-        boolean a = gUserMapper.delete(id);
-        return a & b;
+//        boolean b = userDepartMapper.deleteByUid(id);
+////        boolean a = gUserMapper.delete1(id);
+////        return a & b;
+        return this.gUserMapper.delete1(id);
     }
 
     @Override

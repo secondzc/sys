@@ -14,6 +14,8 @@
       :load="loadTreeNode"
       @node-click="handleNodeClick"
       :render-content="nodeRender"
+      default-expanded-keys="[1]"
+      node-key="id"
       class="kz-tree">
     </el-tree>
     <!--dialog-->

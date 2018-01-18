@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.service.RoleService;
-import com.tongyuan.model.wrapper.RoleWarpper;
 import com.tongyuan.tools.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,7 +48,7 @@ public class RoleController {
         }
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-        jo.put("role",new RoleWarpper(rolelist).warp());
+        jo.put("role",rolelist);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 

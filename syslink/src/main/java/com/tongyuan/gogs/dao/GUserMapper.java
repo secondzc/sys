@@ -16,8 +16,8 @@ public interface GUserMapper {
     GUser querListByName(String name);
 
     GUser queryById(long id);
-    boolean update(GUser user);
 
+    boolean update(GUser user);
 
     boolean add(Map<String, Object> map);
 
@@ -29,6 +29,7 @@ public interface GUserMapper {
 
     boolean delete(long id);
 
+    boolean delete1(long id);
 
     List<Map<String,Object>> queryOrg(Map<String, Object> map);
 
@@ -57,7 +58,6 @@ public interface GUserMapper {
     List<Map<String,Object>>queryUserWithOutDirectoryAuth(long directoryId,List<Integer> departIds);
 
     List<Map<String,Object>>queryUserByDepartId (List<Integer> departIds);
-
 
     List<ReviewUserPage> queryAll();
 }

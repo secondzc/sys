@@ -3,7 +3,6 @@ package com.tongyuan.model.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.service.AuthService;
-import com.tongyuan.model.wrapper.AuthWarpper;
 import com.tongyuan.tools.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,8 +49,9 @@ public class AuthController {
         }
         jo.put("flag",true);
         jo.put("msg","获取列表成功");
-        jo.put("group",new AuthWarpper(list).warp());
-   //     jo.put("group",list);
+
+//        jo.put("group",new AuthWarpper(list).warp());
+        jo.put("group",list);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 

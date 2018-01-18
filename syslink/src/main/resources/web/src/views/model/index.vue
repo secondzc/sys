@@ -126,11 +126,11 @@
                   <div style="position: absolute;right: 50px;">
                     <el-button-group  style="margin-right: 5px;">
                      <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
-                      <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="!this.moveCheck()"
+                      <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="!moveCheck"
                       ></el-button>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                      <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1" :disabled="!this.deleteCheck()"
+                      <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1" :disabled="!deleteCheck"
                       ></el-button>
                     </el-tooltip>
 
@@ -280,7 +280,7 @@
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start" >
                                          <el-button type="primary"
                                             size="small"
-                                                  @click="handleEdit(scope.$index, scope.row)"  :disabled="!func.directoryJudge(scope.row.userId,scope.directoryId,1)"
+                                                  @click="handleEdit(scope.$index, scope.row)"  :disabled="!func.directoryJudge(scope.row.userId,scope.row.directoryId,1)"
                                                      >
                                                       <i class="iconfont icon-chakan" style="font-size: 12px;"></i>  
 
@@ -384,7 +384,7 @@
                                               <!--   <h4 >模型名称：{{o.name}}</h4> -->
                                                <!--  <h4>模型库：{{o.repositoryName}}</h4>
                                                 <div >上传者：{{o.userName}}</div> -->
-                                                 <div><span>模型库：{{o.repositoryName}}</span></div>
+                                                 <div><span>模型名称：{{o.repositoryName}}</span></div>
                                                   <div><span>上传者：{{o.userName}}</span></div>
                                                    <div><span>上传日期：{{o.createTime}}</span></div>
                                                 <div>
@@ -460,7 +460,7 @@
                         <div style="padding: 14px;">
                            <!--  <h4>模型：{{o.name}}</h4> -->
                            <div class="card-column">
-                                   <h4 class="card-column-title">模型库</h4>
+                                   <h4 class="card-column-title">模型名称</h4>
                                <div class="card-column-content">
                                    <span >{{o.repositoryName}}</span>
                               </div>
@@ -713,6 +713,8 @@
                   watch : 'inline-block',
                 },
                 currentRow:null,
+                deleteCheck:false,
+                moveCheck:false
             };
         },
         computed: {
@@ -927,6 +929,11 @@
             this.variable = modelVariable;
             this.varLength = this.variable.length;
             console.log(val);
+            this.deleteCheck = this.checkDelete();
+            this.moveCheck = this.checkMove();
+            console.log(this.deleteCheck);
+            console.log(this.moveCheck);
+            
         },
         handleCurrent(val) {
             let para = {
@@ -1277,6 +1284,8 @@
                                 type: 'success',
                                 duration: 2000
                             });
+                            _this.move.dialogVisible = false;
+                            _this.getModel();
                         }
                     }).catch(function (error) {
                     _this.$message({
@@ -1348,7 +1357,7 @@
                 this.$refs.uploadModel.coverModel(this.file.name);
             }
             ,
-            deleteCheck()
+            checkDelete()
             {
               console.log(this.currentRow);
               if(this.currentRow==null)
@@ -1357,6 +1366,7 @@
               }
               else
               {
+              	console.log(this.func.directoryJudge(this.currentRow.userId,this.currentRow.directoryId,3));
                 if(this.func.directoryJudge(this.currentRow.userId,this.currentRow.directoryId,3))
                 {
                   return true;
@@ -1367,7 +1377,7 @@
                 }
                }
             },
-            moveCheck()
+            checkMove()
             {
               console.log(this.currentRow);
               if(this.currentRow==null)
