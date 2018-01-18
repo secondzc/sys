@@ -938,7 +938,7 @@
                     }
                 }
             )
-            _this.repositories = filterModel;
+            this.repositories = filterModel;
         },
         handleSizeChange(val){
             console.log(`每页 ${val} 条`);
@@ -950,7 +950,7 @@
                     }
                 }
             )
-            _this.repositories = filterModel;
+            this.repositories = filterModel;
         },
         handleEdit(index, row) {
             console.log(index, row);
