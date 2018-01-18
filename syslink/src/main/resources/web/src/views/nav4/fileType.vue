@@ -20,7 +20,7 @@
 
 
 
-              <el-card class="Card" style="height: 265px;width: 240px; margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
+              <el-card class="Card" style="height: 210px;width: 180px; margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
               >
                   <div slot="header"  style="width: inherit;height: inherit;">
                       <span style="font-weight: bold;">{{o.ext}}</span>
@@ -30,7 +30,7 @@
 
                   <div :index="o.index"  >
                       <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
-                          <img v-bind:src="o.iconPath" style="height: 160px;width: 200px;margin-bottom: 10px;">
+                          <img v-bind:src="o.iconPath" style="height: 120px;width: 140px;margin-bottom: 10px;">
                       </div>
                   </div>
               </el-card>
