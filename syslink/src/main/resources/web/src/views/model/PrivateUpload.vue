@@ -173,7 +173,6 @@
                                     duration: 2000
                                 });
                                 _this.closeDia();
-                                _this.$router.push('/mySubmitAll');
                             }
                         })
                         .catch(function (error) {
