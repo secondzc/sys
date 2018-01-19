@@ -2,10 +2,10 @@
     <section>
         <el-container>
                 <el-aside :span="16">
-                    <el-form ref="form"  :model="form" :rules="form.rules" label-width="80px" class="demo-form-inline">
+                    <el-form ref="form"  :model="form" :rules="rules" label-width="80px" class="demo-form-inline">
 
 
-                        <el-form-item label="模型名">
+                        <el-form-item label="模型名" prop="name">
                             <el-col >
                                 <el-input  v-model="form.name"></el-input>
                             </el-col>
@@ -36,7 +36,7 @@
                                                 ref="ModelTypePicture"
                                                 class="avatar-uploader"
                                                 :action = "photo()"
-                                                :show-file-list="true"
+                                                :show-file-list="false"
                                                 :on-success="handleAvatarSuccess"
                                                 :before-upload="beforeAvatarUpload">
                                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
@@ -65,7 +65,7 @@
             <el-footer>
                 <div style="float: right;height: 30px;width: 100%" >
                     <el-button style="float: right;margin-left: 10px" @click="closeDia">取消</el-button>
-                    <el-button style="float: right" type="primary" @click.native="onSubmit">提交</el-button>
+                    <el-button style="float: right" type="primary" @click.native="onSubmit" :loading="submitLoading">提交</el-button>
                     <el-button style="float: right" type="primary" @click.native="returnToUploadModel">上传模型</el-button>
                 </div>
             </el-footer>
@@ -119,18 +119,19 @@
                     files : [],
                     fileLists : [],
                     showPicture: true,
-                    rules: {
-                        name: {
-                            required: true,
-                            validator : validateName,
-                            trigger: 'blur'
-                        }
+                },
+                rules: {
+                    name: {
+                        required: true,
+                        validator : validateName,
+                        trigger: 'blur'
                     }
                 },
                 photoUrl: '',
                 modelType: [],
                 imageUrl: '',
                 name : this.$store.state.userInfo.profile.name,
+                submitLoading :false,
             }
         },
         computed: {
@@ -152,9 +153,11 @@
             },
             submit(){
                 if(this.form.fileLists.length >0){
+                    this.submitLoading = true;
                     console.log('submit!');
                     if(!this.form.showPicture){
-                        this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
+                        var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                        this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[fileListEndPosition].name;
                     }
                     var _this = this;
                     let para = Object.assign({}, _this.form);
@@ -163,6 +166,7 @@
                         data:para})
                         .then(function (response) {
                             if(response.data.msg == "ok"){
+                                _this.submitLoading = false;
                                 _this.$message({
                                     message: '上传成功！',
                                     type: 'success',
@@ -174,6 +178,7 @@
                         })
                         .catch(function (error) {
                             console.log(error);
+                            _this.submitLoading = false;
                             _this.$message({
                                 message: '上传失败！',
                                 type: 'error',
@@ -208,9 +213,10 @@
                                 }
                             }).catch(function (error) {
                             console.log(error)
+                            _this.submitLoading = false;
                             _this.$message({
-                                message: '请重新输入模型分类名称！',
-                                type: 'warning',
+                                message: '提交失败！',
+                                type: 'error',
                                 duration: 2000
                             });
                         })

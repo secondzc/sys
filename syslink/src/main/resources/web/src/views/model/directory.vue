@@ -137,13 +137,14 @@
                   const url = this.data.url.R ;
                   var para = {parent_id: 0};
                   this.$emit("node-click",para);
-                  this. fetch(url, para)
-                      .then(data => {
-                          console.log(data)
-                          this.treeData = data;
-                          resolve(data)
-                      });
-
+                 return  new Promise((resolve, reject) => {
+                      this.fetch(url, para)
+                          .then(data => {
+                              console.log(data)
+                              this.treeData = data;
+                              resolve(data);
+                          });
+                  })
               }
           }
       },

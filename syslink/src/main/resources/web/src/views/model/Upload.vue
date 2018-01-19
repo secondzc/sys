@@ -2,7 +2,7 @@
     <section>
         <el-container>
                 <el-aside :span="16">
-                    <el-form ref="form"  :model="form" :rules="form.rules" label-width="80px" class="demo-form-inline">
+                    <el-form ref="form"  :model="form" :rules="rules" label-width="80px" class="demo-form-inline">
 
 
                         <el-form-item label="模型名" prop="name">
@@ -36,7 +36,7 @@
                                                 ref="ModelTypePicture"
                                                 class="avatar-uploader"
                                                 :action = "photo()"
-                                                :show-file-list="true"
+                                                :show-file-list="false"
                                                 :on-success="handleAvatarSuccess"
                                                 :before-upload="beforeAvatarUpload">
                                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
@@ -119,13 +119,13 @@
                     files : [],
                     fileLists : [],
                     showPicture: true,
-                    rules: {
-                        name: [{
-                            required: true,
-                            validator : validateName,
-                            trigger: 'blur'
-                        }],
-                    }
+                },
+                rules: {
+                    name: [{
+                        required: true,
+                        validator : validateName,
+                        trigger: 'blur'
+                    }],
                 },
                 submitLoading :false,
                 photoUrl: '',
@@ -154,7 +154,8 @@
                     this.submitLoading = true;
                     console.log('submit!');
                     if(!this.form.showPicture){
-                        this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[0].name;
+                        var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                        this.form.photoName = this.$refs.ModelTypePicture.uploadFiles[fileListEndPosition].name;
                     }
                     var _this = this;
                     let para = Object.assign({}, _this.form);
@@ -212,8 +213,8 @@
                             console.log(error)
                             _this.submitLoading = false;
                             _this.$message({
-                                message: '请重新输入模型分类名称！',
-                                type: 'warning',
+                                message: '提交失败！',
+                                type: 'error',
                                 duration: 2000
                             });
                         })
