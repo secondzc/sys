@@ -29,6 +29,7 @@ import axios from 'axios'
 //Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
 import './assets/iconfont/iconfont.css'
+import './assets/iconfont/iconfont.js'
 // @import url at.alicdn.com/t/font_472907_116i00seniuanhfr.css
 import  func from './common/js/func'
 Vue.prototype.$http = axios;

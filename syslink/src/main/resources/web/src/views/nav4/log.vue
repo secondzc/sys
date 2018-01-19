@@ -61,7 +61,7 @@
        </el-table-column>
     <!--   <el-table-column prop="content" label="内容" min-width="150" >
        </el-table-column> -->
-      <el-table-column prop="createDate" label="操作时间" min-width="150" :formatter="formatDate" sortable>
+      <el-table-column prop="createDate" label="操作时间" min-width="150" :formatter="dateFormatter" sortable>
       </el-table-column>
     </el-table>
 
@@ -163,10 +163,10 @@
            this.$router.push({path:'/api/druid/'})
       },
      
-      formatDate:function(row,column){
+      dateFormatter:function(row,column){
         if(row.createDate!=null)
         {
-          return util.formatDate.format(new Date(row.createDate), 'yyyy-MM-dd hh:mm')
+          return moment(row.createDate).format("YYYY-MM-DD HH:mm:ss");
         }
         
 
