@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column prop="name" label="名称" min-width="120" sortable>
       </el-table-column>
-      <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  >
+      <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  :formatter="dateFormatter"  >
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
@@ -722,9 +722,17 @@
 
           }
         });
-      }
+      },
+    dateFormatter:function(row,column){
+        if(row.createDate!=null)
+        {
+          return util.formatDate.format(new Date(row.createDate), 'yyyy-MM-dd ')
+        }
+        
+
     
     
+    },
     },
     mounted() {
       this.getRoles();

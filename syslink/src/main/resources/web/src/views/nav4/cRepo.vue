@@ -48,7 +48,7 @@
       </el-table-column>
       <el-table-column prop="description" label="描述" min-width="200" >
        </el-table-column>
-      <el-table-column prop="createdUnix" label="创建时间" min-width="160" >
+      <el-table-column prop="createdUnix" label="创建时间" min-width="160" :formatter="dateFormatter" >
        </el-table-column>
       <el-table-column prop="updatedUnix" label="更新时间" min-width="160" >
       </el-table-column>
@@ -127,6 +127,14 @@
         this.sels = sels;
       },
 
+     dateFormatter:function(row,column){
+        if(row.createdUnix!=null)
+        {
+        return moment(moment.unix(row.createdUnix)).format('YYYY-MM-DD HH:MM');
+    
+        }
+
+      },
      
        toggleSelection(rows) {
         if (rows) {
@@ -139,14 +147,6 @@
       },
 
      
-      formatDate:function(row,column){
-        if(row.createDate!=null)
-        {
-          return util.formatDate.format(new Date(row.createDate), 'yyyy-MM-dd hh:mm')
-        }
-        
-
-      },
       handleCurrentChange(val) {
          this.pager.pageIndex = val;
          this.getRepos();

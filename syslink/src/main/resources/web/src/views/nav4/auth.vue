@@ -39,7 +39,7 @@
       -->
         <el-table-column prop="authCode" label="代码" min-width="120" sortable>
       </el-table-column>
-        <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  >
+        <el-table-column prop="createDate" label="创建时间" min-width="160" sortable :formatter="dateFormatter" >
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
@@ -65,7 +65,7 @@
       <el-table-column prop="authCode" label="代码" min-width="120" sortable>
       </el-table-column>
 
-      <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  >
+      <el-table-column prop="createDate" label="创建时间" min-width="160" sortable   :formatter="dateFormatter">
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
        </el-table-column>
@@ -533,7 +533,15 @@
       selsChange: function (sels) {
         this.sels = sels;
         console.log(sels);
-      }
+      },
+     dateFormatter:function(row,column){
+        if(row.createDate!=null)
+        {
+         return moment(row.createDate).format("YYYY-MM-DD ");
+        }
+        
+
+    },
     },
     mounted() {
       this.getGroups();
