@@ -469,7 +469,7 @@
                       <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
     
                           </div>
-                        <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;">
+                        <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;padding: 0px 0px 0px 15px;">
                         <div style="padding: 14px;">
                            <!--  <h4>模型：{{o.name}}</h4> -->
                            <div class="card-column">
