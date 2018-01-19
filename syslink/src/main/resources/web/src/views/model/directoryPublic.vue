@@ -376,6 +376,9 @@
               if(this.$refs.dialogForm.model.parent_id == null){
                   this.$refs.dialogForm.model.parent_id = -1;
               }
+              if(this.__currentNode.data.name == this.$refs.dialogForm.model.name ){
+                  this.dialog.dialogVisible = false;
+              }else{
               var checkDirNameUrl = '/api/directory/checkDirName?parentId=' + this.__currentNode.data.parentId +'&dirName='+ this.$refs.dialogForm.model.name +'&dirId='+ this.$refs.dialogForm.model.id
                   +'&dirParentId='+ this.$refs.dialogForm.model.parent_id +'&userName='+ this.$store.state.userInfo.profile.name
               var _this = this;
@@ -399,6 +402,7 @@
                           duration: 2000
                       });
                   })
+              }
           } else {
             return false
           }
