@@ -66,7 +66,7 @@ public class VariableController {
         List<VariableTreeObj> variableTreeObjList = new ArrayList<>();
         try {
             //查询到所有的model
-            List<Model> allModel = modelService.findAllModel();
+            List<Model> allModel = modelService.findAllModelicaModel();
             //查询到所有的Comp（组件）
             List<Component> allComp = componentService.findAllComp();
             //查询到所有的变量
@@ -401,6 +401,7 @@ public class VariableController {
 //            modelUtil.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ "xyx"+"/" + "MyPkg" +".git",System.getProperty("user.home")+"/gogs-repositories/"+ "admin"+"/");
 //            File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+ "admin"+"/" + "MyPkg" +".git");
 //            file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+ "admin"+"/" + "xyxmypkg.git"));
+        String jsonString = "";
     }
 
 }

@@ -165,4 +165,9 @@
         FROM  model
         where parent_id = -1 and is_deleted = "0"
     </select>
+    <select id="findAllModelicaModel" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
+        SELECT *
+        from model
+        where type= 'Modelica' and is_deleted = 0
+    </select>
 </mapper>

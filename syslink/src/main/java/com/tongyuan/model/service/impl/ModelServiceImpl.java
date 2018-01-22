@@ -121,6 +121,15 @@ public class ModelServiceImpl implements ModelService{
 
     }
 
+    /**
+     * 查询modelica的所有模型
+     * @return 模型列表
+     */
+    @Override
+    public List<Model> findAllModelicaModel() {
+        return this.modelMapper.findAllModelicaModel();
+    }
+
 
 
 

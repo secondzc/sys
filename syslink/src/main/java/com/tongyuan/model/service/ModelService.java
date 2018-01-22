@@ -31,4 +31,5 @@ public interface ModelService {
     public Model queryByNameAndDirId(Map<String, Object> params);
     public List<Model> getNullParId();
     public Long addOneModel(GUser user, Long directoryId, Boolean scope, Map<String,Object> map,Long iconUrlId);
+    public List<Model> findAllModelicaModel();
 }

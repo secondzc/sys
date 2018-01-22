@@ -46,7 +46,7 @@ public class ComponentController {
         List<ComponentTreeObj> componentTreeObjList = new ArrayList<>();
         try {
             //查询到所有的model
-            List<Model> allModel = modelService.findAllModel();
+            List<Model> allModel = modelService.findAllModelicaModel();
             //查询到所有的Comp（组件）
             List<Component> allComp = componentService.findAllComp();
             //查询到所有的变量

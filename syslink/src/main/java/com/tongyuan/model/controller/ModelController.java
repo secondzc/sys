@@ -103,17 +103,12 @@ public class ModelController extends  BaseController {
         Model model = new Model();
         model.setDirectoryId(directoryId);
         model.setParentId(-1);
-/*        model.setUserId(nullModel.getUserId());
-        model.setScope(nullModel.getScope());
-        model.setCreateTime(nullModel.getCreateTime());*/
         model.setUserId(user.getID());
         model.setScope(scope);
         model.setCreateTime(DateUtil.getTimestamp());
         model.setLastUpdateTime(DateUtil.getTimestamp());
         model.setDeleted(false);
         analysisXmlMap(xmlMap,model,svgPath);
-        // 修改
-        //Model validateModel = modelService.queryModelByName(model.getName());
         Map<String, Object> param = new HashMap<>();
         param.put("fileName",model.getName());
         param.put("directoryId",directoryId);
@@ -335,7 +330,7 @@ public class ModelController extends  BaseController {
         //获取组件当前model对象
         Model currModel = modelService.queryModelById(modelId);
         //获取所有的model
-        List<Model> allModel = modelService.findAllModel();
+        List<Model> allModel = modelService.findAllModelicaModel();
         //模型实例化组件的模型名称
         String modelCompName = currModel.getName().split("\\.")[0];
         for (int i = 0; i< componentList.size(); i++){
@@ -392,7 +387,7 @@ public class ModelController extends  BaseController {
         // 查询到userId的方法 findByNameAndpassword
         JSONObject jo=new JSONObject();
         Map<String,List<Model>> modelListMap = new HashMap<>();
-        List<Model> allModelList = modelService.findAllModel();
+        List<Model> allModelList = modelService.findAllModelicaModel();
         //所有的公有模型列表
         List<Model> publicModelList = new ArrayList<>();
         //个人私有模型列表
@@ -694,7 +689,7 @@ public class ModelController extends  BaseController {
             treeRoot.setChildren(rootChild);
             modelTreeList.add(treeRoot);
             //查询到所有的model
-            List<Model> allModel = modelService.findAllModel();
+            List<Model> allModel = modelService.findAllModelicaModel();
             variableController.getSearchModel(modelId,allModel,rootChild,modelList);
         }catch(Exception e) {
             e.printStackTrace();
