@@ -372,7 +372,7 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                              <span style="font-weight: bold;">{{o.name}}</span>
-                                                <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-if="func.directoryJudge(o.userId,o.directoryId,1)"> </i>
+                                                <i class="el-icon-search" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" > </i>
 
                                          </div>
 
@@ -456,7 +456,7 @@
                       <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
 
                           </div>
-                        <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;padding: 0px 0px 0px 15px;">
+                        <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;">
                         <div style="padding: 14px;">
                            <!--  <h4>模型：{{o.name}}</h4> -->
                            <div class="card-column">
@@ -945,6 +945,7 @@
                 pageSize: this.pager.pageSize,
                 pageIndex: this.pager.pageIndex
             };
+            this.pager.pageIndex =val;
             console.log(`当前页: ${val}`);
             var filterModel = this.allrepositorie.filter(
                 (u, index) => {

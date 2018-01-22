@@ -82,6 +82,20 @@
                     });
                     file.ignored = true;
                 }
+                //对模型根目录验证，相同根目录无法提交到文件列表
+                var m ;
+                for(m in this.fileLists){
+                    if(this.fileLists[m].isFolder){
+                        if(this.fileLists[m].path.split("/")[0] == file.relativePath.split("/")[0]){
+                            file.ignored = true;
+                        }
+                    }
+                    else{
+                        if(this.fileLists[m].relativePath.split("/")[0] == file.relativePath.split("/")[0]){
+                            file.ignored = true;
+                        }
+                    }
+                }
                 file.uniqueIdentifier = util.UUID.uuid(8,16);
             },
         },

@@ -201,6 +201,7 @@
                     pageSize: this.pager.pageSize,
                     pageIndex: this.pager.pageIndex
                 };
+                this.pager.pageIndex =val;
                 console.log(`当前页: ${val}`);
                 var filterModel = this.details.filter(
                     (u, index) => {

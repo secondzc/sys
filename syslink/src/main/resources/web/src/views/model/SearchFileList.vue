@@ -181,6 +181,7 @@
                     pageSize: this.pager.pageSize,
                     pageIndex: this.pager.pageIndex
                 };
+                this.pager.pageIndex =val;
                 var filterModel = this.searchrepository.filter(
                     (u, index) => {
                         if (index < val * para.pageSize && index >= para.pageSize * (val - 1)) {
