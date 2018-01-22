@@ -321,15 +321,15 @@ public class AttachmentServiceImpl implements AttachmentService {
      */
     @Override
     public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId,List<Attachment> floderList) {
-        List<Attachment> batchUpdateList = new ArrayList<>();
+//        List<Attachment> batchUpdateList = new ArrayList<>();
         for (Attachment attachmentChild : attachmentFileList) {
             for (Attachment attachmentParent : floderList) {
                 if(!StringUtil.isNull(attachmentChild.getTempRelativePath()) && !StringUtil.isNull(attachmentParent.getTempRelativePath())) {
                     if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
                         attachmentChild.setParentId(attachmentParent.getId());
                         attachmentChild.setModelId(modelId);
-//                        this.attachmentMapper.update(attachmentChild);
-                        batchUpdateList.add(attachmentChild);
+                        this.attachmentMapper.update(attachmentChild);
+//                        batchUpdateList.add(attachmentChild);
                         continue;
                     }
                 }
@@ -338,13 +338,13 @@ public class AttachmentServiceImpl implements AttachmentService {
         for (Attachment attachment : attachmentFileList){
             if(attachment.getModelId() != modelId){
                 attachment.setModelId(modelId);
-//                this.attachmentMapper.update(attachment);
-                batchUpdateList.add(attachment);
+                this.attachmentMapper.update(attachment);
+//                batchUpdateList.add(attachment);
             }
         }
-        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "结果");
-        this.attachmentMapper.batchUpdate(batchUpdateList);
-        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "跟新");
+//        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "结果");
+//        this.attachmentMapper.batchUpdate(batchUpdateList);
+//        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "跟新");
     }
 
     @Override

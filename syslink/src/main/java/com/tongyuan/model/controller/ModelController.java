@@ -1544,7 +1544,8 @@ public class ModelController extends  BaseController {
             if (model == null){
                 return returnErrorInfo(jo);
             }else{
-                modelService.delete(model.getId());
+                model.setDeleted(true);
+                modelService.update(model);
             }
         }
         catch (Exception e){
