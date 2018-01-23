@@ -373,7 +373,7 @@
 
                     <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: flex-start;
  
-              display: flex;flex-wrap: wrap;height:calc(100% - 66px);border-bottom: solid 1px #e6e6e6;">
+              display: flex;flex-wrap: wrap;height:calc(100% - 80px);border-bottom: solid 1px #e6e6e6;" id="cardWrapper">
                     
 
                     
