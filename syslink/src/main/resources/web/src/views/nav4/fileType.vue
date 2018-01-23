@@ -377,7 +377,7 @@
         editSubmitForm(){
             this.submitLoading = true;
             if(this.$refs.EditModelTypePicture.uploadFiles.length >0){
-                var fileListEndPosition = this.$refs.ModelTypePicture.uploadFiles.length -1;
+                var fileListEndPosition = this.$refs.EditModelTypePicture.uploadFiles.length -1;
                 this.editForm.photoName = this.$refs.EditModelTypePicture.uploadFiles[fileListEndPosition].name;
             }
             var _this = this;
