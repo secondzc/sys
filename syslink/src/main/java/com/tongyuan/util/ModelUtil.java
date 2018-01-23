@@ -279,7 +279,7 @@ public class ModelUtil {
     }
 
 
-    public void copyDirectory(String srcDirName, String descDirName) {
+    public static void  copyDirectory(String srcDirName, String descDirName) {
         File srcDir = new File(srcDirName);
         File descDir = new File(descDirName);
         findFiles(srcDir, descDir);
@@ -287,7 +287,7 @@ public class ModelUtil {
 
 
     //复制文件夹获取两个文件夹对象
-    public void findFiles(File file, File file2) {
+    public static void findFiles(File file, File file2) {
         if (file.exists()) {
             if (file.isFile()) {// 是文件的话直接复制到目标文件夹内,并打印文件路径
                 copyFiles(file, file2);
@@ -321,7 +321,7 @@ public class ModelUtil {
      * @param file
      * @param file2
      */
-    public void copyFiles(File file, File file2) {
+    public static void copyFiles(File file, File file2) {
         FileInputStream fis;
         FileOutputStream fos;
 

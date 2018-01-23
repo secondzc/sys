@@ -71,8 +71,6 @@ public class DirectoryController extends BaseController{
     private GUserService userService;
     @Autowired
     private ModelUnionService modelUnionService;
-    @Autowired
-    private RepositoryController repositoryController;
 
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -81,50 +79,6 @@ public class DirectoryController extends BaseController{
     public String directory() {
         return "directory";
     }
-
-//    @RequestMapping(value = "/test",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
-//    @ResponseBody
-//    public void test(HttpServletRequest request , HttpServletResponse response) throws IOException {
-//        JSONObject result=new JSONObject();
-//        //文件解析的数据Map
-//        Map<String , Object> dataMap = new HashMap<>();
-//        dataMap = fileX.readZip("D:\\syslink.zip");
-//        boolean  uploadResult = CommonServiceImp.UploadFile("syslink", 0,(Long)dataMap.get("byteslength"),
-//                (byte[])dataMap.get("bytes"));
-//        if(!uploadResult){
-//            result.put("message","文件上传失败!");
-//            result.put("flag",false);
-//            ServletUtil.createSuccessResponse(200, result, response);
-//            return;
-//        }
-//        // 模型相对路径xieyx/20170620.../
-//        String modelDir = resourceUtil.unzipFile("syslink", "xieyx");
-//        //输出文件的目录（modelDir是解压缩到的目录）
-//        System.out.println("modelDir==========" + modelDir + "*************");
-//        //获取到model解压缩的路径
-//        String modelPath =  resourceUtil.getModelPath(modelDir, "syslink");
-//        //遍历文件，对model库进行插入
-//        //	ResourceUtil.insertModelData(modelDir,"syslink",modelPath,"这是syslink项目");
-//       // String parentPath = ResourceUtil.getFileDriectory() + modelDir;
-//        String parentPath = modelPath;
-//        try {
-//            //遍历项目的文件
-//            resourceUtil.getSubFile(parentPath.substring(0,
-//                    parentPath.length()), parentPath.substring(0,
-//                    parentPath.length()), "这是syslink项目");
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            result.put("message","模型上传失败!");
-//            result.put("flag",false);
-//            ServletUtil.createSuccessResponse(200, result, response);
-//            return;
-//        }
-//        result.put("message","模型上传成功!");
-//        result.put("flag",true);
-//        ServletUtil.createSuccessResponse(200, result, response);
-//        return;
-//    }
 
     //把项目在数据库中仿真，描述整个模型的层次结构
     public boolean createModel(File parentF, String filePath, String rootPath, String description) {
@@ -278,7 +232,7 @@ public class DirectoryController extends BaseController{
                 param.put("repositoryName", user.getLowerName() + fileName.toLowerCase());
                 Repository repository = repositoryService.queryByNameAndUserId(param);
                 if (repository == null) {
-                    repositoryController.forkAndCollaboration(name, fileName);
+                    repositoryService.forkAndCollaboration(name, fileName);
                 }
             }
             File xmlFilePath = new File(xmlPath);
@@ -965,28 +919,15 @@ public class DirectoryController extends BaseController{
 
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
-        Long fileSize = map.get("file").get(0).getSize();
-        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
-        String fileName = "";
         try{
-                byte[] bytes = new byte[0];
-                if (fileNames2.length >= 1) {
-                    fileName = fileNames2[0];
-                }
-                //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
-                if (scope) {
-                    //根据directoryid和name找到相对应的model，再找到对应的reviewFlowInstance
-                    Map<String, Object> map1 = new HashMap<>();
-                    map1.put("fileName", fileName);
-                    map1.put("directoryId", directoryId);
-                    Model model = modelService.queryByNameAndDir(map1);
-                    if (model != null) {
-                        //如果不为空，则说明是覆盖的方式，进行撤销
-                        ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByModelId(model.getId());
-                        reviewFlowInstanceService.cancel(reviewFlowInstance.getInstanceId());
-                    }
-                }
-                bytes = map.get("file").get(0).getBytes();
+            long fileSize = 0;
+            String fileName = "";
+            byte[] bytes = new byte[0];
+            directoryService.getUploadFileInfo(fileName,fileSize,bytes,map);
+            //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
+            if (scope) {
+                directoryService.isAddNewReviewFlowInstance(fileName,directoryId);
+            }
                 GUser user = gUserService.querListByName(name);
                 System.out.println("starting upload the file...");
                 boolean result = false;
@@ -1002,12 +943,10 @@ public class DirectoryController extends BaseController{
                 String modelPath = resourceUtil.getModelPath(modelDir, fileName);
                 //遍历文件，对model库进行插入
                 String parentPath = modelPath;
-                resourceUtil.getSubFile(parentPath.substring(0, parentPath.length()), parentPath.substring(0, parentPath.length()), "");
+                directoryService.getSubFile(parentPath.substring(0, parentPath.length()), parentPath.substring(0, parentPath.length()), "");
                 Map<String, Object> xmlMap = new HashMap<String, Object>();
                 //存放解析的所有xmlMap
-                Map<String, Map> xmlAnalysisMap = new HashMap<>();
-                //存放解析的CAExmlMap
-                Map<String, Map> caeXmlAnalysisMap = new HashMap<>();
+                Map<String, JSONObject> xmlAnalysisMap = new HashMap<>();
                 //存放解析svg，info文件所在位置的Map
                 Map<String, String> svgPath = new HashMap<>();
                 //把上传的文件zip包存在映射路径
@@ -1021,29 +960,20 @@ public class DirectoryController extends BaseController{
                 String fileXmlPath = directory.getFilePath();
                 //获取到xml所在的文件位置
                 String xmlPath = "";
-                //获取cae模型xml所在职位
-                String caePath = "";
                 xmlPath = resourceUtil.getXmlPath(resourceUtil.getunzipPath()+fileXmlPath, xmlPath);
                 //对xml进行解析,遍历xml文件下所有文件
                 if (StringUtil.isNull(xmlPath)) {
                 } else {
                     if (scope) {
-                        GUser admin = gUserService.querListByName("admin");
-                        Map<String, Object> param = new HashMap<>();
-                        param.put("userId", admin.getID());
-                        param.put("repositoryName", user.getLowerName() + fileName.toLowerCase());
-                        Repository repository = repositoryService.queryByNameAndUserId(param);
-                        if (repository == null) {
-                            repositoryController.forkAndCollaboration(name, fileName);
-                        }
+                        directoryService.uploadToPublicPository(user,fileName,name);
                     }
                     File xmlFilePath = new File(xmlPath);
                     String[] subFiles = xmlFilePath.list();
-                    this.insertSvgPath(subFiles, xmlFilePath, xmlMap, svgPath, xmlAnalysisMap);
+                    directoryService.getXMlJson(subFiles, xmlFilePath, xmlAnalysisMap);
                     //遍历xmlMap进行数据的插入
-                    for (Map.Entry<String, Map> entry : xmlAnalysisMap.entrySet()) {
+                    for (Map.Entry<String, JSONObject> entry : xmlAnalysisMap.entrySet()) {
                         //解析xmlmap 把数据存放到数据
-                        modelController.insertData(entry, svgPath, scope, user, directory, directoryId);
+//                        modelController.insertData(entry, svgPath, scope, user, directory, directoryId);
                     }
                     //更新模型的层次结构
                     //获取package下面的所有model

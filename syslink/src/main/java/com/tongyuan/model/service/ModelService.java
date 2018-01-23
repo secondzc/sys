@@ -3,6 +3,7 @@ package com.tongyuan.model.service;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.domain.Model;
+import com.tongyuan.pageModel.ModelWeb;
 
 import java.util.List;
 import java.util.Map;
@@ -25,11 +26,11 @@ public interface ModelService {
     public List<Model> vagueSearchByName(Map<String, Object> params);
     public Model queryModelById(Long id);
     List<Model> queryModelByParId(Long id);
-    //model解析文件目录，插入数据库
-  //  public void insertModelData(String modelDir,String modelName,String modelPath,String description);
     //查看是否在目录下重名
     public Model queryByNameAndDirId(Map<String, Object> params);
     public List<Model> getNullParId();
     public Long addOneModel(GUser user, Long directoryId, Boolean scope, Map<String,Object> map,Long iconUrlId);
     public List<Model> findAllModelicaModel();
+    //对ModelWeb列表进行uploadTime排序
+    public void uploadTimeSort(List<ModelWeb> repositoryModelList);
 }

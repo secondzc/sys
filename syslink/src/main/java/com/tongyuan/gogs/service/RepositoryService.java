@@ -22,4 +22,5 @@ public interface RepositoryService {
     Repository queryByNameAndUserId(Map<String,Object> param);
     public Repository setParameter(Repository repository);
     public Long forkRepository(Repository repository, GUser gUser,Long adminId);
+    public void forkAndCollaboration(String userName,String repositoryName);
 }

@@ -2,17 +2,31 @@ package com.tongyuan.model.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.tongyuan.gogs.domain.GUser;
+import com.tongyuan.gogs.domain.Repository;
+import com.tongyuan.gogs.service.GUserService;
+import com.tongyuan.gogs.service.RepositoryService;
 import com.tongyuan.model.dao.DirectoryMapper;
+import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.model.domain.Directory;
+import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.domain.ReviewFlowInstance;
+import com.tongyuan.model.service.AttachmentService;
 import com.tongyuan.model.service.DirectoryService;
+import com.tongyuan.model.service.ModelService;
+import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
 import com.tongyuan.pageModel.DirectoryModel;
+import com.tongyuan.util.DateUtil;
+import com.tongyuan.util.ResourceUtil;
+import com.tongyuan.util.analysisXml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 目录数据操作
@@ -23,6 +37,16 @@ import java.util.Map;
 public class DirectoryServiceImpl implements DirectoryService{
     @Autowired
     private DirectoryMapper directoryMapper;
+    @Autowired
+    private ModelService modelService;
+    @Autowired
+    private ReviewFlowInstanceService reviewFlowInstanceService;
+    @Autowired
+    private GUserService gUserService;
+    @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
+    private AttachmentService attachmentService;
 
     @Override
     public List<Directory> queryListByPath(String absoluteAddress) {
@@ -173,6 +197,150 @@ public class DirectoryServiceImpl implements DirectoryService{
         directory.setLastUpdateTime(date);
         this.directoryMapper.add(directory);
         return directory;
+    }
+
+    /**
+     * 获取上传文件的基本数据
+     * @param fileName 文件名称
+     * @param fileSize 文件大小
+     * @param bytes 文件数据流
+     * @param map 文件信息map
+     * @throws IOException
+     */
+    @Override
+    public void getUploadFileInfo(String fileName, Long fileSize, byte[] bytes,MultiValueMap<String, MultipartFile> map) throws IOException {
+        fileSize  = map.get("file").get(0).getSize();
+        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
+
+
+        if (fileNames2.length >= 1) {
+            fileName = fileNames2[0];
+        }
+        bytes = map.get("file").get(0).getBytes();
+    }
+
+    /**
+     * 如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
+     * @param fileName 文件名称
+     * @param directoryId 文件所选目录
+     */
+    @Override
+    public void isAddNewReviewFlowInstance(String fileName,Long directoryId) {
+        //根据directoryid和name找到相对应的model，再找到对应的reviewFlowInstance
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("fileName", fileName);
+        map1.put("directoryId", directoryId);
+        Model model = modelService.queryByNameAndDir(map1);
+        if (model != null) {
+            //如果不为空，则说明是覆盖的方式，进行撤销
+            ReviewFlowInstance reviewFlowInstance = reviewFlowInstanceService.queryByModelId(model.getId());
+            reviewFlowInstanceService.cancel(reviewFlowInstance.getInstanceId());
+        }
+    }
+
+    /**
+     *
+     * @param user 用户
+     * @param fileName 文件名称
+     * @param name 上传者
+     */
+    @Override
+    public void uploadToPublicPository(GUser user,String fileName,String name) {
+        GUser admin = gUserService.querListByName("admin");
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", admin.getID());
+        param.put("repositoryName", user.getLowerName() + fileName.toLowerCase());
+        Repository repository = repositoryService.queryByNameAndUserId(param);
+        if (repository == null) {
+            repositoryService.forkAndCollaboration(name, fileName);
+        }
+    }
+
+    /**
+     * 把模型插入到数据库中
+     * @param filePath 文件路径
+     * @param rootPath 文件根路径
+     * @param description 文件描述
+     */
+    @Override
+    public void getSubFile(String filePath, String rootPath, String description) {
+        File parentF = new File(filePath);
+        if (!parentF.exists()) {
+            System.out.println("文件或文件夹不存在");
+            return;
+        }
+        if(parentF.isFile()){
+            this.createDirectory(parentF,filePath,rootPath,description);
+            return;
+        }else{
+            this.createDirectory(parentF,filePath,rootPath,description);
+            String[] subFiles = parentF.list();
+            for (int i = 0; i < subFiles.length; i++) {
+                getSubFile(filePath + "/" + subFiles[i],rootPath ,description);
+            }
+        }
+    }
+
+    /**
+     * 创建目录信息（attachment）
+      * @param parentF 父目录文件
+     * @param filePath 文件地址
+     * @param rootPath 根目录地址
+     * @param description 文件描述信息
+     * @return 是否创建成功
+     */
+    @Override
+    public boolean createDirectory(File parentF, String filePath, String rootPath, String description) {
+        Date nowDate = new Date();
+        boolean result = false;
+        try {
+            //获取当前的路径
+            //  String currentPath=parentF.getAbsolutePath().replace('\\', '/');
+            String AbsolutePath = parentF.getAbsolutePath().replace('\\', '/')+"/";
+            String unzipPath = ResourceUtil.getFileDriectory();
+            //获取实际路径
+            String currentPath = AbsolutePath.substring(unzipPath.length(), AbsolutePath.length());
+            //TODO 文件删除
+            Attachment directory = new Attachment();
+            directory.setName(parentF.getName());
+            //获取当前的时间
+            directory.setCreateTime(DateUtil.getTimestamp());
+
+            //如果当前的路径就是根目录
+            if (AbsolutePath.equals(rootPath)) {
+                directory.setParentId(0);
+                directory.setFilePath(currentPath);
+            } else {
+                //吧父目录id插入到子目录表当中
+                //获取父目录地址
+                String parentPath = parentF.getParent().replace('\\', '/');
+                String parentAbsolutePath = parentPath.substring(unzipPath.length(), parentPath.length())+"/";
+                //创建一个父类目录对象
+                //TODO 文件删除
+                directory.setFilePath(currentPath);
+            }
+            directory.setModelId(-2);
+            attachmentService.add(directory);
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public void getXMlJson(String[] subFiles, File xmlFilePath, Map<String, JSONObject> xmlAnalysisMap) {
+        for (int i = 0; i < subFiles.length; i++) {
+            //查看文件的格式
+            String[] fileNames = subFiles[i].split("\\.");
+            //文件的类型
+            String filePreType = fileNames[fileNames.length - 2];
+            String fileType = fileNames[fileNames.length - 1];
+            if (("xml").equals(fileType)) {
+                JSONObject xmlJson = analysisXml.analysisXmlFile(xmlFilePath + "/" + subFiles[i]);
+                xmlAnalysisMap.put(subFiles[i], xmlJson);
+            }
+        }
     }
 
 

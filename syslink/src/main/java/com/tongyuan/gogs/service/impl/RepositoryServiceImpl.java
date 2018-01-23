@@ -7,14 +7,14 @@ import com.tongyuan.gogs.dao.RepositoryMapper;
 import com.tongyuan.gogs.domain.Collaboration;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.gogs.domain.Repository;
-import com.tongyuan.gogs.service.RepositoryService;
+import com.tongyuan.gogs.domain.Watch;
+import com.tongyuan.gogs.service.*;
+import com.tongyuan.util.ModelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-9-18.
@@ -25,7 +25,13 @@ public class RepositoryServiceImpl implements RepositoryService{
     @Autowired
     RepositoryMapper repositoryMapper;
     @Autowired
-    CollaborationMapper collaborationMapper;
+    private GUserService guserService;
+    @Autowired
+    private CollaborationService collaborationService;
+    @Autowired
+    private AccessService accessService;
+    @Autowired
+    private WatchService watchService;
 
     @Override
     public Long add(Repository repository) {
@@ -138,5 +144,30 @@ public class RepositoryServiceImpl implements RepositoryService{
         this.repositoryMapper.add(forkRepository);
         Long forkRepositoryId = forkRepository.getID();
         return  forkRepositoryId;
+    }
+
+    @Override
+    public void forkAndCollaboration(String userName, String repositoryName) {
+        GUser gUser = guserService.querListByName(userName);
+        GUser admin = guserService.querListByName("admin");
+        gUser.setNumRepos(gUser.getNumRepos()+1);
+        guserService.update(gUser);
+        Map<String,Object> param = new HashMap<>();
+        param.put("userId",gUser.getID());
+        param.put("repositoryName",repositoryName.toLowerCase());
+        Repository repository = this.queryByNameAndUserId(param);
+        collaborationService.addDefault(admin.getID(),repository.getID());
+        accessService.addDefault(admin.getID(),repository.getID());
+        Long forkRepositoryId = this.forkRepository(repository,gUser,admin.getID());
+        Watch watch = new Watch();
+        watch.setRepoID(forkRepositoryId);
+        watch.setUserID(gUser.getID());
+        boolean watchResult = watchService.add(watch);
+        repository.setNumForks(repository.getNumForks()+1);
+        this.update(repository);
+        //第一次执行时把fork对象的库复制到用户下面
+        ModelUtil.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ userName.toLowerCase()+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/");
+        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + repositoryName.toLowerCase() +".git");
+        file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + userName.toLowerCase() + repositoryName.toLowerCase() +".git"));
     }
 }

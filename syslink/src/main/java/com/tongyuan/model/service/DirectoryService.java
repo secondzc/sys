@@ -1,8 +1,13 @@
 package com.tongyuan.model.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domain.Directory;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +41,16 @@ public interface DirectoryService {
     ,Boolean scope,String userName);
     //web端增加模型目录
     public Directory addOneDir(String name,Long parent_id,String userName);
-
-
+    //获取上传文件的基本数据（名称大小数据流）
+    public void getUploadFileInfo(String fileName,Long fileSize,byte[] bytes,MultiValueMap<String, MultipartFile> map) throws IOException;
+    //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
+    public void isAddNewReviewFlowInstance(String fileName,Long directoryId);
+    //把模型上传到公有库
+    public void uploadToPublicPository(GUser user, String fileName, String name);
+    //添加模型文件到数据库
+    public void getSubFile(String filePath, String rootPath, String description);
+    //创建文件数据
+    public boolean createDirectory(File parentF, String filePath, String rootPath, String description);
+    //
+    public void getXMlJson(String[] subFiles, File xmlFilePath,Map<String,JSONObject> xmlAnalysisMap);
 }

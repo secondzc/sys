@@ -553,7 +553,7 @@ public class ModelController extends  BaseController {
                     }
                 }
             }
-
+            modelService.uploadTimeSort(repositoryModelList);
         }catch(Exception e){
             e.printStackTrace();
             jo.put("status","1");
@@ -1178,7 +1178,7 @@ public class ModelController extends  BaseController {
         if(!StringUtil.isNull(reviewOfModel.get(i).getIconUrl())){
             modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+resourceUtil.getMappedPackage()+resourceUtil.getunzipPath().substring(7)+reviewOfModel.get(i).getIconUrl());
         }
-        modelWeb.setUploadTime(reviewOfModel.get(i).getCreateTime().getTime());
+        modelWeb.setUploadTime(reviewOfModel.get(i).getLastUpdateTime().getTime());
         modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
         if(reviewOfModel.get(i).getLastUpdateTime() != null){
             modelWeb.setUpdateTime(DateUtil.format(reviewOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));

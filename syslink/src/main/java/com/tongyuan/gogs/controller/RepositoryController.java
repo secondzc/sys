@@ -182,29 +182,29 @@ public class RepositoryController extends BaseController{
         return  jo;
     }
 
-    public void forkAndCollaboration(String userName,String repositoryName){
-        GUser gUser = guserService.querListByName(userName);
-        GUser admin = guserService.querListByName("admin");
-        gUser.setNumRepos(gUser.getNumRepos()+1);
-        guserService.update(gUser);
-        Map<String,Object> param = new HashMap<>();
-        param.put("userId",gUser.getID());
-        param.put("repositoryName",repositoryName.toLowerCase());
-        Repository repository = repositoryService.queryByNameAndUserId(param);
-        collaborationService.addDefault(admin.getID(),repository.getID());
-        accessService.addDefault(admin.getID(),repository.getID());
-        Long forkRepositoryId = repositoryService.forkRepository(repository,gUser,admin.getID());
-        Watch watch = new Watch();
-        watch.setRepoID(forkRepositoryId);
-        watch.setUserID(gUser.getID());
-        boolean watchResult = watchService.add(watch);
-        repository.setNumForks(repository.getNumForks()+1);
-        repositoryService.update(repository);
-        //第一次执行时把fork对象的库复制到用户下面
-        modelUtil.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ userName.toLowerCase()+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/");
-        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + repositoryName.toLowerCase() +".git");
-        file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + userName.toLowerCase() + repositoryName.toLowerCase() +".git"));
-    }
+//    public void forkAndCollaboration(String userName,String repositoryName){
+//        GUser gUser = guserService.querListByName(userName);
+//        GUser admin = guserService.querListByName("admin");
+//        gUser.setNumRepos(gUser.getNumRepos()+1);
+//        guserService.update(gUser);
+//        Map<String,Object> param = new HashMap<>();
+//        param.put("userId",gUser.getID());
+//        param.put("repositoryName",repositoryName.toLowerCase());
+//        Repository repository = repositoryService.queryByNameAndUserId(param);
+//        collaborationService.addDefault(admin.getID(),repository.getID());
+//        accessService.addDefault(admin.getID(),repository.getID());
+//        Long forkRepositoryId = repositoryService.forkRepository(repository,gUser,admin.getID());
+//        Watch watch = new Watch();
+//        watch.setRepoID(forkRepositoryId);
+//        watch.setUserID(gUser.getID());
+//        boolean watchResult = watchService.add(watch);
+//        repository.setNumForks(repository.getNumForks()+1);
+//        repositoryService.update(repository);
+//        //第一次执行时把fork对象的库复制到用户下面
+//        modelUtil.copyDirectory(System.getProperty("user.home")+"/gogs-repositories/"+ userName.toLowerCase()+"/" + repositoryName.toLowerCase() +".git",System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/");
+//        File file = new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + repositoryName.toLowerCase() +".git");
+//        file.renameTo(new File(System.getProperty("user.home")+"/gogs-repositories/"+ admin.getLowerName()+"/" + userName.toLowerCase() + repositoryName.toLowerCase() +".git"));
+//    }
 }
 
 

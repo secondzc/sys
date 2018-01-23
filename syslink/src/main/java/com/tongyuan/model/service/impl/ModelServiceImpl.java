@@ -6,10 +6,13 @@ import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.dao.ModelMapper;
 import com.tongyuan.model.domain.Model;
 import com.tongyuan.model.service.ModelService;
+import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -128,6 +131,22 @@ public class ModelServiceImpl implements ModelService{
     @Override
     public List<Model> findAllModelicaModel() {
         return this.modelMapper.findAllModelicaModel();
+    }
+
+    @Override
+    public void uploadTimeSort(List<ModelWeb> repositoryModelList) {
+        Collections.sort(repositoryModelList, new Comparator<ModelWeb>() {
+            @Override
+            public int compare(ModelWeb o1, ModelWeb o2) {
+                if(o1.getUploadTime() > o2.getUploadTime()){
+                    return -1;
+                }else if(o1.getUploadTime() < o2.getUploadTime()){
+                    return 1;
+                }else{
+                    return  0;
+                }
+            }
+        });
     }
 
 
