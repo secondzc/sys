@@ -142,7 +142,7 @@
 
                          <el-button-group  >
                            <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
-                            <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"
+                            <el-button  icon="el-icon-tickets" size="small"  @click="showList"
                             :class="{buttonFocus:listStatus}"></el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
@@ -214,44 +214,38 @@
 
                         
                               <div style="height: 100%; overflow-y: hidden;display: flex;flex-direction: column;flex-wrap: nowrap;">
-                                <el-table
+                                      <el-table
                                     ref="singleTable"
                                     :data="repositories"
                                     height="100%"
+                                    :fit="true"
                                     highlight-current-row
                                     @current-change="handleCurrentChange"
                                     :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
-                                    style="width: 100%">
+                                >
                                 <el-table-column
                                         label=""
                                         width="80" >
                                     <template scope="scope">
-                                       
-                                          
                                         <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
- 
-                                        
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column  label="名称"
                                         prop="name"
-                                        min-width=100
-                                   sortable>
+                                        min-width="100" sortable>
                                  
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
                                         prop="createTime"
-                                        min-width=100
-                                         sortable>
+                                        min-width="100" sortable>
                                     
                                 </el-table-column>
                                 <el-table-column
                                         label="修改日期"
                                         prop="updateTime"
-                                        min-width=100
-                                         sortable>
+                                        min-width="100" sortable>
                                   
                                 </el-table-column>
 
@@ -259,27 +253,25 @@
                                 <el-table-column
                                         label="类型"
                                         prop="type"
-                                        min-width=100
-                                         >
-                                
+                                        min-width="100">
                                 </el-table-column>
 
                                 <el-table-column
                                         label="上传者"
                                         prop="userName"
-                                        min-width=100
-                                         >
+                                        min-width="100" >
                                    
                                 </el-table-column>
 
                                 <el-table-column
                                         label="描述"
                                         prop="discription"
+                                        min-width="200"
                                          >
                                    
                                 </el-table-column>
 
-                                <el-table-column min-width=150 label="操作">
+                                <el-table-column min-width="150" label="操作">
                                     <template scope="scope">
                                        <!--  <el-button
                                                 size="small"
@@ -322,7 +314,9 @@
                                      </el-button-group>
                                     </template>
                                 </el-table-column>
+
                             </el-table>
+
                              
                                 
 
@@ -1358,6 +1352,12 @@
                 this.file.dialogVisible =false;
                 this.file.modelDialog = true;
             },
+            showList(){
+                this.listStatus=true;
+                this.handleCurrent(this.pager.pageIndex -1);
+                this.handleCurrent(this.pager.pageIndex +1);
+            }
+
     },
 
 
@@ -1371,7 +1371,6 @@
 
 <style scoped lang="scss">
     @import '~scss_vars';
-
     .main-container{
         height: 100%;
         overflow: hidden;
@@ -1440,10 +1439,11 @@
         height: inherit;
     }
     .el-table__body-wrapper
-    {
-        height: inherit;
-        overflow-x: hidden;
-    }
+     {
+         height: inherit;
+         overflow-x: hidden;
+         width:100%;
+     }
     .is-scroll-left
     {
         height: inherit;

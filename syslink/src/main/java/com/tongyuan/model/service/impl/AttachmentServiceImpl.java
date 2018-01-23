@@ -330,7 +330,6 @@ public class AttachmentServiceImpl implements AttachmentService {
                         attachmentChild.setModelId(modelId);
                         this.attachmentMapper.update(attachmentChild);
 //                        batchUpdateList.add(attachmentChild);
-                        continue;
                     }
                 }
             }
@@ -342,9 +341,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 //                batchUpdateList.add(attachment);
             }
         }
-//        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "结果");
+        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "结果");
 //        this.attachmentMapper.batchUpdate(batchUpdateList);
-//        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "跟新");
+        System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "跟新");
     }
 
     @Override
@@ -357,18 +356,24 @@ public class AttachmentServiceImpl implements AttachmentService {
         List<Attachment> fileList = new ArrayList<>();
         for (FileJsonArrayDto fileJsonDto: fileJsonArrayDtoList) {
             for (Attachment attachment: attachmentFileList) {
-                if(attachment.getFloder()){
-                    fileList.add(attachment);
-                    floderList.add(attachment);
-                    continue;
+                if(!StringUtil.isNull(attachment.getTempRelativePath())) {
+                    if (fileJsonDto.getFolder() && attachment.getTempRelativePath().equals(fileJsonDto.getPath())) {
+                        fileList.add(attachment);
+                        break;
+                    }
                 }
                 if(!StringUtil.isNull(fileJsonDto.getUniqueIdentifier())){
                     if(fileJsonDto.getUniqueIdentifier().equals(attachment.getIdentifier())){
                         fileList.add(attachment);
-                        continue;
+                        break;
                     }
                 }
             }
+        }
+        for (Attachment attachment: fileList) {
+           if (attachment.getFloder()){
+               floderList.add(attachment);
+           }
         }
         return fileList;
     }

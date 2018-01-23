@@ -137,7 +137,7 @@
                   </el-button-group>
                   <el-button-group  >
                    <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
-                    <el-button  icon="el-icon-tickets" size="small"  @click="listStatus=true"
+                    <el-button  icon="el-icon-tickets" size="small"  @click="showList"
                     :class="{buttonFocus:listStatus}"></el-button>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
@@ -215,63 +215,48 @@
                                     height="100%"
                                     highlight-current-row
                                     @current-change="handleCurrentChange"
+                                    style="width: 100%!important;"
                                     :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
-                                    style="width: 100%">
+                                    >
                                 <el-table-column
                                         label=""
                                         width="80" >
                                     <template scope="scope">
-
                                             <img v-bind:src="scope.row.imageUrl" style="width: 60px;height: 40px;"/>
-
-
-
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column  label="名称"
                                         prop="name"
-                                        min-width=100
-                                   sortable>
-
+                                        min-width=100 sortable>
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
                                         prop="createTime"
-                                        min-width=100
-                                         sortable>
-
+                                        min-width=100 sortable>
                                 </el-table-column>
                                 <el-table-column
                                         label="修改日期"
                                         prop="updateTime"
-                                        min-width=100
-                                         sortable>
-
+                                        min-width=100 sortable>
                                 </el-table-column>
 
 
                                 <el-table-column
                                         label="类型"
                                         prop="type"
-                                        min-width=100
-                                         >
-
+                                        min-width=100>
                                 </el-table-column>
 
                                 <el-table-column
                                         label="上传者"
                                         prop="userName"
-                                        min-width=100
-                                         >
-
+                                        min-width=100>
                                 </el-table-column>
 
                                 <el-table-column
                                         label="描述"
-                                        prop="discription"
-                                         >
-
+                                        prop="discription">
                                 </el-table-column>
 
                                 <el-table-column min-width=150 label="操作">
@@ -351,14 +336,6 @@
                         >
                         </sortable-list>
                     </div>
-                   <!--  <div style=""  id="modelNumb">
-                        <div style="font-size:14px;" v-if="this.amsg == 0">
-                            总共有个{{modelTotal}}模型库
-                        </div>
-                        <div v-else style="font-size:14px;">
-                            该类下有{{modelTotal}}个模型库
-                        </div>
-                    </div> -->
                 </div>
                 <div  style="display: flex;flex-direction: column;height:inherit;width: auto;">
 
@@ -381,16 +358,10 @@
                                                 <img v-bind:src="o.imageUrl" style="height: 140px;width: 160px;margin-bottom: 10px;">
                                             </div>
                                             <div style="margin-top: 10px;"   >
-                                              <!--   <h4 >模型名称：{{o.name}}</h4> -->
-                                               <!--  <h4>模型库：{{o.repositoryName}}</h4>
-                                                <div >上传者：{{o.userName}}</div> -->
                                                  <div><span>模型名称：{{o.repositoryName}}</span></div>
                                                   <div><span>上传者：{{o.userName}}</span></div>
                                                    <div><span>上传日期：{{o.createTime}}</span></div>
                                                 <div>
-
-
-
                                                     <div :style="{display: style.watch}">
                                                         <a class="ui basic button" @click="addWatch(item)">
                                                             <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
@@ -406,8 +377,6 @@
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <!--<h4>上传日期：{{item.createTime}}</h4>-->
-                                                <!--<div >描述：{{item.discription}}</div>-->
                                             </div>
                                         </div>
                                     </el-card>
@@ -427,9 +396,6 @@
                             </el-pagination>
 
                 </div>
-
-
-
 
             </el-main>
             <el-aside class="right-aside" v-show="info">
@@ -1147,7 +1113,6 @@
                       });
                   })
               _this.getModel();
-//            this.fetchAddTreeNode()
           } else {
             return false
           }
@@ -1186,7 +1151,6 @@
                 if (data.status === 1) {
                     resolve(data.data)
                 } else {
-               //     console.error(data.data.code+":"+ data.data.message)
                     reject(data)
                 }
             }
@@ -1401,14 +1365,12 @@
                   return false;
                 }
                }
+            },
+            showList(){
+                this.listStatus=true;
+                this.handleCurrent(this.pager.pageIndex -1);
+                this.handleCurrent(this.pager.pageIndex +1);
             }
-//            handleClose(done) {
-//                this.$confirm('确认关闭？')
-//                    .then(_ => {
-//                        done();
-//                    })
-//                    .catch(_ => {});
-//            },
 
     },
         mounted() {

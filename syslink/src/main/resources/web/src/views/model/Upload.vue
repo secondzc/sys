@@ -264,12 +264,14 @@
                 var _this = this;
                 _this.$http.post('/api/model/deleteModel?modelName='+data +"&directoryId="+this.bmsg)
                     .then(function (response) {
+                        _this.submitLoading = true;
                         if (response.data.msg == "ok") {
                             _this.submit();
                         }
                     })
                     .catch(function (error) {
                         console.log(error);
+                        _this.submitLoading = false;
                         _this.$message({
                             message: '上传失败！',
                             type: 'error',
