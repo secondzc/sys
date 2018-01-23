@@ -4,7 +4,7 @@
     <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true"  style="height: 45px;" >
           <el-form-item>
-              <el-button type="primary" @click="handleAdd" size="small" >新建<i class="el-icon-plus el-icon--right"></i></el-button>
+              <el-button type="primary" @click="handleAdd" size="small" >新建<i class="el-icon-plus el-icon--right " ></i></el-button>
           </el-form-item>
       </el-form>
 
@@ -24,8 +24,8 @@
               >
                   <div slot="header"  style="width: inherit;height: inherit;">
                       <span style="font-weight: bold;">{{o.ext}}</span>
-                      <i class="el-icon-delete" style="max-width: 14px;float: right;font-size: 20px;" @click="handleDel(o)" > </i>
-                      <i class="el-icon-edit" style="max-width: 14px;float: right;font-size: 20px;margin-right: 20px" @click="handleEdit(o)" > </i>
+                      <i class="el-icon-delete iconHover" style="max-width: 14px;float: right;font-size: 20px;" @click="handleDel(o)" > </i>
+                      <i class="el-icon-edit iconHover" style="max-width: 14px;float: right;font-size: 20px;margin-right: 20px" @click="handleEdit(o)" > </i>
                   </div>
 
                   <div :index="o.index"  >
