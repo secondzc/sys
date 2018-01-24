@@ -10,13 +10,43 @@
 
     <!-- </el-col> -->
     <hr/>
+    
+    <div style="height: 100%;">
+    	<div class="minusHeight" style="overflow-y: auto;display: flex;flex-direction: column;">
+    		<div style="display: flex;align-self: center;flex-wrap: wrap;"  id="cardWrapper">
+    			<el-card class="Card" style="height: 210px;width: 180px;margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
+              >
+                  <div slot="header"  style="width: inherit;height: inherit;">
+                      <span style="font-weight: bold;">{{o.ext}}</span>
+                      <i class="el-icon-delete iconHover" style="max-width: 14px;float: right;font-size: 20px;" @click="handleDel(o)" > </i>
+                      <i class="el-icon-edit iconHover" style="max-width: 14px;float: right;font-size: 20px;margin-right: 20px" @click="handleEdit(o)" > </i>
+                  </div>
+
+                  <div :index="o.index"  >
+                      <div style="border-bottom:  solid 1px #e6e6e6;margin-top:  -10px;" >
+                          <img v-bind:src="o.iconPath" style="height: 120px;width: 140px;margin-bottom: 10px;">
+                      </div>
+                  </div>
+              </el-card>
+    		</div>
+    	</div>
+    	 <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrent"
+                  :current-page="pager.pageIndex"
+                  :page-sizes="[10,30,50,100]"
+                  :page-size="pager.pageSize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="pager.total"  style="min-height: 30px;max-height: 40px;">
+          </el-pagination>
+    </div>
 
     <!--列表-->
-      <div  style="display: flex;flex-direction: column;height:92%;width: auto;">
+      <!--<div  style="display: flex;flex-direction: column;height:100%;width: auto;" class="minusHeight">
 
           <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: flex-start;
 
-              display: flex;flex-wrap: wrap;height:calc(100% - 66px);border-bottom: solid 1px #e6e6e6;">
+              display: flex;flex-wrap: wrap;height:100%;border-bottom: solid 1px #e6e6e6;"  id="cardWrapper">
 
 
 
@@ -50,7 +80,7 @@
           </el-pagination>
 
       </div>
-
+-->
 
     <!--编辑角色界面-->
     <el-dialog title="编辑文件类型" :visible.sync="editFormVisible" v-if="editFormVisible" :close-on-click-modal="false" width="40%">
@@ -443,6 +473,32 @@
     },
     mounted() {
         this.getModelTypeList();
+        
+        
+         let a = 206;
+   	let b = window.innerWidth-240;
+   	let c = parseInt(b/a);
+   	console.log(a);
+   	console.log(b);
+   	console.log(c);
+    $("#cardWrapper").width(206*c);
+    	       
+   $(window).resize(function() {
+   	
+   	
+   
+   
+    
+    
+    let a = 206;
+   	let b = window.innerWidth-240;
+   	let c = parseInt(b/a);
+   	console.log(a);
+   	console.log(b);
+   	console.log(c);
+    $("#cardWrapper").width(206*c);
+    });
+
     }
   }
 
@@ -486,5 +542,10 @@
       width: 178px;
       height: 178px;
       display: block;
+  }
+  .minusHeight{
+  	    height: calc(100%-80px)!important;
+     height: -moz-calc(100% - 80px)!important;
+    height :-webkit-calc(100% - 80px)!important; 
   }
 </style>
