@@ -146,7 +146,7 @@
             getModelVar(){
             var _this = this;
             if(_this.modelId == null || _this.modelId == ''){
-                this.$router.push({path: '/model/index'});
+                this.$router.push({path: '/model/MyIndex'});
             }else {
                 var url = '/api/model/modelVariable?modelId=' + _this.modelId;
                 _this.$http.post(url)
@@ -181,7 +181,7 @@
         },treeModelVar(){
             var _this = this;
             if(_this.modelId == null || _this.modelId == ''){
-                this.$router.push({path: '/model/index'});
+                this.$router.push({path: '/model/MyIndex'});
             }else {
                 var url = '/api/model/modelVariable?modelId=' + _this.treeModelId;
                 _this.$http.post(url)
@@ -309,7 +309,7 @@
             treeModelRefresh(){
                 var _this = this;
                 if(_this.modelId == null || _this.modelId == ''){
-                    this.$router.push({path: '/model/index'});
+                    this.$router.push({path: '/model/MyIndex'});
                 }else {
                     var url = '/api/model/modelVariable?modelId=' + _this.treeModelId;
                     _this.$http.post(url)

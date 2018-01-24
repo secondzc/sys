@@ -738,6 +738,7 @@
                 if (_this.amsg != null && _this.amsg != "") {
                     var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
                 } else {
+                    return;
                     _this.$store.state.amsg = 0;
                     var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
                 }
@@ -852,6 +853,7 @@
             if (_this.amsg != null && _this.amsg != "") {
                 var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
             } else {
+                return;
                 _this.amsg = 0;
                 var url = '/api/model/list?parent_id=' + _this.amsg + "&scope=" + false + "&userId=" + _this.$store.state.userInfo.profile.iD
             }

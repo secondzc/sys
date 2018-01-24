@@ -38,7 +38,8 @@
             getModelVar(){
                 var _this = this;
                 if(_this.modelId == null || _this.modelId == ''){
-                    this.$router.push({path: '/model/index'});
+                    return;
+//                    this.$router.push({path: '/model/index'});
                 }else {
                     var url = '/api/model/treeModelCatalog?modelId=' + _this.treeModelId;
                     _this.$http.post(url)
