@@ -1386,7 +1386,8 @@ public class ModelController extends  BaseController {
                 modelDetail = attachmentService.getModelDetailList(modelFiles,modelId,modelDetail);
             }else{
                 List<AttachmentDto> modelFiles = attachmentService.getAttachByParentId(catalogId);
-                modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,catalogId);
+//                modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,catalogId);
+                modelDetail.addAll(modelFiles);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -1401,6 +1402,9 @@ public class ModelController extends  BaseController {
             attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
             attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
             attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
+            if(attachmentDto.getFloder()){
+                attachmentDto.setFileSize("");
+            }
         }
         jo.put("data",modelDetail);
         return returnSuccessInfo(jo);
@@ -1492,7 +1496,7 @@ public class ModelController extends  BaseController {
                     attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
                 }else{
                     attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attach.getFileIconUrl());
-                }
+                }attach.setCreateTime(attach.getCreateTime().substring(0,10));
                 attach.setName(ModelUtil.getFileName(attach.getName()));
                 attach.setFileSize(ModelUtil.getFileSize(attach.getSize()));
             }

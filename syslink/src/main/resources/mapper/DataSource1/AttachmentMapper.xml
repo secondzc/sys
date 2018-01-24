@@ -73,7 +73,7 @@
     <select id="getModelFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />
         FROM  attachment
-        WHERE model_id = #{modelId} and icon_url is null or trim(icon_url)= ''
+        WHERE model_id = #{modelId} and is_floder = 1 and icon_url is null or trim(icon_url)= ''
     </select>
     <select id="getModelDetail" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
         <!--SELECT <include refid="baseColumnList" />-->
@@ -92,7 +92,7 @@
         on  b.attachment_id = c.id
         ) f
         on  a.ext = f.ext
-        where a.temp_relative_path is not null AND a.model_id = #{modelId}
+        where a.model_id = #{modelId}
     </select>
     <select id="getAttachByParentId" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
         <!--SELECT <include refid="baseColumnList" />-->
@@ -111,7 +111,7 @@
         on  b.attachment_id = c.id
         ) f
         on  a.ext = f.ext
-        where a.parent_id = #{parentId} or a.id = #{parentId}
+        where a.parent_id = #{parentId}
     </select>
 
     <select id="getParentAttach" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">

@@ -136,22 +136,20 @@ public class AttachmentServiceImpl implements AttachmentService {
     public List<AttachmentDto> getModelDetailList(List<AttachmentDto> modelFiles, Long modelId, List<AttachmentDto> modelDetail) {
 
         //判断选中的文件是否为文件夹
-        boolean floder = false;
+//        boolean floder = false;
         AttachmentDto root = new AttachmentDto();
         for (AttachmentDto attchCatelog: modelFiles) {
             if(attchCatelog.getParentId() == 0) {
-                floder = attchCatelog.getFloder();
                 root = attchCatelog;
+                break;
             }
         }
-        if(floder){
-            for (AttachmentDto attachment : modelFiles) {
-                if(attachment.getId() != root.getId() && attachment.getFloder() == false){
-                    modelDetail.add(attachment);
+        if(root != null){
+            for (AttachmentDto attchCatelog: modelFiles) {
+                if(attchCatelog.getParentId() == root.getId()){
+                    modelDetail.add(attchCatelog);
                 }
             }
-        }else{
-            modelDetail.addAll(modelFiles);
         }
         return modelDetail;
     }
