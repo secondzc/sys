@@ -112,7 +112,7 @@
                     <div style="position: absolute;left: 270px;display: inline-flex;
                     min-width: 300px;line-height: 30px">
                         <span> <b>当前分类:</b></span>
-                          <breadcrumb ></breadcrumb>
+                          <breadcrumb @uplaodTitle="uplaodTitle"></breadcrumb>
                     </div>
                   
              
@@ -581,7 +581,7 @@
     import searchFileList from './SearchFileList.vue'
     import uploadFile from  '../nav3/Page6.vue'
     import breadcrumb from '../nav3/breadcrumb.vue'
-    import privateUpload from './PrivateUpload.vue'
+    import privateUpload from './PrivateUpload1.vue'
     import sortableList from './sortable-list'
     import { mapState,mapGetters} from 'vuex'
     import {mapActions} from 'vuex'
@@ -1021,6 +1021,7 @@
                             duration: 2000
                         });
                         _this.getModel();
+                        _this.currentRow= null;
                     }
                     else {
                         _this.$message({
@@ -1303,6 +1304,7 @@
                             });
                             _this.move.dialogVisible = false;
                             _this.getModel();
+                            _this.currentRow = null;
                         }
                     }).catch(function (error) {
                     _this.$message({

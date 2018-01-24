@@ -536,7 +536,7 @@
     import breadcrumb from '../nav3/breadcrumb.vue'
     import sortableList from './sortable-list'
     import uploadFile from  '../nav3/Page6.vue'
-    import upload from './Upload.vue'
+    import upload from './Upload1.vue'
     import packageDetail from './packageDetail.vue'
     import selectDirectory from './selectDirectory.vue'
     import searchFileList from './SearchFileList.vue'
@@ -1003,6 +1003,7 @@
                             duration: 2000
                         });
                         _this.getModel();
+                        _this.currentRow = null;
                     }
                     else {
                         _this.$message({
@@ -1279,6 +1280,7 @@
                             });
                             _this.move.dialogVisible = false;
                             _this.getModel();
+                            _this.currentRow = null;
                         }
                     }).catch(function (error) {
                     _this.$message({
