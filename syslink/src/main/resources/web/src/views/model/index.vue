@@ -349,7 +349,7 @@
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                              <span style="font-weight: bold;">{{o.name}}</span>
-                                                <i class="el-icon-search iconHover" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="func.directoryJudge(o.userId,o.directoryId,1)> </i>
+                                                <i class="el-icon-search iconHover" style="max-width: 14px;float: right;font-size: 20px;" @click="modelVar(o)" v-show="func.directoryJudge(o.userId,o.directoryId,1)" ></i>
 
                                          </div>
 
