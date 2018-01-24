@@ -130,7 +130,7 @@
                         model m
                         on
                          m.id = a.model_id
-                      where a.is_floder = false and m.scope = #{scope} and a.icon_url is null or trim(a.icon_url)= '') mo
+                      where a.is_floder = false and m.is_deleted = 0 and m.scope = #{scope} and a.icon_url is null or trim(a.icon_url)= '') mo
             LEFT JOIN
             ( SELECT b.ext,c.fileIconUrl
                     from file_type b
