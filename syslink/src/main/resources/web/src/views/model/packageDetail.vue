@@ -46,8 +46,12 @@
                                 label=""
                                 width="80" >
                             <template scope="scope">
-
-                                <img v-bind:src="scope.row.fileIconUrl" style="width: 60px;height: 40px;"/>
+                                <div v-if="scope.row.floder == false">
+                                    <img  v-bind:src="scope.row.fileIconUrl" style="width: 60px;height: 40px;"/>
+                                </div >
+                                <div v-else="scope.row.floder == true">
+                                <img  src="../../../src/assets/file.jpg" style="width: 60px;height: 40px;"/>
+                                </div>
 
                             </template>
                         </el-table-column>
@@ -80,22 +84,21 @@
 
                         <el-table-column min-width=150 label="操作">
                             <template scope="scope">
-
+                                <el-tooltip class="item" effect="dark" content="查看" placement="top-start" >
+                                    <el-button type="primary"
+                                               size="small"
+                                               @click="handleWatch(scope.$index, scope.row)"
+                                               :disabled="scope.row.floder == false"
+                                    >
+                                        <i class="iconfont icon-chakan" style="font-size: 12px;"></i>
+                                    </el-button>
+                                </el-tooltip>
                                 <el-button-group>
-                                    <!--<el-tooltip class="item" effect="dark" content="查看" placement="top-start">-->
-                                        <!--<el-button type="primary"-->
-                                                   <!--size="small"-->
-                                                   <!--icon="el-icon-search"   @click="handleEdit(scope.$index, scope.row)" ></el-button>-->
-                                    <!--</el-tooltip>-->
                                     <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
-                                        <el-button type="info"
+                                        <el-button type="primary"
                                                    size="small"
                                                    icon="el-icon-download"   @click="handleDownload(scope.$index, scope.row)"></el-button>
                                     </el-tooltip>
-
-                                    <!--<el-tooltip class="item" effect="dark" content="删除" placement="top-start">-->
-                                        <!--<el-button   size="small" type="danger" icon="el-icon-delete"  @click="handleDeleted(scope.$index, scope.row)" v-if="func.authJudge('management_model_delete')"></el-button>-->
-                                    <!--</el-tooltip>-->
                                 </el-button-group>
                             </template>
                         </el-table-column>
@@ -152,10 +155,8 @@
         },
     computed: {
     ...mapState({
-            modelId: state => state.modelId,
-            a:state =>state.a
         }),
-    ...mapGetters(['modelId','amsg','treeModelId']),
+    ...mapGetters(['treeModelId']),
         getModelDet(){
             let para = {
                 pageSize: this.pager.pageSize,
@@ -210,6 +211,7 @@
                         }
                     }
                 )
+                console.log("333333")
                 this.repositories = filterModel;
             },
             handleCurrentChange(val) {
@@ -246,6 +248,7 @@
                     .then(function (response) {
                         _this.details = response.data.data;
                         _this.pager.total = response.data.data.length;
+                        para.pageIndex = 1;
                         var filterModel = response.data.data.filter(
                             (u, index) => {
                                 if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
@@ -253,6 +256,7 @@
                                 }
                             }
                         )
+                        console.log(filterModel);
                         _this.repositories = filterModel;
                     })
                     .catch(function (error) {
@@ -370,7 +374,11 @@
                     return 'warning-row';
                 }
                 return '';
+            },
+            handleWatch(index, row){
+                this.$refs.setTreeNode.updateNode(row);
             }
+
 
         }
     };
