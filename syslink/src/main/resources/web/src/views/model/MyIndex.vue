@@ -295,14 +295,14 @@
                                          <el-button type="primary" 
                                      size="small"
                                        @click="handleEdit(scope.$index, scope.row)" >
-                                           <i class="iconfont icon-chakan" style="font-size: 12px;"></i>  
+                                           <i class="iconfont icon-chakan" style="font-size: 12px;"></i>
                                        </el-button>
                                     </el-tooltip>
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
                                             <el-button type="primary"
                                                        size="small"
                                                        @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)">
-                                                           <i class="el-icon-download" style="font-size: 12px;"></i>  
+                                                           <i class="el-icon-download" style="font-size: 12px;"></i>
                                                        </el-button>
                                         </el-tooltip>
                                        <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
@@ -311,7 +311,7 @@
                                     
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                                   <el-button   size="small" type="primary"    @click="handleDeleted(scope.$index, scope.row)">
-                                      <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>  
+                                      <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
                                   </el-button>
                                     </el-tooltip>
                                      </el-button-group>
@@ -349,7 +349,7 @@
 
 
             <el-main class="card-main" v-show="!listStatus">
-                <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 47px;">
+                <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 47px;padding: 5px">
                     <!--<span>排序</span>-->
                     <div style="display: inline-block;line-height: 30px;margin-left: 20px;margin-top: 9px;"><p>排序：</p></div>
                     <div id="appp" style="display: inline-block;">
@@ -446,7 +446,7 @@
                 <div v-if="varLength == 0" style="height: inherit;">
                     <div style="height: inherit;overflow-y: hidden;">
                     <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
-                    <div slot="header" class="clearfix" style="height: 10px">
+                    <div slot="header" class="clearfix" style="height: 21px">
                         <span style="font-weight: bold;">我的模型</span>
                         <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
                     </div>
@@ -461,7 +461,7 @@
 
                  <div v-else="this.varLength != 0" v-for="(o, index) in variable" :key="o.id" :offset="index > 0 ? 2 : 0" style="height: inherit;overflow-y: hidden;">
                         <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
-                          <div slot="header" class="clearfix" style="height: 10px">
+                          <div slot="header" class="clearfix" style="height: 21px">
                         <span style="font-weight: bold;">{{o.name}}</span>
                       <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
     
@@ -1371,8 +1371,7 @@
                 this.listStatus=true;
                 this.handleCurrent(this.pager.pageIndex -1);
                 this.handleCurrent(this.pager.pageIndex +1);
-            }
-
+            },
     },
 
 
