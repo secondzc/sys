@@ -128,7 +128,7 @@
                        </el-tooltip> -->
 
                         
-                         <el-button-group  style="margin-right: 5px;">
+                         <!--<el-button-group  style="margin-right: 5px;">
                            <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
                             <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="this.currentRow==null"
                             ></el-button>
@@ -138,7 +138,7 @@
                              ></el-button>
                           </el-tooltip>
 
-                        </el-button-group>
+                        </el-button-group>-->
 
 
                          <el-button-group  >
@@ -274,7 +274,7 @@
                                    
                                 </el-table-column>
 
-                                <el-table-column min-width="150" label="操作">
+                                <el-table-column min-width="200" label="操作">
                                     <template scope="scope">
                                        <!--  <el-button
                                                 size="small"
@@ -305,15 +305,15 @@
                                                            <i class="el-icon-download" style="font-size: 12px;"></i>  
                                                        </el-button>
                                         </el-tooltip>
-                               <!--          <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
-                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
-                                        </el-tooltip> -->
+                                       <el-tooltip class="item" effect="dark" content="移动" placement="top-start">
+                                            <el-button   size="small" type="primary"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;"></i></el-button>
+                                        </el-tooltip> 
                                     
-                                <!--   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger"    @click="handleDeleted(scope.$index, scope.row)">
+                                  <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                                  <el-button   size="small" type="primary"    @click="handleDeleted(scope.$index, scope.row)">
                                       <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>  
                                   </el-button>
-                                    </el-tooltip> -->
+                                    </el-tooltip>
                                      </el-button-group>
                                     </template>
                                 </el-table-column>

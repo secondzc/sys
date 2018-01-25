@@ -84,6 +84,7 @@ export default {
       if(a.directoryId==directoryId&&a.mode>=mode)
       {
         return true;
+        break;
       }
     }
 
