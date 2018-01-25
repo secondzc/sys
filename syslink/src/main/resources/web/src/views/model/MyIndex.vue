@@ -70,6 +70,7 @@
                                   center
                                   ref="DetailDialog"
                                   @DetailReady="DetailReady"
+                                  @PackageDetailReady="PackageDetailReady"
                           >
                               <packageDetail ref="packageDetail"></packageDetail>
                           </el-dialog>
@@ -963,8 +964,16 @@
             }
             else{
                 this.packageDetailDialog.dialogVisible = true;
+                this.$refs.DetailDialog.$nextTick(function(){
+                    console.log("dom渲染完了");
+                    this.$emit("PackageDetailReady",row.index)
+                });
             }
+
         },
+            PackageDetailReady(data){
+                this.$refs.packageDetail.getModelDet(data);
+            },
         handleDownload(index, row){
             console.log(index, row);
             var _this = this;
