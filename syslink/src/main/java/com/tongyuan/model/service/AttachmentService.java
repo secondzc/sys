@@ -39,7 +39,7 @@ public interface AttachmentService {
     //查找model的所有文件
     public List<Attachment> getAttachmentsByModelId(Long modelId);
     //复制attachList到用户下载文件夹下
-    public String getZipUrl(List<Attachment> attachmentList,Model model);
+    public String getZipUrl(List<Attachment> attachmentList,String  modelName,Boolean folder);
     //查找刚上传的icon图片List
     public List<Attachment> getInsertIcon();
     //更新上传文件的modelId和parentId
@@ -48,4 +48,8 @@ public interface AttachmentService {
     public List<Attachment> getDeleteAttach();
     //过滤掉不存在表单的文件
     public List<Attachment> getRealFileList(List<Attachment> attachmentFileList,List<FileJsonArrayDto> fileJsonArrayDtoList,List<Attachment> floderList);
+    //根据文件夹找到文件夹下面的所有文件
+    public List<Attachment> getFloderAttach(List<Attachment> modelAttachmentList,Attachment attachment,List<Attachment> attachmentList);
+    //对attachmentDto 进行排序
+    public void sortAttachDto(List<AttachmentDto> attachmentDtos);
 }

@@ -928,16 +928,14 @@ public class ModelController extends  BaseController {
         String realUrl ="";
         try{
             Model model = modelService.queryModelById(modelId);
-//            String name = modelUtil.splitName(model.getName());
-//             realUrl = "http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getModelFilePath().substring(7);
-            //下载之前先清除上次下载存在的同名文件
+            String modelName = model.getName();
             String modelDir = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + model.getName();
             String modelZip = modelDir+".zip";
             DeleteFileUtil.delete(modelDir);
             DeleteFileUtil.delete(modelZip);
             List<Attachment> attachmentList = attachmentService.getAttachmentsByModelId(modelId);
             if(attachmentList.size() >0){
-                realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,model).substring(7);
+                realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,modelName,false).substring(7);
             }
             }catch(Exception e) {
                 e.printStackTrace();
@@ -947,6 +945,36 @@ public class ModelController extends  BaseController {
                 return returnSuccessInfo(jo);
 
             }
+
+
+    @RequestMapping(value = "/downloadAttachFloder",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JSONObject downloadAttachFloder(@RequestParam(value = "attachmentId",required = false)Long attachmentId,
+                               HttpServletRequest request , HttpServletResponse response){
+
+        JSONObject jo=new JSONObject();
+        String realUrl ="";
+        try{
+            Attachment attachment = attachmentService.queryById(attachmentId);
+            List<Attachment> attachmentList = new ArrayList<>();
+            List<Attachment> modelAttachmentList = attachmentService.getAttachmentsByModelId(attachment.getModelId());
+            attachmentList = attachmentService.getFloderAttach(modelAttachmentList,attachment,attachmentList);
+            String FloderName = attachment.getName();
+            String modelDir = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + attachment.getName();
+            String modelZip = modelDir+".zip";
+            DeleteFileUtil.delete(modelDir);
+            DeleteFileUtil.delete(modelZip);
+            if(attachmentList.size() >0){
+                realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,attachment.getName(),attachment.getFloder()).substring(7);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+            return returnErrorInfo(jo);
+        }
+        jo.put("data",realUrl);
+        return returnSuccessInfo(jo);
+
+    }
 
     @RequestMapping(value = "/downloadAttach",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
@@ -1406,6 +1434,7 @@ public class ModelController extends  BaseController {
                 attachmentDto.setFileSize("");
             }
         }
+        attachmentService.sortAttachDto(modelDetail);
         jo.put("data",modelDetail);
         return returnSuccessInfo(jo);
     }

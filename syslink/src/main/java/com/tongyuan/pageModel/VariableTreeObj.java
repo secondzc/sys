@@ -24,6 +24,17 @@ public class VariableTreeObj {
     private String IsParam;
     //针对其他模型，是否为输入变量，是为1，不是为0
     private String IsInput;
+    //parentId
+    private Long parentId;
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
     private List<VariableTreeObj> children;
 
     public Long getId() {

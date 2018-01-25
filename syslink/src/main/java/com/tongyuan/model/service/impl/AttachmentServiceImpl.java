@@ -1,5 +1,6 @@
 package com.tongyuan.model.service.impl;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.dao.AttachmentMapper;
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by xyx on 2017-12-20.
@@ -101,6 +100,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 VariableTreeObj model = new VariableTreeObj();
                 model.setId(modelRoot.getId());
                 model.setName(modelRoot.getName());
+                model.setParentId(modelRoot.getParentId());
                 List<VariableTreeObj> rootChild = new ArrayList<>();
                 model.setChildren(rootChild);
                 modelCatalogList.add(model);
@@ -289,16 +289,20 @@ public class AttachmentServiceImpl implements AttachmentService {
     /**
      * 获取压缩文件的Url
      * @param attachmentList
-     * @param model
+     * @param modelName
      * @return
      */
     @Override
-    public String getZipUrl(List<Attachment> attachmentList, Model model) {
-        String modelName = model.getName();
+    public String getZipUrl(List<Attachment> attachmentList, String modelName, Boolean folder) {
         for (Attachment attachment:attachmentList) {
             if(!attachment.getFloder()){
                 //下载的相对路径
-                String downloadAbsolutePath = ResourceUtil.getXiaZai() +modelName +"/" + attachment.getTempRelativePath();
+                String downloadAbsolutePath = "";
+                if(folder){
+                    downloadAbsolutePath = ResourceUtil.getXiaZai() +attachment.getTempRelativePath().substring(attachment.getTempRelativePath().indexOf(modelName));
+                }else{
+                    downloadAbsolutePath = ResourceUtil.getXiaZai() +modelName +"/" + attachment.getTempRelativePath();
+                }
                 FileUtils.copyFile(resourceUtil.getunzipPath()+attachment.getFilePath(),resourceUtil.getunzipPath()+downloadAbsolutePath);
             }
         }
@@ -376,6 +380,40 @@ public class AttachmentServiceImpl implements AttachmentService {
         return fileList;
     }
 
+
+    @Override
+    public List<Attachment> getFloderAttach(List<Attachment> modelAttachmentList,Attachment attachment,List<Attachment> attachmentList) {
+        List<Attachment> childAttchList = new ArrayList<>();
+        for (Attachment attach :modelAttachmentList) {
+            if (attach.getParentId() == attachment.getId()){
+                attachmentList.add(attach);
+                childAttchList.add(attach);
+            }
+        }
+        if(childAttchList.size() >0){
+            for (Attachment childAttch :childAttchList) {
+                getFloderAttach(modelAttachmentList,childAttch,attachmentList);
+            }
+        }
+        return  attachmentList;
+    }
+
+    @Override
+    public void sortAttachDto(List<AttachmentDto> attachmentDtos) {
+        Collections.sort(attachmentDtos, new Comparator<AttachmentDto>() {
+            @Override
+            public int compare(AttachmentDto o1, AttachmentDto o2) {
+                if(o1.getSize() > o2.getSize()){
+                    return -1;
+                }else if(o1.getSize() < o2.getSize()){
+                    return 1;
+                }else{
+                    return  0;
+                }
+            }
+        });
+    }
+
     /**
      * 获取模型的子
      * @param modelFiles
@@ -388,6 +426,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 VariableTreeObj treeObj = new VariableTreeObj();
                 treeObj.setId(modelFiles.get(i).getId());
                 treeObj.setName(modelFiles.get(i).getName());
+                treeObj.setParentId(modelFiles.get(i).getParentId());
                 List<VariableTreeObj> childVar = new ArrayList<>();
                 treeObj.setChildren(childVar);
                 childList.add(treeObj);
