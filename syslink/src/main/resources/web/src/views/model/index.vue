@@ -71,10 +71,10 @@
                           <el-dialog
                                   title="移动模型"
                                   :visible.sync="move.dialogVisible"
-                                  width="60%"
+                                  width="40%"
                                   center
                           >
-                              <selectDirectory :data="tree" style="min-height: 500px;"  @selectNode="getSelectedNode" ></selectDirectory>
+                              <selectDirectory :data="tree" style="min-height: 100px;"  @selectNode="getSelectedNode" ></selectDirectory>
                               <div slot="footer" class="dialog-footer">
                                   <el-button @click.native="move.dialogVisible = !move.dialogVisible">取消</el-button>
                                   <el-button type="primary" @click.native="editSubmit1" >提交</el-button>
