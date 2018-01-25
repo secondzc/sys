@@ -4,7 +4,7 @@
             <el-aside class="left-aside" style="overflow: hidden">
                 <div style="height: 100%">
                     <span>文件目录</span>
-                    {{getModelDet}}
+                    <!--{{getModelDet}}-->
                     <modelCatalog @catalog_id="getDetailList"  ref="setTreeNode" style="height: 100%;overflow-y: auto"></modelCatalog>
                 </div>
             </el-aside>
@@ -157,31 +157,31 @@
     ...mapState({
         }),
     ...mapGetters(['treeModelId']),
-        getModelDet(){
-            let para = {
-                pageSize: this.pager.pageSize,
-                pageIndex: this.pager.pageIndex
-            };
-            var _this = this;
-            var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
-            _this.$http.post(url)
-                .then(function (response) {
-//                    _this.repositories = response.data.data;
-                    _this.details = response.data.data;
-                    _this.pager.total = response.data.data.length;
-                    var filterModel = response.data.data.filter(
-                        (u, index) => {
-                            if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
-                                return true
-                            }
-                        }
-                    )
-                    _this.repositories = filterModel;
-                })
-                .catch(function (error) {
-                    console.log(error)
-                })
-        }
+//        getModelDet(){
+//            let para = {
+//                pageSize: this.pager.pageSize,
+//                pageIndex: this.pager.pageIndex
+//            };
+//            var _this = this;
+//            var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
+//            _this.$http.post(url)
+//                .then(function (response) {
+////                    _this.repositories = response.data.data;
+//                    _this.details = response.data.data;
+//                    _this.pager.total = response.data.data.length;
+//                    var filterModel = response.data.data.filter(
+//                        (u, index) => {
+//                            if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
+//                                return true
+//                            }
+//                        }
+//                    )
+//                    _this.repositories = filterModel;
+//                })
+//                .catch(function (error) {
+//                    console.log(error)
+//                })
+//        }
 
         },
         methods: {
@@ -223,7 +223,11 @@
             handleDownload(index, row){
                 console.log(index, row);
                 var _this = this;
-                var url = '/api/model/downloadAttach?attachmentId=' + row.id;
+                if(row.floder){
+                    var url = '/api/model/downloadAttachFloder?attachmentId=' + row.id;
+                }else{
+                    var url = '/api/model/downloadAttach?attachmentId=' + row.id;
+                }
                 _this.$http.post(url)
                     .then(function (response) {
 //                        location.href = response.data.data;
@@ -324,7 +328,7 @@
                                 }
                             )
                             _this.repositories = filterModel;
-                            _this.$refs.setTreeNode.updateNode(_this.treeParentNode);
+                            _this.$refs.setTreeNode.getFloderContent(_this.treeParentNode);
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -376,8 +380,33 @@
                 return '';
             },
             handleWatch(index, row){
-                this.$refs.setTreeNode.updateNode(row);
-            }
+                this.$refs.setTreeNode.getFloderContent(row);
+            },
+            getModelDet(data){
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
+                var _this = this;
+                var url = '/api/model/getModelDetail?modelId=' + data;
+                _this.$http.post(url)
+                    .then(function (response) {
+//                    _this.repositories = response.data.data;
+                        _this.details = response.data.data;
+                        _this.pager.total = response.data.data.length;
+                        var filterModel = response.data.data.filter(
+                            (u, index) => {
+                                if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
+                                    return true
+                                }
+                            }
+                        )
+                        _this.repositories = filterModel;
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            },
 
 
         }

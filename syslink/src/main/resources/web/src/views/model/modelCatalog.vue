@@ -63,10 +63,19 @@
             },
             updateNode(data){
                 this.$refs.tree2.setCurrentKey(data.id);
-                this.$refs.tree2.currentNode =data;
+                this.$refs.tree2.currentNode =this.$refs.tree2.getCurrentNode();
                 console.log(this.$refs.tree2.getCurrentNode());
                 this.$emit('catalog_id', data.id,this.$refs.tree2.$parent.$data.data2[0]);
             },
+            getFloderContent(data){
+                this.$refs.tree2.setCurrentKey(data.parentId);
+                var parentNode = this.$refs.tree2.getCurrentNode();
+                console.log(this.$refs.tree2.getCurrentNode());
+                this.$refs.tree2.setCurrentKey(data.id);
+                this.$refs.tree2.currentNode = this.$refs.tree2.getCurrentNode();
+                this.$emit('catalog_id', data.id,parentNode);
+            },
+
             treeNodeChange(arg1,arg2){
                 console.log(arg1);
             },
@@ -88,7 +97,9 @@
                     data2: [],
                     defaultProps: {
                         children: 'children',
+                        label : 'parentId',
                         label: 'name',
+
                     }
                 };
             }
