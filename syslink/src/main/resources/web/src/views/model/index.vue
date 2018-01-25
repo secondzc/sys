@@ -125,7 +125,7 @@
 
 
                   <div style="position: absolute;right: 50px;">
-                    <el-button-group  style="margin-right: 5px;">
+                    <!--<el-button-group  style="margin-right: 5px;">
                      <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
                       <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="!moveCheck"
                       ></el-button>
@@ -135,7 +135,7 @@
                       ></el-button>
                     </el-tooltip>
 
-                  </el-button-group>
+                  </el-button-group>-->
                   <el-button-group  >
                    <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
                     <el-button  icon="el-icon-tickets" size="small"  @click="showList"
@@ -260,7 +260,7 @@
                                         prop="discription">
                                 </el-table-column>
 
-                                <el-table-column min-width=150 label="操作">
+                                <el-table-column min-width=200 label="操作">
                                     <template scope="scope">
                                     <el-button-group>
                                         <el-tooltip class="item" effect="dark" content="查看" placement="top-start" >
@@ -275,20 +275,20 @@
                                         <el-tooltip class="item" effect="dark" content="下载" placement="top-start">
                                          <el-button type="primary"
                                                    size="small"
-                                             @click="handleDownload(scope.$index, scope.row)" :disabled="validateCAEDownload(scope.row,scope.$index)">
+                                             @click="handleDownload(scope.$index, scope.row)" :disabled="validateDownload(scope.$index, scope.row)">
                                                       <i class="el-icon-download" style="font-size: 12px;"></i>  
 
                                                    </el-button>
                                         </el-tooltip>
-                               <!--      <el-tooltip class="item" effect="dark" content="移动" placement="top-start" >
-                                            <el-button   size="small" type="warning"  @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;" :disabled="!func.directoryJudge(scope.row.userId,scope.directoryId,2)"></i></el-button>
+                                  <el-tooltip class="item" effect="dark" content="移动" placement="top-start" >
+                                            <el-button   size="small" type="primary" v-show="func.directoryJudge(scope.row.userId,scope.row.directoryId,2)"   @click="moveModel(scope.$index, scope.row)" ><i class="iconfont icon-zhuanhuan" style="font-size: 12px;" ></i></el-button>
                                         </el-tooltip>
                                   <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                                  <el-button   size="small" type="danger" @click="handleDeleted(scope.$index, scope.row)"  :disabled="!func.directoryJudge(scope.row.userId,scope.directoryId,3)"
+                                  <el-button   size="small" type="primary" v-show="func.directoryJudge(scope.row.userId,scope.row.directoryId,2)"  @click="handleDeleted(scope.$index, scope.row)"  
                                   >
                                     <i class="iconfont icon-lajitong" style="font-size: 12px;"></i>
                                   </el-button>
-                                    </el-tooltip> -->
+                                    </el-tooltip> 
                                         
                                      </el-button-group>
                                     </template>
@@ -1229,6 +1229,26 @@
                     return false;
                 }
             },
+            
+            validateDownload(index,row)
+            {
+            	if(this.func.directoryJudge(row.userId,row.directoryId,1))
+            	{
+            		 if(row.type == 'Modelica'){
+                    this.style.watch = 'inline-block';
+                    return true;
+                }
+                else{
+                    this.style.watch = 'none';
+                    return false;
+                }
+            	}
+            	else
+            	{
+            		return true;
+            	}
+            },
+            
             uplaodTitle(breadcrumbArray){
                 console.log(breadcrumbArray);
                 this.uploadFileTitle = "上传到:"
