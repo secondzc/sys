@@ -11,7 +11,7 @@
                                 <el-input  v-model="form.name"></el-input>
                           
                             </el-form-item>
-                        <el-form-item label="模型类别" prop="type">
+                        <el-form-item label="模型类别" prop="region">
                             
                                 <el-select style="width: 100%" v-model="form.region" @change="getPhotoUrl(item)" placeholder="模型类别">
                                     <el-option
@@ -136,7 +136,7 @@
                         validator : validateName,
                         trigger: 'blur'
                     }],
-                    type: [{
+                    region: [{
                         required: true,
                         message: '请输入模型分类',
                         trigger: 'blur'

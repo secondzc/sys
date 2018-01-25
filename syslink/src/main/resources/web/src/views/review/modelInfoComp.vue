@@ -49,7 +49,7 @@
                                   width="80%"
                                   center
                                     ref="DetailDialog"
-                             
+								  @PackageDetailReady="PackageDetailReady"
                           >
                             <packageDetail ref="packageDetail"></packageDetail>
                           </el-dialog> 
@@ -117,12 +117,20 @@
 	            //console.log('12.10'+this.reviewModel.id); 
 	            this.$store.dispatch('sendModelId',this.reviewModel.id); 
 	            this.$store.dispatch('sendTreeModelId',this.reviewModel.id);
+	            var modelId = this.reviewModel.id;
 	            if(this.isModelica){
 	               this.$router.push({path:'/model/packageDiagram'}); 	            	
 	            } else{
-	               this.dialogVisible = true;            	
+	               this.dialogVisible = true;
+                    this.$refs.DetailDialog.$nextTick(function(){
+                        console.log("dom渲染完了");
+                        this.$emit("PackageDetailReady",modelId)
+                    });
 	            }
-	        }, 
+	        },
+            PackageDetailReady(data){
+                this.$refs.packageDetail.getModelDet(data);
+            },
 		},
 		mounted(){
 			this.instanceId = sessionStorage.getItem('instanceId');

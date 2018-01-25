@@ -95,7 +95,9 @@
                 return (
                     <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
                     <span>
-                    <span class="iconfont icon-wenjianjia2"> </span>
+                    <svg class="icon " aria-hidden="true">
+                    <use xlinkHref="#icon-file-b-"></use>
+                    `</svg>
                     <span>{node.label}</span>
                 </span>
                 </span>);
@@ -125,6 +127,13 @@
     }
     .el-tree-node__label{
         width: 298px;
+    }
+    .icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
     }
 
     /*.el-tree-node>.el-tree-node__children {*/

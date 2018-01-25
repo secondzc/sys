@@ -173,12 +173,13 @@
                        <el-form :inline="true" :model="filters">
 
                            <el-form-item style="margin-top: 5px;margin-left: 10px;">
-
+                               <el-tooltip   class="item" effect="dark" content="模型搜索" placement="top-start">
                                <el-input placeholder="模型名称" v-model="filters.name" class="input-with-select">
 
                                    <el-button slot="append" icon="el-icon-search"  v-on:click="getModel"></el-button>
                                    <el-button slot="append" icon="el-icon-d-caret"  v-on:click="transformFile"></el-button>
                                </el-input>
+                               </el-tooltip>
                            </el-form-item>
                        </el-form>
                        <!--</el-col>-->
@@ -189,12 +190,13 @@
                        <el-form :inline="true" :model="filters">
 
                            <el-form-item style="margin-top: 5px;margin-left: 10px;">
-
+                               <el-tooltip   class="item" effect="dark" content="文件搜索" placement="top-start">
                                <el-input placeholder="文件名称" v-model="filters.name" class="input-with-select">
 
                                    <el-button slot="append" icon="el-icon-search"  v-on:click="seachFiles"></el-button>
                                    <el-button slot="append" icon="el-icon-d-caret"  v-on:click="transformFile"></el-button>
                                </el-input>
+                               </el-tooltip>
                            </el-form-item>
                        </el-form>
                        <!--</el-col>-->

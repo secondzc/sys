@@ -44,13 +44,13 @@
                             style="width: 100%">
                         <el-table-column
                                 label=""
-                                width="80" >
+                                width="42" >
                             <template scope="scope">
                                 <div v-if="scope.row.floder == false">
-                                    <img  v-bind:src="scope.row.fileIconUrl" style="width: 60px;height: 40px;"/>
+                                    <img  v-bind:src="scope.row.fileIconUrl" style="width: 40px;height: 25px;"/>
                                 </div >
                                 <div v-else="scope.row.floder == true">
-                                <img  src="../../../src/assets/file.jpg" style="width: 60px;height: 40px;"/>
+                                <img  src="../../../src/assets/file.jpg" style="width: 40px;height: 25px;"/>
                                 </div>
 
                             </template>
