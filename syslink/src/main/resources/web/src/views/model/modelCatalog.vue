@@ -16,6 +16,7 @@
                 @node-click="treeNodeClick"
                 @current-change = "treeNodeChange"
                 :filter-node-method="filterNode"
+                :render-content="renderContent"
                 ref="tree2">
         </el-tree>
     </section>
@@ -90,6 +91,15 @@
                         console.log(error)
                     })
             },
+            renderContent(h, { node, data, store }) {
+                return (
+                    <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                    <span>
+                    <span class="iconfont icon-wenjianjia2"> </span>
+                    <span>{node.label}</span>
+                </span>
+                </span>);
+            }
         },
             data() {
                 return {

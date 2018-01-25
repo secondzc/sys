@@ -3,15 +3,15 @@
     	<div style="height: 100%;display: flex;flex-direction: column;">
     		
     			<el-form ref="form"  :model="form" :rules="rules" label-width="80px" class="demo-form-inline" style="display: flex;flex-direction: column;">
-    				<div style="display: flex;flex-direction: row;justify-content: center;margin-bottom: 20px;">
+    				<div style="display: flex;flex-direction: row;justify-content: left;margin-bottom: 20px;">
     					
-    					<div style="display: flex;flex-direction: column;">
+    					<div style="display: flex;flex-direction: column;width: 50%">
     						<el-form-item label="模型名" prop="name">
                             
                                 <el-input  v-model="form.name"></el-input>
                           
-                        </el-form-item>
-                        <el-form-item label="模型类别">
+                            </el-form-item>
+                        <el-form-item label="模型类别" prop="type">
                             
                                 <el-select style="width: 100%" v-model="form.region" @change="getPhotoUrl(item)" placeholder="模型类别">
                                     <el-option
@@ -25,6 +25,7 @@
                                 <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10}"  placeholder="请添加相关描述" v-model="form.desc"></el-input>
                           
                         </el-form-item>
+
     					</div>
     					<div style="width: 5%;"></div>
     					<div >
@@ -59,13 +60,15 @@
                         
     					</div>
     				</div>
+
     				  
                        
                       
     			</el-form>
-    		
-    		
-    		<div style="width: 70%;margin: 0 auto;text-align: center;">
+
+            <div style="float: left;">文件上传</div>
+    		<div style="width: 85%;margin: 0 auto;text-align: center;">
+
     			<uploadFile @sendFiles="sendFiles" @sendFileLists="sendFileLists"></uploadFile>
     		</div>
     		
@@ -131,6 +134,11 @@
                     name: [{
                         required: true,
                         validator : validateName,
+                        trigger: 'blur'
+                    }],
+                    type: [{
+                        required: true,
+                        message: '请输入模型分类',
                         trigger: 'blur'
                     }],
                 },
