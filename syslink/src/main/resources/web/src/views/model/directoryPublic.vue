@@ -177,7 +177,7 @@
       },
       /* 点击响应时间 */
       handleNodeClick (args) {
-//        this.$emit('node-click', args.id);
+        this.$emit('node-click', args.id);
           this.$store.dispatch('sendA',args.id);
           this.$store.dispatch('sendB',args.id);
       },

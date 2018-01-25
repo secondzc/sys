@@ -751,7 +751,7 @@
                         _this.allrepositorie = response.data.repositories;
                         _this.pager.total = response.data.repositories.length;
                         _this.modelTotal = response.data.repositories.length;
-                        _this.varLength = _this.variable.length;
+//                        _this.varLength = _this.variable.length;
                         var filterModel = response.data.repositories.filter(
                             (u, index) => {
                                 if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
@@ -834,15 +834,19 @@
 
 
         hanldeNodeClick (data) {
-            //该目录下的模型列表
-            this.treeItem = data;
-//        this.$emit("node-click",data)
-            this.$store.dispatch('sendA', data.parent_id);
-            if (data.parent_id <= 0) {
-                this.$store.dispatch('sendB', -1);
-            }
-            else {
-                this.$store.dispatch('sendB', data.parent_id);
+//            //该目录下的模型列表
+//            this.treeItem = data;
+////        this.$emit("node-click",data)
+//            this.$store.dispatch('sendA', data.parent_id);
+//            if (data.parent_id <= 0) {
+//                this.$store.dispatch('sendB', -1);
+//            }
+//            else {
+//                this.$store.dispatch('sendB', data.parent_id);
+//            }
+            if(this.info ){
+//                this.info = !this.info;
+                this.varLength = 0;
             }
         },
         //获取用户列表
