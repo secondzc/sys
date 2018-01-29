@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class analysisXml {
     public static void main(String[] args) throws Exception {
-        String xmlStr= readFile("C:/Users/Administrator/Desktop/AircraftLib.Aerodynamics.Components.AerodynamicForce.dom.xml");
+        String xmlStr= readFile("C:/Temp/FileLibrary/admin/2018-01-26_10-01-46/MyPkg/MyPkg.dom.xml");
         JSONObject jsonobject = analysisXmlFile(xmlStr);
         Set<String> keys = jsonobject.keySet();
         Iterator iterator = keys.iterator();

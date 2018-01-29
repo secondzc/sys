@@ -272,10 +272,10 @@ public class ResourceUtil {
         String filePath = getzipPath() + fileName;
         String renametaskName = getNowTime();
         //输出文件的路径
-        String outputDirectory = getunzipPath() + userName + "/"
-                + renametaskName + "/";
 //        String outputDirectory = getunzipPath() + userName + "/"
-//                + renametaskName ;
+//                + renametaskName + "/";
+        String outputDirectory = getunzipPath() + userName + "/"
+                + renametaskName ;
         try {
 //            unzip(filePath, outputDirectory);
             modelUtil.unZipByte(data,outputDirectory);

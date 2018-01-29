@@ -1,20 +1,21 @@
 package com.tongyuan.model.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.dao.ModelMapper;
+import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.enums.ModelClasses;
 import com.tongyuan.model.service.ModelService;
 import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-6-19.
@@ -147,6 +148,86 @@ public class ModelServiceImpl implements ModelService{
                 }
             }
         });
+    }
+
+    @Override
+    public void insertModelicaData(Map.Entry<String, JSONObject> entry, Boolean scope, GUser user, Attachment directory, Long directoryId) {
+        System.out.print("开始插入数据");
+        JSONObject jsonComponents = new JSONObject();
+        JSONObject xmlJson = entry.getValue();
+        Long modelId = (long)0;
+        String modelTypeName = this.getxmlJsonType(xmlJson);
+        Model model = new Model();
+        model.setDirectoryId(directoryId);
+        model.setParentId(-1);
+        model.setUserId(user.getID());
+        model.setScope(scope);
+        model.setCreateTime(DateUtil.getTimestamp());
+        model.setLastUpdateTime(DateUtil.getTimestamp());
+        model.setDeleted(false);
+        model.setType(modelTypeName);
+        jsonComponents = analysisXmlJsonModel(xmlJson,model);
+        Map<String, Object> param = new HashMap<>();
+        param.put("fileName",model.getName());
+        param.put("directoryId",directoryId);
+        Model validateModel = this.queryByNameAndDir(param);
+        if( validateModel == null){
+            this.add(model);
+            modelId = model.getId();
+        }else{
+            model.setLastUpdateTime(DateUtil.getTimestamp());
+            model.setId(validateModel.getId());
+            this.update(model);
+            modelId = model.getId();
+        }
+//        anslysisXmlComponents();
+//        insertVaiable(xmlMap,directoryId);
+
+    }
+
+    /**
+     * 获取一个xml（最顶层的标识）ModelType
+     * @param xmlJson
+     * @return modetypename
+     */
+    @Override
+    public String getxmlJsonType(JSONObject xmlJson) {
+        Set<String> keys = xmlJson.keySet();
+        Iterator iterator = keys.iterator();
+        String modelTypeName = "";
+        while(iterator.hasNext()){
+            modelTypeName = (String) iterator.next();
+        }
+        return  modelTypeName.split("_")[0];
+    }
+
+    @Override
+    public JSONObject analysisXmlJsonModel(JSONObject xmlJson, Model model) {
+        JSONObject anslysisJson = (JSONObject) xmlJson.values().toArray()[0];
+        model.setDiscription((String) anslysisJson.get("ModelDescript"));
+        model.setClasses(ModelClasses.getValueByKey((String) anslysisJson.get("ModelClass")));
+        JSONObject Imports = (JSONObject) anslysisJson.get("Imports");
+        JSONObject Extendses = (JSONObject) anslysisJson.get("Extendses");
+        String importValue = "";
+        String extendValue = "";
+        if(Imports != null ){
+            for(int i= 0;i<Extendses.getJSONObject("extends").size();i++){
+                extendValue = Extendses.getJSONArray("extends").get(i) +",";
+            }
+        }
+        model.setImport(importValue);
+        model.setExtends(extendValue);
+        JSONObject jsonComponents = (JSONObject) anslysisJson.get("Components");
+        return  jsonComponents;
+    }
+
+    @Override
+    public void anslysisXmlComponents(JSONObject jsonComponents, Long modelId, Long directoryId) {
+        JSONArray componentArr = (JSONArray) jsonComponents.get("component");
+        for (int i= 0; i< componentArr.size();i++){
+            JSONObject component = (JSONObject) componentArr.get(i);
+//            if((JSONObject) ((JSONObject) componentArr.get(i)).get())
+        }
     }
 
 

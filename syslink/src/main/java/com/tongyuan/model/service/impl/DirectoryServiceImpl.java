@@ -200,26 +200,6 @@ public class DirectoryServiceImpl implements DirectoryService{
     }
 
     /**
-     * 获取上传文件的基本数据
-     * @param fileName 文件名称
-     * @param fileSize 文件大小
-     * @param bytes 文件数据流
-     * @param map 文件信息map
-     * @throws IOException
-     */
-    @Override
-    public void getUploadFileInfo(String fileName, Long fileSize, byte[] bytes,MultiValueMap<String, MultipartFile> map) throws IOException {
-        fileSize  = map.get("file").get(0).getSize();
-        String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
-
-
-        if (fileNames2.length >= 1) {
-            fileName = fileNames2[0];
-        }
-        bytes = map.get("file").get(0).getBytes();
-    }
-
-    /**
      * 如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
      * @param fileName 文件名称
      * @param directoryId 文件所选目录
@@ -336,8 +316,15 @@ public class DirectoryServiceImpl implements DirectoryService{
             //文件的类型
             String filePreType = fileNames[fileNames.length - 2];
             String fileType = fileNames[fileNames.length - 1];
+            //读取文件字符串
+            String xmlStr ="";
             if (("xml").equals(fileType)) {
-                JSONObject xmlJson = analysisXml.analysisXmlFile(xmlFilePath + "/" + subFiles[i]);
+                try {
+                   xmlStr= analysisXml.readFile(xmlFilePath + "/" + subFiles[i]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                JSONObject xmlJson = analysisXml.analysisXmlFile(xmlStr);
                 xmlAnalysisMap.put(subFiles[i], xmlJson);
             }
         }

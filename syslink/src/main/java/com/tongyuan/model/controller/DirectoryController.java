@@ -919,11 +919,16 @@ public class DirectoryController extends BaseController{
 
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
+        long fileSize = 0;
+        String fileName = "";
+        byte[] bytes = new byte[0];
         try{
-            long fileSize = 0;
-            String fileName = "";
-            byte[] bytes = new byte[0];
-            directoryService.getUploadFileInfo(fileName,fileSize,bytes,map);
+            fileSize  = map.get("file").get(0).getSize();
+            String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
+            if (fileNames2.length >= 1) {
+                fileName = fileNames2[0];
+            }
+            bytes = map.get("file").get(0).getBytes();
             //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
             if (scope) {
                 directoryService.isAddNewReviewFlowInstance(fileName,directoryId);
@@ -974,6 +979,7 @@ public class DirectoryController extends BaseController{
                     for (Map.Entry<String, JSONObject> entry : xmlAnalysisMap.entrySet()) {
                         //解析xmlmap 把数据存放到数据
 //                        modelController.insertData(entry, svgPath, scope, user, directory, directoryId);
+                        modelService.insertModelicaData(entry,scope,user,directory,directoryId);
                     }
                     //更新模型的层次结构
                     //获取package下面的所有model
