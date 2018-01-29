@@ -821,10 +821,10 @@
 //            else {
 //                this.$store.dispatch('sendB', data.parent_id);
 //            }
-            if(this.info ){
+//            if(this.info ){
 //                this.info = !this.info;
                 this.varLength = 0;
-            }
+//            }
         },
         //获取用户列表
         getModel() {
