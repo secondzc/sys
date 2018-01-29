@@ -3,7 +3,7 @@ import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import './common/css/custom.css'
 //import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'
 
