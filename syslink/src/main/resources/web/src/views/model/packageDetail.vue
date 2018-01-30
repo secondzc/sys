@@ -318,6 +318,10 @@
                     _this.$http.post(url)
                         .then(function (response) {
                             _this.parentAttach = response.data.parentAttach;
+                            if(_this.parentAttach == null){
+                               return ;
+                            }
+
                             _this.details = response.data.data;
                             _this.pager.total = response.data.data.length;
                             var filterModel = response.data.data.filter(

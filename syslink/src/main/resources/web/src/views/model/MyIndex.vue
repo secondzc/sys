@@ -77,7 +77,7 @@
 
 
                           <el-dialog
-                                  title="移动模型"
+                                  title="移动模型至下列所选模型分类"
                                   :visible.sync="move.dialogVisible"
                                   width="40%"
                                   center
