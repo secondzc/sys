@@ -92,15 +92,29 @@
                     })
             },
             renderContent(h, { node, data, store }) {
-                return (
+
+                if(node.childNodes.length == 0){
+                    return (
+                        <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                        <span>
+                        <span>{node.label}</span>
+                        </span>
+                    </span>
+                );
+                }else{
+                    return (
                     <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
                     <span>
-                    <svg class="icon " aria-hidden="true">
-                    <use xlinkHref="#icon-file-b-"></use>
-                    `</svg>
+                                 <svg class="icon " aria-hidden="true">
+                                <use xlinkHref="#icon-file-b-"></use>
+                                `</svg>
+
                     <span>{node.label}</span>
                 </span>
-                </span>);
+                </span>
+                );
+                }
+
             }
         },
             data() {

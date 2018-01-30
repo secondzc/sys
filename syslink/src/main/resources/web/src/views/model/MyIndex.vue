@@ -154,7 +154,7 @@
                         </el-button-group>
                  <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
                 <el-button icon="el-icon-info"    size ="small"
-                           @click="showInfo" :class="{buttonFocus:info}"></el-button>
+                           @click="info=!info" :class="{buttonFocus:info}"></el-button>
                        </el-tooltip>
                   </div>
          
@@ -162,7 +162,7 @@
 
         </el-header>
         <el-container style="border-top:solid 1px #e7e7e7 ;height: 100%;overflow-y: hidden;">
-            <el-aside class="left-aside" id="leftAside">
+            <el-aside class="left-aside">
 
 
                <div style="display: inline-block;height: 50px; overflow: hidden;" id="searchMoudle">
@@ -348,7 +348,7 @@
             </el-main>
 
 
-            <el-main class="card-main" v-show="!listStatus" id="cardMain">
+            <el-main class="card-main" v-show="!listStatus">
                 <div style="overflow-y: hidden;border-bottom: solid 1px  #e7e7e7;height: 47px;padding: 5px">
                     <!--<span>排序</span>-->
                     <div style="display: inline-block;line-height: 30px;margin-left: 20px;margin-top: 9px;"><p>排序：</p></div>
@@ -372,11 +372,15 @@
                         </div>
                     </div> -->
                 </div>
-                
-                <div style="height: inherit;width: auto;overflow-y: hidden;">
-                	<div style="height: -webkit-calc(100% - 92px)!important;overflow-y: auto;">
-                		<div style="height: auto;overflow-y: hidden;display: flex;flex-wrap: wrap;margin:0 auto" id="cardWrapper"    >
-                		 <el-card class="Card" style="height: 300px;width: 190px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0"
+                <div  style="display: flex;flex-direction: column;height:inherit;width: auto;">
+
+                    <div  style=" overflow-x: hidden;overflow-y: auto;justify-content: flex-start;
+ 
+              display: flex;flex-wrap: wrap;height:calc(100% - 80px);border-bottom: solid 1px #e6e6e6;" id="cardWrapper">
+                    
+
+                    
+                                    <el-card class="Card" style="height: 300px;width: 190px; margin: 12px;"   v-for="(o, index) in repositories" :key="o.id" :offset="index > 0 ? 2 : 0"
                                     >
                                        <div slot="header"  style="width: inherit;height: inherit;">
                                    <span style="font-weight: bold;">{{o.name}}</span>
@@ -419,9 +423,12 @@
                                             </div>
                                         </div>
                                     </el-card>
-                                    </div>
-                	</div>
-                	   <el-pagination
+                           
+
+
+                    </div>
+                  
+                       <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrent"
                                     :current-page="pager.pageIndex"
@@ -430,22 +437,18 @@
                                     layout="total, sizes, prev, pager, next, jumper"
                                     :total="pager.total"  style="min-height: 30px;max-height: 40px;">
                             </el-pagination>
-                	
                 </div>
-                
-                
-                
-                
-            
+
+              
 
             </el-main>
-            <el-aside class="right-aside" v-show="info" id="rightAside">
+            <el-aside class="right-aside" v-show="info">
                 <div v-if="varLength == 0" style="height: inherit;">
                     <div style="height: inherit;overflow-y: hidden;">
                     <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
                     <div slot="header" class="clearfix" style="height: 21px">
                         <span style="font-weight: bold;">我的模型</span>
-                        <i class="el-icon-close" style="float: right;"  @click="showInfo"></i>
+                        <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
                     </div>
                     <div style="padding: 14px;">
                         <!--<div class="card-column">-->
@@ -460,7 +463,7 @@
                         <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
                           <div slot="header" class="clearfix" style="height: 21px">
                         <span style="font-weight: bold;">{{o.name}}</span>
-                      <i class="el-icon-close" style="float: right;"  @click="showInfo"></i>
+                      <i class="el-icon-close" style="float: right;"  @click="info=!info"></i>
     
                           </div>
                         <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;padding: 0px 0px 0px 15px;">
@@ -722,7 +725,6 @@
                     watch : 'inline-block',
                 },
                 currentRow:null,
-               
             };
         },
         computed: {
@@ -1374,66 +1376,12 @@
                 this.handleCurrent(this.pager.pageIndex -1);
                 this.handleCurrent(this.pager.pageIndex +1);
             },
-            showInfo(info){
-            	var _this = this;
-            	
-            let promise = new Promise(function(resolve, reject) {
-             _this.info = !_this.info;
-             resolve();
-            });
-
-             promise.then(function() {
-             	console.log('then',_this.info);
-             	_this.infoWidth();
-         
-            });
-            },
-            infoWidth(){
-               if($('#cardMain').is(':visible'))
-            	{
-            		const a = 190+24+2;
-   
-                    if(this.info)
-                    {
-            	      let b = $(window).width()-($('#leftAside').width()+$('#rightAside').width());
-                      let c = parseInt(b/a);
-            	      $("#cardWrapper").width(a*c);
-            	      console.log('then',this.info);
-
-                    }
-                    else
-                    {
-            
-            	      let b = $(window).width()-$('#leftAside').width();
-            	      let c = parseInt(b/a);
-            	      $("#cardWrapper").width(a*c);
-            	      console.log('then',this.info);
-                     }
-            	}
-            }
     },
 
 
         mounted() {
             this.$store.dispatch('sendA',this.$store.getters.privateDirId.data.id);
             this.$store.dispatch('sendB',this.$store.getters.privateDirId.data.id);
-                      
-            
-            
-          
-            const a = 190+24+2;
-            const b = $(window).width()-$('#leftAside').width();
-            let c = parseInt(b/a);
-            $('#cardWrapper').width(a*c);
-            
-            
-
-            var _this = this;
-            $(window).resize(function() {
-            	
-            	_this.infoWidth();
-
-            });
         }
     };
 
