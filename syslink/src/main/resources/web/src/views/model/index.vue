@@ -111,7 +111,7 @@
 
 
 
-                   <p>{{getRepos}}</p>
+                <p style="display: none;">{{getRepos}}</p>
 
                     <div style="position: absolute;left: 270px;display: inline-flex;
                     min-width: 300px;line-height: 30px">

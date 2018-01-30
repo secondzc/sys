@@ -4,7 +4,7 @@
     <!-- <div class="kz-tree__top">
       <el-button size="small" icon="plus" type="primary" @click="treeAdd({ id: 0 })">增加分类</el-button>
     </div> -->
-    <p>{{getTreeData}}</p>
+    <p style="display: none;">{{getTreeData}}</p>
     <el-tree
       ref="kzTree"
       :data ="treeData"
