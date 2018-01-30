@@ -73,7 +73,8 @@
     <select id="getModelFiles" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
         SELECT <include refid="baseColumnList" />
         FROM  attachment
-        WHERE model_id = #{modelId} and is_floder = 1 and icon_url is null or trim(icon_url)= ''
+        WHERE model_id = #{modelId} and is_floder = 1 and (icon_url is null or trim(icon_url)= '')
+        or model_id = #{modelId} and parent_id = 0
     </select>
     <select id="getModelDetail" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
         <!--SELECT <include refid="baseColumnList" />-->
@@ -165,5 +166,15 @@
          SELECT *
         from attachment
         where model_id = -1
+    </select>
+    <select id="getModelicaRelatedAttach" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Attachment">
+        SELECT <include refid="baseColumnList" />
+        from attachment
+        where attachment.model_id = -2 and attachment.ext is NULL and attachment.size = 0
+    </select>
+    <select id="queryListById" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
+        SELECT <include refid="baseColumnList" />
+        from attachment
+        where attachment.id = #{id}
     </select>
 </mapper>

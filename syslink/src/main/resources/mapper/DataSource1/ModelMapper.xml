@@ -20,7 +20,8 @@
         <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="model_text" property="modelText" jdbcType="LONGVARCHAR"/>
-        <result column="iconUrl" property="iconUrl" jdbcType="VARCHAR"/>
+        <result column="icon_url" property="iconUrl" jdbcType="VARCHAR"/>
+
     </resultMap>
     <resultMap id="mapResultMap" type="com.tongyuan.model.DTO.ModelDto">
         <id column="id" property="id" jdbcType="BIGINT"  />
@@ -41,23 +42,25 @@
         <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
         <result column="scope" property="scope" jdbcType="BOOLEAN"/>
         <result column="model_text" property="modelText" jdbcType="LONGVARCHAR"/>
-        <result column="iconUrl" property="iconUrl" jdbcType="VARCHAR"/>
+        <result column="icon_url" property="iconUrl" jdbcType="VARCHAR"/>
+        <result column="iconRealUrl" property="iconRealUrl" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="baseColumnList" >
         id,parent_id,name,classes,type,directory_id,discription,Import,Extends,icon_file_id,diagram_file_id,
-        info_file_id,is_deleted,user_id,create_time,last_update_time,scope,model_text
+        info_file_id,is_deleted,user_id,create_time,last_update_time,scope,model_text,icon_url
     </sql>
 
     <insert id="add" parameterType="com.tongyuan.model.domain.Model" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO model (parent_id, name,classes,type,directory_id,discription,Import,Extends,icon_file_id,diagram_file_id,
-        info_file_id,is_deleted,user_id,create_time,last_update_time,scope,model_text) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId}, #{discription},#{Import}, #{Extends}, #{iconFileId},
-        #{diagramFileId}, #{infoFileId}, #{isDeleted},#{userId}, #{createTime}, #{lastUpdateTime},#{scope},#{modelText})
+        info_file_id,is_deleted,user_id,create_time,last_update_time,scope,model_text,icon_url) VALUES (#{parentId}, #{name}, #{classes},#{type}, #{directoryId}, #{discription},#{Import}, #{Extends}, #{iconFileId},
+        #{diagramFileId}, #{infoFileId}, #{isDeleted},#{userId}, #{createTime}, #{lastUpdateTime},#{scope},#{modelText},#{iconUrl})
     </insert>
     <update id="update" parameterType="com.tongyuan.model.domain.Model">
         UPDATE model SET
         parent_id = #{parentId},name = #{name},classes = #{classes},type = #{type},directory_id = #{directoryId},discription = #{discription},Import = #{Import},Extends = #{Extends},icon_file_id = #{iconFileId}
          ,diagram_file_id = #{diagramFileId},info_file_id = #{infoFileId},is_deleted = #{isDeleted},user_id = #{userId},create_time = #{createTime},last_update_time = #{lastUpdateTime},scope = #{scope},model_text = #{modelText}
+         ,icon_url = #{iconUrl}
         WHERE id = #{id}
     </update>
     <delete id="deleteByIds"  parameterType="java.lang.String">
@@ -83,8 +86,8 @@
         FROM model
         where name = #{name} and is_deleted = "0"
     </select>
-    <select id="findAllModel" resultMap="baseResultMap" resultType="com.tongyuan.model.domain.Model">
-        SELECT m.*,a.icon_url as iconUrl
+    <select id="findAllModel" resultMap="mapResultMap" resultType="com.tongyuan.model.DTO.ModelDto">
+        SELECT m.*,a.icon_url as iconRealUrl
         from attachment a
         RIGHT JOIN
         (SELECT
