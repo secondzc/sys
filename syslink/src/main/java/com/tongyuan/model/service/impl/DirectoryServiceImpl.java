@@ -279,7 +279,7 @@ public class DirectoryServiceImpl implements DirectoryService{
             String AbsolutePath = parentF.getAbsolutePath().replace('\\', '/')+"/";
             String unzipPath = ResourceUtil.getFileDriectory();
             //获取实际路径
-            String currentPath = AbsolutePath.substring(unzipPath.length(), AbsolutePath.length());
+            String currentPath = AbsolutePath.substring(unzipPath.length(), AbsolutePath.length()-1);
             //TODO 文件删除
             Attachment directory = new Attachment();
             directory.setName(parentF.getName());

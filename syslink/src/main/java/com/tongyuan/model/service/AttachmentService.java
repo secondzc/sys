@@ -15,6 +15,7 @@ public interface AttachmentService {
     Long add(Attachment attachment);
     int update(Attachment attachment);
     int batchUpdate(List<Attachment> attachmentList);
+    public List<AttachmentDto> queryListById(Long attachmentId);
     public void delete(Long attachmentId);
     public Attachment queryListByPath(String parentPath);
     public Long addIconOfModel(String fileName,String iconUrl,Long size);
@@ -52,4 +53,8 @@ public interface AttachmentService {
     public List<Attachment> getFloderAttach(List<Attachment> modelAttachmentList,Attachment attachment,List<Attachment> attachmentList);
     //对attachmentDto 进行排序
     public void sortAttachDto(List<AttachmentDto> attachmentDtos);
+    //查询Modelica模型关联文件
+    public List<Attachment> getModelicaRelatedAttach();
+    //更新modelica上传的文件modelid
+    public void updateModelicaAttach();
 }

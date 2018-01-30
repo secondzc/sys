@@ -44,6 +44,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
+    public List<AttachmentDto> queryListById(Long attachmentId) {
+        return this.attachmentMapper.queryListById(attachmentId);
+    }
+
+    @Override
     public void delete(Long attachmentId) {
         this.attachmentMapper.delete(attachmentId);
     }
@@ -137,20 +142,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 
         //判断选中的文件是否为文件夹
 //        boolean floder = false;
-        AttachmentDto root = new AttachmentDto();
+        List<AttachmentDto> root = new ArrayList<>();
         for (AttachmentDto attchCatelog: modelFiles) {
             if(attchCatelog.getParentId() == 0) {
-                root = attchCatelog;
-                break;
+                root.add(attchCatelog);
             }
         }
-        if(root != null){
-            for (AttachmentDto attchCatelog: modelFiles) {
-                if(attchCatelog.getParentId() == root.getId()){
-                    modelDetail.add(attchCatelog);
-                }
-            }
-        }
+        modelDetail.addAll(root);
         return modelDetail;
     }
 
@@ -412,6 +410,16 @@ public class AttachmentServiceImpl implements AttachmentService {
                 }
             }
         });
+    }
+
+    @Override
+    public List<Attachment> getModelicaRelatedAttach() {
+        return this.attachmentMapper.getModelicaRelatedAttach();
+    }
+
+    @Override
+    public void updateModelicaAttach() {
+
     }
 
     /**

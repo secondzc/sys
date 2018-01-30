@@ -2,6 +2,7 @@ package com.tongyuan.model.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.domain.Attachment;
@@ -23,7 +24,7 @@ public interface ModelService {
      Model queryModelByName(String name);
      //根据Name和模型分类Id查找非package模型
      public Model queryByNameAndDir(Map<String, Object> params);
-    public List<Model> findAllModel();
+    public List<ModelDto> findAllModel();
     public List<Map<String,Object>> findAllModelMap();
     public List<Model> findRootModel();
     public List<Model> vagueSearchByName(Map<String, Object> params);
@@ -44,4 +45,10 @@ public interface ModelService {
     public JSONObject analysisXmlJsonModel(JSONObject xmlJson, Model model);
     //解析jsonCpmponent
     public void anslysisXmlComponents(JSONObject jsonComponents,Long modelId,Long directoryId);
+    //更新模型的目录结构
+    public void updateModelFramwork(GUser user, String fileName, Boolean scope);
+    //添加目录的文件关联
+    public void addModelAttachRelation(List<Model> modelList);
+    //更新组件的引用模型id
+    public void updateUploadComponentParentModelId();
 }

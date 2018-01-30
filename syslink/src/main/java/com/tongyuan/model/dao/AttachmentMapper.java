@@ -29,4 +29,7 @@ public interface AttachmentMapper {
     public List<Attachment> getDeleteAttach();
     //批量更新
     public int batchUpdate(@Param("list") List<Attachment> attachmentList);
+    //查询Modelica模型关联文件
+    public List<Attachment> getModelicaRelatedAttach();
+    public List<AttachmentDto> queryListById(Long attachmentId);
 }

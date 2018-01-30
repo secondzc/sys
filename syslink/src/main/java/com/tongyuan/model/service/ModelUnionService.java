@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.domain.ModelRepo;
 
 import java.util.Map;
@@ -12,4 +13,5 @@ public interface ModelUnionService {
     boolean update(ModelRepo model);
     int deleteByIds(String[] ids);
     ModelRepo queryUnion(Map<String,Object> param);
+    public void addModelUnion(GUser user, String fileName, Long modelId);
 }

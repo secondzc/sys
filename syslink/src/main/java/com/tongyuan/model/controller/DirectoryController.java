@@ -956,10 +956,10 @@ public class DirectoryController extends BaseController{
                 Map<String, String> svgPath = new HashMap<>();
                 //把上传的文件zip包存在映射路径
                 String caeZipAbsoluteUrl = "";
-                caeZipAbsoluteUrl = modelPath + "/" + fileName + ".zip";
+                caeZipAbsoluteUrl = modelPath  + fileName + ".zip";
                 resourceUtil.writeFile(caeZipAbsoluteUrl, 0, fileSize, bytes);
                 //查找到项目所在的位置
-                Attachment directory = attachmentService.queryListByPath(modelDir+fileName+"/");
+                Attachment directory = attachmentService.queryListByPath(modelDir+fileName);
                 //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
                 //文件所在位置
                 String fileXmlPath = directory.getFilePath();
@@ -978,13 +978,10 @@ public class DirectoryController extends BaseController{
                     //遍历xmlMap进行数据的插入
                     for (Map.Entry<String, JSONObject> entry : xmlAnalysisMap.entrySet()) {
                         //解析xmlmap 把数据存放到数据
-//                        modelController.insertData(entry, svgPath, scope, user, directory, directoryId);
                         modelService.insertModelicaData(entry,scope,user,directory,directoryId);
                     }
                     //更新模型的层次结构
-                    //获取package下面的所有model
-                    this.updateModelFramwork(name, fileName, scope);
-                    //        this.doCmd(name,fileXmlPath,fileName);
+                    modelService.updateModelFramwork(user,fileName,scope);
                     result = true;
                     System.out.println("上传完毕！！！");
 

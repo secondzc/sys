@@ -20,7 +20,7 @@ public interface ModelMapper {
     public Model queryModelByName(String name);
     //根据Name和模型分类Id查找非package模型
     public Model queryByNameAndDir(Map<String, Object> params);
-    public List<Model> findAllModel();
+    public List<ModelDto> findAllModel();
     //查询modelica的所有模型
     public List<Model> findAllModelicaModel();
     public List<Map<String,Object>> findAllModelMap();

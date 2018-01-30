@@ -1,5 +1,6 @@
 package com.tongyuan.model.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.domain.Variable;
 
 import java.util.List;
@@ -15,4 +16,9 @@ public interface VariableService {
     public long selectId();
     public List<Variable> findAllVariable();
     public List<Variable> findVarByModelId(Long modelId);
+    //添加xmlJson中vaiable参数的数据
+    public void DoVariableParaFromXml(JSONObject variableJson,Variable variable);
+    //添加一个variable根据jsonVariable
+    public void insertVariableFromJsonXml(JSONObject jsonVariable,Long modelId,Long componentId);
+
 }

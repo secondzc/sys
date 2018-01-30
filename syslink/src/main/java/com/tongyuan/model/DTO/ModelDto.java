@@ -59,6 +59,16 @@ public class ModelDto {
 
     //iconUrl
     private String iconUrl;
+    //iconRealUrl
+    private String iconRealUrl;
+
+    public String getIconRealUrl() {
+        return iconRealUrl;
+    }
+
+    public void setIconRealUrl(String iconRealUrl) {
+        this.iconRealUrl = iconRealUrl;
+    }
 
     public long getId() {
         return id;

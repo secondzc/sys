@@ -1,11 +1,14 @@
 package com.tongyuan.model.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tongyuan.model.dao.VariableMapper;
 import com.tongyuan.model.domain.Variable;
+import com.tongyuan.model.enums.VariableType;
 import com.tongyuan.model.service.VariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,5 +53,52 @@ public class VariableServiceImpl implements VariableService {
     @Override
     public List<Variable> findVarByModelId(Long modelId) {
         return this.variableMapper.findVarByModelId(modelId);
+    }
+
+    @Override
+    public void DoVariableParaFromXml(JSONObject variableJson,Variable variable) {
+        variable.setIsVariable(1);
+        variable.setCreateTime(new Date());
+        variable.setName((String) variableJson.get("@Name"));
+        if("True".equals(variableJson.get("@IsArray"))){
+            variable.setType(VariableType.getValueByKey(variableJson.get("@Type")+"[]"));
+        }
+        else{
+            variable.setType((String) variableJson.get("@Type"));
+        }
+        if (variableJson.get("@Value") != null) {
+            if(variableJson.get("@Value").toString().length() > 250){
+                variable.setDefaultValue("默认值过长！");
+            }else{
+                variable.setDefaultValue((String) variableJson.get("@Value"));
+            }
+        }
+        if (variableJson.get("@Unit") != null) {
+            variable.setUnits((String) variableJson.get("@Unit"));
+        }
+        if (variableJson.get("@Min") != null) {
+            variable.setLowerBound((String) variableJson.get("@Min"));
+        }
+        if (variableJson.get("@Max") != null) {
+            variable.setUpperBound((String) variableJson.get("@Max"));
+        }
+        if (variableJson.get("@IsParameter") != null) {
+            if ("True".equals(variableJson.get("@IsParameter"))) {
+                variable.setIsParam(1);
+            } else {
+                variable.setIsParam(0);
+            }
+        }
+        variable.setComponnetId(0);
+        variable.setIsInput(0);
+    }
+
+    @Override
+    public void insertVariableFromJsonXml(JSONObject jsonVariable,Long modelId,Long componentId) {
+        Variable variable = new Variable();
+        this.DoVariableParaFromXml(jsonVariable,variable);
+        variable.setModelId(modelId);
+        variable.setComponnetId(componentId);
+        this.add(variable);
     }
 }

@@ -15,6 +15,7 @@ import com.tongyuan.gogs.service.WatchService;
 import com.tongyuan.model.DTO.AttachmentDto;
 import com.tongyuan.model.DTO.FileJsonArrayDto;
 import com.tongyuan.model.DTO.FileTypeDto;
+import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.domain.*;
 import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.enums.ModelClasses;
@@ -428,9 +429,9 @@ public class ModelController extends  BaseController {
         JSONObject jo=new JSONObject();
         List<ModelWeb>  repositoryModelList = new ArrayList<>();
         //过滤后的modelList
-        List<Model> searchModel = new ArrayList<>();
+        List<ModelDto> searchModel = new ArrayList<>();
         //查询公有上传申签通过的模型
-        List<Model> reviewOfModel = new ArrayList<>();
+        List<ModelDto> reviewOfModel = new ArrayList<>();
         //查询所有direactory
         List<Directory> allDirectory = directoryService.findAllDirectory();
         //查询所有的repository
@@ -451,7 +452,7 @@ public class ModelController extends  BaseController {
         }
         try {
             List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
-            List<Model> allModelList = modelService.findAllModel();
+            List<ModelDto> allModelList = modelService.findAllModel();
             if(parent_id != null && parent_id != 0 && rootDirectoryList.size() >0){
                 //仅有一个directory
                 if(rootDirectoryList.size() >0){
@@ -461,7 +462,7 @@ public class ModelController extends  BaseController {
 
                 }
                 for (Long id : directoryIdList) {
-                    for (Model model: allModelList) {
+                    for (ModelDto model: allModelList) {
                         if(model.getDirectoryId() == id){
                             if(scope != null){
                                 if(model.getParentId() == 0 && model.getScope() == scope ){
@@ -488,14 +489,14 @@ public class ModelController extends  BaseController {
       //      if(parent_id != null  && rootDirectoryList.size() >0){
             if(parent_id == 0){
                 if(scope != null) {
-                    for (Model model : allModelList) {
+                    for (ModelDto model : allModelList) {
                         if (model.getParentId() == 0 && model.getScope() == scope) {
                             searchModel.add(model);
                             reviewOfModel.add(model);
                         }
                     }
                 }else{
-                    for (Model model : allModelList) {
+                    for (ModelDto model : allModelList) {
                         if (model.getParentId() == 0 && model.getScope() == true ) {
                             searchModel.add(model);
                         }
@@ -511,7 +512,7 @@ public class ModelController extends  BaseController {
 //                }
             }
             if(scope == null){
-                for (Model model :searchModel) {
+                for (ModelDto model :searchModel) {
                     for (ReviewFlowInstance reviewFlowInstance:allReviewFlow) {
                         if(reviewFlowInstance.getModelId() == model.getId() && reviewFlowInstance.getStatus() == 3){
                             reviewOfModel.add(model);
@@ -1191,7 +1192,7 @@ public class ModelController extends  BaseController {
     }
 
 
-    public void insertModelWeb(ModelWeb modelWeb ,List<Model> reviewOfModel,int i,GUser user){
+    public void insertModelWeb(ModelWeb modelWeb ,List<ModelDto> reviewOfModel,int i,GUser user){
         modelWeb.setIndex(reviewOfModel.get(i).getId());
         modelWeb.setTotal(reviewOfModel.size());
         modelWeb.setName(modelUtil.splitName(reviewOfModel.get(i).getName()));
@@ -1203,8 +1204,8 @@ public class ModelController extends  BaseController {
 //        modelWeb.setTextInfo(reviewOfModel.get(i).getTextInfo());
         modelWeb.setDirectoryId(reviewOfModel.get(i).getDirectoryId());
         modelWeb.setType(reviewOfModel.get(i).getType());
-        if(!StringUtil.isNull(reviewOfModel.get(i).getIconUrl())){
-            modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+resourceUtil.getMappedPackage()+resourceUtil.getunzipPath().substring(7)+reviewOfModel.get(i).getIconUrl());
+        if(!StringUtil.isNull(reviewOfModel.get(i).getIconRealUrl())){
+            modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+resourceUtil.getMappedPackage()+resourceUtil.getunzipPath().substring(7)+reviewOfModel.get(i).getIconRealUrl());
         }
         modelWeb.setUploadTime(reviewOfModel.get(i).getLastUpdateTime().getTime());
         modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
@@ -1413,7 +1414,11 @@ public class ModelController extends  BaseController {
                 List<AttachmentDto> modelFiles = attachmentService.getModelDetail(modelId);
                 modelDetail = attachmentService.getModelDetailList(modelFiles,modelId,modelDetail);
             }else{
-                List<AttachmentDto> modelFiles = attachmentService.getAttachByParentId(catalogId);
+                List<AttachmentDto> modelFiles = new ArrayList<>();
+                modelFiles = attachmentService.getAttachByParentId(catalogId);
+                if(modelFiles.size() == 0){
+                    modelFiles = attachmentService.queryListById(catalogId);
+                }
 //                modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,catalogId);
                 modelDetail.addAll(modelFiles);
             }

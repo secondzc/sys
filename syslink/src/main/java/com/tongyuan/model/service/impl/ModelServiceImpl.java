@@ -3,15 +3,23 @@ package com.tongyuan.model.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.tongyuan.exception.SqlNumberException;
 import com.tongyuan.gogs.domain.GUser;
 import com.tongyuan.model.DTO.ModelDto;
 import com.tongyuan.model.dao.ModelMapper;
 import com.tongyuan.model.domain.Attachment;
 import com.tongyuan.model.domain.Model;
+import com.tongyuan.model.domain.Variable;
+import com.tongyuan.model.domain.enums.ConstNodeInstanceStatus;
 import com.tongyuan.model.enums.ModelClasses;
-import com.tongyuan.model.service.ModelService;
+import com.tongyuan.model.service.*;
+import com.tongyuan.model.service.ReviewService.ReviewFlowInstanceService;
+import com.tongyuan.model.service.ReviewService.StatusChangeService;
 import com.tongyuan.pageModel.ModelWeb;
 import com.tongyuan.util.DateUtil;
+import com.tongyuan.util.FileX;
+import com.tongyuan.util.ModelUtil;
+import com.tongyuan.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +33,22 @@ import java.util.*;
 public class ModelServiceImpl implements ModelService{
     @Autowired
     ModelMapper modelMapper;
-
+    @Autowired
+    VariableService variableService;
+    @Autowired
+    ComponentService componentService;
+    @Autowired
+    ModelUnionService modelUnionService;
+    @Autowired
+    private StatusChangeService statusChangeService;
+    @Autowired
+    private ReviewFlowInstanceService reviewFlowInstanceService;
+    @Autowired
+    private ModelUtil modelUtil;
+    @Autowired
+    private ResourceUtil resourceUtil;
+    @Autowired
+    AttachmentService attachmentService;
 
     @Override
     public Long add(Model model) {
@@ -69,7 +92,7 @@ public class ModelServiceImpl implements ModelService{
     }
 
     @Override
-    public List<Model> findAllModel() {
+    public List<ModelDto> findAllModel() {
         return this.modelMapper.findAllModel();
     }
 
@@ -175,12 +198,16 @@ public class ModelServiceImpl implements ModelService{
             this.add(model);
             modelId = model.getId();
         }else{
+            validateModel.setDeleted(true);
+            this.update(validateModel);
+            model.setDeleted(false);
             model.setLastUpdateTime(DateUtil.getTimestamp());
-            model.setId(validateModel.getId());
-            this.update(model);
+            this.add(model);
             modelId = model.getId();
         }
-//        anslysisXmlComponents();
+        if(jsonComponents != null){
+            anslysisXmlComponents(jsonComponents,modelId,directoryId);
+        }
 //        insertVaiable(xmlMap,directoryId);
 
     }
@@ -201,6 +228,12 @@ public class ModelServiceImpl implements ModelService{
         return  modelTypeName.split("_")[0];
     }
 
+    /**
+     * 解析xml文件最外层的Model
+     * @param xmlJson
+     * @param model
+     * @return
+     */
     @Override
     public JSONObject analysisXmlJsonModel(JSONObject xmlJson, Model model) {
         JSONObject anslysisJson = (JSONObject) xmlJson.values().toArray()[0];
@@ -217,17 +250,153 @@ public class ModelServiceImpl implements ModelService{
         }
         model.setImport(importValue);
         model.setExtends(extendValue);
+        model.setName((String) anslysisJson.get("ModelName"));
         JSONObject jsonComponents = (JSONObject) anslysisJson.get("Components");
         return  jsonComponents;
     }
 
+    /**
+     * 解析Xml文件的component里面的数据
+     * @param jsonComponents
+     * @param modelId
+     * @param directoryId
+     */
     @Override
     public void anslysisXmlComponents(JSONObject jsonComponents, Long modelId, Long directoryId) {
-        JSONArray componentArr = (JSONArray) jsonComponents.get("component");
-        for (int i= 0; i< componentArr.size();i++){
-            JSONObject component = (JSONObject) componentArr.get(i);
-//            if((JSONObject) ((JSONObject) componentArr.get(i)).get())
+        if(jsonComponents.get("component") != null){
+            if(jsonComponents.get("component") instanceof JSONArray){
+                JSONArray componentArr = (JSONArray) jsonComponents.get("component");
+                for (int i= 0; i< componentArr.size();i++){
+                    JSONObject component = (JSONObject) componentArr.get(i);
+                    if("True".equals(component.get("@IsVariable"))){
+                        variableService.insertVariableFromJsonXml(component,modelId, (long) 0);
+                    }else{
+                        Long componentId = componentService.insertComponentFromXml(component,modelId, (long) 0);
+                        if(component.get("component") != null) {
+                            if (component.get("component") instanceof JSONArray) {
+                                //解析子component
+                                componentService.insertChildComponentJsonArr((JSONArray) component.get("component"),modelId,componentId);
+                            }
+                            else{
+                                componentService.insertChildComponentJsonObject((JSONObject) component.get("component"),modelId,componentId);
+                            }
+                        }
+                    }
+                }
+            }else{
+                JSONObject componentJsonObj = (JSONObject) jsonComponents.get("component");
+                if("True".equals(componentJsonObj.get("@IsVariable"))){
+                    variableService.insertVariableFromJsonXml(componentJsonObj,modelId, (long) 0);
+                }else{
+                    Long componentId = componentService.insertComponentFromXml(componentJsonObj,modelId, (long) 0);
+                    if(componentJsonObj.get("component") != null) {
+                        if (componentJsonObj.get("component") instanceof JSONArray) {
+                            //解析子component
+                            componentService.insertChildComponentJsonArr((JSONArray) componentJsonObj.get("component"),modelId,componentId);
+                        }
+                        else{
+                            componentService.insertChildComponentJsonObject((JSONObject) componentJsonObj.get("component"),modelId,componentId);
+                        }
+                    }
+                }
+            }
         }
+
+
+    }
+
+    //更新模型的目录结构
+    @Override
+    public void updateModelFramwork(GUser user, String fileName, Boolean scope) {
+        //查询刚插入的model
+        try {
+            //modelica模型包modelId
+            long modelicaPackageId = 0;
+            List<Model> packageList = this.getNullParId();
+            if (packageList.size() == 1) {
+                packageList.get(0).setParentId(0);
+                this.update(packageList.get(0));
+                 modelicaPackageId = packageList.get(0).getId();
+                modelUnionService.addModelUnion(user, fileName, modelicaPackageId);
+                //下面两行都有异常要抛出
+                //scope为1表示公共库，要参加审签
+                if (scope) {
+                        Long instanceId = null;
+                        instanceId = reviewFlowInstanceService.startInstance(modelicaPackageId);
+                        statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
+                }
+            } else if (packageList.size() <= 0) {
+                return;
+            } else {
+                for (Model model : packageList) {
+                    if (model.getName().split("\\.").length == 1) {
+                        model.setParentId(0);
+                        this.update(model);
+                        modelicaPackageId = model.getId();
+                        modelUnionService.addModelUnion(user, fileName, modelicaPackageId);
+                        //更新上传文件的目录modelId
+
+                        //下面两行都有异常要抛出
+                        if (scope) {
+                            Long instanceId = reviewFlowInstanceService.startInstance(modelicaPackageId);
+                            statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
+                        }
+                    }
+                }
+            }
+            //对model的文件路径进行设置
+            this.addModelAttachRelation(packageList);
+            for (Model modelParent : packageList) {
+                for (Model modelChild : packageList) {
+                    String childParentName = modelUtil.getParentName(modelChild.getName());
+                    if (childParentName != null && !childParentName.equals("")) {
+                        if (childParentName.equals(modelParent.getName())) {
+                            modelChild.setParentId(modelParent.getId());
+                            this.update(modelChild);
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 添加模型的关联文件属性
+     * @param modelList
+     */
+    @Override
+    public void addModelAttachRelation(List<Model> modelList) {
+        //查询刚插入的模型关联文件
+        List<Attachment> modelicaRelatedAttach = attachmentService.getModelicaRelatedAttach();
+        for (Model model:modelList) {
+            for (Attachment attachment : modelicaRelatedAttach) {
+                if((model.getName()+".diagram.svg").equals(attachment.getName())){
+                    model.setDiagramFileId(attachment.getId());
+                }
+
+                if((model.getName()+".icon.svg").equals(attachment.getName())){
+                    model.setIconFileId(attachment.getId());
+                    model.setIconUrl(attachment.getFilePath());
+                }
+                if((model.getName()+".info.html").equals(attachment.getName())){
+                    model.setInfoFileId(attachment.getId());
+                }
+                if((model.getName()+".mo").equals(attachment.getName())){
+                    String textAllInfo = FileX.read(resourceUtil.getunzipPath()+ attachment.getFilePath());
+                    model.setModelText(textAllInfo);
+                }
+            }
+        }
+    }
+
+    /**
+     * 更新上传组件的引用模型Id
+     */
+    @Override
+    public void updateUploadComponentParentModelId() {
+
     }
 
 
