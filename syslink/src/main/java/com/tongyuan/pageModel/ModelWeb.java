@@ -31,8 +31,8 @@ public class ModelWeb {
     //directoryparentId
     private  Long directoryParentId;
     private  Long directoryId;
-    private String createTime;
-    private String updateTime;
+    private Long createTime;
+    private Long updateTime;
     private Long uploadTime;
     private String repositoryName;
     //模型库数量
@@ -48,13 +48,6 @@ public class ModelWeb {
     //text信息（.mo文件）
     private String textInfo;
 
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public Boolean getAlreadyWatch() {
         return alreadyWatch;
@@ -128,12 +121,20 @@ public class ModelWeb {
         this.uploadTime = uploadTime;
     }
 
-    public String getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
     }
 
     public Long getDirectoryParentId() {

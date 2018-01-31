@@ -57,4 +57,6 @@ public interface AttachmentService {
     public List<Attachment> getModelicaRelatedAttach();
     //更新modelica上传的文件modelid
     public void updateModelicaAttach();
+    //获取模型目录下的所有文件
+    public List<AttachmentDto> getFilesOfModel(Long modelId);
 }

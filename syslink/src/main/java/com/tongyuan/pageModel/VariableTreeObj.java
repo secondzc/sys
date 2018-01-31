@@ -1,5 +1,7 @@
 package com.tongyuan.pageModel;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.util.List;
 
 /**
@@ -26,6 +28,16 @@ public class VariableTreeObj {
     private String IsInput;
     //parentId
     private Long parentId;
+
+    private Boolean isFloder;
+
+    public Boolean getFloder() {
+        return isFloder;
+    }
+
+    public void setFloder(Boolean floder) {
+        isFloder = floder;
+    }
 
     public Long getParentId() {
         return parentId;

@@ -106,6 +106,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 model.setId(modelRoot.getId());
                 model.setName(modelRoot.getName());
                 model.setParentId(modelRoot.getParentId());
+                model.setFloder(modelRoot.getFloder());
                 List<VariableTreeObj> rootChild = new ArrayList<>();
                 model.setChildren(rootChild);
                 modelCatalogList.add(model);
@@ -423,6 +424,14 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     /**
+     * 获取模型目录下的所有文件
+     */
+    @Override
+    public List<AttachmentDto> getFilesOfModel(Long modelId) {
+       return  this.attachmentMapper.getFilesOfModel(modelId);
+    }
+
+    /**
      * 获取模型的子
      * @param modelFiles
      * @param modelId
@@ -435,6 +444,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 treeObj.setId(modelFiles.get(i).getId());
                 treeObj.setName(modelFiles.get(i).getName());
                 treeObj.setParentId(modelFiles.get(i).getParentId());
+                treeObj.setFloder(modelFiles.get(i).getFloder());
                 List<VariableTreeObj> childVar = new ArrayList<>();
                 treeObj.setChildren(childVar);
                 childList.add(treeObj);

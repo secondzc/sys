@@ -1208,9 +1208,9 @@ public class ModelController extends  BaseController {
             modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+resourceUtil.getMappedPackage()+resourceUtil.getunzipPath().substring(7)+reviewOfModel.get(i).getIconRealUrl());
         }
         modelWeb.setUploadTime(reviewOfModel.get(i).getLastUpdateTime().getTime());
-        modelWeb.setCreateTime(DateUtil.format(reviewOfModel.get(i).getCreateTime(),"yyyy-MM-dd"));
+        modelWeb.setCreateTime(reviewOfModel.get(i).getCreateTime().getTime());
         if(reviewOfModel.get(i).getLastUpdateTime() != null){
-            modelWeb.setUpdateTime(DateUtil.format(reviewOfModel.get(i).getLastUpdateTime(),"yyyy-MM-dd"));
+            modelWeb.setUpdateTime(reviewOfModel.get(i).getLastUpdateTime().getTime());
         }
         modelWeb.setDiscription(reviewOfModel.get(i).getDiscription());
         modelWeb.setType(reviewOfModel.get(i).getType());
@@ -1386,15 +1386,23 @@ public class ModelController extends  BaseController {
                                 HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<VariableTreeObj> modelCatalogList = new ArrayList<>();
+        List<VariableTreeObj> catalogList = new ArrayList<>();
         try{
             //模型的所有文件（包含文件夹）
             List<Attachment> modelFiles = attachmentService.getModelFiles(modelId);
             modelCatalogList = attachmentService.getModelCatalog(modelCatalogList,modelFiles);
+            Model model = modelService.queryModelById(modelId);
+            VariableTreeObj rootCatalog = new VariableTreeObj();
+            rootCatalog.setName(model.getName());
+            rootCatalog.setId(model.getId());
+            rootCatalog.setParentId(model.getParentId());
+            rootCatalog.setChildren(modelCatalogList);
+            catalogList.add(rootCatalog);
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-        jo.put("data",modelCatalogList);
+        jo.put("data",catalogList);
         return returnSuccessInfo(jo);
     }
 
@@ -1450,15 +1458,28 @@ public class ModelController extends  BaseController {
                                      HttpServletRequest request , HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<AttachmentDto> modelFiles = new ArrayList<>();
+        FileTypeDto fileTypeDto = new FileTypeDto();
         try{
+            //查找默认的fileType图标
+            fileTypeDto = fileTypeService.getDefaultIcon();
             //模型目录下的文件和文件
-            modelFiles = attachmentService.getModelDetail(modelId);
+            modelFiles = attachmentService.getFilesOfModel(modelId);
         }catch(Exception e){
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
         for (AttachmentDto attachmentDto:modelFiles) {
+            if(StringUtil.isNull(attachmentDto.getFileIconUrl())){
+                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
+            }else{
+                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
+            }
+            attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
+            attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
             attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
+            if(attachmentDto.getFloder()){
+                attachmentDto.setFileSize("");
+            }
         }
         jo.put("data",modelFiles);
         return returnSuccessInfo(jo);

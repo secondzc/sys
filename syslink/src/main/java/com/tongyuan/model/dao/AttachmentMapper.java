@@ -32,4 +32,5 @@ public interface AttachmentMapper {
     //查询Modelica模型关联文件
     public List<Attachment> getModelicaRelatedAttach();
     public List<AttachmentDto> queryListById(Long attachmentId);
+    public List<AttachmentDto> getFilesOfModel(Long modelId);
 }
