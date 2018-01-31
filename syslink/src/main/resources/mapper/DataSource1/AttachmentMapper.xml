@@ -177,4 +177,20 @@
         from attachment
         where attachment.id = #{id}
     </select>
+    <select id="getFilesOfModel" resultMap="DtoMap" resultType="com.tongyuan.model.DTO.AttachmentDto">
+        SELECT *
+        FROM  attachment a
+        LEFT JOIN
+        (
+        SELECT b.*,c.fileIconUrl
+        from file_type b
+        LEFT JOIN
+        (SELECT icon_url,id,icon_url as fileIconUrl
+        from attachment
+        where 1=1 )c
+        on  b.attachment_id = c.id
+        ) f
+        on  a.ext = f.ext
+        where a.model_id = #{modelId} and a.is_floder = 0
+    </select>
 </mapper>
