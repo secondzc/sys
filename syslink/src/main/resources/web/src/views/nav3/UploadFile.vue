@@ -1,6 +1,6 @@
 <template>
     <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader"
-              @file-complete="fileComplete" @complete="complete"  @file-added="fileAdded" ></uploader>
+              @file-complete="fileComplete" @complete="complete"  @file-added="fileAdded" @upload-start="startUpload"></uploader>
     <!--@files-submitted="filesAdd"-->
 
 </template>
@@ -98,6 +98,11 @@
                 }
                 file.uniqueIdentifier = util.UUID.uuid(8,16);
             },
+            startUpload(){
+                console.log("开始上传！");
+                this.$emit("stopUpload");
+            }
+
         },
         mounted () {
             this.$nextTick(() => {
