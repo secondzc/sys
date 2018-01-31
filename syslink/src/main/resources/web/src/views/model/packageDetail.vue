@@ -41,7 +41,9 @@
                             highlight-current-row
                             :row-class-name="tableRowClassName"
                             :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
-                            style="width: 100%">
+                            style="width: 100%"
+                            @row-dblclick="checkFloder"
+                    >
                         <el-table-column
                                 label=""
                                 width="42" >
@@ -185,6 +187,11 @@
 
         },
         methods: {
+            checkFloder(row, event, column){
+                if(row.floder){
+                    this.handleWatch(column,row);
+                }
+            },
             handleSizeChange(val){
                 console.log(`每页 ${val} 条`);
                 this.pager.pageSize = val;
@@ -274,17 +281,19 @@
                     pageIndex: this.pager.pageIndex
                 };
                 var _this = this;
-                var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
+                var url = '/api/model/getModelFiles?modelId=' + _this.treeModelId;
                 _this.$http.post(url)
                     .then(function (response) {
                         _this.details = response.data.data;
                         var searchModel = response.data.data.filter(model => {
-                            if (para.name && model.name.indexOf(para.name) == -1) {
-                                return false
-                            }
-                            else {
-                                return true
-                            }
+//                            if (para.name && model.name.indexOf(para.name) == -1) {
+//                                return false
+//                            }
+//                            else {
+//                                return true
+//                            }
+                            var re =new RegExp("^.*"+ para.name +".*$", 'i');   //i表示不区分大小写
+                            return re.test(model.name);
                         })
                         var filterModel = searchModel.filter(
                             (u, index) => {

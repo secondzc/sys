@@ -67,7 +67,7 @@
 
             <div style="float: left;">文件上传</div>
     		<div style="width: 85%;margin: 0 auto;text-align: center;">
-    			<uploadFile @sendFiles="sendFiles" @sendFileLists="sendFileLists"></uploadFile>
+    			<uploadFile @sendFiles="sendFiles" @sendFileLists="sendFileLists" @stopUpload="stopUpload"></uploadFile>
     		</div>
     		
     		<div style="margin-top: 20px;">
@@ -160,14 +160,19 @@
             ...mapGetters(['modelId', 'bmsg', 'treeModelId']),
         },
         methods: {
+            stopUpload(){
+                this.submitLoading = true;
+            },
             returnToUploadModel(){
-                this.$emit("returnToModel")
+                this.$emit("returnToModel");
             },
             sendFiles(data){
                this.form.files = data;
+                this.submitLoading = false;
             },
             sendFileLists(data){
                 this.form.fileLists = data;
+                this.submitLoading = false;
             },
             submit(){
                 if(this.form.fileLists.length >0){

@@ -56,8 +56,10 @@
 
         methods: {
             filterNode(value, data) {
-                if (!value) return true;
-                return data.name.indexOf(value) !== -1;
+//                if (!value) return true;
+//                return data.name.indexOf(value) !== -1;
+                var re =new RegExp("^.*"+ value +".*$", 'i');   //i表示不区分大小写
+                return re.test(data.name);
             },
             treeNodeClick(arg,node,tree){
                 this.$emit('catalog_id', arg.id,node.parent.data);
@@ -93,25 +95,25 @@
             },
             renderContent(h, { node, data, store }) {
 
-                if(node.childNodes.length == 0){
+                if(node.childNodes.length > 0 || data.floder ){
+                    return (
+                        <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                        <span>
+                        <svg class="icon " aria-hidden="true">
+                        <use xlinkHref="#icon-file-b-"></use>
+                        `</svg>
+
+                    <span>{node.label}</span>
+                </span>
+                </span>
+                );
+                }else{
                     return (
                         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
                         <span>
                         <span>{node.label}</span>
                         </span>
                     </span>
-                );
-                }else{
-                    return (
-                    <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                    <span>
-                                 <svg class="icon " aria-hidden="true">
-                                <use xlinkHref="#icon-file-b-"></use>
-                                `</svg>
-
-                    <span>{node.label}</span>
-                </span>
-                </span>
                 );
                 }
 

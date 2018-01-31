@@ -140,12 +140,14 @@
                         _this.allrepository = response.data.data;
 //                        _this.pager.total = response.data.data.length;
                         var searchFils = response.data.data.filter(model => {
-                            if (data && model.name.indexOf(data) == -1) {
-                                return false
-                            }
-                            else {
-                                return true
-                            }
+//                            if (data && model.name.indexOf(data) == -1) {
+//                                return false
+//                            }
+//                            else {
+//                                return true
+//                            }
+                            var re =new RegExp("^.*"+ data +".*$", 'i');   //i表示不区分大小写
+                            return re.test(model.name);
                         })
                         _this.searchrepository = searchFils;
                         _this.pager.total = searchFils.length;

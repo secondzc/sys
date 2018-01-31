@@ -241,14 +241,17 @@
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
-                                        prop="createTime"
-                                        min-width="100" sortable>
-                                    
+                                        prop="uploadTime"
+                                        min-width="100"
+                                        sortable
+                                        :formatter="dateFormatter"
+                                >
                                 </el-table-column>
                                 <el-table-column
                                         label="修改日期"
                                         prop="updateTime"
-                                        min-width="100" sortable>
+                                        min-width="100" sortable
+                                        :formatter="dateFormatter">
                                   
                                 </el-table-column>
 
@@ -575,6 +578,7 @@
 
 
 <script >
+    import util from '../../common/js/util'
     import errGif from '@/assets/401_images/401.gif'
     import kzTree from './directory.vue';
     import upload from './Upload.vue'
@@ -868,12 +872,14 @@
                 .then(function (response) {
                     _this.allrepositorie = response.data.repositories;
                     var searchModel = response.data.repositories.filter(model => {
-                        if (para.name && model.name.indexOf(para.name) == -1) {
-                            return false
-                        }
-                        else {
-                            return true
-                        }
+//                        if (para.name && model.name.indexOf(para.name) == -1) {
+//                            return false
+//                        }
+//                        else {
+//                            return true
+//                        }
+                        var re =new RegExp("^.*"+ para.name +".*$", 'i');   //i表示不区分大小写
+                        return re.test(model.name);
                     })
                     var filterModel = searchModel.filter(
                         (u, index) => {
@@ -1265,9 +1271,9 @@
             },
             uplaodTitle(breadcrumbArray){
                 console.log(breadcrumbArray);
-                this.uploadFileTitle = "上传到:"
+                this.uploadFileTitle = "上传到:  "
                 for(var i=0; i<breadcrumbArray.length;i++){
-                    this.uploadFileTitle += breadcrumbArray[i].name + "/"
+                    this.uploadFileTitle += breadcrumbArray[i].name + "  /  "
                 }
                 this.uploadFileTitle = this.uploadFileTitle.substring(0,this.uploadFileTitle.length-1)
             },
@@ -1376,7 +1382,15 @@
                 this.handleCurrent(this.pager.pageIndex -1);
                 this.handleCurrent(this.pager.pageIndex +1);
             },
-    },
+            dateFormatter:function(row,column) {
+                if (row.createTime != null) {
+                    return util.formatDate.format(new Date(row.createTime),'yyyy-MM-dd');
+                }
+                if (row.updateTime != null) {
+                    return util.formatDate.format(new Date(row.updateTime),'yyyy-MM-dd');
+                }
+            },
+            },
 
 
         mounted() {
@@ -1388,7 +1402,6 @@
 </script>
 
 <style scoped lang="scss">
-    @import '~scss_vars';
     .main-container{
         height: 100%;
         overflow: hidden;
