@@ -4,24 +4,22 @@
 
       <router-link v-if="!item.hidden&&item.leaf&&item.children.length>0" :to="item.children[0].path">
         <el-menu-item class="naviItem" :index="item.children[0].path" >
-          <!-- <icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg> -->
-          <i :class="item.iconCls"></i><span slot="title">{{item.children[0].name}}</span>
+            <i :class="item.iconCls"></i><span slot="title">{{item.children[0].name}}</span>
         </el-menu-item>
       </router-link>
 
-      <el-submenu :index="item.name" v-if="!item.leaf&&!item.hidden">
+      <el-submenu :index="item.name" v-if="!item.leaf&&!item.hidden&&item.children">
         <template slot="title">
-          <!-- <icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg> -->
+         
           <i :class="item.iconCls"></i><span slot="title" >{{item.name}}</span>
         </template>
         <template v-for="child in item.children" v-if='!child.hidden'>
 
           <sidebar-item  v-if='child.children&&child.children.length>0' :routes='[child]'> </sidebar-item>
-
           <router-link v-else :to="child.path">
             <el-menu-item class="naviItem"  :index="child.path">
                <i :class="child.iconCls"></i>
-              <!-- <icon-svg v-if='child.icon' :icon-class="child.icon"></icon-svg> --><span >{{child.name}}</span>
+              <span >{{child.name}}</span>
             </el-menu-item>
           </router-link>
 
@@ -68,5 +66,15 @@ export default {
   .abc{
      
   }
+   a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: auto;
+    text-decoration: none;
+    text-decoration-line: none;
+    text-decoration-style: initial;
+    text-decoration-color: initial;
+}
+
+
 </style>
 

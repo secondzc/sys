@@ -70,47 +70,6 @@
   
 
 
-  
-
-
-   
-<!--   <el-col :span="24" class="header" >
-      <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-        {{collapsed?'':sysName}}
-      </el-col>
-  
-      <el-col :span="10 " style="flex: 0 0 230;">
-  
-        <i class="iconfont icon-weibiaoti261" @click="collapse" v-show="this.func.isLogin()&&this.func.isOpened()"></i>
-       
-         <i class="iconfont icon-weibiaoti26" @click="collapse" v-show="this.func.isLogin()&&!this.func.isOpened()"></i>
-
-        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toMySpace"  >工作台</a>
-        <a  href="http://gogs.modelica-china.com:8080/login.html#/index" v-show="!this.func.isLogin()" id="home-page">首页</a>
-        <a  href="http://gogs.modelica-china.com:3000/" v-show="this.func.isLogin()" >协同</a>
-        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toModel">模型</a>
-        <a  href="javascript:void(0)"  v-show="this.func.isLogin()" @click="toCorporate">仿真</a>
-        <a  href="javascript:void(0)"  v-show="!this.func.isLogin()"  @click="toLogin">登录</a>
-
-        
-
-      
-      </el-col>
-      <el-col :span="4" class="userinfo">
-        <el-dropdown v-if="this.func.isLogin()" trigger="hover">
-          <span class="el-dropdown-link userinfo-inner">
-            <i class="el-icon-bell"></i>
-         {{this.$store.state.userInfo.profile.name}}</span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="personalInfo">个人信息</el-dropdown-item>
-            <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-    </el-col>
-    </el-col>
-  -->
-
 
 
 
@@ -206,10 +165,6 @@ import SylTitle from '@/assets/systitle.png'
                 });
                
 
-            },
-            changePassWd()
-            {
-               this.$router.push('/changePassWd');
             },
             personalInfo()
             {

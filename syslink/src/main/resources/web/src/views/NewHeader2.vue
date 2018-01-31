@@ -7,10 +7,6 @@
 
 
 
-   <!-- <div style="min-width: 250px;margin-left: 100px;">
-     <img :src="SysLogo"  style="height: 40px;margin-top: 5px;" />
-   <img :src="SylTitle"  style="height: 40px;" />
-   </div> -->
 
 
    <div style="min-width: 350px;display: flex;">
@@ -141,10 +137,6 @@ import SylTitle from '@/assets/systitle.png'
                 });
                
 
-            },
-            changePassWd()
-            {
-               this.$router.push('/changePassWd');
             },
             personalInfo()
             {

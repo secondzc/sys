@@ -422,7 +422,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .kz-tree__wrapper {
     min-width: 250px;
     text-align: left;

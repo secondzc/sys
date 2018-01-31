@@ -4,10 +4,10 @@
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.realName" placeholder="真实姓名/用户名"  min-width="120" ></el-input>
+          <el-input v-model="filters.realName" @keyup.enter.native="getLogs" placeholder="真实姓名/用户名"  min-width="120" ></el-input>
         </el-form-item>
          <el-form-item>
-          <el-input v-model="filters.content" placeholder="内容"  min-width="120" ></el-input>
+          <el-input v-model="filters.content" placeholder="内容" @keyup.enter.native="getLogs" min-width="120" ></el-input>
         </el-form-item>
        
          <el-form-item>
@@ -17,7 +17,7 @@
       type="datetimerange"
       :picker-options="pickerOptions2"
       placeholder="选择时间范围"
-      align="right">
+      align="right"  >
     </el-date-picker>
           
         </el-form-item>
@@ -220,9 +220,10 @@
            
             this.getLogs();
           });
-        }).catch(() => {
-
-        });
+        }).catch(function (error) {
+              	 this.listLoading = false;
+                 console.log(error);
+          });
       }
 
  
