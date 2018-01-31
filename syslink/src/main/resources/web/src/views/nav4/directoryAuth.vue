@@ -34,7 +34,7 @@
   <div  style="display: flex;height: inherit;">
     <el-tree :data="data3"   node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"    @node-click="getUsers1"
-     :expand-on-click-node="false"   :default-expand-all="true"   :render-content="nodeRender"  style="width: 300px;">
+     :expand-on-click-node="false"   :default-expand-all="true"   :render-content="nodeRender1"  style="width: 300px;">
     </el-tree>
      
       <!--列表-->
@@ -122,7 +122,7 @@
       <hr/>
         <div style="display: flex;min-height: 300px;">
            
-        <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="max-width: 200px;"></el-tree>
+        <el-tree :data="data4" :props="defaultProps1" :render-content="nodeRender" :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="max-width: 200px;"></el-tree>
      
       <!--列表-->
         <el-table :data="users" highlight-current-row  center   height="100%" @selection-change="selsChange"  @cell-click="cellClick"  ref="directoryAuthTable">
@@ -322,32 +322,44 @@
          this.$refs.directoryAuthTable.toggleRowSelection(row,true);
      },
 
-      nodeRender (h, { _self, node, data }) {
-        // @todo: 使用jsx插件更好理解
-        const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
-          h('i', {
-                'class': data.icon,
-              
-              }),
-          h('span', data.name),
-          h('span',
-            {
-              'class': 'kz-tree-bar'
-            },
-
-          )
-        ]
-        return h(
-          'div',
-          {
-            'class': 'el-tree-node__label',
-            prop: {
-              children: '-'
-            }
-          },
-          childrenNodes
-        )
+      nodeRender1 (h, { _self, node, data }) {
+      	
+      	
+      	if(data.id===0)
+      	{
+      		return (<span>{data.name}</span>)
+      	}
+      	else
+      	{
+      		return (
+           <span class="spanEllipsis" title={data.name}>
+           <svg class="icon" aria-hidden="true" >
+       <use xlinkHref="#icon-wenjianjiayigongxiang"></use>
+      </svg>
+      {data.name}
+                 </span>
+      		)
+      	}
       },
+      	 nodeRender (h, { _self, node, data }) {
+      	
+      	
+      	if(data.id===0)
+      	{
+      		return (<span>{data.name}</span>)
+      	}
+      	else
+      	{
+      		return (
+           <span class="spanEllipsis" title={data.name}>
+      {data.name}
+           </span>
+      		)
+      	}
+      },
+       
+
+    
 
       handleChange(value) {
         console.log(value);

@@ -75,7 +75,7 @@
         }
     };
 </script>
-<style>
+<style scoped>
     .iconClassRoot {
         width:15px;
         height:15px;

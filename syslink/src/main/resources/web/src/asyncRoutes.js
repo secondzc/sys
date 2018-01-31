@@ -34,7 +34,6 @@ import Sidebar from './views/Sidebar.vue'
 
 import myRepo from './views/nav4/myRepo.vue'
 import cRepo from  './views/nav4/cRepo.vue'
-import changePassWd from './views/nav4/changePassWd.vue'
 import personalInfo from './views/nav4/personalInfo.vue'
 
 
@@ -102,17 +101,7 @@ export let  commonRoutes = [
             {path:'/logout',component:LogOut,name:'登出'}
         ]
     },
-      {
-        path: '',
-        component: NewHeader,
-        name: '个人设置',
-        hidden: true,
-        children: [
-            // { path: '/main', component: Main, name: '项目', hidden: true },
-            {path:'/changePassWd',component:changePassWd,name:'修改密码'}
-        ]
-    },
-      {
+    {
         path: '',
         component: NewHeader,
         name: '个人设置',

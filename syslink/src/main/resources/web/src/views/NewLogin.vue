@@ -95,6 +95,7 @@
           this.$message.error(msgerror);
       },
       handleSubmit2(ev) {
+      	this.logining = true;
           var _this = this;
           _this.$http.get('/api/loginUser'
               ,{
@@ -152,12 +153,14 @@
                       // //存储用户id
                       // localStorage.setItem('uid',JSON.stringify(uid));
                       
-                     
+                    
                     
                       _this.$router.push({path: '/brief'});
+                       	_this.logining = false;
                  }else{
                      //如果返回500，就在页面上方弹出错误信息
                      _this.errormsg(response.data.errormsg);
+                     _this.logining = false;
                  }
               })
               .catch(function (error) {

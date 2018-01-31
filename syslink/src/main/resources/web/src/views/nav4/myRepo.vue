@@ -4,7 +4,7 @@
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="仓库名"  min-width="120" ></el-input>
+          <el-input v-model="filters.name" placeholder="仓库名" @keyup.enter.native="getRepos" min-width="120" ></el-input>
         </el-form-item>
        <!--   <el-form-item>
           <el-input v-model="filters.content" placeholder="内容"  min-width="120" ></el-input>

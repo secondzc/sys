@@ -181,13 +181,29 @@
       },
       /* 构建分类title及工具 */
       nodeRender (h, { _self, node, data }) {
+      	let level;
+      	if(node.level<=5)
+      	{
+      		level = node.level;
+      	}
+      	else
+      	{
+      		level = 5;
+      	}
         
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
-            h('i', {
-                'class': 'iconfont icon-wenjianjia2',}
+        
+        
+
+            h('svg', {
+                'class': 'icon',attrs:{'aria-hidden':'true'},domProps:{title:data.name},style:{'margin-bottom':'5px'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiaweigongxiang'}})]
             ),
-          h('span', data.name),
+            
+
+          h('span',
+          {'class':'spanEllipsis',domProps:{title:data.name},style:{width:150-level*18+'px'}},
+          data.name),
           h('span',
             {
               'class': 'kz-tree-bar'
@@ -237,19 +253,7 @@
             ]
           )
         ]
-           const childrenNodes1 = data.id === 0 ? [h('span', data.name)] : [
-            h('i', {
-                'class': 'iconfont icon-wenjianjia2',}
-            ),
-          h('span', data.name),
-          h('span',
-            {
-              'class': 'kz-tree-bar'
-            },
       
-          )
-        ]
-        
        
          return h(
           'div',
@@ -430,7 +434,7 @@
   }
 </script>
 
-<style>
+<style >
   .kz-tree__wrapper {
     min-width: 250px;
     text-align: left;
@@ -465,13 +469,6 @@
   border: none;
   }
 
-  .el-tree-node__label
-  {
-    width: 120px;
-    white-space: nowrap;
-   text-overflow: ellipsis;
-    overflow: hidden;
-  }
 
   .iconfont{
     font-family:"iconfont";

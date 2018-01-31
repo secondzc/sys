@@ -174,7 +174,6 @@
               })
                .then((res) => {
                 this.editLoading = false;
-                //NProgress.done();
                 if(res.data.flag)
                 {
                   callback(new Error('角色名称重复'));
@@ -225,7 +224,6 @@
               })
                .then((res) => {
                 this.editLoading = false;
-                //NProgress.done();
                 if(res.data.flag)
                 {
                   callback(new Error('角色名称重复'));
@@ -448,10 +446,6 @@
           type: 'warning'
         }).then(() => {
           this.listLoading = true;
-          //NProgress.start();
-          // let  a = this.sels;
-          // let b = a.length;
-      //    console.log(b);
           let para = { id: this.currentRow.id};
           this.$http({
             url:'/api/role/delete',
@@ -477,9 +471,10 @@
             }
             this.getRoles();
           });
-        }).catch(() => {
-
-        });
+        }).catch(function (error) {
+          this.listLoading = false;
+          console.log(error);
+          });
       },
 
       modelAuthSubmit()
@@ -496,7 +491,6 @@
                 url:'api/DirectoryAuth/roleAdd',
                 data:para}).then((res)=>{
                 this.addLoading = false;
-                //NProgress.done();
                 if(res.data.flag)
                 {
                   this.$message({
@@ -515,7 +509,10 @@
             
                 this.modelVisible = false;
                  this.getRoles();
-              });        
+              }).catch(function (error) {
+              	 this.addLoading = false;
+                 console.log(error);
+          });      
 
 
         
@@ -611,7 +608,6 @@
           if (valid) {
 
               this.editLoading = true;
-              //NProgress.start();
               let para = Object.assign({}, this.editForm);
           
               this.$http({
@@ -621,7 +617,6 @@
               })
                .then((res) => {
                 this.editLoading = false;
-                //NProgress.done();
                 if(res.data.flag)
                 {
                   this.$message({
@@ -640,7 +635,10 @@
                 this.$refs['editForm'].resetFields();
                 this.editFormVisible = false;
                 this.getRoles();
-              });
+              }).catch(function (error) {
+              	 this.editLoading = false;
+                 console.log(error);
+          });
           }
         });
       },
@@ -662,7 +660,6 @@
               })
                .then((res) => {
                 this.permissionLoading = false;
-                //NProgress.done();
                 if(res.data.flag)
                 {
                   this.$message({
@@ -681,7 +678,10 @@
                 this.permissionVisible = false;
                 this.getGroups();
                 this.getRoles();
-              });
+              }).catch(function (error) {
+              	 this.permissionLoading = false;
+                 console.log(error);
+          });
            
           }
         });

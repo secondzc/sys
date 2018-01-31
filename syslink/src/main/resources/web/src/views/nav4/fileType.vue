@@ -17,7 +17,7 @@
     			<el-card class="Card" style="height: 210px;width: 180px;margin: 12px;"   v-for="(o, index) in modelTypes" :key="o.id" :offset="index > 0 ? 2 : 0"
               >
                   <div slot="header"  style="width: inherit;height: inherit;" >
-                      <span style="font-weight: bold;">{{o.ext}}</span>
+                      <span class="spanEllipsis" style="width: 80px;font-weight: bold;" :title="o.ext">{{o.ext}}</span>
                       <i class="el-icon-delete iconHover" style="max-width: 14px;float: right;font-size: 20px;" @click="handleDel(o)" > </i>
                       <i class="el-icon-edit iconHover" style="max-width: 14px;float: right;font-size: 20px;margin-right: 20px" @click="handleEdit(o)" > </i>
                   </div>
@@ -481,7 +481,11 @@
    $(window).resize(function() {
 
    	let c = parseInt($('#wrapper').width()/206);
-     $("#cardWrapper").width(a*c);
+   	if(c>=1)
+   	{
+   		 $("#cardWrapper").width(a*c);
+   	}
+    
     });
    }
   }

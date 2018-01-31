@@ -3,25 +3,26 @@
      <div >
     <template v-for="item in routers">
 
-      <router-link v-if="!item.hidden&&item.leaf&&item.children.length>0" :to="item.children[0].path">
+     
+          
+          <router-link v-if="!item.hidden&&item.leaf&&item.children.length>0" :to="item.children[0].path">
         <el-menu-item class="naviItem" :index="item.children[0].path" >
-          <!-- <icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg> -->
-          <i :class="item.iconCls"></i><span slot="title" v-show="opened">{{item.children[0].name}}</span>
+            <i :class="item.iconCls"></i><span slot="title" v-show="opened">{{item.children[0].name}}</span>
         </el-menu-item>
       </router-link>
 
-      <el-submenu :index="item.name" v-if="!item.leaf&&!item.hidden">
+      <el-submenu :index="item.name" v-if="!item.leaf&&!item.hidden&&item.children.length>0">
         <template slot="title">
-          <!-- <icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg> -->
+         
           <i :class="item.iconCls"></i><span slot="title" v-show="opened">{{item.name}}</span>
         </template>
         <template v-for="child in item.children" v-if='!child.hidden'>
 
           <sidebar-item  v-if='child.children&&child.children.length>0' :routes='[child]'> </sidebar-item>
-
           <router-link v-else :to="child.path">
             <el-menu-item class="naviItem"  :index="child.path">
-              <i v-if='child.iconCls' :class="child.iconCls"></i><span >{{child.name}}</span>
+               <i :class="child.iconCls"></i>
+              <span >{{child.name}}</span>
             </el-menu-item>
           </router-link>
 
@@ -51,11 +52,14 @@ export default {
    //   return !this.sidebar.opened
    return false
     }
+  },
+  mounted(){
+    console.log(this.routers);
   }
 }
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
   
   .naviMenu
   {
@@ -95,6 +99,20 @@ export default {
     z-index: 1000;
     overflow-x: visible;
 }
+  span:hover{
+  	visibility: hidden;
+  	
+  }
+  span{
+  	transition-property: visibility;
+transition-duration: 0.02s;
+-moz-transition-property: visibility; 
+-moz-transition-duration: 0.02s; 
+-webkit-transition-property: visibility;
+-webkit-transition-duration: 0.02s; 
+-o-transition-property: visibility; 
+-o-transition-duration: 0.02s; 
+  }
 
 </style>
 

@@ -56,9 +56,6 @@ function filterAsyncRouter(limitRoutes, auth,role) {
 }
 
 
-/**
-**通过localStorage 中的uid获取用户信息
-**/
 function getUserInfoFirst(userName){
   return axios.post('api/user/getUserInfoFirst',userName)
 }
@@ -67,8 +64,8 @@ function getUserInfo(){
   return axios.post('api/user/getUserInfo')
 }
 
-function getSession(JSESSIONID){
-  return axios.post('api/user/sessionJudge',JSESSIONID)
+function getSession(){
+  return axios.post('api/user/sessionJudge')
 }
 
 function autoPass(userName){
@@ -95,18 +92,18 @@ function clearLogin() {
 function clearLogin1()
 {
    let gogsDomain = global_.gogsHostPath;
-    let gogsPort = global_.gogsPort;
-     let domain = global_.HostPath;
+   let gogsPort = global_.gogsPort;
+   let domain = global_.HostPath;
 
 
       if(gogsPort.length>0)
-           {
-                  return   axios.get ("http://"+domain+gogsPort+'/user/logout');
-          }
-                else
-           {
-                  window.location.href="http://"+domain+'/'+gogsDomain;
-                  return   axios.get('http://'+domain+'/'+gogsDomain+'/user/logout')
+        {
+          return   axios.get ("http://"+domain+gogsPort+'/user/logout');
+        }
+      else
+        {
+          window.location.href="http://"+domain+'/'+gogsDomain;
+          return   axios.get('http://'+domain+'/'+gogsDomain+'/user/logout');
         }
            
 }
