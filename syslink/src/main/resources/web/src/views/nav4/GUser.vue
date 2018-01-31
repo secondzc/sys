@@ -12,7 +12,7 @@
           <el-form :inline="true" :model="filters" >
       
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="用户名/真实姓名/邮箱"></el-input>
+          <el-input v-model="filters.name" @keyup.enter.native="query" placeholder="用户名/真实姓名/邮箱"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" v-on:click="query">查询</el-button>
@@ -32,10 +32,10 @@
      
 
   <div  style="display: flex;height: inherit;">
-     <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="max-width: 200px;"></el-tree>
+     <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :render-content="nodeRender1"   :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="width: 200px;"></el-tree>
      
       <!--列表-->
-    <el-table :data="users" highlight-current-row  center    height="100%"@selection-change="selsChange" class="tableWrapper" ref="userTable">
+    <el-table :data="users" highlight-current-row  center    height="100%" @selection-change="selsChange" class="tableWrapper" ref="userTable">
       <el-table-column type="selection" width="55">
       </el-table-column>
           
@@ -405,7 +405,7 @@
     <el-tree :data="data3" node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"  
     :default-checked-keys="modelTree"   :default-expand-all="true"
-    :expand-on-click-node="false"   :render-content="nodeRender">
+    :expand-on-click-node="false"   :render-content="nodeRender2">
     </el-tree>
 
     </el-form>
@@ -444,8 +444,14 @@
         {
           if (re.test(value))
           {
-             
-             let para = {name:''};
+          	
+          	if(value.length>20)
+          	{
+          		 callback(new Error('用户名不得超过20个字符'));
+          	}
+          	else
+          	{
+          		let para = {name:''};
               para.name=value;
             
               this.$http({
@@ -467,6 +473,9 @@
                 
               });
           
+          	}
+             
+             
 
                
           } 
@@ -488,8 +497,17 @@
         {
           if (re.test(value))
           {
+          	
+          	if(value.length>10)
+          	{
+          		callback(new Error('真实姓名不得超过10个字符'));
+          	}
+          	else
+          	{
+          		callback();
+          	}
          
-            callback();
+            
     
           } 
           else
@@ -822,17 +840,54 @@
       }
     },
     methods: {
-
-           nodeRender(h, { node, data, store }) {
+    	    nodeRender1(h, { node, data, store }) {
              if(!data.parentId==0)
             {
-                return (
+                return (              
+               <span title={node.label} class="spanEllipsis">{node.label}</span>
+                );
+            }
+            else
+            {
+                   return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
             <i class ="iconfont icon-wenjianjia" />
-              <span>{node.label}</span>
+              <span title={node.label}>{node.label}</span>
             </span>
-            <span>
+          
+          </span>  
+          );
+            }
+
+
+      
+      },
+
+           nodeRender2(h, { node, data, store }) {
+           	
+           	let level;
+           	if(node.level<=10)
+           	{
+           		level = node.level;
+           	}
+           	else
+           	{
+           		level = 10;
+           	}
+           	let minWidth = level*18;
+           	
+             if(!data.parentId==0)
+            {
+                return (
+          <span style="width:100%;display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+            <span style="max-width:minWidth;"   class="spanEllipsis" title={node.label}>
+              <svg class="icon" aria-hidden="true" >
+              <use xlinkHref="#icon-wenjianjiayigongxiang"></use>
+           </svg>
+              {node.label}
+            </span>
+            <span style="margin-right:10px;min-width:200px;">
             <el-radio-group v-model={data.mode}>
             <el-radio  label={1}>可读</el-radio>
             <el-radio label={2}>读/写</el-radio>
@@ -848,7 +903,9 @@
                    return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-            <i class ="iconfont icon-wenjianjia" />
+              <svg class="icon" aria-hidden="true" >
+       <use xlinkHref="#icon-wenjianjiayigongxiang"></use>
+      </svg>
               <span>{node.label}</span>
             </span>
           

@@ -104,8 +104,14 @@
         {
           if (re.test(value))
           {
-             
-             let para = {name:''};
+          	
+          	if(value.length>15)
+          	{
+          		 callback(new Error('部门名称不得超过15个字符'));
+          	}
+          	else
+          	{
+          		 let para = {name:''};
               para.name=value;
             
               this.$http({
@@ -127,6 +133,9 @@
                 
               });
           
+          	}
+             
+            
 
                
           } 
@@ -156,7 +165,14 @@
             }
             else
             {
-               let para = {name:''};
+            	
+            	if(value.length>15)
+          	  {
+          		 callback(new Error('部门名称不得超过15个字符'));
+          	  }
+          	   else
+          	  {
+          		 let para = {name:''};
               para.name=value;
             
               this.$http({
@@ -178,6 +194,8 @@
                 
               });
           
+          	  }
+              
             }
                                       
           } 

@@ -63,9 +63,7 @@ router.beforeEach((to, from, next) => {
 
 
 
-    let sessionId = Cookies.get('JSESSIONID') 
-     let SID = {SID:sessionId};
-     store.dispatch('GetSession',SID).then(()=>{
+     store.dispatch('GetSession').then(()=>{
        console.log(store.getters.session)
        if(store.getters.session)
      {
