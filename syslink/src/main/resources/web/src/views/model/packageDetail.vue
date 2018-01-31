@@ -22,7 +22,7 @@
 
                                 <el-form-item style="margin-left: 10px;margin-top: -8px">
 
-                                    <el-input placeholder="文件名称" v-model="filters.name" class="input-with-select">
+                                    <el-input placeholder="文件名称" v-model="filters.name" class="input-with-select" @keydown.enter.native="getFile">
 
                                         <el-button slot="append" icon="el-icon-search"  v-on:click="getFile"></el-button>
                                     </el-input>
