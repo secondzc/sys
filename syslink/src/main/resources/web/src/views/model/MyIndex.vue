@@ -401,7 +401,7 @@
                                                 <div >上传者：{{o.userName}}</div> -->
                                                  <div><span>模型名称：{{o.repositoryName}}</span></div>
                                                   <div><span>上传者：{{o.userName}}</span></div>
-                                                   <div><span>上传日期：{{o.createTime}}</span></div>
+                                                   <div><span>上传日期：{{dateFormatter(o)}}</span></div>
                                                 <div>
                                                   
                                                 
