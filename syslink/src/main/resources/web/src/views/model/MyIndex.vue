@@ -237,7 +237,10 @@
                                 <el-table-column  label="名称"
                                         prop="name"
                                         min-width="100" sortable  >
-                                 
+                        <template slot-scope="scope">
+                            
+                            <span style="min-width:100px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
+                           </template>
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
@@ -402,7 +405,7 @@
                                                   
                                                 
                                                
-                                                    <div :style="{display: style.watch}">
+                                                    <!--<div :style="{display: style.watch}">
                                                         <a class="ui basic button" @click="addWatch(item)">
                                                             <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
                                                             <i v-else="o.alreadyWatch == false" class="iconfont icon-quxiaoguanzhu01"  ></i>
@@ -415,7 +418,7 @@
                                                             <i v-else="o.alreadyStar == false" class="iconfont icon-guanzhu4"  ></i>
                                                             {{o.numberStar}}
                                                         </a>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                                 <!--<h4>上传日期：{{item.createTime}}</h4>-->
                                                 <!--<div >描述：{{item.discription}}</div>-->
@@ -898,12 +901,13 @@
         modelVar: function (item) {
             this.$store.dispatch('sendModelId', item.index);
             this.$store.dispatch('sendTreeModelId', item.index);
-            if(item.type == "Modelica"){
-                this.$router.push({path: '/model/packageDiagram'});
-            }
-            else{
-                this.packageDetailDialog.dialogVisible = true;
-            }
+//          if(item.type == "Modelica"){
+//              this.$router.push({path: '/model/packageDiagram'});
+//          }
+//          else{
+//              this.packageDetailDialog.dialogVisible = true;
+//          }
+            this.packageDetailDialog.dialogVisible = true;
         },
         modelVariable: function (model) {
             if(model == null){
@@ -916,9 +920,6 @@
             if (model == null) {
                 $("#variable")[0].style.display = "none";
             }
-//            if(model.type == 'Modelica'){
-//                this.style.watch = 'inline-block';
-//            }
             console.log(model);
         },
         onSortFinsh(repositories){
@@ -971,17 +972,21 @@
             console.log(index, row);
             this.$store.dispatch('sendModelId', row.index);
             this.$store.dispatch('sendTreeModelId', row.index);
-            if(row.type == "Modelica"){
-                this.$router.push({path: '/model/packageDiagram'});
-            }
-            else{
-                this.packageDetailDialog.dialogVisible = true;
+//          if(row.type == "Modelica"){
+//              this.$router.push({path: '/model/packageDiagram'});
+//          }
+//          else{
+//              this.packageDetailDialog.dialogVisible = true;
+//              this.$refs.DetailDialog.$nextTick(function(){
+//                  console.log("dom渲染完了");
+//                  this.$emit("PackageDetailReady",row.index)
+//              });
+//          }
+             this.packageDetailDialog.dialogVisible = true;
                 this.$refs.DetailDialog.$nextTick(function(){
                     console.log("dom渲染完了");
                     this.$emit("PackageDetailReady",row.index)
                 });
-            }
-
         },
             PackageDetailReady(data){
                 this.$refs.packageDetail.getModelDet(data);
@@ -1251,23 +1256,24 @@
             uploadFile(){
                 this.file.dialogVisible = true;
             },
-            validateCAE(o){
-                if(o.type == 'Modelica'){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            },
+//          validateCAE(o){
+//              if(o.type == 'Modelica'){
+//                  return true;
+//              }
+//              else{
+//                  return false;
+//              }
+//          },
             validateCAEDownload(o){
-                if(o.type == 'Modelica'){
-                    this.style.watch = 'inline-block';
-                    return true;
-                }
-                else{
-                    this.style.watch = 'none';
-                    return false;
-                }
+//              if(o.type == 'Modelica'){
+//                  this.style.watch = 'inline-block';
+//                  return true;
+//              }
+//              else{
+//                  this.style.watch = 'none';
+//                  return false;
+//              }
+                return false;
             },
             uplaodTitle(breadcrumbArray){
                 console.log(breadcrumbArray);
@@ -1386,8 +1392,6 @@
                 if (row.createTime != null) {
                     return util.formatDate.format(new Date(row.createTime),'yyyy-MM-dd');
                 }
-            },
-            dateFormatterupdateTime:function(row,column) {
                 if (row.updateTime != null) {
                     return util.formatDate.format(new Date(row.updateTime),'yyyy-MM-dd');
                 }

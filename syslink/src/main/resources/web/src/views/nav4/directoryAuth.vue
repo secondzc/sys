@@ -34,7 +34,7 @@
   <div  style="display: flex;height: inherit;">
     <el-tree :data="data3"   node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"    @node-click="getUsers1"
-     :expand-on-click-node="false"   :default-expand-all="true"   :render-content="nodeRender1"  style="width: 300px;">
+     :expand-on-click-node="false"   :default-expand-all="true"   :render-content="nodeRender1"  style="width: 300px;height:100%;overflow-y:auto">
     </el-tree>
      
       <!--列表-->

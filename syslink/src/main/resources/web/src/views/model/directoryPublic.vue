@@ -197,12 +197,12 @@
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
            h('svg', {
-                'class': 'icon',attrs:{'aria-hidden':'true'},domProps:{title:data.name},style:{'margin-bottom':'5px'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiayigongxiang'}})]
+                'class': 'icon',attrs:{'aria-hidden':'true'},domProps:{title:data.name},style:{'vertical-align':'baseline'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiayigongxiang'}})]
             ),
             
 
           h('span',
-          {'class':'spanEllipsis',domProps:{title:data.name},style:{width:150-level*18+'px'}},
+          {'class':'spanEllipsis',domProps:{title:data.name},style:{width:150-level*18+'px','margin-left':'0.1em'}},
           data.name),
           h('span',
             {

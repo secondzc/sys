@@ -32,7 +32,7 @@
      
 
   <div  style="display: flex;height: inherit;">
-     <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :render-content="nodeRender1"   :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="width: 200px;"></el-tree>
+     <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :render-content="nodeRender1"   :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="width: 200px;height:100%;overflow-y:auto"></el-tree>
      
       <!--列表-->
     <el-table :data="users" highlight-current-row  center    height="100%" @selection-change="selsChange" class="tableWrapper" ref="userTable">
@@ -880,14 +880,14 @@
              if(!data.parentId==0)
             {
                 return (
-          <span style="width:100%;display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-            <span style="max-width:minWidth;"   class="spanEllipsis" title={node.label}>
+          <span     style="width:100%;font-size: 14px; ">
+            <span style={{ maxWidth:200-minWidth+'px',minWidth:'100px'}} class="spanEllipsis" title={node.label}>
               <svg class="icon" aria-hidden="true" >
               <use xlinkHref="#icon-wenjianjiayigongxiang"></use>
            </svg>
               {node.label}
             </span>
-            <span style="margin-right:10px;min-width:200px;">
+            <span style="margin-right:10px;min-width:250px;position:absolute;right:5%">
             <el-radio-group v-model={data.mode}>
             <el-radio  label={1}>可读</el-radio>
             <el-radio label={2}>读/写</el-radio>

@@ -96,25 +96,35 @@
                     })
             },
             renderContent(h, { node, data, store }) {
+            	
+            	let level ;
+            	if(node.level>10)
+            	{
+            		level=10;
+            	}
+            	else
+            	{
+            		level = node.level;
+            	}
 
                 if(node.childNodes.length > 0 || data.floder ){
                     return (
-                        <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                        <span>
+                        
+                        <span style={{width:298-18*level+'px'}} title={node.label} class="spanEllipsis">
                         <svg class="icon " aria-hidden="true">
                         <use xlinkHref="#icon-file-b-"></use>
                         `</svg>
 
-                    <span>{node.label}</span>
+                {node.label}
                 </span>
-                </span>
+              
                 );
                 }else{
                     return (
-                        <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                        <span>
-                        <span>{node.label}</span>
-                        </span>
+                        <span title={node.label}>
+                      
+                       {node.label}
+                    
                     </span>
                 );
                 }
@@ -136,7 +146,7 @@
 
     };
 </script>
-<style>
+<style scoped>
     .iconClassRoot {
         width:15px;
         height:15px;

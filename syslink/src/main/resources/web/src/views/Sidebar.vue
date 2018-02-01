@@ -99,10 +99,10 @@ export default {
     z-index: 1000;
     overflow-x: visible;
 }
-  span:hover{
+  /*span:hover{
   	visibility: hidden;
   	
-  }
+  }*/
   span{
   	transition-property: visibility;
 transition-duration: 0.02s;

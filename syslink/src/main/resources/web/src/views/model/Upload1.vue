@@ -76,7 +76,7 @@
     			 <div style="float: right;height: 30px;width: 100%" >
                     <el-button style="float: right;margin-left: 10px" @click="closeDia">取消</el-button>
                     <el-button style="float: right" type="primary" @click.native="onSubmit" :loading="submitLoading">提交</el-button>
-                    <el-button style="float: right" type="primary" @click.native="returnToUploadModel">上传模型</el-button>
+                 <!--   <el-button style="float: right" type="primary" @click.native="returnToUploadModel">上传模型</el-button>-->
                 </div>
     		</div>
     	</div>

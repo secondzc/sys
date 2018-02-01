@@ -80,7 +80,7 @@ function getPublicDirId(publicDir){
 }
 
 function clearLogin() {
-     Cookies.remove('syslink')
+      Cookies.remove('syslink')
       Cookies.remove('gogs_awesome')
     return    axios.post('api/user/destory')
               

@@ -232,7 +232,11 @@
 
                                 <el-table-column  label="名称"
                                         prop="name"
-                                        min-width=100 sortable>
+                                        min-width=100 sortable >
+                                <template slot-scope="scope">
+                            
+                            <span style="min-width:100px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
+                           </template>
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
@@ -890,12 +894,13 @@
         modelVar: function (item) {
             this.$store.dispatch('sendModelId', item.index);
             this.$store.dispatch('sendTreeModelId', item.index);
-            if(item.type == "Modelica"){
-                this.$router.push({path: '/model/packageDiagram'});
-            }
-            else{
-                this.packageDetailDialog.dialogVisible = true;
-            }
+//          if(item.type == "Modelica"){
+//              this.$router.push({path: '/model/packageDiagram'});
+//          }
+//          else{
+//              this.packageDetailDialog.dialogVisible = true;
+//          }
+             this.packageDetailDialog.dialogVisible = true;
         },
         modelVariable: function (model) {
             if(model == null){
@@ -965,16 +970,21 @@
             console.log(index, row);
             this.$store.dispatch('sendModelId', row.index);
             this.$store.dispatch('sendTreeModelId', row.index);
-            if(row.type == "Modelica"){
-                this.$router.push({path: '/model/packageDiagram'});
-            }
-            else{
-                this.packageDetailDialog.dialogVisible = true;
+//          if(row.type == "Modelica"){
+//              this.$router.push({path: '/model/packageDiagram'});
+//          }
+//          else{
+//              this.packageDetailDialog.dialogVisible = true;
+//              this.$refs.DetailDialog.$nextTick(function(){
+//                  console.log("dom渲染完了");
+//                  this.$emit("PackageDetailReady",row.index)
+//              });
+//          }
+             this.packageDetailDialog.dialogVisible = true;
                 this.$refs.DetailDialog.$nextTick(function(){
                     console.log("dom渲染完了");
                     this.$emit("PackageDetailReady",row.index)
                 });
-            }
 
         },
             PackageDetailReady(data){
@@ -1237,37 +1247,38 @@
             uploadFile(){
                 this.file.dialogVisible = true;
             },
-            validateCAE(o){
-                if(o.type == 'Modelica'){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            },
-            validateCAEDownload(o){
-                if(o.type == 'Modelica'){
-                    this.style.watch = 'inline-block';
-                    return true;
-                }
-                else{
-                    this.style.watch = 'none';
-                    return false;
-                }
-            },
+//          validateCAE(o){
+//              if(o.type == 'Modelica'){
+//                  return true;
+//              }
+//              else{
+//                  return false;
+//              }
+//          },
+//          validateCAEDownload(o){
+//              if(o.type == 'Modelica'){
+//                  this.style.watch = 'inline-block';
+//                  return true;
+//              }
+//              else{
+//                  this.style.watch = 'none';
+//                  return false;
+//              }
+//          },
             
             validateDownload(index,row)
             {
             	if(this.func.directoryJudge(row.userId,row.directoryId,1))
             	{
-            		 if(row.type == 'Modelica'){
-                    this.style.watch = 'inline-block';
-                    return true;
-                }
-                else{
-                    this.style.watch = 'none';
-                    return false;
-                }
+//          		 if(row.type == 'Modelica'){
+//                  this.style.watch = 'inline-block';
+//                  return true;
+//                  }
+//                  else{
+//                     this.style.watch = 'none';
+//                     return false;
+//                   }
+                     return false;
             	}
             	else
             	{
