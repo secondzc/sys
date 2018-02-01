@@ -916,6 +916,9 @@
             if (model == null) {
                 $("#variable")[0].style.display = "none";
             }
+//            if(model.type == 'Modelica'){
+//                this.style.watch = 'inline-block';
+//            }
             console.log(model);
         },
         onSortFinsh(repositories){
