@@ -26,6 +26,9 @@
 			</el-table-column>
 			
             <el-table-column prop="instanceName" label="模型名" min-width="120" sortable>
+            	<template slot-scope="scope">
+                    <span style="min-width:100px" v-bind:title="scope.row.instanceName"  class="spanEllipsis">{{ scope.row.instanceName }}</span>
+                 </template>
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" min-width="120" sortable>
             </el-table-column>

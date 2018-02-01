@@ -49,6 +49,7 @@
                                   v-if="file.dialogVisible"
                                   width="80%"
                                   center
+                                   :close-on-click-modal="false" 
                           >
                               <el-dialog
                                       width="30%"
@@ -94,6 +95,7 @@
                           title="上传模型文件"
                           :visible.sync="file.modelDialog"
                           width="30%"
+                         
                           >
                           <!--<span>这是一段信息</span>-->
                           <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview" > </myUpload>
@@ -224,7 +226,6 @@
                                     :fit="true"
                                     highlight-current-row
                                     @current-change="handleCurrentChange"
-                                    :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
                                 >
                                 <el-table-column
                                         label=""
@@ -277,7 +278,7 @@
                                         min-width="200"
                                          >
                                    <template slot-scope="scope">
-                                       <span style="min-width:100px" v-bind:title="scope.row.discription"  class="spanEllipsis">{{ scope.row.discription }}</span>
+                                       <span style="min-width:200px" v-bind:title="scope.row.discription"  class="spanEllipsis">{{ scope.row.discription }}</span>
                                      </template>
                                 </el-table-column>
 
@@ -506,7 +507,7 @@
 
                            
                          
-                            <div class="card-column">
+                            <!--<div class="card-column">
                                 <div :style="{display: style.watch}">
                                     <a class="ui basic button" @click="addWatch(o)">
                                     <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
@@ -521,7 +522,7 @@
                                         {{o.numberStar}}
                                     </a>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="card-column">
                                    <h4 class="card-column-title">描述</h4>
                                <div class="card-column-content">

@@ -40,7 +40,7 @@
 			<div v-for="(commentPage,index) in commentPages">
     	        <div style="display:flex">
     	        	<div style="width:100px;"><p>审核者:</p></div>
-    	            <div >{{commentPage.checkorName}}</div>
+    	            <span :title="commentPage.checkorName" class="spanEllipsis">{{commentPage.checkorName}}</span>
     	        </div>
     	        
     	        <div style="display:flex">

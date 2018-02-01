@@ -113,9 +113,16 @@
                 }
                 else
                 {
-                    if (re.test(value))
+                  if (re.test(value))
                     {
-                        callback();
+                    	if(value.length>128)
+                    	{
+                    		callback(new Error('模型名称字符不得超过128个'));
+                    	}
+                    	else{
+                    		callback();
+                    	}
+                        
                     }
                     else
                     {

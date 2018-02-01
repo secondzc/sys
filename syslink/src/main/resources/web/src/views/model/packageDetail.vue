@@ -61,6 +61,10 @@
                         <el-table-column  label="名称"
                                           prop="name"
                                           min-width=100 sortable>
+                                          
+                               <template slot-scope="scope">
+                                <span style="min-width:100px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
+                               </template>
 
                         </el-table-column>
                         <el-table-column

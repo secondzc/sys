@@ -6,7 +6,7 @@
     	<el-card style="width:660px;">
     		<div style="display:flex">
     			<div style="width:100px;"><p>模型名:</p></div>
-    		    <div >{{this.reviewModel.name}}</div>
+    		    <span class="spanEllipsis" :title="this.reviewModel.name">{{this.reviewModel.name}}</span>
     		</div>
     		
     		<div style="display:flex">
@@ -26,7 +26,7 @@
 
     		  <div style="display:flex">
     			  <div style="width:100px;"><p>提交者:</p></div>
-    		      <div >{{this.userName}}</div>
+    		      <span class="spanEllipsis" :title="this.userName">{{this.userName}}</span>
     		  </div>
     	</el-card>
        </div>

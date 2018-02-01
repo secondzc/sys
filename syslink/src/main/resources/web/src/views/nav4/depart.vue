@@ -428,8 +428,17 @@
         });
       },
       handleDel(index,row){
-
-            this.$confirm('确认删除该组织吗?', '提示', {
+      	
+      	if(row.id==1)
+      	{
+      		  this.$message({
+                  message: '根部门不允许删除',
+                  type: 'error'
+                });
+      	}
+      	else
+      	{
+      		  this.$confirm('确认删除该组织吗?', '提示', {
           type: 'warning'
         }).then(() => {
             let para = {id :''};
@@ -455,6 +464,9 @@
         }).catch(() => {
 
         });
+      	}
+
+          
 
 
 

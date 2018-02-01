@@ -442,7 +442,18 @@
  
       //删除
       handleDel: function () {
-        this.$confirm('确认删除该角色吗?', '提示', {
+      	
+      	if(	this.currentRow.id==1)
+      	{
+      	 this.$message({
+              message: '管理员角色不允许删除',
+              type: 'error'
+              });
+      	
+      	}
+      	else
+      	{
+      		 this.$confirm('确认删除该角色吗?', '提示', {
           type: 'warning'
         }).then(() => {
           this.listLoading = true;
@@ -475,6 +486,9 @@
           this.listLoading = false;
           console.log(error);
           });
+      	}
+      	
+       
       },
 
       modelAuthSubmit()

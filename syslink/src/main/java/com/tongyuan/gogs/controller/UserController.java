@@ -372,7 +372,11 @@ public class UserController extends BaseController {
         {
             for(int i=0;i<ids.size();i++)
             {
-                userService.deleteUser(ids.getIntValue(i));
+                if(ids.getIntValue(i)!=1)
+                {
+                    userService.deleteUser(ids.getIntValue(i));
+                }
+
             }
         }
         catch (Exception e)

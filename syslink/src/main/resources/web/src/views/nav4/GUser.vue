@@ -1049,8 +1049,17 @@
 
       //删除
       handleDel: function (index, row) {
-       
-        this.$confirm('确认删除该用户吗?', '提示', {
+      	
+      	if(row.id==1)
+      	{
+      		   this.$message({
+              message: '管理员用户不允许删除',
+              type: 'error'
+              });
+      	}
+      	else
+      	{
+      		 this.$confirm('确认删除该用户吗?', '提示', {
           type: 'warning'
         }).then(() => {
           this.listLoading = true;
@@ -1084,6 +1093,9 @@
         }).catch(() => {
 
         });
+      	}
+       
+       
       },
       //显示编辑界面
 

@@ -40,6 +40,7 @@
                                   v-if="file.dialogVisible"
                                   width="80%"
                                   center
+                                   :close-on-click-modal="false" 
                               >
                                   <el-dialog
                                           width="30%"
@@ -85,6 +86,7 @@
                                   :visible.sync="file.modelDialog"
                                   v-if="file.modelDialog"
                                   width="30%"
+                                 
                                   >
                               <!--<span>这是一段信息</span>-->
                               <upload-file  style="text-align: center;"
@@ -220,8 +222,7 @@
                                     highlight-current-row
                                     @current-change="handleCurrentChange"
                                     style="width: 100%!important;"
-                                    :default-sort = "{prop: 'createTime',prop:'name', order: 'descending'}"
-                                    >
+                                     >
                                 <el-table-column
                                         label=""
                                         width="80" >
@@ -267,7 +268,7 @@
                                         label="描述"
                                         prop="discription">
                                           <template slot-scope="scope">
-                                       <span style="min-width:100px" v-bind:title="scope.row.discription"  class="spanEllipsis">{{ scope.row.discription }}</span>
+                                       <span style="min-width:200px" v-bind:title="scope.row.discription"  class="spanEllipsis">{{ scope.row.discription }}</span>
                                      </template>
                                 </el-table-column>
 
@@ -484,7 +485,7 @@
 
 
 
-                            <div class="card-column">
+                            <!--<div class="card-column">
                                 <div :style="{display: style.watch}">
                                     <a class="ui basic button" @click="addWatch(o)">
                                     <i v-if="o.alreadyWatch == true" class="iconfont icon-guanzhu"  ></i>
@@ -499,7 +500,7 @@
                                         {{o.numberStar}}
                                     </a>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="card-column">
                                    <h4 class="card-column-title">描述</h4>
                                <div class="card-column-content">
