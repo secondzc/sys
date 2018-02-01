@@ -251,7 +251,7 @@
                                         label="修改日期"
                                         prop="updateTime"
                                         min-width="100" sortable
-                                        :formatter="dateFormatter">
+                                        :formatter="dateFormatterupdateTime">
                                   
                                 </el-table-column>
 
@@ -484,13 +484,13 @@
                            <div class="card-column">
                                    <h4 class="card-column-title">创建日期</h4>
                                <div class="card-column-content">
-                                   <span >{{o.createTime}}</span>
+                                   <span >{{dateFormatter(o)}}</span>
                               </div>
                            </div>
                            <div class="card-column">
                                    <h4 class="card-column-title">修改日期</h4>
                                <div class="card-column-content">
-                                   <span >{{o.updateTime}}</span>
+                                   <span >{{dateFormatterupdateTime(o)}}</span>
                               </div>
                            </div>
 
@@ -1383,6 +1383,8 @@
                 if (row.createTime != null) {
                     return util.formatDate.format(new Date(row.createTime),'yyyy-MM-dd');
                 }
+            },
+            dateFormatterupdateTime:function(row,column) {
                 if (row.updateTime != null) {
                     return util.formatDate.format(new Date(row.updateTime),'yyyy-MM-dd');
                 }
