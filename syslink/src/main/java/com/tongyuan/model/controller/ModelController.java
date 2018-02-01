@@ -1395,7 +1395,7 @@ public class ModelController extends  BaseController {
             VariableTreeObj rootCatalog = new VariableTreeObj();
             rootCatalog.setName(model.getName());
             rootCatalog.setId(model.getId());
-            rootCatalog.setParentId(model.getParentId());
+            rootCatalog.setParentId((long) -1);
             rootCatalog.setChildren(modelCatalogList);
             catalogList.add(rootCatalog);
         }catch(Exception e){
