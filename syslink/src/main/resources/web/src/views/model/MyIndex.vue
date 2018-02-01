@@ -237,10 +237,9 @@
                                 <el-table-column  label="名称"
                                         prop="name"
                                         min-width="100" sortable  >
-                        <template slot-scope="scope">
-                            
-                            <span style="min-width:100px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
-                           </template>
+                                     <template slot-scope="scope">
+                                       <span style="min-width:100px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
+                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                         label="创建日期"
@@ -277,7 +276,9 @@
                                         prop="discription"
                                         min-width="200"
                                          >
-                                   
+                                   <template slot-scope="scope">
+                                       <span style="min-width:100px" v-bind:title="scope.row.discription"  class="spanEllipsis">{{ scope.row.discription }}</span>
+                                     </template>
                                 </el-table-column>
 
                                 <el-table-column min-width="200" label="操作">
@@ -451,7 +452,7 @@
                     <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
                     <div slot="header" class="clearfix" style="height: 21px">
                         <span style="font-weight: bold;">我的模型</span>
-                        <i class="el-icon-close" style="float: right;"  @click="showInfo"></i>
+                        <i class="el-icon-close iconHover" style="float: right;"  @click="showInfo"></i>
                     </div>
                     <div style="padding: 14px;">
                         <!--<div class="card-column">-->
@@ -466,7 +467,7 @@
                         <el-card :body-style="{ padding: '0px' }" style="height: inherit;overflow-y: auto;">
                           <div slot="header" class="clearfix" style="height: 21px">
                         <span :title="o.name" class="cardTitle2" >{{o.name}}</span>
-                      <i class="el-icon-close" style="float: right;"  @click="showInfo"></i>
+                      <i class="el-icon-close iconHover" style="float: right;"  @click="showInfo"></i>
     
                           </div>
                         <img v-bind:src="o.imageUrl" style="height: 200px;width: 270px; margin-top: 10px;padding: 0px 0px 0px 15px;">
@@ -1388,10 +1389,12 @@
                 this.handleCurrent(this.pager.pageIndex -1);
                 this.handleCurrent(this.pager.pageIndex +1);
             },
-	     dateFormatter:function(row,column) {
+	    dateFormatter:function(row,column) {
                 if (row.createTime != null) {
                     return util.formatDate.format(new Date(row.createTime),'yyyy-MM-dd');
                 }
+            },
+            dateFormatterupdateTime:function(row,column) {
                 if (row.updateTime != null) {
                     return util.formatDate.format(new Date(row.updateTime),'yyyy-MM-dd');
                 }
@@ -1412,9 +1415,9 @@
             });
             },
             infoWidth(){
-               if($('#cardMain').is(':visible'))
-            	{
-            		const a = 190+24+2;
+//             if($('#cardMain').is(':visible'))
+//          	{
+            	  const a = 190+24+2;
    
                     if(this.info)
                     {
@@ -1424,6 +1427,7 @@
                       {
                         $("#cardWrapper").width(a*c);   	
                       }
+                    
 
 
 
@@ -1437,10 +1441,12 @@
                       {
                         $("#cardWrapper").width(a*c);   	
                       }
+                      
+                    
 
                      }
             	}
-            }
+//          }
     },
 
 

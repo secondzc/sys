@@ -2,7 +2,8 @@
   <section>
     <!--工具条-->
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
-      <el-form :inline="true" :model="filters">
+   	<div style="height:100%;overflow-y:hidden">
+      <el-form :inline="true" :model="filters" style="height:50px;">
         <el-form-item>
           <el-input v-model="filters.realName" @keyup.enter.native="getLogs" placeholder="真实姓名/用户名"  min-width="120" ></el-input>
         </el-form-item>
@@ -23,10 +24,9 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getLogs" size="small" >查询</el-button>
-        </el-form-item>
-         <el-form-item>
           <el-button type="primary" v-on:click="reset"  size="small" >重置</el-button>
         </el-form-item>
+     
         <!--
        <el-form-item>
            <el-button @click="toggleSelection()">取消选择</el-button>
@@ -37,13 +37,15 @@
       </el-form>
       <hr/>
     <!-- </el-col> -->
-
+   <div class="tableWrapper">
+   	
+ 
     <!--列表-->
     <el-table :data="logs" highlight-current-row   stripe  ref="multipleTable"  style="width: 100%;"  @selection-change="selsChange" >
       <el-table-column type="selection" min-width="100">
       </el-table-column>
-      <el-table-column type="index" min-width="120">
-      </el-table-column>
+      <!--<el-table-column type="index" min-width="120">
+      </el-table-column>-->
        <el-table-column type="expand">
       <template slot-scope="props">
 
@@ -52,8 +54,14 @@
       </template>
     </el-table-column>
       <el-table-column prop="userName" label="用户名" min-width="120" >
+      	  <template slot-scope="scope">               
+            <span style="min-width:100px" v-bind:title="scope.row.userName"  class="spanEllipsis">{{ scope.row.userName }}</span>
+          </template>
       </el-table-column>
       <el-table-column prop="realName" label="真实姓名" min-width="120" >
+      	  <template slot-scope="scope">
+              <span style="min-width:100px" v-bind:title="scope.row.realName"  class="spanEllipsis">{{ scope.row.realName }}</span>
+           </template>
        </el-table-column>
       <el-table-column prop="userIp" label="用户IP" min-width="160" >
        </el-table-column>
@@ -65,7 +73,7 @@
       </el-table-column>
     </el-table>
 
-
+  </div>
     <div style="display: flex;margin-top: 10px;text-align: justify;justify-content: space-between;">
       <el-button type="danger"  size="small" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
      <el-pagination  
@@ -78,6 +86,9 @@
       :total="pager.total">
     </el-pagination>
 
+    </div>
+    
+    
     </div>
     
      
@@ -237,4 +248,10 @@
 
 <style scoped>
 
+.tableWrapper{
+	  overflow: auto!important;
+    height: calc(100%-100px)!important;
+     height: -moz-calc(100% - 100px)!important;
+    height :-webkit-calc(100% - 100px)!important; 
+}
 </style>

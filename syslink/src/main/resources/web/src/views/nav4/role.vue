@@ -2,7 +2,7 @@
   <section>
     <!--工具条-->
     <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
-      <el-form :inline="true" >
+      <el-form :inline="true" style="height:50px;">
         <el-form-item>
           <el-button size="small" type="primary" @click="handleAdd"  >新建</el-button>
           <el-button size="small"  @click="handleEdit"  :disabled="this.currentRow===null">编辑</el-button>
