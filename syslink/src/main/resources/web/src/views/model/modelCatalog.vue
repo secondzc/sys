@@ -62,7 +62,9 @@
                 return re.test(data.name);
             },
             treeNodeClick(arg,node,tree){
-                this.$emit('catalog_id', arg.id,node.parent.data);
+                if(arg.parentId != -1){
+                    this.$emit('catalog_id', arg.id,node.parent.data);
+                }
             },
             updateNode(data){
                 this.$refs.tree2.setCurrentKey(data.id);
@@ -134,7 +136,7 @@
 
     };
 </script>
-<style scoped>
+<style>
     .iconClassRoot {
         width:15px;
         height:15px;
