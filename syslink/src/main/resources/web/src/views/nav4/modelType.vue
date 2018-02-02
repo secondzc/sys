@@ -442,6 +442,7 @@
         },
         resetForm(){
             this.$refs['form'].resetFields();
+            this.form={};
             this.$refs.ModelTypePicture.clearFiles();
             this.imageUrl = '';
         },
