@@ -98,7 +98,7 @@ public class ModelTypeController extends  BaseController{
         try {
             modelTypeList = modelTypeService.getModelTypeList();
             for (ModelTypeDto modelTypeDto : modelTypeList) {
-                if(modelTypeDto.getName().equals(modelTypeName.toLowerCase())){
+                if(modelTypeDto.getName().equals(modelTypeName)){
                     return  returnErrorInfo(jo);
                 }
             }
