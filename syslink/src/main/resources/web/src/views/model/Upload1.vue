@@ -75,7 +75,7 @@
     		<div style="margin-top: 20px;">
     			 <div style="float: right;height: 30px;width: 100%" >
                     <el-button style="float: right;margin-left: 10px" @click="closeDia">取消</el-button>
-                    <el-button style="float: right" type="primary" @click.native="onSubmit" :loading="submitLoading">提交</el-button>
+                    <el-button style="float: right" type="primary" @click.native="onSubmit" :loading="submitLoading" :disabled="allowUpload">提交</el-button>
                  <!--   <el-button style="float: right" type="primary" @click.native="returnToUploadModel">上传模型</el-button>-->
                 </div>
     		</div>
@@ -153,6 +153,7 @@
                 photoUrl: '',
                 modelType: [],
                 imageUrl: '',
+                allowUpload : false,
                 name : this.$store.state.userInfo.profile.name,
 
             }
@@ -166,15 +167,15 @@
         },
         methods: {
             stopUpload(){
-                this.submitLoading = true;
+                this.allowUpload = true;
             },
             sendFiles(data){
                this.form.files = data;
-                this.submitLoading = false;
+                this.allowUpload = false;
             },
             sendFileLists(data){
                 this.form.fileLists = data;
-                this.submitLoading = false;
+                this.allowUpload = false;
             },
             submit(){
                 if(this.form.fileLists.length >0){
