@@ -1167,7 +1167,7 @@
         })
       },
             fetchAddTreeNode () {
-                const url = 'api/directory/add';
+                const url = 'api/directory/add?userName=' + this.name +'&';
                 this.dialog.submiting = true
                 var _this = this;
                 this.fetch(url, this.dialog.form, 'post')
