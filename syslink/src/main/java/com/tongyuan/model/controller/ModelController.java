@@ -1442,7 +1442,10 @@ public class ModelController extends  BaseController {
             }
             attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
             attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
-            attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
+            if(!attachmentDto.getFloder()){
+                attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
+            }
+
             if(attachmentDto.getFloder()){
                 attachmentDto.setFileSize("");
             }
