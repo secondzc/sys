@@ -71,6 +71,8 @@ public class DirectoryController extends BaseController{
     private GUserService userService;
     @Autowired
     private ModelUnionService modelUnionService;
+    @Autowired
+    private LogService logService;
 
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -260,6 +262,7 @@ public class DirectoryController extends BaseController{
     public JSONObject add(@RequestParam(value = "name", required = false) String name,
                           @RequestParam(value = "parent_id", required = false) Long parent_id,
                           @RequestParam(value = "userName", required = false) String userName,
+                          @RequestParam(value = "scope", required = false) Boolean scope,
                           HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         JSONObject jsonObject = new JSONObject();
@@ -270,6 +273,13 @@ public class DirectoryController extends BaseController{
             directoryModel.setId(directory.getId());
             directoryModel.setParentId(directory.getParentId() + "");
             jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+//            if(scope)
+//            {
+//                Map<String,Object> parent = directoryService.queryMapById(directory.getParentId());
+//                String title = "新建目录";
+//                String content ="用户\t"+getUserName()+"\t添加目录\t"+directory.getName()+"\t到目录\t"+parent.get("name");
+//                logService.addLog(title,content);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("添加目录失败!");

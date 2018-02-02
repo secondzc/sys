@@ -16,7 +16,7 @@
 
             <div style="display:flex">
     			 <div style="width:100px;"><p>模型描述:</p></div>
-    		     <div >{{this.reviewModel.discription}}</div>
+    		     <span class="spanEllipsis" :title="this.reviewModel.discription">{{this.reviewModel.discription}}</span>
     		 </div>
     		
     		<div style="display:flex">

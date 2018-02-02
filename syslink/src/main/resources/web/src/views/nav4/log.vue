@@ -3,7 +3,7 @@
     <!--工具条-->
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom: 0px;"> -->
    	<div style="height:100%;overflow-y:hidden">
-      <el-form :inline="true" :model="filters" style="height:50px;">
+      <el-form :inline="true" :model="filters" style="height:50px;" @submit.native.prevent>
         <el-form-item>
           <el-input v-model="filters.realName" @keyup.enter.native="getLogs" placeholder="真实姓名/用户名"  min-width="120" ></el-input>
         </el-form-item>
@@ -55,12 +55,12 @@
     </el-table-column>
       <el-table-column prop="userName" label="用户名" min-width="120" >
       	  <template slot-scope="scope">               
-            <span style="min-width:100px" v-bind:title="scope.row.userName"  class="spanEllipsis">{{ scope.row.userName }}</span>
+            <span style="min-width:120px" v-bind:title="scope.row.userName"  class="spanEllipsis">{{ scope.row.userName }}</span>
           </template>
       </el-table-column>
       <el-table-column prop="realName" label="真实姓名" min-width="120" >
       	  <template slot-scope="scope">
-              <span style="min-width:100px" v-bind:title="scope.row.realName"  class="spanEllipsis">{{ scope.row.realName }}</span>
+              <span style="min-width:120px" v-bind:title="scope.row.realName"  class="spanEllipsis">{{ scope.row.realName }}</span>
            </template>
        </el-table-column>
       <el-table-column prop="userIp" label="用户IP" min-width="160" >

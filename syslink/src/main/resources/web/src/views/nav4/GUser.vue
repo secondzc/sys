@@ -9,7 +9,7 @@
    <!--  <el-col :span="24" class="toolbar" style="padding-bottom:0px;"> -->
   
       <div style="height: 50px;margin-top: 10px;min-width: 500px;">
-          <el-form :inline="true" :model="filters" >
+          <el-form :inline="true" :model="filters" @submit.native.prevent>
       
         <el-form-item>
           <el-input v-model="filters.name" @keyup.enter.native="query" placeholder="用户名/真实姓名/邮箱"></el-input>
@@ -84,10 +84,19 @@
       <el-table-column prop="id" label="ID" width="80" sortable>
       </el-table-column>
       <el-table-column prop="name" label="用户名" min-width="120" sortable>
+      	<template slot-scope="scope">
+          <span style="min-width:120px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
+        </template>
       </el-table-column>
        <el-table-column prop="departName" label="部门" min-width="120" sortable>
+       	<template slot-scope="scope">
+          <span style="min-width:120px" v-bind:title="scope.row.departName"  class="spanEllipsis">{{ scope.row.departName }}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="email" label="邮箱" min-width="120" sortable>
+      	<template slot-scope="scope">
+          <span style="min-width:120px" v-bind:title="scope.row.email"  class="spanEllipsis">{{ scope.row.email }}</span>
+        </template>
      
        </el-table-column>
    <!--   <el-table-column prop="isActive"  label="已激活" min-width="120" sortable>
@@ -431,9 +440,9 @@
   export default {
     data() {
 
-      //新建用户时名称验证，只允许中文，英文，以及数字且名称唯一
+      //新建用户时名称验证，只允许英文，数字，以及下划线且名称唯一
        var validateName = (rule, value, callback) => {
-        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        let re = new RegExp("^[ a-zA-Z0-9_-]+$");
         console.log(value);
 
         if(!value)
@@ -481,12 +490,12 @@
           } 
           else
           {
-              callback(new Error('只允许输入中文、字母、数字'));
+              callback(new Error('只允许输入英文、数字、下划线及空格'));
           }
         }
       };
         var validateFullName = (rule, value, callback) => {
-        let re = new RegExp("[^\x00-\xff]");
+        let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
         console.log(value);
 
         if(!value)
@@ -498,9 +507,9 @@
           if (re.test(value))
           {
           	
-          	if(value.length>10)
+          	if(value.length>20)
           	{
-          		callback(new Error('真实姓名不得超过10个字符'));
+          		callback(new Error('真实姓名不得超过20个字符'));
           	}
           	else
           	{
@@ -512,7 +521,7 @@
           } 
           else
           {
-              callback(new Error('只允许输入中文'));
+              callback(new Error('只允许输入中文、英文、数字、下划线及空格'));
           }
         }
       };

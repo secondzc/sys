@@ -173,9 +173,7 @@
       },
     data() {
         var validateName = (rule, value, callback) => {
-            let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
-            console.log(value);
-
+           let re = new RegExp("^[ a-zA-Z0-9_-]+$");
             if(!value)
             {
                 callback(new Error('请输入模型分类名称'));
@@ -184,11 +182,18 @@
             {
                 if (re.test(value))
                 {
-                    callback();
+                	  if(value.length>32)
+                	  {
+                	  	 callback(new Error('模型类型名称不得超过32个字符'));
+                	  }
+                	  else
+                	  {
+                	     callback();
+                	  }
                 }
                 else
                 {
-                    callback(new Error('只允许输入中文、字母、数字'));
+                  callback(new Error('只允许输入英文、数字、下划线及空格'));
                 }
             }
         };
