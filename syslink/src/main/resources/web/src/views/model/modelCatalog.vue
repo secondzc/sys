@@ -40,7 +40,6 @@
                 var _this = this;
                 if(_this.modelId == null || _this.modelId == ''){
                     return;
-//                    this.$router.push({path: '/model/index'});
                 }else {
                     var url = '/api/model/treeModelCatalog?modelId=' + _this.treeModelId;
                     _this.$http.post(url)
@@ -55,6 +54,21 @@
         },
 
         methods: {
+            refreshModelCatalog(){
+                var _this = this;
+                if(_this.modelId == null || _this.modelId == ''){
+                    return;
+                }else {
+                    var url = '/api/model/treeModelCatalog?modelId=' + _this.treeModelId;
+                    _this.$http.post(url)
+                        .then(function (response) {
+                            _this.data2 = response.data.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                }
+            },
             filterNode(value, data) {
 //                if (!value) return true;
 //                return data.name.indexOf(value) !== -1;
@@ -64,6 +78,9 @@
             treeNodeClick(arg,node,tree){
                 if(arg.parentId != -1){
                     this.$emit('catalog_id', arg.id,node.parent.data);
+                }
+                if(arg.parentId == -1){
+                    this.$emit('getModelDet',arg.id)
                 }
             },
             updateNode(data){

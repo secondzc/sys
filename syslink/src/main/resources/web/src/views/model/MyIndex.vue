@@ -172,7 +172,7 @@
                    <div v-if="filters.Model" style="display: inline-block;">
                        <!--工具条-->
                        <!--<el-col :span="24" class="toolbar" >-->
-                       <el-form :inline="true" :model="filters" >
+                       <el-form :inline="true" :model="filters"  @submit.native.prevent>
 
                            <el-form-item style="margin-top: 5px;margin-left: 10px;">
                                <el-tooltip   class="item" effect="dark" content="模型搜索" placement="top-start">
@@ -189,7 +189,7 @@
                    <div v-else="filters.Model" style="display: inline-block;">
                        <!--工具条-->
                        <!--<el-col :span="24" class="toolbar" >-->
-                       <el-form :inline="true" :model="filters"  >
+                       <el-form :inline="true" :model="filters"  @submit.native.prevent>
 
                            <el-form-item style="margin-top: 5px;margin-left: 10px;">
                                <el-tooltip   class="item" effect="dark" content="文件搜索" placement="top-start">
@@ -558,7 +558,7 @@
 
          <el-dialog :title="dialog.title" :visible.sync="dialog.dialogVisible" :close-on-click-modal="false">
       <el-form :model="dialog.form" ref="dialogForm" :rules="dialog.rules"
-
+               @submit.native.prevent
      >
         <el-form-item label="分类名称" prop="name" label-width="120" required>
           <el-input v-model="dialog.form.name" auto-complete="off" class="el-col-12"></el-input>

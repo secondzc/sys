@@ -5,7 +5,7 @@
                 <div style="height: 100%">
                     <span>文件目录</span>
                     <!--{{getModelDet}}-->
-                    <modelCatalog @catalog_id="getDetailList"  ref="setTreeNode" style="height: 100%;overflow-y: auto"></modelCatalog>
+                    <modelCatalog @catalog_id="getDetailList" @getModelDet="getModelDet"  ref="setTreeNode" style="height: 100%;overflow-y: auto"></modelCatalog>
                 </div>
             </el-aside>
             <el-main style="overflow-y: hidden">
@@ -332,7 +332,10 @@
                         .then(function (response) {
                             _this.parentAttach = response.data.parentAttach;
                             if(_this.parentAttach == null){
-                               return ;
+//                               return ;
+                                _this.refreshModel();
+                                _this.$refs.setTreeNode.refreshModelCatalog();
+                                _this.catalog = 0;
                             }
 
                             _this.details = response.data.data;
@@ -408,7 +411,6 @@
                 var url = '/api/model/getModelDetail?modelId=' + data;
                 _this.$http.post(url)
                     .then(function (response) {
-//                    _this.repositories = response.data.data;
                         _this.details = response.data.data;
                         _this.pager.total = response.data.data.length;
                         var filterModel = response.data.data.filter(
@@ -424,8 +426,30 @@
                         console.log(error)
                     })
             },
-
-
+            refreshModel(){
+                let para = {
+                    pageSize: this.pager.pageSize,
+                    pageIndex: this.pager.pageIndex
+                };
+                var _this = this;
+                var url = '/api/model/getModelDetail?modelId=' + _this.treeModelId;
+                _this.$http.post(url)
+                    .then(function (response) {
+                        _this.details = response.data.data;
+                        _this.pager.total = response.data.data.length;
+                        var filterModel = response.data.data.filter(
+                            (u, index) => {
+                                if (index < para.pageIndex * para.pageSize && index >= para.pageSize * (para.pageIndex - 1)) {
+                                    return true
+                                }
+                            }
+                        )
+                        _this.repositories = filterModel;
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            },
         }
     };
 
