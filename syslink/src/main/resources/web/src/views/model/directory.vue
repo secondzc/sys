@@ -317,7 +317,8 @@
         this.$confirm('是否删除此分类?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+            closeOnClickModal:false,
         }).then(fetchDelOk).catch(e => e)
       },
       /* ajax封装 */

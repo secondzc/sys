@@ -31,6 +31,7 @@
                                   center
                                   ref="singleDialog"
                                   @DomReady = "DomReady()"
+                                  :close-on-click-modal="false"
                           >
                               <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
                               </el-dialog>
@@ -47,7 +48,8 @@
                                           title="是否覆盖之前的模型"
                                           :visible.sync="file.innerVisible"
                                           append-to-body
-                                          center>
+                                          center
+                                          :close-on-click-modal="false" >
                                       <div slot="footer" class="dialog-footer">
                                           <el-button @click.native="file.innerVisible= !file.innerVisible">取消</el-button>
                                           <el-button type="primary" @click.native="cover" >覆盖</el-button>
@@ -64,6 +66,7 @@
                                     ref="DetailDialog"
                                   @DetailReady="DetailReady"
                                   @PackageDetailReady="PackageDetailReady"
+                                  :close-on-click-modal="false"
                           >
                             <packageDetail ref="packageDetail"></packageDetail>
                           </el-dialog>
@@ -74,6 +77,7 @@
                                   :visible.sync="move.dialogVisible"
                                   width="40%"
                                   center
+                                  :close-on-click-modal="false"
                           >
                               <selectDirectory :data="tree" style="min-height: 100px;"  @selectNode="getSelectedNode" ></selectDirectory>
                               <div slot="footer" class="dialog-footer">
@@ -86,7 +90,7 @@
                                   :visible.sync="file.modelDialog"
                                   v-if="file.modelDialog"
                                   width="30%"
-                                 
+                                  :close-on-click-modal="false"
                                   >
                               <!--<span>这是一段信息</span>-->
                               <upload-file  style="text-align: center;"
@@ -823,7 +827,8 @@
               this.$confirm('上传已成功！是否跳转到审签页', '提示', {
            confirmButtonText: '确定',
            cancelButtonText: '取消',
-           type: 'success '
+           type: 'success ',
+                  closeOnClickModal:false,
            }).then(() => {
            this.$router.push('/brief')
             }).catch(() => {
@@ -1007,7 +1012,8 @@
         handleDeleted(index, row){
             console.log(index, row);
             this.$confirm('确认删除该模型吗?', '提示', {
-                type: 'warning'
+                type: 'warning',
+                closeOnClickModal:false,
             }).then(() => {
                 var _this = this;
                 var url = '/api/model/deleted?modelId=' + row.index;
@@ -1038,7 +1044,8 @@
                  handleDeleted1(){
                var _this = this;
             this.$confirm('确认删除该模型吗?', '提示', {
-                type: 'warning'
+                type: 'warning',
+                closeOnClickModal:false,
             }).then(() => {
             var url = '/api/model/deleted?modelId=' + this.currentRow.index;
             _this.$http.post(url)
