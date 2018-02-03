@@ -144,7 +144,9 @@
             batchRemove: function() {
                 let ids = this.sels.map(item =>item.instanceId).join(",").toString();
                 this.$confirm('确认删除选中记录吗？','提示',{
-                    type:'warning'
+                    type:'warning',
+					          closeOnClickModal:false
+                    
                 }).then(()=>{
                     this.listLoading = true;
                     let params = {instanceIds: ids};
@@ -162,7 +164,10 @@
                 })
             },
             remove: function(row){
-                this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{
+                this.$confirm('确认删除选中记录吗？','提示',{
+                	type:'warning',
+					 closeOnClickModal:false
+                }).then(()=>{
                     this.listLoading = true;
                     let params = {instanceIds: row.instanceId};
                     let url = 'api/reviewFlowInstance/deleteByInstanceId';

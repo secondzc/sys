@@ -406,10 +406,10 @@
 
 
 
-    <el-dialog title="目录控制" :visible.sync="modelVisible" v-if="modelVisible"   >
+    <el-dialog title="目录控制" center :visible.sync="modelVisible" v-if="modelVisible"  style="min-width:1200px ;"  >
 
  <!--    <div slot="title">    -->
-    <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
+    <el-form :model="directory" label-width="100px"  ref="directoryForm"   >
 
     <el-tree :data="data3" node-key="id"  
     ref="tree1"  highlight-current :props="defaultProps1"  
@@ -1069,7 +1069,8 @@
       	else
       	{
       		 this.$confirm('确认删除该用户吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();
@@ -1468,7 +1469,8 @@
         var ids = this.sels.map(item => item.id);
 
         this.$confirm('确认删除选中记录吗？', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false 
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();

@@ -183,7 +183,10 @@
 						message:'未配置不能提交',
 					})
 				}else{
-				  this.$confirm('确认提交吗？','提示',{}).then(()=>{
+				  this.$confirm('确认提交吗？','提示',{
+				  	  type:'info ',
+                    closeOnClickModal:false
+				  }).then(()=>{
 					this.submitAllLoading = true;
 					let url = '/api/reviewNode/batchAdd';
 					let nodeName = [];
@@ -277,7 +280,9 @@
 				}
 			},
 			remove(row){
-				this.$confirm('确认要删除吗？','提示').then(()=>{
+				this.$confirm('确认要删除吗？','提示',{   
+					    type:'warning',
+              closeOnClickModal:false}).then(()=>{
 				    let sequence = this.items.indexOf(row);
 				    this.items.splice(sequence,1);
 				});

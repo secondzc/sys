@@ -460,7 +460,8 @@
       	else
       	{
       		 this.$confirm('确认删除该角色吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           let para = { id: this.currentRow.id};

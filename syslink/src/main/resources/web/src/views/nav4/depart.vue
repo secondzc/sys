@@ -439,7 +439,8 @@
       	else
       	{
       		  this.$confirm('确认删除该组织吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
             let para = {id :''};
             para.id = row.id;

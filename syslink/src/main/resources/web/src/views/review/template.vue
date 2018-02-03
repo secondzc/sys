@@ -165,7 +165,8 @@
 			batchRemove: function() {
 				let ids = this.sels.map(item =>item.templateId).join(",").toString();
 				this.$confirm('确认删除选中记录吗？','提示',{
-					type:'warning'
+					type:'warning',
+					 closeOnClickModal:false
 				}).then(()=>{
 					this.listLoading = true;
 					let params = {templateIds: ids};
@@ -220,7 +221,10 @@
 			        			}
 			        	
 			        		}else{
-			        			this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
+			        			this.$confirm('已经存在默认模板，要替换吗？','提示',{
+			        				 type:'info',
+			        				 closeOnClickModal:false
+			        			}).then(()=>{
 			        				param.assure = "yes";
 			        				this.func.ajaxPost(url,param,res =>{
 			        					if(res.data.code === 200 && !res.data.changeDefault){
@@ -257,7 +261,10 @@
 				return flag;
 			},
 			remove: function(index,row){
-				this.$confirm('确认删除选中记录吗？','提示',{}).then(()=>{
+				this.$confirm('确认删除选中记录吗？','提示',{
+					type:'warning',
+					 closeOnClickModal:false
+				}).then(()=>{
 					this.listLoading = true;
 					let params = {templateIds: row.templateId};
 					let url = '/api/reviewFlowTemplate/deleteByTemplateId';
@@ -292,7 +299,10 @@
 						    this.listLoading = false;
 						    this.getTemplates(false);
 						}else{
-							this.$confirm('已经存在默认模板，要替换吗？','提示',{}).then(()=>{
+							this.$confirm('已经存在默认模板，要替换吗？','提示',{
+								type:'info',
+					            closeOnClickModal:false
+							}).then(()=>{
 								param.assure = "yes";
 								this.func.ajaxPost(url,param,res =>{
 									if(res.data.code ===200){

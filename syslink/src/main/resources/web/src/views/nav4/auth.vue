@@ -269,7 +269,8 @@
       //删除
       handleDel: function () {
         this.$confirm('确认删除该权限组吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+           closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();
@@ -307,7 +308,8 @@
       },
        handleItemDel: function (index, row) {
         this.$confirm('确认删除该权限项吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();

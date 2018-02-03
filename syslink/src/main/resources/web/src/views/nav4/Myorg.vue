@@ -282,7 +282,8 @@
         handleDel: function (index, row) {
         console.log(index);
         this.$confirm('确认删除该组织吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();
