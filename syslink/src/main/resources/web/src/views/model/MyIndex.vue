@@ -616,22 +616,30 @@
         data() {
             this.__currentNode = null;
             var validateName = (rule, value, callback) => {
-                let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+                let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
                 console.log(value);
 
                 if(!value)
                 {
-                    callback(new Error('请输入分类名称'));
+                    callback(new Error('请输入分类目录名称'));
                 }
                 else
                 {
                     if (re.test(value))
                     {
-                        callback();
+                    	if(value.length>32)
+                    	{
+                    		callback(new Error('分类目录名称不得超过32个字符'));
+                    	}
+                    	else
+                    	{
+                    	    callback();
+                    	}
+                     
                     }
                     else
                     {
-                        callback(new Error('只允许输入中文、字母、数字'));
+                        callback(new Error('只允许输入中文、字母、数字、下划线及空格'));
                     }
                 }
             };
@@ -709,7 +717,7 @@
                             name: {
                               required: true,
                                 validator : validateName,
-        //                      message: '请输入分类名称',
+//                              message: '请输入分类名称',
                               trigger: 'blur'
                             }
                           }

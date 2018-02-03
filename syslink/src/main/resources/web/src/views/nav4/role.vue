@@ -21,10 +21,16 @@
       <el-table-column type="index" width="60">
       </el-table-column>
       <el-table-column prop="name" label="名称" min-width="120" sortable>
+      	<template slot-scope="scope">
+          <span style="min-width:120px" v-bind:title="scope.row.name"  class="spanEllipsis">{{ scope.row.name }}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="createDate" label="创建时间" min-width="160" sortable  :formatter="dateFormatter"  >
        </el-table-column>
       <el-table-column prop="description" label="描述" min-width="160" sortable  >
+      	<template slot-scope="scope">
+          <span style="min-width:160px" v-bind:title="scope.row.description"  class="spanEllipsis">{{ scope.row.description }}</span>
+        </template>
        </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
@@ -152,7 +158,7 @@
   export default {
     data() {
         var validateName = (rule, value, callback) => {
-        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
         console.log(value);
 
         if(!value)
@@ -190,13 +196,13 @@
           } 
           else
           {
-              callback(new Error('只允许输入中文、字母、数字'));
+              callback(new Error('只允许输入中文、英文、数字、下划线及空格'));
           }
         }
       };
         var validateName1 = (rule, value, callback) => {
         console.log(this.editForm.name);
-        let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+        let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
         console.log(value);
 
         if(!value)
@@ -243,7 +249,7 @@
           } 
           else
           {
-              callback(new Error('只允许输入中文、字母、数字'));
+              callback(new Error('只允许输入中文、字母、数字、下划线及空格'));
           }
         }
       };

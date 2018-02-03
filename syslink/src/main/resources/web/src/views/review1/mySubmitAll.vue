@@ -5,7 +5,7 @@
 		<!--工具条-->
 		<el-col :span="24" style="padding-bottom: 0px;margin-top: 10px;">
             
-			<el-form :inline="true" :model="filters">
+			<el-form :inline="true" :model="filters" @submit.native.prevent>
 <!--                 <el-radio-group v-model="tab" style="margin-bottom: 30px;">
         <el-radio-button label="cancel">撤销流程...</el-radio-button>
         </el-radio-group> -->
@@ -27,7 +27,7 @@
 			
             <el-table-column prop="instanceName" label="模型名" min-width="120" sortable>
             	<template slot-scope="scope">
-                    <span style="min-width:100px" v-bind:title="scope.row.instanceName"  class="spanEllipsis">{{ scope.row.instanceName }}</span>
+                    <span style="min-width:120px" v-bind:title="scope.row.instanceName"  class="spanEllipsis">{{ scope.row.instanceName }}</span>
                  </template>
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" min-width="120" sortable>

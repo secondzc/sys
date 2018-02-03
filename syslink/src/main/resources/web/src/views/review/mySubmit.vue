@@ -2,7 +2,7 @@
 	<section>
 		<!--工具条-->
 		<el-col :span="24" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="filters">
+			<el-form :inline="true" :model="filters" @submit.native.prevent>
 				<el-form-item>
 					<el-input v-model="filters.name" placeholder="模型名" @keyup.enter.native="getInstance"></el-input>
 				</el-form-item>
@@ -20,7 +20,7 @@
 
             <el-table-column prop="instanceName" label="模型名" min-width="120" sortable>
             	<template slot-scope="scope">
-                    <span style="min-width:100px" v-bind:title="scope.row.instanceName"  class="spanEllipsis">{{ scope.row.instanceName }}</span>
+                    <span style="min-width:120px" v-bind:title="scope.row.instanceName"  class="spanEllipsis">{{ scope.row.instanceName }}</span>
                  </template>
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" min-width="120" sortable>

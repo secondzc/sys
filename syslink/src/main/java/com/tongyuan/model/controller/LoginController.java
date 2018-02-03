@@ -118,7 +118,7 @@ public class LoginController extends BaseController {
                     LoginedUserModel loginedUser =userService.CreateLoginedUser(user);
                     setSessionUser(request,loginedUser);
                     String title = "登录";
-                    String content = "用户:"+userName+"登录系统";
+                    String content = "用户:\t"+userName+"\t登录系统";
                     logService.addLog(title,content);
 
 

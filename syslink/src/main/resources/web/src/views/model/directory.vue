@@ -75,7 +75,7 @@
 //                }else {
 //                    callback();
 //                }
-            let re = new RegExp("^[a-zA-Z0-9\u4e00-\u9fa5]+$");
+            let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
             console.log(value);
 
             if(!value)
@@ -86,11 +86,18 @@
             {
                 if (re.test(value))
                 {
-                    callback();
+                    if(value.length>32)
+                    	{
+                    		callback(new Error('分类目录名称不得超过32个字符'));
+                    	}
+                    	else
+                    	{
+                    	    callback();
+                    	}
                 }
                 else
                 {
-                    callback(new Error('只允许输入中文、字母、数字'));
+                    callback(new Error('只允许输入中文、字母、数字下划线及空格'));
                 }
             }
         };
@@ -229,7 +236,15 @@
                 on: {
                   click: function (event) {
                     event.stopPropagation()
-                    typeof _self.treeAdd === 'function' && _self.treeAdd(data, event, node)
+                    if(node.level>=6)
+                    {
+                    	 _self.$message({ message: '模型目录层级不得超过六级', type: 'warning',duration: 2000 })
+                    }
+                    else
+                    {
+                    	 typeof _self.treeAdd === 'function' && _self.treeAdd(data, event, node)
+                    }
+                   
                   }
                 }
               }),
@@ -374,8 +389,8 @@
               var _this = this;
               _this.$http.post(checkDirNameUrl)
                   .then(function (response) {
-                      if(response.data.state == 1){
-                          _this.fetchAddTreeNode()
+                      if(response.data.state == 1){                     	
+                      		_this.fetchAddTreeNode()
                       }else{
                           _this.$message({
                               message: '名称重复,请重新输入模型分类名称！',

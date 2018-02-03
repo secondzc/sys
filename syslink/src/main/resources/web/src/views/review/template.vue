@@ -3,7 +3,7 @@
 	     <!--这是注释-->
 		<!--工具条-->
 		<el-col :span="24"  style="padding-bottom: 0px;margin-top: 10px;">
-			<el-form :inline="true" :model="filters">
+			<el-form :inline="true" :model="filters" @submit.native.prevent>
 				<el-form-item>
 					<el-input v-model="filters.name" placeholder="模板名" @keyup.enter.native="getTemplates(false)"></el-input>
 				</el-form-item>
@@ -22,10 +22,16 @@
 			<el-table-column type="selection" width="50">
 			</el-table-column>
 			<el-table-column prop="templateName" label="模板名" width="120" >
+				<template slot-scope="scope">               
+                    <span style="min-width:120px" v-bind:title="scope.row.templateName"  class="spanEllipsis">{{ scope.row.templateName }}</span>
+                </template>
 			</el-table-column>
 			<el-table-column prop="alreadyConfig" label="是否配置" width="120" :formatter="format">
 			</el-table-column>
 			<el-table-column prop="description" label="模板描述" width="120" >
+				<template slot-scope="scope">               
+                    <span style="min-width:120px" v-bind:title="scope.row.description"  class="spanEllipsis">{{ scope.row.description }}</span>
+                 </template>
 			</el-table-column>
 			<el-table-column prop="createTime" label="创建时间" width="120" >
 			</el-table-column>

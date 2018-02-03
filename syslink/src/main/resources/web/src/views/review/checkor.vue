@@ -3,7 +3,7 @@
 
         <!--工具条-->
 		<el-col :span="24"  style="padding-bottom: 0px;">
-			<el-form :inline="true" >
+			<el-form :inline="true"  @submit.native.prevent>
 				<el-form-item>
 					<el-input v-model="modelName" placeholder="模型名" @keyup.enter.native="getDetail"></el-input>
 				</el-form-item>
@@ -19,8 +19,14 @@
 			<el-table-column type="index" v-if="false" >
 			</el-table-column>
 			<el-table-column prop="model.name" label="模型名" min-width=120 sortable >
+				<template slot-scope="scope">
+                    <span style="min-width:120px" v-bind:title="scope.row.model.name"  class="spanEllipsis">{{ scope.row.model.name }}</span>
+                </template>
 			</el-table-column>
 			<el-table-column prop="userName" label="用户名" min-width=120 sortable>
+				<template slot-scope="scope">
+                     <span style="min-width:120px" v-bind:title="scope.row.userName"  class="spanEllipsis">{{ scope.row.userName }}</span>
+               </template>
 			</el-table-column>
 			<el-table-column prop="createTime" label="创建时间" min-width=120 sortable>
 			</el-table-column>

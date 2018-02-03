@@ -178,13 +178,29 @@
       },
       /* 构建分类title及工具 */
       nodeRender (h, { _self, node, data }) {
+      	
+      	let level ;
+      	if(node.level>8)
+      	{
+      		level = 8;
+      	}
+      	else
+      	{
+      		level = node.level;
+      	}
         
         // @todo: 使用jsx插件更好理解
         const childrenNodes = data.id === 0 ? [h('span', data.name)] : [
-            h('i', {
-                'class': 'iconfont icon-wenjianjia2',}
-            ),
-          h('span', data.name),
+//        h('svg', {
+//              'class': 'icon',attrs:{'aria-hidden':'true'},domProps:{title:data.name},style:{'vertical-align':'baseline','margin-right':'0.1em'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiaweigongxiang'}})]
+//          ),
+
+          h('span',{'class':'spanEllipsis',style:{'width':(9-level)*18+'px'},domProps:{title:data.name}},[ h('svg', {
+              'class': 'icon',attrs:{'aria-hidden':'true'},style:{'margin-right':'0.1em'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiaweigongxiang'}})]
+          ),h('span',data.name)]),
+          
+          
+          
 //          h('span',
 //            {
 //              'class': 'kz-tree-bar'
@@ -234,21 +250,17 @@
 //            ]
 //          )
         ]
-           const childrenNodes1 = data.id === 0 ? [h('span', data.name)] : [
-            h('i', {
-                'class': 'iconfont icon-wenjianjia2',}
-            ),
-          h('span', data.name),
-          h('span',
-            {
-              'class': 'kz-tree-bar'
-            },
-      
-          )
-        ]
         
-       
-         return h(
+        
+         const childrenNodes1 = data.id === 0 ? [h('span', data.name)] : [
+             h('span',{'class':'spanEllipsis'},[ h('svg', {
+              'class': 'icon',attrs:{'aria-hidden':'true'},domProps:{title:data.name},style:{'margin-right':'0.1em'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiayigongxiang'}})]
+          ),h('span',data.name)]),]
+         
+         
+         if(!data.userName)
+         {
+         	 return h(
           'div',
           {
             'class': 'el-tree-node__label',
@@ -258,6 +270,25 @@
           },
           childrenNodes
         )
+         }
+         else
+         {
+         	 return h(
+          'div',
+          {
+            'class': 'el-tree-node__label',
+            prop: {
+              children: '-'
+            }
+          },
+          childrenNodes1
+        )
+         }
+          
+          
+          
+       
+        
   
 
        
