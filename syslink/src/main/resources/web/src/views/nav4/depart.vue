@@ -29,10 +29,21 @@
       :expand-type="false"
       :selection-type="false"
       >
+      
+      <template slot="name" slot-scope="scope">
+       <span class="spanEllipsis" :title="scope.row.name">{{scope.row.name}}</span>
+       </template>
+       <template slot="parentName" slot-scope="scope">
+     <span class="spanEllipsis" :title="scope.row.parentName">{{scope.row.parentName}}</span>
+       </template>
+       <template slot="description" slot-scope="scope">
+     <span class="spanEllipsis" :title="scope.row.description">{{scope.row.description}}</span>
+       </template>
        <template slot="operation" slot-scope="scope">
      <el-button size="small"   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
      <el-button size="small" type="danger"  @click="handleDel(scope.$index, scope.row)">删除</el-button>
        </template>
+       
     </zk-table>
 
 
@@ -278,18 +289,25 @@
           {
             label: '名称',
             prop: 'name',
-           minWidth: '300px',
+            minWidth: '300px',
+            type:'template',
+            template:'name',
          
           },
           {
             label: '父部门',
             prop: 'parentName',
             minWidth: '100px',
+            type:'template',
+            template:'parentName',
+ 
           },
           {
             label: '描述',
             prop: 'description',
-             minWidth: '200px'
+            minWidth: '200px',
+            type:'template',
+            template:'description',
           },
           {
             label: '创建时间',
@@ -501,7 +519,7 @@
   }
 </script>
 
-<style  >
+<style >
 
 
 .zk-table{
@@ -516,6 +534,14 @@
     height: calc(100%-60px)!important;
      height: -moz-calc(100% - 60px)!important;
     height :-webkit-calc(100% - 60px)!important; 
+}
+
+.zk-table__cell-inner
+{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	
 }
 
 </style>
