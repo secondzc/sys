@@ -585,7 +585,14 @@
                     	}
                     	else
                     	{
-                    	    callback();
+                    	    if(value.trim())
+                    		 {
+                    		     callback();
+                    		 }
+                    		 else
+                    		 {
+                    		     callback(new Error('不能全为空格'));
+                    		 }
                     	}
                      
                     }

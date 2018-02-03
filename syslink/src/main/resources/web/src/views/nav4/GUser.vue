@@ -460,17 +460,19 @@
           	}
           	else
           	{
-          		let para = {name:''};
-              para.name=value;
+          		
+          		if(value.trim())
+          		{
+          			 let para = {name:''};
+                 para.name=value;
             
-              this.$http({
-                url:'/api/user/nameExist',
-                method:'post',
-                data:para
-              })
-               .then((res) => {
-                this.editLoading = false;
-                //NProgress.done();
+                  this.$http({
+                   url:'/api/user/nameExist',
+                   method:'post',
+                   data:para
+                 })
+                  .then((res) => {
+                  this.editLoading = false;
                 if(res.data.flag)
                 {
                   callback(new Error('用户名重复'));
@@ -480,7 +482,14 @@
                    callback();
                 }
                 
-              });
+                 });
+          		}
+          		else
+          		{
+          			callback(new Error('不能全为空格'));
+          		}
+          	
+          	
           
           	}
              
@@ -497,6 +506,8 @@
         var validateFullName = (rule, value, callback) => {
         let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
         console.log(value);
+        
+   
 
         if(!value)
         {
@@ -513,7 +524,15 @@
           	}
           	else
           	{
-          		callback();
+          		if(value.trim())
+          		{
+          				callback();
+          		}
+          		else
+          		{
+          			callback(new Error('不能全为空格'));
+          		}
+          	
           	}
          
             
