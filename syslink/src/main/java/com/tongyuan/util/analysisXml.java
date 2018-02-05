@@ -21,16 +21,16 @@ import java.util.Set;
  * Created by Administrator on 2018-1-19.
  */
 public class analysisXml {
-    public static void main(String[] args) throws Exception {
-        String xmlStr= readFile("C:/Temp/FileLibrary/admin/2018-01-26_10-01-46/MyPkg/MyPkg.dom.xml");
-        JSONObject jsonobject = analysisXmlFile(xmlStr);
-        Set<String> keys = jsonobject.keySet();
-        Iterator iterator = keys.iterator();
-        while(iterator.hasNext()){
-            String key = (String) iterator.next();
-            System.out.print(key);
-        }
-    }
+//    public static void main(String[] args) throws Exception {
+//        String xmlStr= readFile("C:/Temp/FileLibrary/admin/2018-01-26_10-01-46/MyPkg/MyPkg.dom.xml");
+//        JSONObject jsonobject = analysisXmlFile(xmlStr);
+//        Set<String> keys = jsonobject.keySet();
+//        Iterator iterator = keys.iterator();
+//        while(iterator.hasNext()){
+//            String key = (String) iterator.next();
+//            System.out.print(key);
+//        }
+//    }
 
 
     public static String readFile(String path) throws Exception {
