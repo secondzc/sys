@@ -59,7 +59,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/model")
-public class ModelController extends  BaseController {
+public class ModelController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -94,13 +94,13 @@ public class ModelController extends  BaseController {
     private AttachmentService attachmentService;
     @Autowired
     private ModelTypeService modelTypeService;
-	@Autowired
+    @Autowired
     private LogService logService;
-	@Autowired
+    @Autowired
     private FileTypeService fileTypeService;
 
-    public void insertData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId){
-        Map<String,Object> xmlMap = entry.getValue();
+    public void insertData(Map.Entry<String, Map> entry, Map svgPath, Boolean scope, GUser user, Attachment directory, Long directoryId) {
+        Map<String, Object> xmlMap = entry.getValue();
         Model model = new Model();
         model.setDirectoryId(directoryId);
         model.setParentId(-1);
@@ -109,31 +109,31 @@ public class ModelController extends  BaseController {
         model.setCreateTime(DateUtil.getTimestamp());
         model.setLastUpdateTime(DateUtil.getTimestamp());
         model.setDeleted(false);
-        analysisXmlMap(xmlMap,model,svgPath);
+        analysisXmlMap(xmlMap, model, svgPath);
         Map<String, Object> param = new HashMap<>();
-        param.put("fileName",model.getName());
-        param.put("directoryId",directoryId);
+        param.put("fileName", model.getName());
+        param.put("directoryId", directoryId);
         Model validateModel = modelService.queryByNameAndDir(param);
-        if( validateModel == null){
+        if (validateModel == null) {
             modelService.add(model);
-        }else{
+        } else {
             model.setLastUpdateTime(DateUtil.getTimestamp());
             model.setId(validateModel.getId());
             modelService.update(model);
         }
-        insertVaiable(xmlMap,directoryId);
+        insertVaiable(xmlMap, directoryId);
     }
 
-    public void analysisXmlMap(Map<String,Object> xmlMap,Model model,Map<String,String> svgPath){
-        for (Map.Entry<String ,Object> entry : xmlMap.entrySet()) {
-            if("ModelName".equals(entry.getKey())){
+    public void analysisXmlMap(Map<String, Object> xmlMap, Model model, Map<String, String> svgPath) {
+        for (Map.Entry<String, Object> entry : xmlMap.entrySet()) {
+            if ("ModelName".equals(entry.getKey())) {
                 String type = "";
                 //判断value是什么类型
-                type = decideType(entry.getValue(),type);
-                if("String".equals(type)){
-                    if(!StringUtil.isNull((String) entry.getValue())){
+                type = decideType(entry.getValue(), type);
+                if ("String".equals(type)) {
+                    if (!StringUtil.isNull((String) entry.getValue())) {
                         model.setName((String) entry.getValue());
-                        for(Map.Entry<String ,String> svgEntry : svgPath.entrySet()){
+                        for (Map.Entry<String, String> svgEntry : svgPath.entrySet()) {
 //                            if (svgEntry.getKey().equals(entry.getValue()+".diagram.svg")){
 //                                model.setDiagramSvgPath(svgEntry.getValue());
 //                            }
@@ -157,59 +157,57 @@ public class ModelController extends  BaseController {
 //                            }
                         }
                     }
-            }
+                }
 
             }
-            if(entry.getKey().endsWith("_Model")){
-               String [] modelNames = entry.getKey().split("\\_");
-                 model.setType(modelNames[0]);
+            if (entry.getKey().endsWith("_Model")) {
+                String[] modelNames = entry.getKey().split("\\_");
+                model.setType(modelNames[0]);
             }
-            if("ModelDescript".equals(entry.getKey())){
+            if ("ModelDescript".equals(entry.getKey())) {
                 String type = "";
                 //判断value是什么类型
-                type = decideType(entry.getValue(),type);
-                if("String".equals(type)){
-                    if(!StringUtil.isNull((String) entry.getValue())){
-                    model.setDiscription((String) entry.getValue());
+                type = decideType(entry.getValue(), type);
+                if ("String".equals(type)) {
+                    if (!StringUtil.isNull((String) entry.getValue())) {
+                        model.setDiscription((String) entry.getValue());
                     }
                 }
             }
-            if("ModelClass".equals(entry.getKey())){
+            if ("ModelClass".equals(entry.getKey())) {
                 String type = "";
                 //判断value是什么类型
-                type = decideType(entry.getValue(),type);
-                if("String".equals(type)){
-                    if(!StringUtil.isNull((String) entry.getValue())){
+                type = decideType(entry.getValue(), type);
+                if ("String".equals(type)) {
+                    if (!StringUtil.isNull((String) entry.getValue())) {
                         model.setClasses(ModelClasses.getValueByKey((String) entry.getValue()));
                     }
                 }
             }
-            if("Imports".equals(entry.getKey())){
+            if ("Imports".equals(entry.getKey())) {
                 String type = "";
-                type = decideType(entry.getValue(),type);
+                type = decideType(entry.getValue(), type);
                 //当imports 一个组件的时候，或者没有的时候
-                if("String".equals(type)){
-                    if(!StringUtil.isNull((String) entry.getValue())){
+                if ("String".equals(type)) {
+                    if (!StringUtil.isNull((String) entry.getValue())) {
                         model.setImport((String) entry.getValue());
                     }
-                }
-                else if("Map".equals(type)){
-                    Object secondValue =  ((Map)entry.getValue()).get("import");
-                    type = decideType(secondValue,type);
+                } else if ("Map".equals(type)) {
+                    Object secondValue = ((Map) entry.getValue()).get("import");
+                    type = decideType(secondValue, type);
                     //当import的数量等于1的时候
-                    if("String".equals(type)){
-                        if(!StringUtil.isNull(secondValue.toString())){
+                    if ("String".equals(type)) {
+                        if (!StringUtil.isNull(secondValue.toString())) {
                             model.setImport(secondValue.toString());
                         }
-                    }
-                    else if("List".equals(type)){
+                    } else if ("List".equals(type)) {
                         //当import的数量大于1的时候
-                        List<String> valueList = (List)secondValue;
-                        String importValue="";
-                        for(int i= 0;i<valueList.size();i++){
-                            type = decideType(valueList.get(i),type);
-                            if("String".equals(type)){
-                                importValue += valueList.get(i)+",";
+                        List<String> valueList = (List) secondValue;
+                        String importValue = "";
+                        for (int i = 0; i < valueList.size(); i++) {
+                            type = decideType(valueList.get(i), type);
+                            if ("String".equals(type)) {
+                                importValue += valueList.get(i) + ",";
                             }
                         }
                         model.setImport(importValue);
@@ -217,32 +215,30 @@ public class ModelController extends  BaseController {
                 }
             }
 
-            if("Extendses".equals(entry.getKey())){
+            if ("Extendses".equals(entry.getKey())) {
                 String type = "";
-                type = decideType(entry.getValue(),type);
+                type = decideType(entry.getValue(), type);
                 //当imports 一个组件的时候，或者没有的时候
-                if("String".equals(type)){
-                    if(!StringUtil.isNull((String) entry.getValue())){
+                if ("String".equals(type)) {
+                    if (!StringUtil.isNull((String) entry.getValue())) {
                         model.setExtends((String) entry.getValue());
                     }
-                }
-                else if("Map".equals(type)){
-                    Object secondValue =  ((Map)entry.getValue()).get("extends");
-                    type = decideType(secondValue,type);
+                } else if ("Map".equals(type)) {
+                    Object secondValue = ((Map) entry.getValue()).get("extends");
+                    type = decideType(secondValue, type);
                     //当import的数量等于1的时候
-                    if("String".equals(type)){
-                        if(!StringUtil.isNull(secondValue.toString())){
+                    if ("String".equals(type)) {
+                        if (!StringUtil.isNull(secondValue.toString())) {
                             model.setExtends(secondValue.toString());
                         }
-                    }
-                    else if("List".equals(type)){
+                    } else if ("List".equals(type)) {
                         //当import的数量大于1的时候
-                        List<String> valueList = (List)secondValue;
-                        String extendsValue="";
-                        for(int i= 0;i<valueList.size();i++){
-                            type = decideType(valueList.get(i),type);
-                            if("String".equals(type)){
-                                extendsValue += valueList.get(i)+",";
+                        List<String> valueList = (List) secondValue;
+                        String extendsValue = "";
+                        for (int i = 0; i < valueList.size(); i++) {
+                            type = decideType(valueList.get(i), type);
+                            if ("String".equals(type)) {
+                                extendsValue += valueList.get(i) + ",";
                             }
                         }
                         model.setExtends(extendsValue);
@@ -252,23 +248,21 @@ public class ModelController extends  BaseController {
         }
     }
 
-    public String decideType(Object value,String type){
-        boolean string = value instanceof  String ;
-        boolean list = value instanceof  List;
-        boolean map = value instanceof  Map;
-        if(string){
+    public String decideType(Object value, String type) {
+        boolean string = value instanceof String;
+        boolean list = value instanceof List;
+        boolean map = value instanceof Map;
+        if (string) {
             type = "String";
-        }
-        else if(list){
+        } else if (list) {
             type = "List";
-        }
-        else if(map){
+        } else if (map) {
             type = "Map";
         }
         return type;
     }
 
-    public void insertVaiable(Map<String,Object> xmlMap,Long directoryId) {
+    public void insertVaiable(Map<String, Object> xmlMap, Long directoryId) {
         Model model = new Model();
         for (Map.Entry<String, Object> entry : xmlMap.entrySet()) {
             if ("ModelName".equals(entry.getKey())) {
@@ -278,52 +272,53 @@ public class ModelController extends  BaseController {
                 if ("String".equals(type)) {
                     if (!StringUtil.isNull((String) entry.getValue())) {
                         //修改
-                       // model = modelService.queryModelByName((String) entry.getValue());
+                        // model = modelService.queryModelByName((String) entry.getValue());
                         Map<String, Object> param = new HashMap<>();
-                        param.put("fileName",(String) entry.getValue());
-                        param.put("directoryId",directoryId);
+                        param.put("fileName", (String) entry.getValue());
+                        param.put("directoryId", directoryId);
                         model = modelService.queryByNameAndDir(param);
                     }
                 }
             }
         }
         //插入到variable表中
-        insertV(xmlMap,model);
-      }
-    public  void insertV(Map<String,Object> xmlMap,Model model) {
+        insertV(xmlMap, model);
+    }
+
+    public void insertV(Map<String, Object> xmlMap, Model model) {
         //存储组件的id和parentName
-        Map<String,Long> compName = new HashMap<String,Long>();
+        Map<String, Long> compName = new HashMap<String, Long>();
 
         //存储变量的自身id和parentname
-        Map<String,Long> variableId = new HashMap<>();
+        Map<String, Long> variableId = new HashMap<>();
         for (Map.Entry<String, Object> entry : xmlMap.entrySet()) {
             if ("Components".equals(entry.getKey())) {
                 String type = "";
                 //判断value是什么类型
                 type = decideType(entry.getValue(), type);
-                if("Map".equals(type)){
-                Map<String, List> compMap = (Map<String, List>) entry.getValue();
-                type = decideType(compMap.get("component"),type);
-                if("List".equals(type)){
-                    List<Map<String, Object>> compList = compMap.get("component");
-                    for(int i = 0;i<compList.size(); i++){
-                        type = decideType(compList.get(i),type);
-                        if("Map".equals(type) && compList.get(i).get("parentName") != null){
-                            analysis(compList.get(i),model,compName,variableId);
-                        }
-                        if("Map".equals(type) && compList.get(i).get("component") != null){
-                            type = decideType(compList.get(i).get("component"),type);
-                            analysisComponent((HashMap<String, Object>) compList.get(i),model,compName,variableId);
+                if ("Map".equals(type)) {
+                    Map<String, List> compMap = (Map<String, List>) entry.getValue();
+                    type = decideType(compMap.get("component"), type);
+                    if ("List".equals(type)) {
+                        List<Map<String, Object>> compList = compMap.get("component");
+                        for (int i = 0; i < compList.size(); i++) {
+                            type = decideType(compList.get(i), type);
+                            if ("Map".equals(type) && compList.get(i).get("parentName") != null) {
+                                analysis(compList.get(i), model, compName, variableId);
+                            }
+                            if ("Map".equals(type) && compList.get(i).get("component") != null) {
+                                type = decideType(compList.get(i).get("component"), type);
+                                analysisComponent((HashMap<String, Object>) compList.get(i), model, compName, variableId);
+                            }
                         }
                     }
-                 }
                 }
             }
         }
         //刚插入的Component
         List<Component> componentList = componentService.queryListNullComp();
-        if(componentList.size() == 0){
-            return ;
+        if (componentList.size() == 0) {
+            return;
         }
         //获取组件model的id
         long modelId = 0;
@@ -334,26 +329,26 @@ public class ModelController extends  BaseController {
         List<Model> allModel = modelService.findAllModelicaModel();
         //模型实例化组件的模型名称
         String modelCompName = currModel.getName().split("\\.")[0];
-        for (int i = 0; i< componentList.size(); i++){
+        for (int i = 0; i < componentList.size(); i++) {
 
-            for(int j = 0; j< componentList.size(); j++){
+            for (int j = 0; j < componentList.size(); j++) {
                 //用来判断第二层组件父类
                 //定义需要比较的parentName
                 String parentName = "";
                 String parentNameArr[] = componentList.get(i).getParentName().split("\\;");
-                for(int m= 0;m< parentNameArr.length; m++){
-                    parentName += parentNameArr[m]+";";
+                for (int m = 0; m < parentNameArr.length; m++) {
+                    parentName += parentNameArr[m] + ";";
                 }
-                if(parentName != null && parentName != "" && parentName != ";") {
+                if (parentName != null && parentName != "" && parentName != ";") {
                     if (parentNameArr.length == 1) {
-                        if (parentName.substring(0, parentName.length() - 1).equals(componentList.get(j).getName()) && componentList.get(i).getModelId() == 0 && componentList.get(j).getModelId() == 0  ) {
+                        if (parentName.substring(0, parentName.length() - 1).equals(componentList.get(j).getName()) && componentList.get(i).getModelId() == 0 && componentList.get(j).getModelId() == 0) {
                             componentList.get(i).setParentId(componentList.get(j).getId());
                         }
                     }
                 }
-             //   if(parentName != null && parentName != ""){
-                if(parentNameArr.length >= 2){
-                    if(parentName.substring(0,parentName.length()-1).equals(componentList.get(j).getParentName()+componentList.get(j).getName()) && componentList.get(i).getModelId() == 0 && componentList.get(j).getModelId() == 0){
+                //   if(parentName != null && parentName != ""){
+                if (parentNameArr.length >= 2) {
+                    if (parentName.substring(0, parentName.length() - 1).equals(componentList.get(j).getParentName() + componentList.get(j).getName()) && componentList.get(i).getModelId() == 0 && componentList.get(j).getModelId() == 0) {
                         componentList.get(i).setParentId(componentList.get(j).getId());
                     }
                 }
@@ -368,7 +363,7 @@ public class ModelController extends  BaseController {
 //            }
 //            boolean componentResult = componentService.update(componentList.get(i));
         }
-        for (int i = 0; i< componentList.size(); i++) {
+        for (int i = 0; i < componentList.size(); i++) {
             for (Model modelComp : allModel) {
                 if (modelComp.getName().equals(modelCompName + "." + componentList.get(i).getType())) {
                     componentList.get(i).setModelId(modelComp.getId());
@@ -381,13 +376,13 @@ public class ModelController extends  BaseController {
     }
 
     //获取模型列表
-    @RequestMapping(value = "/getModelList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getModelList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public void getModelList(HttpServletRequest request , HttpServletResponse response){
+    public void getModelList(HttpServletRequest request, HttpServletResponse response) {
         //获取到userName,password
         // 查询到userId的方法 findByNameAndpassword
-        JSONObject jo=new JSONObject();
-        Map<String,List<Model>> modelListMap = new HashMap<>();
+        JSONObject jo = new JSONObject();
+        Map<String, List<Model>> modelListMap = new HashMap<>();
         List<Model> allModelList = modelService.findAllModelicaModel();
         //所有的公有模型列表
         List<Model> publicModelList = new ArrayList<>();
@@ -395,39 +390,39 @@ public class ModelController extends  BaseController {
         List<Model> privateModelList = new ArrayList<>();
         //所有私有的模型列表
         List<Model> allPrivateModelLsit = new ArrayList<>();
-        for (Model allmodel: allModelList) {
-            if(0 != allmodel.getParentId()){
+        for (Model allmodel : allModelList) {
+            if (0 != allmodel.getParentId()) {
                 publicModelList.add(allmodel);
-                if(false == allmodel.getScope()){
+                if (false == allmodel.getScope()) {
                     allPrivateModelLsit.add(allmodel);
-   //                 if(user.getId() != null && user.getId() == allmodel.getUserId()){
-   //                 privateModelList.add(allmodel);
- //                   }
+                    //                 if(user.getId() != null && user.getId() == allmodel.getUserId()){
+                    //                 privateModelList.add(allmodel);
+                    //                   }
                 }
             }
         }
 //        modelListMap.put("publicModelList",publicModelList);
 //        modelListMap.put("privateModelList",privateModelList);
 //        modelListMap.put("allPrivateModelLsit",allPrivateModelLsit);
-        jo.put("publicModelList",publicModelList);
-        jo.put("privateModelList",privateModelList);
-        jo.put("allPrivateModelLsit",allPrivateModelLsit);
-        jo.put("message","查询成功!");
-        jo.put("flag",true);
+        jo.put("publicModelList", publicModelList);
+        jo.put("privateModelList", privateModelList);
+        jo.put("allPrivateModelLsit", allPrivateModelLsit);
+        jo.put("message", "查询成功!");
+        jo.put("flag", true);
         ServletUtil.createSuccessResponse(200, jo, response);
         return;
-  //      return modelListMap;
+        //      return modelListMap;
     }
 
 
-    @RequestMapping(value = "/list",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject list(@RequestParam(value = "parent_id",required = false)Long parent_id,
-                           @RequestParam(value = "scope",required = false)Boolean scope,
-                           @RequestParam(value = "userId",required = false)Long userId,
-                           HttpServletRequest request , HttpServletResponse response){
-        JSONObject jo=new JSONObject();
-        List<ModelWeb>  repositoryModelList = new ArrayList<>();
+    public JSONObject list(@RequestParam(value = "parent_id", required = false) Long parent_id,
+                           @RequestParam(value = "scope", required = false) Boolean scope,
+                           @RequestParam(value = "userId", required = false) Long userId,
+                           HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
+        List<ModelWeb> repositoryModelList = new ArrayList<>();
         //过滤后的modelList
         List<ModelDto> searchModel = new ArrayList<>();
         //查询公有上传申签通过的模型
@@ -443,34 +438,34 @@ public class ModelController extends  BaseController {
         //查询所有的审核模型
         List<ReviewFlowInstance> allReviewFlow = reviewFlowInstanceService.allReviewFlow();
         //存放directory的id
-        List<Long> directoryIdList  = new ArrayList<>();
-        if(parent_id == null){
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","ok");
+        List<Long> directoryIdList = new ArrayList<>();
+        if (parent_id == null) {
+            jo.put("status", "1");
+            jo.put("code", 0);
+            jo.put("msg", "ok");
             return jo;
         }
         try {
             List<Directory> rootDirectoryList = directoryService.queryListById(parent_id);
             List<ModelDto> allModelList = modelService.findAllModel();
-            if(parent_id != null && parent_id != 0 && rootDirectoryList.size() >0){
+            if (parent_id != null && parent_id != 0 && rootDirectoryList.size() > 0) {
                 //仅有一个directory
-                if(rootDirectoryList.size() >0){
+                if (rootDirectoryList.size() > 0) {
                     Directory oneDirectory = rootDirectoryList.get(0);
-                    getModelTree(oneDirectory.getId(),allDirectory,directoryIdList);
-                     directoryIdList.add(oneDirectory.getId());
+                    getModelTree(oneDirectory.getId(), allDirectory, directoryIdList);
+                    directoryIdList.add(oneDirectory.getId());
 
                 }
                 for (Long id : directoryIdList) {
-                    for (ModelDto model: allModelList) {
-                        if(model.getDirectoryId() == id){
-                            if(scope != null){
-                                if(model.getParentId() == 0 && model.getScope() == scope ){
+                    for (ModelDto model : allModelList) {
+                        if (model.getDirectoryId() == id) {
+                            if (scope != null) {
+                                if (model.getParentId() == 0 && model.getScope() == scope) {
                                     searchModel.add(model);
                                     reviewOfModel.add(model);
                                 }
-                            }else{
-                                if(model.getParentId() == 0){
+                            } else {
+                                if (model.getParentId() == 0) {
                                     searchModel.add(model);
                                 }
                             }
@@ -486,18 +481,18 @@ public class ModelController extends  BaseController {
 //                    }
 //                }
             }
-      //      if(parent_id != null  && rootDirectoryList.size() >0){
-            if(parent_id == 0){
-                if(scope != null) {
+            //      if(parent_id != null  && rootDirectoryList.size() >0){
+            if (parent_id == 0) {
+                if (scope != null) {
                     for (ModelDto model : allModelList) {
                         if (model.getParentId() == 0 && model.getScope() == scope) {
                             searchModel.add(model);
                             reviewOfModel.add(model);
                         }
                     }
-                }else{
+                } else {
                     for (ModelDto model : allModelList) {
-                        if (model.getParentId() == 0 && model.getScope() == true ) {
+                        if (model.getParentId() == 0 && model.getScope() == true) {
                             searchModel.add(model);
                         }
                     }
@@ -511,42 +506,42 @@ public class ModelController extends  BaseController {
 //                    }
 //                }
             }
-            if(scope == null){
-                for (ModelDto model :searchModel) {
-                    for (ReviewFlowInstance reviewFlowInstance:allReviewFlow) {
-                        if(reviewFlowInstance.getModelId() == model.getId() && reviewFlowInstance.getStatus() == 3){
+            if (scope == null) {
+                for (ModelDto model : searchModel) {
+                    for (ReviewFlowInstance reviewFlowInstance : allReviewFlow) {
+                        if (reviewFlowInstance.getModelId() == model.getId() && reviewFlowInstance.getStatus() == 3) {
                             reviewOfModel.add(model);
                         }
                     }
                 }
             }
-            for (int i = 0; i <= reviewOfModel.size() -1; i++) {
+            for (int i = 0; i <= reviewOfModel.size() - 1; i++) {
                 ModelWeb modelWeb = new ModelWeb();
                 GUser user = gUserService.queryById(reviewOfModel.get(i).getUserId());
-                this.insertModelWeb(modelWeb ,reviewOfModel,i,user);
-                repositoryModelList.add(modelWeb );
+                this.insertModelWeb(modelWeb, reviewOfModel, i, user);
+                repositoryModelList.add(modelWeb);
             }
             for (ModelWeb modelWeb : repositoryModelList) {
-                for (Repository repository: allRepository) {
-                    if(modelWeb.getRepositoryName().equals(repository.getName())){
+                for (Repository repository : allRepository) {
+                    if (modelWeb.getRepositoryName().equals(repository.getName())) {
                         //关注列表
                         List<Watch> watches = new ArrayList<>();
-                        for (Watch watch : allWatch){
-                            if(repository.getID() == watch.getRepoID()){
+                        for (Watch watch : allWatch) {
+                            if (repository.getID() == watch.getRepoID()) {
                                 watches.add(watch);
                             }
-                            if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
-                               modelWeb.setAlreadyWatch(true);
+                            if (repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()) {
+                                modelWeb.setAlreadyWatch(true);
                             }
                         }
                         modelWeb.setNumberWatch(watches.size());
                         //收藏列表
                         List<Star> stars = new ArrayList<>();
                         for (Star star : allStar) {
-                            if (repository.getID() == star.getRepoId()){
+                            if (repository.getID() == star.getRepoId()) {
                                 stars.add(star);
                             }
-                            if(repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()){
+                            if (repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()) {
                                 modelWeb.setAlreadyStar(true);
                             }
                         }
@@ -555,27 +550,27 @@ public class ModelController extends  BaseController {
                 }
             }
             modelService.uploadTimeSort(repositoryModelList);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","ok");
+            jo.put("status", "1");
+            jo.put("code", 0);
+            jo.put("msg", "ok");
             return jo;
         }
-        jo.put("status",1);
-        jo.put("code",0);
-        jo.put("msg","ok");
-        jo.put("repositories",repositoryModelList);
+        jo.put("status", 1);
+        jo.put("code", 0);
+        jo.put("msg", "ok");
+        jo.put("repositories", repositoryModelList);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
-    @RequestMapping(value = "/modelVariable",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/modelVariable", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject modelVariable(@RequestParam(value = "modelId",required = false)String modelId,
-                           HttpServletRequest request , HttpServletResponse response){
-        JSONObject jo=new JSONObject();
+    public JSONObject modelVariable(@RequestParam(value = "modelId", required = false) String modelId,
+                                    HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
         //获取model对象
-        Model model =  new Model();
+        Model model = new Model();
         List<Variable> variableList = new ArrayList<>();
         ModelWeb modelWeb = new ModelWeb();
         try {
@@ -617,42 +612,41 @@ public class ModelController extends  BaseController {
 //            if(model.getInfoTextPath() != null && model.getInfoTextPath() != ""){
 //                modelWeb.setInfoTextPath("http://"+resourceUtil.getLocalPath()+"/FileLibrarys"+model.getInfoTextPath().substring(7));
 //            }
-            for (Repository repository: allRepository) {
-                if(model.getScope()){
-                    if((user.getName()+modelWeb.getRepositoryName()).equals(repository.getName())){
-                        setWebModelWatchAndStar(allWatch,repository,modelWeb,allStar);
+            for (Repository repository : allRepository) {
+                if (model.getScope()) {
+                    if ((user.getName() + modelWeb.getRepositoryName()).equals(repository.getName())) {
+                        setWebModelWatchAndStar(allWatch, repository, modelWeb, allStar);
+                    }
+                } else {
+                    if (modelWeb.getRepositoryName().equals(repository.getName())) {
+                        setWebModelWatchAndStar(allWatch, repository, modelWeb, allStar);
                     }
                 }
-                else{
-                        if(modelWeb.getRepositoryName().equals(repository.getName())){
-                            setWebModelWatchAndStar(allWatch,repository,modelWeb,allStar);
-                        }
-                    }
 
 
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","ok");
+            jo.put("status", "1");
+            jo.put("code", 0);
+            jo.put("msg", "ok");
             return jo;
         }
-        jo.put("status",1);
-        jo.put("code",0);
-        jo.put("msg","ok");
-        jo.put("tableData",variableList);
+        jo.put("status", 1);
+        jo.put("code", 0);
+        jo.put("msg", "ok");
+        jo.put("tableData", variableList);
         jo.put("form", modelWeb);
         return (JSONObject) JSONObject.toJSON(jo);
     }
 
-    public void setWebModelWatchAndStar(List<Watch> allWatch,Repository repository,ModelWeb modelWeb,List<Star> allStar){
+    public void setWebModelWatchAndStar(List<Watch> allWatch, Repository repository, ModelWeb modelWeb, List<Star> allStar) {
         List<Watch> watches = new ArrayList<>();
-        for (Watch watch : allWatch){
-            if(repository.getID() == watch.getRepoID()){
+        for (Watch watch : allWatch) {
+            if (repository.getID() == watch.getRepoID()) {
                 watches.add(watch);
             }
-            if(repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()){
+            if (repository.getID() == watch.getRepoID() && modelWeb.getUserId() == watch.getUserID()) {
                 modelWeb.setAlreadyWatch(true);
             }
         }
@@ -660,10 +654,10 @@ public class ModelController extends  BaseController {
         //收藏列表
         List<Star> stars = new ArrayList<>();
         for (Star star : allStar) {
-            if (repository.getID() == star.getRepoId()){
+            if (repository.getID() == star.getRepoId()) {
                 stars.add(star);
             }
-            if(repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()){
+            if (repository.getID() == star.getRepoId() && modelWeb.getUserId() == star.getUid()) {
                 modelWeb.setAlreadyStar(true);
             }
         }
@@ -671,12 +665,11 @@ public class ModelController extends  BaseController {
     }
 
 
-
-    @RequestMapping(value = "/treeModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/treeModel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject treeModel(@RequestParam(value = "modelId",required = false)Long modelId,
-                           HttpServletRequest request , HttpServletResponse response) {
-        JSONObject jo=new JSONObject();
+    public JSONObject treeModel(@RequestParam(value = "modelId", required = false) Long modelId,
+                                HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jo = new JSONObject();
         //在这个模型下的所有model（modelList）
         List<VariableTreeObj> modelTreeList = new ArrayList<>();
         List<VariableTreeObj> modelList = new ArrayList<>();
@@ -691,49 +684,47 @@ public class ModelController extends  BaseController {
             modelTreeList.add(treeRoot);
             //查询到所有的model
             List<Model> allModel = modelService.findAllModelicaModel();
-            variableController.getSearchModel(modelId,allModel,rootChild,modelList);
-        }catch(Exception e) {
+            variableController.getSearchModel(modelId, allModel, rootChild, modelList);
+        } catch (Exception e) {
             e.printStackTrace();
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","error");
+            jo.put("status", "1");
+            jo.put("code", 0);
+            jo.put("msg", "error");
             return jo;
         }
-        jo.put("status",1);
-        jo.put("code",0);
-        jo.put("msg","ok");
-        jo.put("data",modelTreeList);
-        return  jo;
+        jo.put("status", 1);
+        jo.put("code", 0);
+        jo.put("msg", "ok");
+        jo.put("data", modelTreeList);
+        return jo;
     }
 
 
-
-
     //获取点击树后所有的模型对象
-    public static void getModelTree(Long directoryId,List<Directory> allDirectory,List<Long> directoryIdList){
-        for(int i= 0; i< allDirectory.size() ; i++){
-            if(allDirectory.get(i).getParentId() == directoryId){
+    public static void getModelTree(Long directoryId, List<Directory> allDirectory, List<Long> directoryIdList) {
+        for (int i = 0; i < allDirectory.size(); i++) {
+            if (allDirectory.get(i).getParentId() == directoryId) {
                 directoryIdList.add(allDirectory.get(i).getId());
-                getModelTree(allDirectory.get(i).getId(),allDirectory,directoryIdList);
+                getModelTree(allDirectory.get(i).getId(), allDirectory, directoryIdList);
             }
         }
     }
 
     //获取model树所有子节点的id
-    public static void getModelChildTree(Long modelId,List<Model> allModel,List<TreeObj> treeChild ){
-        for(int i=0; i<allModel.size(); i++){
-            if(allModel.get(i).getParentId() == modelId){
-                 TreeObj treeObj = new TreeObj();
-                 treeObj.setId(allModel.get(i).getId());
-                 treeObj.setLabel(allModel.get(i).getName());
+    public static void getModelChildTree(Long modelId, List<Model> allModel, List<TreeObj> treeChild) {
+        for (int i = 0; i < allModel.size(); i++) {
+            if (allModel.get(i).getParentId() == modelId) {
+                TreeObj treeObj = new TreeObj();
+                treeObj.setId(allModel.get(i).getId());
+                treeObj.setLabel(allModel.get(i).getName());
                 List<TreeObj> childVar = new ArrayList<>();
                 treeObj.setChildren(childVar);
-                 treeChild.add(treeObj);
+                treeChild.add(treeObj);
             }
         }
-        if( treeChild != null){
-            for (TreeObj treechild: treeChild) {
-                getModelChildTree(treechild.getId(),allModel,treechild.getChildren());
+        if (treeChild != null) {
+            for (TreeObj treechild : treeChild) {
+                getModelChildTree(treechild.getId(), allModel, treechild.getChildren());
             }
         }
 
@@ -742,28 +733,28 @@ public class ModelController extends  BaseController {
     /*
     * 用来解析xml的参数存储
     * */
-    public  void analysis(Map<String,Object> xmlData,Model model,Map<String,Long> compName,Map<String,Long> variableId){
+    public void analysis(Map<String, Object> xmlData, Model model, Map<String, Long> compName, Map<String, Long> variableId) {
         //存储变量的parentName 和组件id（包含变量的组件）
-        Map<String,Long> variableName = new HashMap<>();
-        if(xmlData.get("IsVariable").equals("True")){
+        Map<String, Long> variableName = new HashMap<>();
+        if (xmlData.get("IsVariable").equals("True")) {
             Variable variable = new Variable();
             variable.setModelId(model.getId());
             //判断这个组件是否需要插入到数据库
-            doSet(xmlData,variable);
+            doSet(xmlData, variable);
 //          int variableAdd = variableService.add(variable);
-           variableName.put(variable.getParentName(), (long) -1);
-            for (Map.Entry<String,Long> varName : variableName.entrySet()) {
+            variableName.put(variable.getParentName(), (long) -1);
+            for (Map.Entry<String, Long> varName : variableName.entrySet()) {
                 String variableArr[] = varName.getKey().split("\\;");
                 //用来比较的变量父类名
                 String varCompare = "";
-                for(int i= 0;i< variableArr.length ; i++){
-                    varCompare += variableArr[i]+";";
+                for (int i = 0; i < variableArr.length; i++) {
+                    varCompare += variableArr[i] + ";";
                 }
-                if(varCompare == "" || varCompare == null || varCompare.equals(";")){
+                if (varCompare == "" || varCompare == null || varCompare.equals(";")) {
                     int variableAdd = variableService.add(variable);
-                }else{
-                    for (Map.Entry<String,Long> comp: compName.entrySet()) {
-                        if(comp.getKey().equals(varCompare.substring(0,varCompare.length()-1))){
+                } else {
+                    for (Map.Entry<String, Long> comp : compName.entrySet()) {
+                        if (comp.getKey().equals(varCompare.substring(0, varCompare.length() - 1))) {
                             varName.setValue(comp.getValue());
                             variable.setComponnetId(comp.getValue());
                             //   int variableUp = variableService.update(variable);
@@ -775,17 +766,17 @@ public class ModelController extends  BaseController {
             }
 
         }
-        if(xmlData.get("IsVariable").equals("False")){
-               Component component = new Component();
-               component.setModelId(model.getId());
-               component.setCreateTime(new Date());
-               doComponentSet(xmlData,component);
-               int componentResult = componentService.add(component);
-               long index_last_id = component.getId();
-               if(component.getParentName().equals("")){
-                   compName.put(component.getName(),index_last_id);
-               }
-               compName.put(component.getParentName()+component.getName(),index_last_id);
+        if (xmlData.get("IsVariable").equals("False")) {
+            Component component = new Component();
+            component.setModelId(model.getId());
+            component.setCreateTime(new Date());
+            doComponentSet(xmlData, component);
+            int componentResult = componentService.add(component);
+            long index_last_id = component.getId();
+            if (component.getParentName().equals("")) {
+                compName.put(component.getName(), index_last_id);
+            }
+            compName.put(component.getParentName() + component.getName(), index_last_id);
         }
 
     }
@@ -793,21 +784,21 @@ public class ModelController extends  BaseController {
     /**
      * 获取到参数插入到对象中
      */
-    public static void doSet(Map<String,Object> xmlData,Variable variable){
-        if (xmlData.get("Name") != null ) {
+    public static void doSet(Map<String, Object> xmlData, Variable variable) {
+        if (xmlData.get("Name") != null) {
             variable.setName((String) xmlData.get("Name"));
         }
         if (xmlData.get("Type") != null) {
             if ("True".equals(xmlData.get("IsArray"))) {
-                variable.setType(VariableType.getValueByKey(xmlData.get("Type")+"[]"));
-            }else {
+                variable.setType(VariableType.getValueByKey(xmlData.get("Type") + "[]"));
+            } else {
                 variable.setType((String) xmlData.get("Type"));
             }
         }
         if (xmlData.get("Value") != null) {
-            if(xmlData.get("Value").toString().length() > 250){
+            if (xmlData.get("Value").toString().length() > 250) {
                 variable.setDefaultValue("默认值过长！");
-            }else{
+            } else {
                 variable.setDefaultValue((String) xmlData.get("Value"));
             }
         }
@@ -834,13 +825,13 @@ public class ModelController extends  BaseController {
     }
 
     //解析组件
-    public void analysisComponent(HashMap<String, Object> map, Model model,Map<String,Long> compName,Map<String,Long> variableId){
+    public void analysisComponent(HashMap<String, Object> map, Model model, Map<String, Long> compName, Map<String, Long> variableId) {
         //组件内容
-        List<HashMap<String,Object>>  componentList = new ArrayList<>();
+        List<HashMap<String, Object>> componentList = new ArrayList<>();
         String type = "";
-        if(map.get("component") != null) {
+        if (map.get("component") != null) {
             type = decideType(map.get("component"), type);
-            if("Map".equals(type)){
+            if ("Map".equals(type)) {
                 analysisComponentVar(map, model, compName, variableId);
             }
             if ("List".equals(type)) {
@@ -866,17 +857,17 @@ public class ModelController extends  BaseController {
         }
     }
 
-    public void doComponentSet(Map<String,Object> xmlData,Component component){
-        if (xmlData.get("Name") != null ) {
+    public void doComponentSet(Map<String, Object> xmlData, Component component) {
+        if (xmlData.get("Name") != null) {
             component.setName((String) xmlData.get("Name"));
         }
         if (xmlData.get("Type") != null) {
             component.setType((String) xmlData.get("Type"));
         }
         if (xmlData.get("Modification") != null) {
-            if(xmlData.get("Modification").toString().length() > 200){
+            if (xmlData.get("Modification").toString().length() > 200) {
                 component.setModification("重定义过长！");
-            }else{
+            } else {
                 component.setModification((String) xmlData.get("Modification"));
             }
 
@@ -884,155 +875,152 @@ public class ModelController extends  BaseController {
         if (xmlData.get("parentName") != null) {
             component.setParentName((String) xmlData.get("parentName"));
         }
-        }
+    }
 
-        //组件存在conpent和componentVar同时存在
-    public void  analysisComponentVar(HashMap<String, Object> map, Model model,Map<String,Long> compName,Map<String,Long> variableId){
-                //组件内容
-        List<HashMap<String,Object>>  componentList = new ArrayList<>();
+    //组件存在conpent和componentVar同时存在
+    public void analysisComponentVar(HashMap<String, Object> map, Model model, Map<String, Long> compName, Map<String, Long> variableId) {
+        //组件内容
+        List<HashMap<String, Object>> componentList = new ArrayList<>();
         //获取组件内容插入到数据库
         componentList = (List<HashMap<String, Object>>) map.get("componentVar");
-        if(componentList != null){
+        if (componentList != null) {
             HashMap<String, Object> componentMap = componentList.get(0);
             //修改变量的parentName
-            if(componentMap.get("parentName") != null){
+            if (componentMap.get("parentName") != null) {
                 reviseVariable(componentMap);
             }
-            analysis(componentMap,model,compName,variableId);
-        }
-        else{
+            analysis(componentMap, model, compName, variableId);
+        } else {
             return;
         }
         //子组件内容
-        analysisComponentVar((HashMap<String, Object>) map.get("component"),model,compName,variableId);
+        analysisComponentVar((HashMap<String, Object>) map.get("component"), model, compName, variableId);
     }
 
-     public void reviseVariable(HashMap<String, Object> componentMap){
+    public void reviseVariable(HashMap<String, Object> componentMap) {
         String parentName = "";
         String realParentName = "";
         parentName = (String) componentMap.get("parentName");
         String variableArr[] = parentName.split("\\;");
         //得出正真的parentName(实际上在得到parentName时无法规避特殊性)
-         for(int i= 0; i<variableArr.length-1; i++){
-             realParentName += variableArr[i]+";";
-         }
-         //修改componentMap
-         componentMap.put("parentName",realParentName.substring(0,realParentName.length()-1));
-     }
+        for (int i = 0; i < variableArr.length - 1; i++) {
+            realParentName += variableArr[i] + ";";
+        }
+        //修改componentMap
+        componentMap.put("parentName", realParentName.substring(0, realParentName.length() - 1));
+    }
 
-    @RequestMapping(value = "/download",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/download", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject download(@RequestParam(value = "modelId",required = false)Long modelId,
-                                HttpServletRequest request , HttpServletResponse response){
+    public JSONObject download(@RequestParam(value = "modelId", required = false) Long modelId,
+                               HttpServletRequest request, HttpServletResponse response) {
 
-        JSONObject jo=new JSONObject();
-        String realUrl ="";
-        try{
+        JSONObject jo = new JSONObject();
+        String realUrl = "";
+        try {
             Model model = modelService.queryModelById(modelId);
             String modelName = model.getName();
-            String modelDir = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + model.getName();
-            String modelZip = modelDir+".zip";
+            String modelDir = resourceUtil.getunzipPath() + ResourceUtil.getXiaZai() + model.getName();
+            String modelZip = modelDir + ".zip";
             DeleteFileUtil.delete(modelDir);
             DeleteFileUtil.delete(modelZip);
             List<Attachment> attachmentList = attachmentService.getAttachmentsByModelId(modelId);
-            if(attachmentList.size() >0){
-                realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,modelName,false).substring(7);
+            if (attachmentList.size() > 0) {
+                realUrl = "http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + attachmentService.getZipUrl(attachmentList, modelName, false).substring(7);
             }
-            }catch(Exception e) {
-                e.printStackTrace();
-                return returnErrorInfo(jo);
-            }
-                jo.put("data",realUrl);
-                return returnSuccessInfo(jo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return returnErrorInfo(jo);
+        }
+        jo.put("data", realUrl);
+        return returnSuccessInfo(jo);
 
-            }
+    }
 
 
-    @RequestMapping(value = "/downloadAttachFloder",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/downloadAttachFloder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject downloadAttachFloder(@RequestParam(value = "attachmentId",required = false)Long attachmentId,
-                               HttpServletRequest request , HttpServletResponse response){
+    public JSONObject downloadAttachFloder(@RequestParam(value = "attachmentId", required = false) Long attachmentId,
+                                           HttpServletRequest request, HttpServletResponse response) {
 
-        JSONObject jo=new JSONObject();
-        String realUrl ="";
-        try{
+        JSONObject jo = new JSONObject();
+        String realUrl = "";
+        try {
             Attachment attachment = attachmentService.queryById(attachmentId);
             List<Attachment> attachmentList = new ArrayList<>();
             List<Attachment> modelAttachmentList = attachmentService.getAttachmentsByModelId(attachment.getModelId());
-            attachmentList = attachmentService.getFloderAttach(modelAttachmentList,attachment,attachmentList);
+            attachmentList = attachmentService.getFloderAttach(modelAttachmentList, attachment, attachmentList);
             String FloderName = attachment.getName();
-            String modelDir = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + attachment.getName();
-            String modelZip = modelDir+".zip";
+            String modelDir = resourceUtil.getunzipPath() + ResourceUtil.getXiaZai() + attachment.getName();
+            String modelZip = modelDir + ".zip";
             DeleteFileUtil.delete(modelDir);
             DeleteFileUtil.delete(modelZip);
-            if(attachmentList.size() >0){
-                realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ attachmentService.getZipUrl(attachmentList,attachment.getName(),attachment.getFloder()).substring(7);
+            if (attachmentList.size() > 0) {
+                realUrl = "http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + attachmentService.getZipUrl(attachmentList, attachment.getName(), attachment.getFloder()).substring(7);
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return returnErrorInfo(jo);
         }
-        jo.put("data",realUrl);
+        jo.put("data", realUrl);
         return returnSuccessInfo(jo);
 
     }
 
-    @RequestMapping(value = "/downloadAttach",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/downloadAttach", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject downloadAttach(@RequestParam(value = "attachmentId",required = false)Long attachmentId,
-                               HttpServletRequest request , HttpServletResponse response){
+    public JSONObject downloadAttach(@RequestParam(value = "attachmentId", required = false) Long attachmentId,
+                                     HttpServletRequest request, HttpServletResponse response) {
 
-        JSONObject jo=new JSONObject();
-        String realUrl ="";
-        try{
+        JSONObject jo = new JSONObject();
+        String realUrl = "";
+        try {
             Attachment attachment = attachmentService.queryById(attachmentId);
-             realUrl = "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachment.getFilePath();
-        }catch(Exception e) {
+            realUrl = "http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + resourceUtil.getunzipPath().substring(7) + attachment.getFilePath();
+        } catch (Exception e) {
             e.printStackTrace();
             return returnErrorInfo(jo);
         }
-        jo.put("data",realUrl);
+        jo.put("data", realUrl);
         return returnSuccessInfo(jo);
 
     }
 
 
-
-
-    @RequestMapping(value = "/deleted",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/deleted", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject deleted(@RequestParam(value = "modelId",required = false)Long modelId,
-                               HttpServletRequest request , HttpServletResponse response){
+    public JSONObject deleted(@RequestParam(value = "modelId", required = false) Long modelId,
+                              HttpServletRequest request, HttpServletResponse response) {
 
-        JSONObject jo=new JSONObject();
-        try{
+        JSONObject jo = new JSONObject();
+        try {
             Model model = modelService.queryModelById(modelId);
             model.setDeleted(true);
             modelService.update(model);
             String title = "删除模型";
-            String content = "用户\t"+getUserName()+"\t删除模型\t"+model.getName();
-            logService.addLog(title,content);
-        }catch(Exception e) {
+            String content = "用户\t" + getUserName() + "\t删除模型\t" + model.getName();
+            logService.addLog(title, content);
+        } catch (Exception e) {
             e.printStackTrace();
-            jo.put("status","1");
-            jo.put("code",0);
-            jo.put("msg","error");
+            jo.put("status", "1");
+            jo.put("code", 0);
+            jo.put("msg", "error");
             return jo;
         }
-        jo.put("status",1);
-        jo.put("code",0);
-        jo.put("msg","ok");
+        jo.put("status", 1);
+        jo.put("code", 0);
+        jo.put("msg", "ok");
         return (JSONObject) JSONObject.toJSON(jo);
 
     }
 
-    public void insertCAEData(Map.Entry<String,Map> entry,Map svgPath,Boolean scope,GUser user,Attachment directory,Long directoryId,String modelFilePath){
-        Map<String,Object> xmlMap = entry.getValue();
+    public void insertCAEData(Map.Entry<String, Map> entry, Map svgPath, Boolean scope, GUser user, Attachment directory, Long directoryId, String modelFilePath) {
+        Map<String, Object> xmlMap = entry.getValue();
         Model model = new Model();
         long modelId = 0;
         String type = "";
-        Map<String,String> generalInfo = new HashMap<>();
-        if((Map<String, String>) xmlMap.get("GeneralInfo") != null){
+        Map<String, String> generalInfo = new HashMap<>();
+        if ((Map<String, String>) xmlMap.get("GeneralInfo") != null) {
             generalInfo = (Map<String, String>) xmlMap.get("GeneralInfo");
             model.setDirectoryId(directoryId);
             model.setUserId(user.getID());
@@ -1054,52 +1042,52 @@ public class ModelController extends  BaseController {
                 model.setName(generalInfo.get("Name"));
             }
             Map<String, Object> param = new HashMap<>();
-            param.put("fileName",model.getName());
-            param.put("directoryId",directoryId);
+            param.put("fileName", model.getName());
+            param.put("directoryId", directoryId);
             Model validateModel = modelService.queryByNameAndDir(param);
-            if( validateModel == null){
+            if (validateModel == null) {
                 modelService.add(model);
                 modelId = model.getId();
-            }else{
+            } else {
                 model.setLastUpdateTime(DateUtil.getTimestamp());
                 model.setId(validateModel.getId());
                 modelService.update(model);
                 modelId = validateModel.getId();
             }
         }
-        this.getCAEVariable(xmlMap,type,modelId);
+        this.getCAEVariable(xmlMap, type, modelId);
         try {
             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
+            statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
         } catch (SqlNumberException e) {
             e.printStackTrace();
         }
     }
 
-    public void toolInsertCAE(Map<String,Object> xmlMap,boolean isScopeDir,GUser user,Long dirID,String modelFilePath){
+    public void toolInsertCAE(Map<String, Object> xmlMap, boolean isScopeDir, GUser user, Long dirID, String modelFilePath) {
         Model model = new Model();
         long modelId = 0;
         String type = "";
-        Map<String,String> generalInfo = new HashMap<>();
+        Map<String, String> generalInfo = new HashMap<>();
         model.setDirectoryId(dirID);
-        this.insertCAEModel(xmlMap,generalInfo,model,user,isScopeDir, modelFilePath);
+        this.insertCAEModel(xmlMap, generalInfo, model, user, isScopeDir, modelFilePath);
         Map<String, Object> param = new HashMap<>();
-        param.put("fileName",model.getName());
-        param.put("directoryId",dirID);
+        param.put("fileName", model.getName());
+        param.put("directoryId", dirID);
         Model validateModel = modelService.queryByNameAndDir(param);
-        if( validateModel == null){
+        if (validateModel == null) {
             modelService.add(model);
             modelId = model.getId();
-        }else{
+        } else {
             model.setLastUpdateTime(DateUtil.getTimestamp());
             model.setId(validateModel.getId());
             modelService.update(model);
             modelId = validateModel.getId();
         }
-        this.getCAEVariable(xmlMap,type,modelId);
+        this.getCAEVariable(xmlMap, type, modelId);
         try {
             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
+            statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
         } catch (SqlNumberException e) {
             e.printStackTrace();
         }
@@ -1107,8 +1095,7 @@ public class ModelController extends  BaseController {
     }
 
 
-
-    public void insertCAEVariable(Map<String,String> variable,Long modelId){
+    public void insertCAEVariable(Map<String, String> variable, Long modelId) {
         Variable caeVariable = new Variable();
         caeVariable.setModelId(modelId);
         caeVariable.setName(variable.get("Name"));
@@ -1117,7 +1104,7 @@ public class ModelController extends  BaseController {
         caeVariable.setUpperBound(variable.get("Max"));
         caeVariable.setLowerBound(variable.get("Min"));
         caeVariable.setCreateTime(DateUtil.getTimestamp());
-        if("".equals(variable.get("parentName"))){
+        if ("".equals(variable.get("parentName"))) {
             variableService.add(caeVariable);
         }
     }
@@ -1140,14 +1127,13 @@ public class ModelController extends  BaseController {
 //                model.setIconSvgPath(directory.getRelativeAddress() + "/"+generalInfo.get("IconFile").split("\\/")[generalInfo.get("IconFile").split("\\/").length-1]);
 //            }
             //模型源文件路径
-            String modelFullPath = resourceUtil.getunzipPath()+modelRelativePath;
+            String modelFullPath = resourceUtil.getunzipPath() + modelRelativePath;
             //将xml中的base64内容保存为文件
             String clientIconFile = generalInfo.get("IconFile");
             String base64IconData = generalInfo.get("IconData");
-            if (!StringUtil.isNull(clientIconFile))
-            {
+            if (!StringUtil.isNull(clientIconFile)) {
                 String serverIconFile = Paths.get(modelFullPath).getParent().toString()
-                        +"/"+Paths.get(clientIconFile).getFileName();
+                        + "/" + Paths.get(clientIconFile).getFileName();
                 byte[] byIconData = Base64.getDecoder().decode(base64IconData);
                 try {
                     OutputStream out = new FileOutputStream(serverIconFile);
@@ -1169,19 +1155,19 @@ public class ModelController extends  BaseController {
         }
     }
 
-    public void getCAEVariable( Map<String,Object> xmlMap,String type,long modelId){
-        if((Map<String, Object>) xmlMap.get("Files") != null){
-            Map<String,Object> filesMap = (Map<String, Object>) xmlMap.get("Files");
-            type = decideType(filesMap.get("File"),type);
-            if("List".equals(type)){
-                List<Map<String,Object>> fileList = (List<Map<String, Object>>) filesMap.get("File");
-                for (Map<String,Object> file:fileList) {
-                    if(file.get("Variables") != null){
-                        Map<String,Object> variables = (Map<String, Object>) file.get("Variables");
-                        if(variables.get("Variable") != null){
-                            List<Map<String,String>> variableList = (List<Map<String, String>>) variables.get("Variable");
-                            for (Map<String,String> variable :variableList) {
-                                insertCAEVariable(variable,modelId);
+    public void getCAEVariable(Map<String, Object> xmlMap, String type, long modelId) {
+        if ((Map<String, Object>) xmlMap.get("Files") != null) {
+            Map<String, Object> filesMap = (Map<String, Object>) xmlMap.get("Files");
+            type = decideType(filesMap.get("File"), type);
+            if ("List".equals(type)) {
+                List<Map<String, Object>> fileList = (List<Map<String, Object>>) filesMap.get("File");
+                for (Map<String, Object> file : fileList) {
+                    if (file.get("Variables") != null) {
+                        Map<String, Object> variables = (Map<String, Object>) file.get("Variables");
+                        if (variables.get("Variable") != null) {
+                            List<Map<String, String>> variableList = (List<Map<String, String>>) variables.get("Variable");
+                            for (Map<String, String> variable : variableList) {
+                                insertCAEVariable(variable, modelId);
                             }
                         }
 
@@ -1192,7 +1178,7 @@ public class ModelController extends  BaseController {
     }
 
 
-    public void insertModelWeb(ModelWeb modelWeb ,List<ModelDto> reviewOfModel,int i,GUser user){
+    public void insertModelWeb(ModelWeb modelWeb, List<ModelDto> reviewOfModel, int i, GUser user) {
         modelWeb.setIndex(reviewOfModel.get(i).getId());
         modelWeb.setTotal(reviewOfModel.size());
         modelWeb.setName(modelUtil.splitName(reviewOfModel.get(i).getName()));
@@ -1204,12 +1190,12 @@ public class ModelController extends  BaseController {
 //        modelWeb.setTextInfo(reviewOfModel.get(i).getTextInfo());
         modelWeb.setDirectoryId(reviewOfModel.get(i).getDirectoryId());
         modelWeb.setType(reviewOfModel.get(i).getType());
-        if(!StringUtil.isNull(reviewOfModel.get(i).getIconRealUrl())){
-            modelWeb.setImageUrl("http://"+resourceUtil.getLocalPath()+resourceUtil.getMappedPackage()+resourceUtil.getunzipPath().substring(7)+reviewOfModel.get(i).getIconRealUrl());
+        if (!StringUtil.isNull(reviewOfModel.get(i).getIconRealUrl())) {
+            modelWeb.setImageUrl("http://" + resourceUtil.getLocalPath() + resourceUtil.getMappedPackage() + resourceUtil.getunzipPath().substring(7) + reviewOfModel.get(i).getIconRealUrl());
         }
         modelWeb.setUploadTime(reviewOfModel.get(i).getLastUpdateTime().getTime());
         modelWeb.setCreateTime(reviewOfModel.get(i).getCreateTime().getTime());
-        if(reviewOfModel.get(i).getLastUpdateTime() != null){
+        if (reviewOfModel.get(i).getLastUpdateTime() != null) {
             modelWeb.setUpdateTime(reviewOfModel.get(i).getLastUpdateTime().getTime());
         }
         modelWeb.setDiscription(reviewOfModel.get(i).getDiscription());
@@ -1223,9 +1209,9 @@ public class ModelController extends  BaseController {
     @RequestMapping(value = "/uploadModelIcon", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public void uploadModelIcon(@RequestParam(value = "name", required = false) String name,
-                                  @RequestParam(value = "directoryId", required = false) Long directoryId,
-                                  @RequestParam(value = "scope", required = false) Boolean scope,
-                                    HttpServletRequest request, HttpServletResponse response) {
+                                @RequestParam(value = "directoryId", required = false) Long directoryId,
+                                @RequestParam(value = "scope", required = false) Boolean scope,
+                                HttpServletRequest request, HttpServletResponse response) {
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
         Long fileSize = map.get("file").get(0).getSize();
@@ -1240,14 +1226,14 @@ public class ModelController extends  BaseController {
         String relativePath = "";
         //绝对路径
         String absolutePath = "";
-        relativePath = resourceUtil.getStorePath(name,fileName);
+        relativePath = resourceUtil.getStorePath(name, fileName);
         //把文件写入绝对路径
         absolutePath = resourceUtil.getunzipPath() + relativePath;
         try {
             bytes = map.get("file").get(0).getBytes();
-            resourceUtil.writeFile(absolutePath,0,fileSize,bytes);
+            resourceUtil.writeFile(absolutePath, 0, fileSize, bytes);
             //创建一个attachment对象
-            attachmentService.addIconOfModel(fileName,relativePath,fileSize);
+            attachmentService.addIconOfModel(fileName, relativePath, fileSize);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("文件写入出错!");
@@ -1273,7 +1259,7 @@ public class ModelController extends  BaseController {
         String absolutePath = "";
         //web端相对路径
         String tempRelativePath = "";
-        String uniqueIdentifier = "" ;
+        String uniqueIdentifier = "";
         try {
             tempRelativePath = modelUtil.getFileContent((FileInputStream) multiRequest.getPart("relativePath").getInputStream());
             uniqueIdentifier = modelUtil.getFileContent((FileInputStream) multiRequest.getPart("identifier").getInputStream());
@@ -1282,14 +1268,14 @@ public class ModelController extends  BaseController {
         } catch (ServletException e) {
             e.printStackTrace();
         }
-        relativePath = resourceUtil.getStorePath(name,fileName);
+        relativePath = resourceUtil.getStorePath(name, fileName);
         //把文件写入绝对路径
         absolutePath = resourceUtil.getunzipPath() + relativePath;
         try {
             bytes = map.get("file").get(0).getBytes();
-            resourceUtil.writeFile(absolutePath,0,fileSize,bytes);
+            resourceUtil.writeFile(absolutePath, 0, fileSize, bytes);
             //创建一个attachment对象
-            attachmentService.addFileOfModel(fileName,relativePath,fileSize,tempRelativePath,uniqueIdentifier);
+            attachmentService.addFileOfModel(fileName, relativePath, fileSize, tempRelativePath, uniqueIdentifier);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("文件写入出错!");
@@ -1299,10 +1285,10 @@ public class ModelController extends  BaseController {
     @RequestMapping(value = "/uploadFloder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject uploadFloder(@RequestParam(value = "name", required = false) String name,
-                                  @RequestParam(value = "directoryId", required = false) Long directoryId,
-                                  @RequestParam(value = "scope", required = false) Boolean scope,
-                             @RequestBody Map<String,Object> map,
-                                  HttpServletRequest request, HttpServletResponse response) {
+                                   @RequestParam(value = "directoryId", required = false) Long directoryId,
+                                   @RequestParam(value = "scope", required = false) Boolean scope,
+                                   @RequestBody Map<String, Object> map,
+                                   HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()));
 
@@ -1315,29 +1301,29 @@ public class ModelController extends  BaseController {
             long iconUrlId = 0;
             boolean iconUpdate = (boolean) map.get("showPicture");
             String modelType = (String) map.get("region");
-            if(iconUpdate){
+            if (iconUpdate) {
                 ModelType type = modelTypeService.getByType(modelType);
                 iconUrlId = type.getIcon();
-            }else{
+            } else {
                 iconList = attachmentService.getInsertIcon();
-                for (Attachment icon: iconList) {
-                    if(map.get("photoName").equals(icon.getName())){
+                for (Attachment icon : iconList) {
+                    if (map.get("photoName").equals(icon.getName())) {
                         iconUrlId = icon.getId();
                     }
                 }
             }
             System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()));
-            Long modelId = modelService.addOneModel(user, directoryId, scope, map,iconUrlId);
+            Long modelId = modelService.addOneModel(user, directoryId, scope, map, iconUrlId);
             //把刚刚上传的图标修改modelId
-           if(iconList.size() >0 && !iconUpdate){
-               for (Attachment icon: iconList) {
-                   if(icon.getId() == iconUrlId){
-                       icon.setModelId(modelId);
-                       attachmentService.update(icon);
-                       break;
-                   }
-               }
-           }
+            if (iconList.size() > 0 && !iconUpdate) {
+                for (Attachment icon : iconList) {
+                    if (icon.getId() == iconUrlId) {
+                        icon.setModelId(modelId);
+                        attachmentService.update(icon);
+                        break;
+                    }
+                }
+            }
             List<FileJsonArrayDto> fileJsonArrayDtoList = JSONArray.parseArray(map.get("fileLists").toString(), FileJsonArrayDto.class);
             for (FileJsonArrayDto fileJsonDto : fileJsonArrayDtoList) {
                 if (fileJsonDto.getFolder()) {
@@ -1349,14 +1335,14 @@ public class ModelController extends  BaseController {
             List<Attachment> attachmentFileList = attachmentService.queryNullModelId(modelId);
             System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "查询");
             //过滤掉没有提交到表单的文件
-            attachmentFileList = attachmentService.getRealFileList(attachmentFileList,fileJsonArrayDtoList,floderList);
-            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date())+ "过滤");
+            attachmentFileList = attachmentService.getRealFileList(attachmentFileList, fileJsonArrayDtoList, floderList);
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "过滤");
             //更新上传文件的modelId和parentId
-            attachmentService.UpdateModelFrame(attachmentFileList,modelId,floderList);
-            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date())+ "修改");
+            attachmentService.UpdateModelFrame(attachmentFileList, modelId, floderList);
+            System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "修改");
             //删除不必要的文件
             List<Attachment> deleteFileList = attachmentService.getDeleteAttach();
-            for (Attachment deleteFile: deleteFileList) {
+            for (Attachment deleteFile : deleteFileList) {
                 attachmentService.delete(deleteFile.getId());
             }
             System.out.println(new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss:SSS").format(new Date()) + "删除");
@@ -1364,33 +1350,33 @@ public class ModelController extends  BaseController {
                 try {
                     Long instanceId = reviewFlowInstanceService.startInstance(modelId);
                     statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
-                    Map<String,Object> directory = directoryService.queryMapById(directoryId);
+                    Map<String, Object> directory = directoryService.queryMapById(directoryId);
                     String title = "上传模型";
-                    String content ="用户\t"+user.getName()+"\t上传模型\t"+map.get("name")+"\t到分类\t"+directory.get("name");
-                    logService.addLog(title,content);
+                    String content = "用户\t" + user.getName() + "\t上传模型\t" + map.get("name") + "\t到分类\t" + directory.get("name");
+                    logService.addLog(title, content);
                 } catch (SqlNumberException e) {
                     e.printStackTrace();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("模型目录更新失败");
             return returnErrorInfo(jo);
         }
-        return  returnSuccessInfo(jo);
+        return returnSuccessInfo(jo);
     }
 
-    @RequestMapping(value = "/treeModelCatalog",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/treeModelCatalog", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject treeModelCatalog(@RequestParam(value = "modelId",required = false)Long modelId,
-                                HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject treeModelCatalog(@RequestParam(value = "modelId", required = false) Long modelId,
+                                       HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<VariableTreeObj> modelCatalogList = new ArrayList<>();
         List<VariableTreeObj> catalogList = new ArrayList<>();
-        try{
+        try {
             //模型的所有文件（包含文件夹）
             List<Attachment> modelFiles = attachmentService.getModelFiles(modelId);
-            modelCatalogList = attachmentService.getModelCatalog(modelCatalogList,modelFiles);
+            modelCatalogList = attachmentService.getModelCatalog(modelCatalogList, modelFiles);
             Model model = modelService.queryModelById(modelId);
             VariableTreeObj rootCatalog = new VariableTreeObj();
             rootCatalog.setName(model.getName());
@@ -1398,170 +1384,171 @@ public class ModelController extends  BaseController {
             rootCatalog.setParentId((long) -1);
             rootCatalog.setChildren(modelCatalogList);
             catalogList.add(rootCatalog);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-        jo.put("data",catalogList);
+        jo.put("data", catalogList);
         return returnSuccessInfo(jo);
     }
 
-    @RequestMapping(value = "/getModelDetail",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getModelDetail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getModelDetail(@RequestParam(value = "modelId",required = false)Long modelId,
-                                     @RequestParam(value = "catalogId",required = false)Long catalogId,
-                                     HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject getModelDetail(@RequestParam(value = "modelId", required = false) Long modelId,
+                                     @RequestParam(value = "catalogId", required = false) Long catalogId,
+                                     HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<AttachmentDto> modelDetail = new ArrayList<>();
         FileTypeDto fileTypeDto = new FileTypeDto();
-        try{
+        try {
             //查找默认的fileType图标
             fileTypeDto = fileTypeService.getDefaultIcon();
             //模型目录下的文件和文件
-            if(catalogId == null){
+            if (catalogId == null) {
                 List<AttachmentDto> modelFiles = attachmentService.getModelDetail(modelId);
-                modelDetail = attachmentService.getModelDetailList(modelFiles,modelId,modelDetail);
-            }else{
+                modelDetail = attachmentService.getModelDetailList(modelFiles, modelId, modelDetail);
+            } else {
                 List<AttachmentDto> modelFiles = new ArrayList<>();
                 modelFiles = attachmentService.getAttachByParentId(catalogId);
-                if(modelFiles.size() == 0){
+                if (modelFiles.size() == 0) {
                     modelFiles = attachmentService.queryListById(catalogId);
                 }
 //                modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,catalogId);
                 modelDetail.addAll(modelFiles);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-        for (AttachmentDto attachmentDto:modelDetail) {
-            if(StringUtil.isNull(attachmentDto.getFileIconUrl())){
-                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
-            }else{
-                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
+        for (AttachmentDto attachmentDto : modelDetail) {
+            if (StringUtil.isNull(attachmentDto.getFileIconUrl())) {
+                attachmentDto.setFileIconUrl("http://" + resourceUtil.getLocalPath() + fileTypeDto.getIconPath());
+            } else {
+                attachmentDto.setFileIconUrl("http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
             }
             attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
-            attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
-            if(!attachmentDto.getFloder()){
+            attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0, 10));
+            if (!attachmentDto.getFloder()) {
                 attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
             }
 
-            if(attachmentDto.getFloder()){
+            if (attachmentDto.getFloder()) {
                 attachmentDto.setFileSize("");
             }
         }
         attachmentService.sortAttachDto(modelDetail);
-        jo.put("data",modelDetail);
+        jo.put("data", modelDetail);
         return returnSuccessInfo(jo);
     }
 
-    @RequestMapping(value = "/getModelFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getModelFiles", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getModelFiles(@RequestParam(value = "modelId",required = false)Long modelId,
-                                     HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject getModelFiles(@RequestParam(value = "modelId", required = false) Long modelId,
+                                    HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<AttachmentDto> modelFiles = new ArrayList<>();
         FileTypeDto fileTypeDto = new FileTypeDto();
-        try{
+        try {
             //查找默认的fileType图标
             fileTypeDto = fileTypeService.getDefaultIcon();
             //模型目录下的文件和文件
             modelFiles = attachmentService.getFilesOfModel(modelId);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-        for (AttachmentDto attachmentDto:modelFiles) {
-            if(StringUtil.isNull(attachmentDto.getFileIconUrl())){
-                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
-            }else{
-                attachmentDto.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
+        for (AttachmentDto attachmentDto : modelFiles) {
+            if (StringUtil.isNull(attachmentDto.getFileIconUrl())) {
+                attachmentDto.setFileIconUrl("http://" + resourceUtil.getLocalPath() + fileTypeDto.getIconPath());
+            } else {
+                attachmentDto.setFileIconUrl("http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + resourceUtil.getunzipPath().substring(7) + attachmentDto.getFileIconUrl());
             }
             attachmentDto.setFileSize(ModelUtil.getFileSize(attachmentDto.getSize()));
-            attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0,10));
+            attachmentDto.setCreateTime(attachmentDto.getCreateTime().substring(0, 10));
             attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
-            if(attachmentDto.getFloder()){
+            if (attachmentDto.getFloder()) {
                 attachmentDto.setFileSize("");
             }
         }
-        jo.put("data",modelFiles);
+        jo.put("data", modelFiles);
         return returnSuccessInfo(jo);
     }
 
-    @RequestMapping(value = "/getParentFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getParentFiles", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getParentFiles(@RequestParam(value = "catalogId",required = false)Long catalogId,
-                                    HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject getParentFiles(@RequestParam(value = "catalogId", required = false) Long catalogId,
+                                     HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         Attachment parentAttach = new Attachment();
         List<AttachmentDto> modelDetail = new ArrayList<>();
-        try{
+        try {
             //模型目录下的文件和文件
             parentAttach = attachmentService.getParentAttach(catalogId);
-            if(parentAttach == null){
+            if (parentAttach == null) {
                 return returnSuccessInfo(jo);
             }
             List<AttachmentDto> modelFiles = attachmentService.getAttachByParentId(parentAttach.getId());
-            modelDetail =attachmentService.getDetailListByAttachId(modelFiles,modelDetail,parentAttach.getId());
-            for (AttachmentDto attachmentDto:modelDetail) {
+            modelDetail = attachmentService.getDetailListByAttachId(modelFiles, modelDetail, parentAttach.getId());
+            for (AttachmentDto attachmentDto : modelDetail) {
                 attachmentDto.setName(ModelUtil.getFileName(attachmentDto.getName()));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型目录失败");
         }
-        jo.put("parentAttach",parentAttach);
-        jo.put("data",modelDetail);
+        jo.put("parentAttach", parentAttach);
+        jo.put("data", modelDetail);
         return returnSuccessInfo(jo);
     }
 
-    @RequestMapping(value = "/moveModel",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/moveModel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject moveModel(@RequestParam(value = "CurrentNodeId",required = false)Long CurrentNodeId,
-                                @RequestParam(value = "SelectedNodeId",required = false)Long SelectedNodeId,
-                                     HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject moveModel(@RequestParam(value = "CurrentNodeId", required = false) Long CurrentNodeId,
+                                @RequestParam(value = "SelectedNodeId", required = false) Long SelectedNodeId,
+                                HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
-        try{
+        try {
             Model model = modelService.queryModelById(CurrentNodeId);
-            Map<String,Object> oldDirectory = directoryService.queryMapById(model.getDirectoryId());
+            Map<String, Object> oldDirectory = directoryService.queryMapById(model.getDirectoryId());
             model.setDirectoryId(SelectedNodeId);
-            Map<String,Object> newDirectory = directoryService.queryMapById(SelectedNodeId);
+            Map<String, Object> newDirectory = directoryService.queryMapById(SelectedNodeId);
             modelService.update(model);
             String title = "移动模型";
-            String content = "用户\t"+getUserName()+"\t将模型\t"+model.getName()+"\t从\t"+oldDirectory.get("name").toString()+"\t移动到\t"+newDirectory.get("name").toString();
-            logService.addLog(title,content);
+            String content = "用户\t" + getUserName() + "\t将模型\t" + model.getName() + "\t从\t" + oldDirectory.get("name").toString() + "\t移动到\t" + newDirectory.get("name").toString();
+            logService.addLog(title, content);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型目录失败");
-            return  returnErrorInfo(jo);
+            return returnErrorInfo(jo);
         }
         return returnSuccessInfo(jo);
     }
 
-    @RequestMapping(value = "/getAllFiles",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getAllFiles", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getAllFiles(@RequestParam(value = "scope",required = false)Boolean scope,
-            HttpServletRequest request , HttpServletResponse response) {
+    public JSONObject getAllFiles(@RequestParam(value = "scope", required = false) Boolean scope,
+                                  HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<AttachmentDto> allFiles = new ArrayList<>();
         FileTypeDto fileTypeDto = new FileTypeDto();
-        try{
+        try {
             allFiles = attachmentService.getAllFiles(scope);
             fileTypeDto = fileTypeService.getDefaultIcon();
-            for (AttachmentDto attach: allFiles) {
-                if(StringUtil.isNull(attach.getFileIconUrl())){
-                    attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ fileTypeDto.getIconPath());
-                }else{
-                    attach.setFileIconUrl("http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) + attach.getFileIconUrl());
-                }attach.setCreateTime(attach.getCreateTime().substring(0,10));
+            for (AttachmentDto attach : allFiles) {
+                if (StringUtil.isNull(attach.getFileIconUrl())) {
+                    attach.setFileIconUrl("http://" + resourceUtil.getLocalPath() + fileTypeDto.getIconPath());
+                } else {
+                    attach.setFileIconUrl("http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + resourceUtil.getunzipPath().substring(7) + attach.getFileIconUrl());
+                }
+                attach.setCreateTime(attach.getCreateTime().substring(0, 10));
                 attach.setName(ModelUtil.getFileName(attach.getName()));
                 attach.setFileSize(ModelUtil.getFileSize(attach.getSize()));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型目录失败");
-            return  returnErrorInfo(jo);
+            return returnErrorInfo(jo);
         }
         jo.put("data", allFiles);
         return returnSuccessInfo(jo);
@@ -1579,11 +1566,10 @@ public class ModelController extends  BaseController {
             params.put("fileName", checkModelName);
             params.put("directoryId", directoryId);
             model = modelService.queryByNameAndDirId(params);
-            if (model == null){
+            if (model == null) {
                 return returnSuccessInfo(jo);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型类型列表失败");
             return returnErrorInfo(jo);
@@ -1594,8 +1580,8 @@ public class ModelController extends  BaseController {
     @RequestMapping(value = "/deleteModel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject deleteModel(@RequestParam(value = "modelName", required = false) String modelName,
-                                @RequestParam(value = "directoryId", required = false) String directoryId,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                  @RequestParam(value = "directoryId", required = false) String directoryId,
+                                  HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         Model model = new Model();
         try {
@@ -1603,23 +1589,19 @@ public class ModelController extends  BaseController {
             params.put("fileName", modelName);
             params.put("directoryId", directoryId);
             model = modelService.queryByNameAndDirId(params);
-            if (model == null){
+            if (model == null) {
                 return returnErrorInfo(jo);
-            }else{
+            } else {
                 model.setDeleted(true);
                 modelService.update(model);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型类型列表失败");
             return returnErrorInfo(jo);
         }
         return returnSuccessInfo(jo);
     }
-
-
-
 
 
 }

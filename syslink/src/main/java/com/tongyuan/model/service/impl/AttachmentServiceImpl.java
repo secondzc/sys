@@ -60,6 +60,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 创建一个模型的图标文件
+     *
      * @param fileName
      * @param iconUrl
      * @param size
@@ -79,11 +80,12 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachment.setModelId(-1);
         this.attachmentMapper.add(attachment);
         Long attachmentId = attachment.getId();
-        return  attachmentId;
+        return attachmentId;
     }
 
     /**
      * 根据模型id获取所有文件（包含文件夹）
+     *
      * @param modelId
      * @return
      */
@@ -94,14 +96,15 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 获取模型目录
+     *
      * @param modelCatalogList
      * @param modelFiles
      * @return
      */
     @Override
     public List<VariableTreeObj> getModelCatalog(List<VariableTreeObj> modelCatalogList, List<Attachment> modelFiles) {
-        for (Attachment modelRoot:modelFiles) {
-            if(modelRoot.getParentId() == 0){
+        for (Attachment modelRoot : modelFiles) {
+            if (modelRoot.getParentId() == 0) {
                 VariableTreeObj model = new VariableTreeObj();
                 model.setId(modelRoot.getId());
                 model.setName(modelRoot.getName());
@@ -115,7 +118,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         for (VariableTreeObj variableTreeObj : modelCatalogList) {
             //子文件列表
             List<VariableTreeObj> childList = new ArrayList<>();
-            this.getModelChild(modelFiles,variableTreeObj.getId(),childList);
+            this.getModelChild(modelFiles, variableTreeObj.getId(), childList);
             variableTreeObj.setChildren(childList);
         }
         return modelCatalogList;
@@ -123,6 +126,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 根据模型id获取所有文件（不包含文件夹）
+     *
      * @param modelId
      * @return
      */
@@ -133,6 +137,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 获取模型详细列表
+     *
      * @param modelFiles
      * @param modelId
      * @param modelDetail
@@ -144,8 +149,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         //判断选中的文件是否为文件夹
 //        boolean floder = false;
         List<AttachmentDto> root = new ArrayList<>();
-        for (AttachmentDto attchCatelog: modelFiles) {
-            if(attchCatelog.getParentId() == 0) {
+        for (AttachmentDto attchCatelog : modelFiles) {
+            if (attchCatelog.getParentId() == 0) {
                 root.add(attchCatelog);
             }
         }
@@ -155,29 +160,31 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 查找该目录下的所有文件
+     *
      * @param modelFiles
      * @param modelDetail
      * @return
      */
     @Override
-    public List<AttachmentDto> getDetailListByAttachId(List<AttachmentDto> modelFiles, List<AttachmentDto> modelDetail,Long catalog) {
+    public List<AttachmentDto> getDetailListByAttachId(List<AttachmentDto> modelFiles, List<AttachmentDto> modelDetail, Long catalog) {
         boolean floder = false;
         for (AttachmentDto attachment : modelFiles) {
-            if( attachment.getFloder() == false && attachment.getId() != catalog){
+            if (attachment.getFloder() == false && attachment.getId() != catalog) {
                 modelDetail.add(attachment);
             }
-            if(attachment.getId() == catalog){
+            if (attachment.getId() == catalog) {
                 floder = attachment.getFloder();
             }
         }
-        if(modelDetail.size() == 0 && !floder){
+        if (modelDetail.size() == 0 && !floder) {
             modelDetail.addAll(modelFiles);
         }
-        return  modelDetail;
+        return modelDetail;
     }
 
     /**
      * 根据文件id获取子文件和自身
+     *
      * @param attachId
      * @return
      */
@@ -199,14 +206,14 @@ public class AttachmentServiceImpl implements AttachmentService {
         attachmentDto.setFloder(attachment.getFloder());
         attachmentDto.setParentId(attachment.getParentId());
         attachmentDto.setModelId(attachment.getModelId());
-        attachmentDto.setCreateTime(DateUtil.format(attachment.getCreateTime(),"yyyy-MM-dd"));
+        attachmentDto.setCreateTime(DateUtil.format(attachment.getCreateTime(), "yyyy-MM-dd"));
         return attachmentDto;
     }
 
     @Override
     public List<AttachmentDto> transformDtoList(List<Attachment> attachmentList) {
-        List<AttachmentDto>  attachmentDtoList = new ArrayList<>();
-        for (Attachment attachment :attachmentList) {
+        List<AttachmentDto> attachmentDtoList = new ArrayList<>();
+        for (Attachment attachment : attachmentList) {
             attachmentDtoList.add(this.transformToDto(attachment));
         }
         return attachmentDtoList;
@@ -219,6 +226,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 获取所有的文件
+     *
      * @return
      */
     @Override
@@ -228,13 +236,14 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 添加模型中的一个文件
+     *
      * @param fileName
      * @param filePath
      * @param fileSize
      * @param tempRelativePath
      */
     @Override
-    public void addFileOfModel(String fileName, String filePath, Long fileSize, String tempRelativePath,String uniqueIdentifier) {
+    public void addFileOfModel(String fileName, String filePath, Long fileSize, String tempRelativePath, String uniqueIdentifier) {
         Attachment attachment = new Attachment();
         attachment.setName(fileName);
         attachment.setExt(ModelUtil.getFileExt(fileName));
@@ -250,6 +259,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 获取刚插入的文件
+     *
      * @param modelId
      * @return
      */
@@ -260,11 +270,12 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 添加一个文件的Dto
+     *
      * @param fileJsonArrayDto
      * @param modelId
      */
     @Override
-    public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto,Long modelId) {
+    public void addFileJsonDto(FileJsonArrayDto fileJsonArrayDto, Long modelId) {
         Attachment attachment = new Attachment();
         attachment.setModelId(modelId);
         attachment.setCreateTime(DateUtil.getTimestamp());
@@ -287,26 +298,27 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 获取压缩文件的Url
+     *
      * @param attachmentList
      * @param modelName
      * @return
      */
     @Override
     public String getZipUrl(List<Attachment> attachmentList, String modelName, Boolean folder) {
-        for (Attachment attachment:attachmentList) {
-            if(!attachment.getFloder()){
+        for (Attachment attachment : attachmentList) {
+            if (!attachment.getFloder()) {
                 //下载的相对路径
                 String downloadAbsolutePath = "";
-                if(folder){
-                    downloadAbsolutePath = ResourceUtil.getXiaZai() +attachment.getTempRelativePath().substring(attachment.getTempRelativePath().indexOf(modelName));
-                }else{
-                    downloadAbsolutePath = ResourceUtil.getXiaZai() +modelName +"/" + attachment.getTempRelativePath();
+                if (folder) {
+                    downloadAbsolutePath = ResourceUtil.getXiaZai() + attachment.getTempRelativePath().substring(attachment.getTempRelativePath().indexOf(modelName));
+                } else {
+                    downloadAbsolutePath = ResourceUtil.getXiaZai() + modelName + "/" + attachment.getTempRelativePath();
                 }
-                FileUtils.copyFile(resourceUtil.getunzipPath()+attachment.getFilePath(),resourceUtil.getunzipPath()+downloadAbsolutePath);
+                FileUtils.copyFile(resourceUtil.getunzipPath() + attachment.getFilePath(), resourceUtil.getunzipPath() + downloadAbsolutePath);
             }
         }
-        String downloadDirPath = resourceUtil.getunzipPath()+ ResourceUtil.getXiaZai() + modelName;
-        ZipDir.createZip(downloadDirPath,downloadDirPath+".zip");
+        String downloadDirPath = resourceUtil.getunzipPath() + ResourceUtil.getXiaZai() + modelName;
+        ZipDir.createZip(downloadDirPath, downloadDirPath + ".zip");
         return downloadDirPath + ".zip";
     }
 
@@ -317,15 +329,16 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 更改模型的目录层次结构
+     *
      * @param attachmentFileList
      * @param modelId
      */
     @Override
-    public void UpdateModelFrame(List<Attachment> attachmentFileList,Long modelId,List<Attachment> floderList) {
+    public void UpdateModelFrame(List<Attachment> attachmentFileList, Long modelId, List<Attachment> floderList) {
 //        List<Attachment> batchUpdateList = new ArrayList<>();
         for (Attachment attachmentChild : attachmentFileList) {
             for (Attachment attachmentParent : floderList) {
-                if(!StringUtil.isNull(attachmentChild.getTempRelativePath()) && !StringUtil.isNull(attachmentParent.getTempRelativePath())) {
+                if (!StringUtil.isNull(attachmentChild.getTempRelativePath()) && !StringUtil.isNull(attachmentParent.getTempRelativePath())) {
                     if (attachmentParent.getTempRelativePath().equals(ModelUtil.getParentNameByPara(attachmentChild.getTempRelativePath(), "/"))) {
                         attachmentChild.setParentId(attachmentParent.getId());
                         attachmentChild.setModelId(modelId);
@@ -335,8 +348,8 @@ public class AttachmentServiceImpl implements AttachmentService {
                 }
             }
         }
-        for (Attachment attachment : attachmentFileList){
-            if(attachment.getModelId() != modelId){
+        for (Attachment attachment : attachmentFileList) {
+            if (attachment.getModelId() != modelId) {
                 attachment.setModelId(modelId);
                 this.attachmentMapper.update(attachment);
 //                batchUpdateList.add(attachment);
@@ -353,48 +366,48 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList, List<FileJsonArrayDto> fileJsonArrayDtoList,List<Attachment> floderList) {
+    public List<Attachment> getRealFileList(List<Attachment> attachmentFileList, List<FileJsonArrayDto> fileJsonArrayDtoList, List<Attachment> floderList) {
         List<Attachment> fileList = new ArrayList<>();
-        for (FileJsonArrayDto fileJsonDto: fileJsonArrayDtoList) {
-            for (Attachment attachment: attachmentFileList) {
-                if(!StringUtil.isNull(attachment.getTempRelativePath())) {
+        for (FileJsonArrayDto fileJsonDto : fileJsonArrayDtoList) {
+            for (Attachment attachment : attachmentFileList) {
+                if (!StringUtil.isNull(attachment.getTempRelativePath())) {
                     if (fileJsonDto.getFolder() && attachment.getTempRelativePath().equals(fileJsonDto.getPath())) {
                         fileList.add(attachment);
                         break;
                     }
                 }
-                if(!StringUtil.isNull(fileJsonDto.getUniqueIdentifier())){
-                    if(fileJsonDto.getUniqueIdentifier().equals(attachment.getIdentifier())){
+                if (!StringUtil.isNull(fileJsonDto.getUniqueIdentifier())) {
+                    if (fileJsonDto.getUniqueIdentifier().equals(attachment.getIdentifier())) {
                         fileList.add(attachment);
                         break;
                     }
                 }
             }
         }
-        for (Attachment attachment: fileList) {
-           if (attachment.getFloder()){
-               floderList.add(attachment);
-           }
+        for (Attachment attachment : fileList) {
+            if (attachment.getFloder()) {
+                floderList.add(attachment);
+            }
         }
         return fileList;
     }
 
 
     @Override
-    public List<Attachment> getFloderAttach(List<Attachment> modelAttachmentList,Attachment attachment,List<Attachment> attachmentList) {
+    public List<Attachment> getFloderAttach(List<Attachment> modelAttachmentList, Attachment attachment, List<Attachment> attachmentList) {
         List<Attachment> childAttchList = new ArrayList<>();
-        for (Attachment attach :modelAttachmentList) {
-            if (attach.getParentId() == attachment.getId()){
+        for (Attachment attach : modelAttachmentList) {
+            if (attach.getParentId() == attachment.getId()) {
                 attachmentList.add(attach);
                 childAttchList.add(attach);
             }
         }
-        if(childAttchList.size() >0){
-            for (Attachment childAttch :childAttchList) {
-                getFloderAttach(modelAttachmentList,childAttch,attachmentList);
+        if (childAttchList.size() > 0) {
+            for (Attachment childAttch : childAttchList) {
+                getFloderAttach(modelAttachmentList, childAttch, attachmentList);
             }
         }
-        return  attachmentList;
+        return attachmentList;
     }
 
     @Override
@@ -402,12 +415,12 @@ public class AttachmentServiceImpl implements AttachmentService {
         Collections.sort(attachmentDtos, new Comparator<AttachmentDto>() {
             @Override
             public int compare(AttachmentDto o1, AttachmentDto o2) {
-                if(o1.getSize() > o2.getSize()){
+                if (o1.getSize() > o2.getSize()) {
                     return 1;
-                }else if(o1.getSize() < o2.getSize()){
+                } else if (o1.getSize() < o2.getSize()) {
                     return -1;
-                }else{
-                    return  0;
+                } else {
+                    return 0;
                 }
             }
         });
@@ -428,18 +441,19 @@ public class AttachmentServiceImpl implements AttachmentService {
      */
     @Override
     public List<AttachmentDto> getFilesOfModel(Long modelId) {
-       return  this.attachmentMapper.getFilesOfModel(modelId);
+        return this.attachmentMapper.getFilesOfModel(modelId);
     }
 
     /**
      * 获取模型的子
+     *
      * @param modelFiles
      * @param modelId
      * @param childList
      */
-    public void getModelChild(List<Attachment> modelFiles,Long modelId,List<VariableTreeObj> childList){
-        for(int i=0; i<modelFiles.size(); i++){
-            if(modelFiles.get(i).getParentId() == modelId) {
+    public void getModelChild(List<Attachment> modelFiles, Long modelId, List<VariableTreeObj> childList) {
+        for (int i = 0; i < modelFiles.size(); i++) {
+            if (modelFiles.get(i).getParentId() == modelId) {
                 VariableTreeObj treeObj = new VariableTreeObj();
                 treeObj.setId(modelFiles.get(i).getId());
                 treeObj.setName(modelFiles.get(i).getName());
@@ -450,9 +464,9 @@ public class AttachmentServiceImpl implements AttachmentService {
                 childList.add(treeObj);
             }
         }
-        if( childList != null){
-            for (VariableTreeObj treechild: childList) {
-                getModelChild(modelFiles,treechild.getId(),treechild.getChildren());
+        if (childList != null) {
+            for (VariableTreeObj treechild : childList) {
+                getModelChild(modelFiles, treechild.getId(), treechild.getChildren());
             }
         }
     }

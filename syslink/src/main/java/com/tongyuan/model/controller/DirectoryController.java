@@ -41,7 +41,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/api/directory")
-public class DirectoryController extends BaseController{
+public class DirectoryController extends BaseController {
     @Autowired
     private DirectoryService directoryService;
     @Autowired
@@ -89,7 +89,7 @@ public class DirectoryController extends BaseController{
         try {
             //获取当前的路径
             //  String currentPath=parentF.getAbsolutePath().replace('\\', '/');
-            String AbsolutePath = parentF.getAbsolutePath().replace('\\', '/')+"/";
+            String AbsolutePath = parentF.getAbsolutePath().replace('\\', '/') + "/";
             String unzipPath = ResourceUtil.getFileDriectory();
             //获取实际路径
             String currentPath = AbsolutePath.substring(unzipPath.length(), AbsolutePath.length());
@@ -101,13 +101,13 @@ public class DirectoryController extends BaseController{
 
             //如果当前的路径就是根目录
             if (AbsolutePath.equals(rootPath)) {
-                 directory.setParentId(0);
-                 directory.setFilePath(currentPath);
+                directory.setParentId(0);
+                directory.setFilePath(currentPath);
             } else {
                 //吧父目录id插入到子目录表当中
                 //获取父目录地址
                 String parentPath = parentF.getParent().replace('\\', '/');
-                String parentAbsolutePath = parentPath.substring(unzipPath.length(), parentPath.length())+"/";
+                String parentAbsolutePath = parentPath.substring(unzipPath.length(), parentPath.length()) + "/";
                 //创建一个父类目录对象
                 //TODO 文件删除
                 Attachment parentDirectory = new Attachment();
@@ -206,7 +206,7 @@ public class DirectoryController extends BaseController{
             e.printStackTrace();
         }
         //查找到项目所在的位置
-        Attachment directory = attachmentService.queryListByPath(modelDir+fileName+"/");
+        Attachment directory = attachmentService.queryListByPath(modelDir + fileName + "/");
         //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
         //文件所在位置
         String fileXmlPath = directory.getFilePath();
@@ -214,7 +214,7 @@ public class DirectoryController extends BaseController{
         String xmlPath = "";
         //获取cae模型xml所在职位
         String caePath = "";
-        xmlPath = resourceUtil.getXmlPath(resourceUtil.getunzipPath()+fileXmlPath, xmlPath);
+        xmlPath = resourceUtil.getXmlPath(resourceUtil.getunzipPath() + fileXmlPath, xmlPath);
         //对xml进行解析,遍历xml文件下所有文件
         if (StringUtil.isNull(xmlPath)) {
             //       result = false;
@@ -268,18 +268,18 @@ public class DirectoryController extends BaseController{
         JSONObject jsonObject = new JSONObject();
         try {
             DirectoryModel directoryModel = new DirectoryModel();
-            Directory directory = directoryService.addOneDir(name,parent_id,userName);
+            Directory directory = directoryService.addOneDir(name, parent_id, userName);
             directoryModel.setName(name);
             directoryModel.setId(directory.getId());
             directoryModel.setParentId(directory.getParentId() + "");
             jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
-//            if(scope)
-//            {
-//                Map<String,Object> parent = directoryService.queryMapById(directory.getParentId());
-//                String title = "新建目录";
-//                String content ="用户\t"+getUserName()+"\t添加目录\t"+directory.getName()+"\t到目录\t"+parent.get("name");
-//                logService.addLog(title,content);
-//            }
+            if(scope)
+            {
+                Map<String,Object> parent = directoryService.queryMapById(directory.getParentId());
+                String title = "新建目录";
+                String content ="用户\t"+getUserName()+"\t添加目录\t"+directory.getName()+"\t到目录\t"+parent.get("name");
+                logService.addLog(title,content);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("添加目录失败!");
@@ -357,8 +357,8 @@ public class DirectoryController extends BaseController{
         JSONObject jo = new JSONObject();
         List<JSONObject> directoryModelList = new ArrayList<>();
         try {
-            directoryService.getDirExpChild(directoryModelList,parent_id
-                    ,scope,userName);
+            directoryService.getDirExpChild(directoryModelList, parent_id
+                    , scope, userName);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("目录获取失败");
@@ -499,13 +499,13 @@ public class DirectoryController extends BaseController{
     public JSONObject getDirectoryTree(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         //点击树节点父类列表
-        List<Map<String,Object>>directoryTree = new ArrayList<>();
-       Map<String, Object> publicDirectory = new HashMap<>();
+        List<Map<String, Object>> directoryTree = new ArrayList<>();
+        Map<String, Object> publicDirectory = new HashMap<>();
         try {
             publicDirectory = directoryService.queryPublicRoot();
-            if (publicDirectory!=null) {
-                    setChidren(publicDirectory);
-              directoryTree.add(publicDirectory);
+            if (publicDirectory != null) {
+                setChidren(publicDirectory);
+                directoryTree.add(publicDirectory);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -535,15 +535,13 @@ public class DirectoryController extends BaseController{
             map.put("icon", "iconfont icon-wenjianjia");
         }
 
-        map.put("mode",0);
-        List<Map<String,Object>>chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
-        if(chidlren.size()>0)
-        {
-            map.put("children",chidlren);
-            Iterator<Map<String,Object>> iterator = chidlren.iterator();
-            while (iterator.hasNext())
-            {
-                Map<String,Object> child =iterator.next();
+        map.put("mode", 0);
+        List<Map<String, Object>> chidlren = directoryService.queryMapListByParentId(Long.parseLong(map.get("id").toString()));
+        if (chidlren.size() > 0) {
+            map.put("children", chidlren);
+            Iterator<Map<String, Object>> iterator = chidlren.iterator();
+            while (iterator.hasNext()) {
+                Map<String, Object> child = iterator.next();
                 setChidren(child);
             }
         }
@@ -588,7 +586,7 @@ public class DirectoryController extends BaseController{
         try {
             GUser user = userService.queryById(getUserId());
             String userName = user.getLowerName();
-             privateDir = directoryService.getPrivateDir(userName);
+            privateDir = directoryService.getPrivateDir(userName);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -727,7 +725,7 @@ public class DirectoryController extends BaseController{
                     if (scope) {
                         try {
                             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-                            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
+                            statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
                         } catch (SqlNumberException e) {
                             e.printStackTrace();
                         }
@@ -764,6 +762,7 @@ public class DirectoryController extends BaseController{
 
     /**
      * 是否增加模型并申签
+     *
      * @param subFiles
      * @param directoryId
      * @param model
@@ -780,7 +779,7 @@ public class DirectoryController extends BaseController{
         //下面两行都有异常要抛出
         try {
             Long instanceId = reviewFlowInstanceService.startInstance(modelId);
-            statusChangeService.updateStatus(instanceId, "1",ConstNodeInstanceStatus.ACTIVE);
+            statusChangeService.updateStatus(instanceId, "1", ConstNodeInstanceStatus.ACTIVE);
         } catch (SqlNumberException e) {
             e.printStackTrace();
         }
@@ -923,17 +922,17 @@ public class DirectoryController extends BaseController{
     @ResponseBody
 //    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
     public void uploadDirectoryTest(@RequestParam(value = "name", required = false) String name,
-                                @RequestParam(value = "directoryId", required = false) Long directoryId,
-                                @RequestParam(value = "scope", required = false) Boolean scope,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                    @RequestParam(value = "directoryId", required = false) Long directoryId,
+                                    @RequestParam(value = "scope", required = false) Boolean scope,
+                                    HttpServletRequest request, HttpServletResponse response) {
 
         StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> map = multiRequest.getMultiFileMap();
         long fileSize = 0;
         String fileName = "";
         byte[] bytes = new byte[0];
-        try{
-            fileSize  = map.get("file").get(0).getSize();
+        try {
+            fileSize = map.get("file").get(0).getSize();
             String fileNames2[] = map.get("file").get(0).getOriginalFilename().split("\\.");
             if (fileNames2.length >= 1) {
                 fileName = fileNames2[0];
@@ -941,69 +940,67 @@ public class DirectoryController extends BaseController{
             bytes = map.get("file").get(0).getBytes();
             //如果是公共库且是覆盖的方式，则撤回之前的审签流程，并新开始一个审签流程
             if (scope) {
-                directoryService.isAddNewReviewFlowInstance(fileName,directoryId);
+                directoryService.isAddNewReviewFlowInstance(fileName, directoryId);
             }
-                GUser user = gUserService.querListByName(name);
-                System.out.println("starting upload the file...");
-                boolean result = false;
-                //获取压缩包 C:/Temp/zip/文件名
-                String filePath = resourceUtil.getzipPath() + fileName;
-                System.out.println("filePath==" + filePath);
-                System.out.println("starting writing file...");
-                String modelDir = "";
-                modelDir = resourceUtil.unzipByte(fileName, name, bytes);
-                //输出文件的目录（modelDir是解压缩到的目录）
-                System.out.println("modelDir==========" + modelDir + "*************");
-                //获取到model解压缩的路径
-                String modelPath = resourceUtil.getModelPath(modelDir, fileName);
-                //遍历文件，对model库进行插入
-                String parentPath = modelPath;
-                directoryService.getSubFile(parentPath.substring(0, parentPath.length()), parentPath.substring(0, parentPath.length()), "");
-                Map<String, Object> xmlMap = new HashMap<String, Object>();
-                //存放解析的所有xmlMap
-                Map<String, JSONObject> xmlAnalysisMap = new HashMap<>();
-                //存放解析svg，info文件所在位置的Map
-                Map<String, String> svgPath = new HashMap<>();
-                //把上传的文件zip包存在映射路径
-                String caeZipAbsoluteUrl = "";
-                caeZipAbsoluteUrl = modelPath  + fileName + ".zip";
-                resourceUtil.writeFile(caeZipAbsoluteUrl, 0, fileSize, bytes);
-                //查找到项目所在的位置
-                Attachment directory = attachmentService.queryListByPath(modelDir+fileName);
-                //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
-                //文件所在位置
-                String fileXmlPath = directory.getFilePath();
-                //获取到xml所在的文件位置
-                String xmlPath = "";
-                xmlPath = resourceUtil.getXmlPath(resourceUtil.getunzipPath()+fileXmlPath, xmlPath);
-                //对xml进行解析,遍历xml文件下所有文件
-                if (StringUtil.isNull(xmlPath)) {
-                } else {
-                    if (scope) {
-                        directoryService.uploadToPublicPository(user,fileName,name);
-                    }
-                    File xmlFilePath = new File(xmlPath);
-                    String[] subFiles = xmlFilePath.list();
-                    directoryService.getXMlJson(subFiles, xmlFilePath, xmlAnalysisMap);
-                    //遍历xmlMap进行数据的插入
-                    for (Map.Entry<String, JSONObject> entry : xmlAnalysisMap.entrySet()) {
-                        //解析xmlmap 把数据存放到数据
-                        modelService.insertModelicaData(entry,scope,user,directory,directoryId);
-                    }
-                    //更新模型的层次结构
-                    modelService.updateModelFramwork(user,fileName,scope);
-                    result = true;
-                    System.out.println("上传完毕！！！");
-
+            GUser user = gUserService.querListByName(name);
+            System.out.println("starting upload the file...");
+            boolean result = false;
+            //获取压缩包 C:/Temp/zip/文件名
+            String filePath = resourceUtil.getzipPath() + fileName;
+            System.out.println("filePath==" + filePath);
+            System.out.println("starting writing file...");
+            String modelDir = "";
+            modelDir = resourceUtil.unzipByte(fileName, name, bytes);
+            //输出文件的目录（modelDir是解压缩到的目录）
+            System.out.println("modelDir==========" + modelDir + "*************");
+            //获取到model解压缩的路径
+            String modelPath = resourceUtil.getModelPath(modelDir, fileName);
+            //遍历文件，对model库进行插入
+            String parentPath = modelPath;
+            directoryService.getSubFile(parentPath.substring(0, parentPath.length()), parentPath.substring(0, parentPath.length()), "");
+            Map<String, Object> xmlMap = new HashMap<String, Object>();
+            //存放解析的所有xmlMap
+            Map<String, JSONObject> xmlAnalysisMap = new HashMap<>();
+            //存放解析svg，info文件所在位置的Map
+            Map<String, String> svgPath = new HashMap<>();
+            //把上传的文件zip包存在映射路径
+            String caeZipAbsoluteUrl = "";
+            caeZipAbsoluteUrl = modelPath + fileName + ".zip";
+            resourceUtil.writeFile(caeZipAbsoluteUrl, 0, fileSize, bytes);
+            //查找到项目所在的位置
+            Attachment directory = attachmentService.queryListByPath(modelDir + fileName);
+            //获取文件所在位置，寻找xml文件所在的路径，解析xml吧所需的数据插入到数据库中
+            //文件所在位置
+            String fileXmlPath = directory.getFilePath();
+            //获取到xml所在的文件位置
+            String xmlPath = "";
+            xmlPath = resourceUtil.getXmlPath(resourceUtil.getunzipPath() + fileXmlPath, xmlPath);
+            //对xml进行解析,遍历xml文件下所有文件
+            if (StringUtil.isNull(xmlPath)) {
+            } else {
+                if (scope) {
+                    directoryService.uploadToPublicPository(user, fileName, name);
                 }
-        }
-        catch (Exception e){
+                File xmlFilePath = new File(xmlPath);
+                String[] subFiles = xmlFilePath.list();
+                directoryService.getXMlJson(subFiles, xmlFilePath, xmlAnalysisMap);
+                //遍历xmlMap进行数据的插入
+                for (Map.Entry<String, JSONObject> entry : xmlAnalysisMap.entrySet()) {
+                    //解析xmlmap 把数据存放到数据
+                    modelService.insertModelicaData(entry, scope, user, directory, directoryId);
+                }
+                //更新模型的层次结构
+                modelService.updateModelFramwork(user, fileName, scope);
+                result = true;
+                System.out.println("上传完毕！！！");
+
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("上传失败！");
         }
 
     }
-
 
 
 }

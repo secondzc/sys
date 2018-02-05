@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/api/modeltype")
-public class ModelTypeController extends  BaseController{
+public class ModelTypeController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -38,33 +38,33 @@ public class ModelTypeController extends  BaseController{
     @Autowired
     private ResourceUtil resourceUtil;
 
-    @RequestMapping(value = "/getModelTypeList",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/getModelTypeList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JSONObject getModelTypeList(HttpServletRequest request , HttpServletResponse response){
+    public JSONObject getModelTypeList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<ModelTypeDto> modelTypeList = new ArrayList<>();
         List<ModelTypeDto> modelTypeDtoList = new ArrayList<>();
         try {
             modelTypeList = modelTypeService.getModelTypeList();
             modelTypeDtoList.addAll(modelTypeList);
-            for (ModelTypeDto modelType :modelTypeDtoList) {
-                modelType.setFilePath( "http://"+resourceUtil.getLocalPath()+ resourceUtil.getMapped()+ resourceUtil.getunzipPath().substring(7) +modelType.getFilePath());
+            for (ModelTypeDto modelType : modelTypeDtoList) {
+                modelType.setFilePath("http://" + resourceUtil.getLocalPath() + resourceUtil.getMapped() + resourceUtil.getunzipPath().substring(7) + modelType.getFilePath());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型类型列表失败");
             return returnErrorInfo(jo);
         }
-        jo.put("modelTypeList",modelTypeList);
-        jo.put("data",modelTypeDtoList);
+        jo.put("modelTypeList", modelTypeList);
+        jo.put("data", modelTypeDtoList);
         return returnSuccessInfo(jo);
     }
 
     @RequestMapping(value = "/addModelType", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject addModelType(@RequestParam(value = "name", required = false) String name,
-                                @RequestBody Map<String,Object> map,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                   @RequestBody Map<String, Object> map,
+                                   HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         String modelName = (String) map.get("name");
         String iconName = (String) map.get("photoName");
@@ -81,29 +81,28 @@ public class ModelTypeController extends  BaseController{
                     break;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("模型类型添加失败");
-            return  returnErrorInfo(jo);
+            return returnErrorInfo(jo);
         }
-        return  returnSuccessInfo(jo);
+        return returnSuccessInfo(jo);
     }
 
     @RequestMapping(value = "/checkName", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject checkName(@RequestParam(value = "modelTypeName", required = false) String modelTypeName,
-                             HttpServletRequest request, HttpServletResponse response) {
+                                HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         List<ModelTypeDto> modelTypeList = new ArrayList<>();
         try {
             modelTypeList = modelTypeService.getModelTypeList();
             for (ModelTypeDto modelTypeDto : modelTypeList) {
-                if(modelTypeDto.getName().equals(modelTypeName)){
-                    return  returnErrorInfo(jo);
+                if (modelTypeDto.getName().equals(modelTypeName)) {
+                    return returnErrorInfo(jo);
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取模型类型列表失败");
             return returnErrorInfo(jo);
@@ -114,8 +113,8 @@ public class ModelTypeController extends  BaseController{
     @RequestMapping(value = "/updateModelType", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject updateModelType(@RequestParam(value = "name", required = false) String name,
-                                   @RequestBody Map<String,Object> map,
-                                   HttpServletRequest request, HttpServletResponse response) {
+                                      @RequestBody Map<String, Object> map,
+                                      HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         String modelName = (String) map.get("name");
         String iconName = (String) map.get("photoName");
@@ -131,27 +130,27 @@ public class ModelTypeController extends  BaseController{
                     break;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("模型类型修改失败");
-            return  returnErrorInfo(jo);
+            return returnErrorInfo(jo);
         }
-        return  returnSuccessInfo(jo);
+        return returnSuccessInfo(jo);
     }
 
     @RequestMapping(value = "/deleted", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public JSONObject deleted(@RequestParam(value = "modelTypeName", required = false) String modelTypeName,
-                                      HttpServletRequest request, HttpServletResponse response) {
+                              HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         try {
             modelTypeService.delete(modelTypeName);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("模型类型添加失败");
-            return  returnErrorInfo(jo);
+            return returnErrorInfo(jo);
         }
-        return  returnSuccessInfo(jo);
+        return returnSuccessInfo(jo);
     }
 
 }
