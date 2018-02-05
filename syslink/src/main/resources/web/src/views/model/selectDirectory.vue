@@ -195,7 +195,7 @@
 //              'class': 'icon',attrs:{'aria-hidden':'true'},domProps:{title:data.name},style:{'vertical-align':'baseline','margin-right':'0.1em'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiaweigongxiang'}})]
 //          ),
 
-          h('span',{'class':'spanEllipsis',style:{'width':(9-level)*18+'px'},domProps:{title:data.name}},[ h('svg', {
+          h('span',{'class':'spanEllipsis',style:{'width':400-level*18+'px'},domProps:{title:data.name}},[ h('svg', {
               'class': 'icon',attrs:{'aria-hidden':'true'},style:{'margin-right':'0.1em'}},[h('use',{attrs:{'xlink:href':'#icon-wenjianjiaweigongxiang'}})]
           ),h('span',data.name)]),
           

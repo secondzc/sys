@@ -169,8 +169,13 @@
         {
           if (re.test(value))
           {
-             
-             let para = {name:''};
+             if(value.length>20)
+             {
+             	 callback(new Error('角色名称不得超过20个字符'));
+             }
+             else
+             {
+             	let para = {name:''};
               para.name=value;
             
               this.$http({
@@ -190,6 +195,8 @@
                 }
                 
               });
+             }
+             
           
 
                
@@ -220,26 +227,45 @@
             }
             else
             {
-               let para = {name:''};
-              para.name=value;
+            	
+            	if(value.length>20)
+            	{
+            		callback(new Error('角色名称不得超过20个字符'));
+            	}
+            	else
+            	{
+            		
+            		
+            		 if(value.trim())
+          		   {
+          				     let para = {name:''};
+                        para.name=value;
             
-              this.$http({
-                url:'/api/role/nameExist',
-                method:'post',
-                data:para
-              })
-               .then((res) => {
-                this.editLoading = false;
-                if(res.data.flag)
-                {
-                  callback(new Error('角色名称重复'));
-                }
-                else
-                {
-                   callback();
-                }
-                
-              });
+                       this.$http({
+                       url:'/api/role/nameExist',
+                       method:'post',
+                       data:para
+                     })
+                    .then((res) => {
+                      this.editLoading = false;
+                      if(res.data.flag)
+                      {
+                          callback(new Error('角色名称重复'));
+                      }
+                       else
+                       {
+                         callback();
+                        }
+                 
+                        });
+          		   }
+          	     	else
+          		    {
+          		      	callback(new Error('不能全为空格'));
+          	     	}
+            		
+            	}
+            
           
             }
              
@@ -460,7 +486,8 @@
       	else
       	{
       		 this.$confirm('确认删除该角色吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           let para = { id: this.currentRow.id};

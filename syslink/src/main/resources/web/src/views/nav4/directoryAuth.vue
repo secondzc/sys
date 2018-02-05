@@ -496,7 +496,8 @@
       handleDel: function (index, row) {
         console.log(index);
         this.$confirm('确认删除该用户吗?', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();
@@ -734,7 +735,8 @@
       
 
         this.$confirm('确认删除选中记录吗？', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();

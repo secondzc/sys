@@ -124,7 +124,8 @@ import SylTitle from '@/assets/systitle.png'
             logout: function () {
                //  var _this = this;
                 this.$confirm('确认退出吗?', '提示', {
-                    //type: 'warning'
+                    type:'warning',
+					          closeOnClickModal:false
                 }).then(() => {
   
 

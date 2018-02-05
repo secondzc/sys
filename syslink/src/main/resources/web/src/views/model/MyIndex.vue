@@ -8,32 +8,46 @@
             <span>#############</span>
         </el-header> -->
         <el-header  class="bottom-header" >
-            <div style="padding: 10px;min-width: 200px;max-height: 50px;">
+        	
+        	
+        	<div style="width: 210px;display: flex;height: inherit;align-items: center;">
+                   
+                         <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>       	
+                        <el-button  size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 10px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+               
+           </div>
 
-                <!--<el-button type="primary" size="small"  style="float: left;">添加分类</el-button>-->
-                <!--<el-button type="primary" size="small"  style="float: left;">上传</el-button>-->
-
-
-
+           <div class="breadCrumb">
+           	<p style="display: none;">{{getRepos}}</p>            
+                 <!--   <span style="min-width: 80px;display: inline-block;"> <b>当前分类:</b></span>-->
+                  <span style="min-width: 80px;display: inline-block;font-weight: bold;"> 当前分类:</span>
+                    <breadcrumb @uplaodTitle="uplaodTitle" style="height: 16px;"></breadcrumb>
+           </div>
                 
-
-
-                      <div style="position: absolute;left: 20px;display: inline-flex;
-                      min-width: 200px;">
-                         <!--<upload-file ></upload-file>-->
-                          <!--<myUpload></myUpload>-->
-                          <!--<el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="isSelectModel">上传文件<i class="el-icon-upload"></i></el-button>-->
-
-                          <!--<el-dialog-->
-                                  <!--title="上传模型文件"-->
-                                  <!--:visible.sync="file.dialogVisible"-->
-                                  <!--width="30%"-->
-                                  <!--&gt;-->
-                              <!--&lt;!&ndash;<span>这是一段信息</span>&ndash;&gt;-->
-                              <!--<myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview"></myUpload>-->
-                          <!--</el-dialog>-->
-                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>
-                          <el-dialog
+                
+           <div style="min-width: 140px;display: flex;height: inherit;align-items: center;">
+           	  <el-button-group  >
+                    <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
+                       <el-button  icon="el-icon-tickets" size="small"  @click="showList"
+                            :class="{buttonFocus:listStatus}"></el-button>
+                     </el-tooltip>
+                     <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
+                       <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
+                            :class="{buttonFocus:!listStatus}"></el-button>
+                     </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
+                        <el-button icon="el-icon-info"    size ="small"
+                           @click="showInfo" :class="{buttonFocus:info}"></el-button>
+                       </el-tooltip>
+              </el-button-group>
+            
+           </div>
+  
+               
+        	
+        	
+            
+             <el-dialog
                                   title="文件列表"
                                   :visible.sync="packageDetailDialog.SearchDialog"
                                   width="80%"
@@ -104,67 +118,6 @@
                           <!--<span>这是一段信息</span>-->
                           <myUpload @refreshMyModel="getModel" style="text-align: center;" @allowToReview="allowToReview" > </myUpload>
                           </el-dialog>
-
-                      </div>
-
-                      <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
-                          <el-button size="small"  type="primary" @click="treeAdd({ id: privateDirId })"  style="margin-left: 30px;">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
-                      </div>
-
-                     
-
-                     
-                   <p style="display: none;">{{getRepos}}</p>
-                    
-                    <div style="position: absolute;left: 270px;display: inline-flex;
-                    min-width: 300px;line-height: 30px">
-                        <span> <b>当前分类:</b></span>
-                          <breadcrumb @uplaodTitle="uplaodTitle"></breadcrumb>
-                    </div>
-                  
-             
-
-
-
-
-                  <div style="position: absolute;right: 50px;">
-                <!--         <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                     <el-button icon="el-icon-delete"    size ="small"
-                           @click="handleDeleted1"  style="margin-right: 10px;"></el-button>
-                       </el-tooltip> -->
-
-                        
-                         <!--<el-button-group  style="margin-right: 5px;">
-                           <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
-                            <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="this.currentRow==null"
-                            ></el-button>
-                          </el-tooltip>
-                          <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                            <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1" :disabled="this.currentRow==null"
-                             ></el-button>
-                          </el-tooltip>
-
-                        </el-button-group>-->
-
-
-                         <el-button-group  >
-                           <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
-                            <el-button  icon="el-icon-tickets" size="small"  @click="showList"
-                            :class="{buttonFocus:listStatus}"></el-button>
-                          </el-tooltip>
-                          <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
-                            <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
-                            :class="{buttonFocus:!listStatus}"></el-button>
-                          </el-tooltip>
-
-                        </el-button-group>
-                 <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
-                <el-button icon="el-icon-info"    size ="small"
-                           @click="showInfo" :class="{buttonFocus:info}"></el-button>
-                       </el-tooltip>
-                  </div>
-         
-            </div>
 
         </el-header>
         <el-container style="border-top:solid 1px #e7e7e7 ;height: 100%;overflow-y: hidden;">
@@ -633,7 +586,14 @@
                     	}
                     	else
                     	{
-                    	    callback();
+                    	   if(value.trim())
+                    		 {
+                    		      callback();
+                    		 }
+                    		 else
+                    		 {
+                    		      callback(new Error('不能全为空格'));
+                    		 }
                     	}
                      
                     }
@@ -1505,8 +1465,8 @@
         border-top: solid 1px #e7e7e7;
     }
     .bottom-header{
-        max-height:  50px;
-       /* border-top: solid 1px #cfdbe5;*/
+         height:  50px!important;
+        display: flex;
     }
     .main-footer{
         max-height: 30px;
@@ -1690,6 +1650,19 @@
     	text-overflow: ellipsis;
     	width: 250px;
     }
+    
+     .breadCrumb
+    {
+    	width: -webkit-calc(100%-380px)!important;
+    	width: -moz-calc(100% - 380px)!important;
+    	width: calc(100% - 380px)!important;
+    	display: flex;height: inherit;
+    	align-items: center;
+    	margin-left: 30px;
+        min-width: 750px;
+    	
+    }
+
 
 
 

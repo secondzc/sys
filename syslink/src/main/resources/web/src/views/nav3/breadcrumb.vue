@@ -1,16 +1,17 @@
 <template>
-    <section >
-        <p>{{getTreeItem}}</p>
-    <div >
+    <section style="height: inherit;display: flex;align-items: center;">
+        <p style="display: none;">{{getTreeItem}}</p>
+   <!-- <div >-->
        <!--  <el-col :span="24" class="breadcrumb-container"> -->
-        <el-breadcrumb separator="/" style="line-height: 30px;margin-left: 10px;">
-        <el-breadcrumb-item v-for="item in treeItem" :key="item.index" >
-            <span >  {{ item.name }}</span>
-      
+       <!--	<span style="font-weight: bold;">当前分类:</span>-->
+        <el-breadcrumb separator="/" >
+        <el-breadcrumb-item v-for="item in treeItem" :key="item.index" :title='item.name' >
+           <span style="display:inline-block;height:inherit;max-width: 100px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">  {{ item.name }}</span>
+         
         </el-breadcrumb-item>
         </el-breadcrumb>
     <!--     </el-col> -->
-    </div>
+  <!--  </div>-->
     </section>
 </template>
 <script>
@@ -49,4 +50,14 @@
     }
 
 </script>
+
+<style scoped>
+	.el-breadcrumb
+	{
+	/*	line-height: 20px;*/
+
+	/*display: flex;
+	align-items: center;*/
+	}
+</style>
 

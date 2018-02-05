@@ -9,29 +9,53 @@
             <span>#############</span>
         </el-header> -->
         <el-header  class="bottom-header" >
-            <div style="padding: 10px;min-width: 200px;max-height: 50px;">
+        	
+        	
+        	<div style="width: 210px;display: flex;height: inherit;align-items: center;">
+                   
+                         <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>       	
+                        <el-button  size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 10px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+               
+           </div>
 
-                <!--<el-button type="primary" size="small"  style="float: left;">添加分类</el-button>-->
-                <!--<el-button type="primary" size="small"  style="float: left;">上传</el-button>-->
-
-
-
-
-
-
-                      <div style="position: absolute;left: 20px;display: inline-flex;
-                      min-width: 200px;">
-                         <!--<upload-file ></upload-file>-->
-
-                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>
-                          <el-dialog
+           <div class="breadCrumb">
+           	<p style="display: none;">{{getRepos}}</p>            
+                 <!--   <span style="min-width: 80px;display: inline-block;"> <b>当前分类:</b></span>-->
+                  <span style="min-width: 80px;display: inline-block;font-weight: bold;"> 当前分类:</span>
+                    <breadcrumb @uplaodTitle="uplaodTitle" style="height: 16px;"></breadcrumb>
+           </div>
+                
+                
+           <div style="min-width: 140px;display: flex;height: inherit;align-items: center;">
+           	  <el-button-group  >
+                   <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
+                    <el-button  icon="el-icon-tickets" size="small"  @click="showList"
+                    :class="{buttonFocus:listStatus}"></el-button>
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
+                    <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
+                    :class="{buttonFocus:!listStatus}" ></el-button>
+                  </el-tooltip>
+                     <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
+                  <el-button icon="el-icon-info"  style="margin-left: 10px;"  size ="small"
+                  @click="showInfo" :class="{buttonFocus:info}"></el-button>
+                  </el-tooltip>
+                </el-button-group>
+            
+           </div>
+  
+               
+        	
+        	
+        	
+          
+                        <el-dialog
                                   title="文件列表"
                                   :visible.sync="packageDetailDialog.SearchDialog"
                                   width="80%"
                                   center
                                   ref="singleDialog"
                                   @DomReady = "DomReady()"
-                                  :close-on-click-modal="false"
                           >
                               <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
                               </el-dialog>
@@ -48,8 +72,7 @@
                                           title="是否覆盖之前的模型"
                                           :visible.sync="file.innerVisible"
                                           append-to-body
-                                          center
-                                          :close-on-click-modal="false" >
+                                          center>
                                       <div slot="footer" class="dialog-footer">
                                           <el-button @click.native="file.innerVisible= !file.innerVisible">取消</el-button>
                                           <el-button type="primary" @click.native="cover" >覆盖</el-button>
@@ -66,7 +89,6 @@
                                     ref="DetailDialog"
                                   @DetailReady="DetailReady"
                                   @PackageDetailReady="PackageDetailReady"
-                                  :close-on-click-modal="false"
                           >
                             <packageDetail ref="packageDetail"></packageDetail>
                           </el-dialog>
@@ -77,7 +99,6 @@
                                   :visible.sync="move.dialogVisible"
                                   width="40%"
                                   center
-                                  :close-on-click-modal="false"
                           >
                               <selectDirectory :data="tree" style="min-height: 100px;"  @selectNode="getSelectedNode" ></selectDirectory>
                               <div slot="footer" class="dialog-footer">
@@ -90,9 +111,9 @@
                                   :visible.sync="file.modelDialog"
                                   v-if="file.modelDialog"
                                   width="30%"
-                                  :close-on-click-modal="false"
+                                 
                                   >
-                              <!--<span>这是一段信息</span>-->
+                         
                               <upload-file  style="text-align: center;"
                               @uploadFileSuccess="uploadFileSuccess"
                                ></upload-file>
@@ -108,58 +129,11 @@
 
 
 
-                      </div>
-
-                      <div style="position: absolute;left: 100px;display: inline-flex;min-width: 200px;">
-                          <el-button size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 30px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
-                      </div>
 
 
 
 
-                <p style="display: none;">{{getRepos}}</p>
-
-                    <div style="position: absolute;left: 270px;display: inline-flex;
-                    min-width: 300px;line-height: 30px">
-                        <span> <b>当前分类:</b></span>
-                          <breadcrumb @uplaodTitle="uplaodTitle"></breadcrumb>
-                    </div>
-
-
-
-
-
-
-                  <div style="position: absolute;right: 50px;">
-                    <!--<el-button-group  style="margin-right: 5px;">
-                     <el-tooltip class="item" effect="dark" content="移动" placement="bottom">
-                      <el-button  icon="el-icon-rank" size="small"  @click="moveModel1" :disabled="!moveCheck"
-                      ></el-button>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-                      <el-button  icon="el-icon-delete"  size="small" @click="handleDeleted1" :disabled="!deleteCheck"
-                      ></el-button>
-                    </el-tooltip>
-
-                  </el-button-group>-->
-                  <el-button-group  >
-                   <el-tooltip class="item" effect="dark" content="列表视图" placement="bottom">
-                    <el-button  icon="el-icon-tickets" size="small"  @click="showList"
-                    :class="{buttonFocus:listStatus}"></el-button>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="卡片视图" placement="bottom">
-                    <el-button  icon="el-icon-menu"  size="small" @click="listStatus=false"
-                    :class="{buttonFocus:!listStatus}" ></el-button>
-                  </el-tooltip>
-
-                </el-button-group>
-                <el-tooltip class="item" effect="dark" content="详细信息" placement="bottom">
-                  <el-button icon="el-icon-info"    size ="small"
-                  @click="showInfo" :class="{buttonFocus:info}"></el-button>
-                </el-tooltip>
-                  </div>
-
-            </div>
+                
 
         </el-header>
         <el-container style="border-top:solid 1px #e7e7e7 ;height: 100%;overflow-y: hidden;">
@@ -611,7 +585,14 @@
                     	}
                     	else
                     	{
-                    	    callback();
+                    	    if(value.trim())
+                    		 {
+                    		     callback();
+                    		 }
+                    		 else
+                    		 {
+                    		     callback(new Error('不能全为空格'));
+                    		 }
                     	}
                      
                     }
@@ -1550,7 +1531,8 @@
         border-top: solid 1px #e7e7e7;
     }
     .bottom-header{
-        max-height:  50px;
+       height:  50px!important;
+        display: flex;
         /*border-top: solid 1px #cfdbe5;*/
     }
     .main-footer{
@@ -1738,6 +1720,16 @@
     	overflow: hidden;
     	text-overflow: ellipsis;
     	width: 250px;
+    }
+    .breadCrumb
+    {
+    	width: -webkit-calc(100%-380px)!important;
+    	width: -moz-calc(100% - 380px)!important;
+    	width: calc(100% - 380px)!important;
+    	display: flex;height: inherit;
+    	align-items: center;
+    	margin-left: 30px;
+    	min-width: 750px;
     }
 
 

@@ -218,7 +218,8 @@
         var ids = this.sels.map(item => item.id);
 
         this.$confirm('确认删除选中记录吗？', '提示', {
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal:false
         }).then(() => {
           this.listLoading = true;
           //NProgress.start();

@@ -44,17 +44,22 @@
   </el-menu>
 
 
-   <span style="margin-right: 10px;font-family: Microsoft Yahei;line-height: 50px;width: 200px;"  :title="this.$store.state.userInfo.profile.name" class="spanEllipsis">
+  
+  <div style="width: 150px;display: flex;align-items: center;">
+  		<span style="margin-right: 10px;font-family: Microsoft Yahei;width: 100px;" :title="this.$store.state.userInfo.profile.name" class="spanEllipsis">
      {{this.$store.state.userInfo.profile.name}} 
-   </span>
-  <el-dropdown style="min-width: 50px;" trigger="click" >
+      </span>
+  	  <el-dropdown style="min-width: 50px;height: 50px;" trigger="click">
    
-   <div style="display: flex;" class="icon-focus hoverCursor">
-    <i class="iconfont icon-gerenxinxi" style="font-size: 32px;line-height: 50px;"></i>
-   <i class="iconfont icon-xiala" style="font-size: 16px;line-height: 50px;"></i>
+   
+     <div style="display: flex;align-items: center;height: inherit;width: 50px;" >
+     
+     <div class="icon-focus" style="display: flex;align-items: center;">
+     	 <i class="iconfont icon-gerenxinxi" style="font-size: 32px;"></i>
+       <i class="iconfont icon-xiala" style="font-size: 16px;"></i>
+     </div>
+   
    </div>
-   
- 
   
   <el-dropdown-menu slot="dropdown">
      <!--  <div style="text-align: center;border-bottom: solid 1px #e6ebf5;height: 30px;line-height: 30px;font-weight: 700;font-size: 12px;">
@@ -64,7 +69,7 @@
      <el-dropdown-item divided @click.native="logout"><i class="iconfont icon-dengluzhuangtaituichu" style="font-size: 20px;"></i> 退出</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
-
+  </div>
 
 
 
@@ -180,7 +185,8 @@ import SylTitle from '@/assets/systitle.png'
             logout: function () {
                //  var _this = this;
                 this.$confirm('确认退出吗?', '提示', {
-                    //type: 'warning'
+                   type:'warning',
+					         closeOnClickModal:false
                 }).then(() => {
   
 

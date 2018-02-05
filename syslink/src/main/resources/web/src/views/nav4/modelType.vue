@@ -188,7 +188,14 @@
                 	  }
                 	  else
                 	  {
-                	     callback();
+                	    if(value.trim())
+          	         	{
+          				      callback();
+          		        }
+          	        	else
+          		        {
+          			        callback(new Error('不能全为空格'));
+          	         	}
                 	  }
                 }
                 else
@@ -249,7 +256,8 @@
         handleDel(val){
             console.log(val);
             this.$confirm('确认删除该模型类型吗?', '提示', {
-                type: 'warning'
+                type: 'warning',
+                closeOnClickModal:false
             }).then(() => {
                 var _this = this;
                 var url = '/api/modeltype/deleted?modelTypeName=' + val.name;
