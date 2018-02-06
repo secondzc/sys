@@ -1,7 +1,9 @@
 <template>
     <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader"
-              @file-complete="fileComplete" @complete="complete"  @file-added="fileAdded" @upload-start="startUpload"></uploader>
-    <!--@files-submitted="filesAdd"-->
+              @file-complete="fileComplete" @complete="complete"  @file-added="fileAdded" @upload-start="startUpload"
+              @files-added="filesAdd"
+              ></uploader>
+
 
 </template>
 
@@ -72,15 +74,34 @@
                     }
                 }
             },
+            filesAdd(fileList, newFileList, evt){
+                if (newFileList.length > 0) {
+                    if (newFileList[0].isFolder) {
+                        for (var n in fileList) {
+                            if (fileList[n].size > 400 * 1024 * 1024) {
+                                fileList[n].ignored = true;
+                                this.$message({
+                                    message: '存在单文件400M以上文件,从文件列表中已删除，请重新选择文件！',
+                                    type: 'error',
+                                    duration: 2000
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+            },
             fileAdded(file){
                 console.log("11111");
-                if (file.size > 400*1024*1024) {
-                    this.$message({
-                        message: '存在单文件400M以上文件,从文件列表中已删除，请重新选择文件！',
-                        type: 'error',
-                        duration: 2000
-                    });
-                    file.ignored = true;
+                if (file.relativePath.split('/').length === 1) {
+                    if (file.size > 400 * 1024 * 1024) {
+                        this.$message({
+                            message: '存在单文件400M以上文件,从文件列表中已删除，请重新选择文件！',
+                            type: 'error',
+                            duration: 2000
+                        });
+                        file.ignored = true;
+                    }
                 }
                 //对模型根目录验证，相同根目录无法提交到文件列表
                 var m ;
