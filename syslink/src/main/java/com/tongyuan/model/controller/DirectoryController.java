@@ -357,6 +357,9 @@ public class DirectoryController extends BaseController {
         JSONObject jo = new JSONObject();
         List<JSONObject> directoryModelList = new ArrayList<>();
         try {
+            if(parent_id == null){
+                parent_id = (long)0;
+            }
             directoryService.getDirExpChild(directoryModelList, parent_id
                     , scope, userName);
         } catch (Exception e) {
@@ -862,7 +865,7 @@ public class DirectoryController extends BaseController {
         try {
             if (dirParentId == privateDir.getId()) {
                 for (Directory levelDir : allDirectory) {
-                    if (levelDir.getParentId() == dirParentId && userName.equals(levelDir.getUserName())) {
+                    if (levelDir.getParentId() == dirParentId ) {
                         levelDirList.add(levelDir);
                     }
                 }
