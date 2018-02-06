@@ -646,7 +646,7 @@
                 },],
                 tree: {
                     url: {
-                        C: '/api/directory/add',
+                        C: '/api/directory/add?scope='+ true +'&',
                         U: '/api/directory/update',
                         R: 'api/directory/list',
                         D: '/api/directory/delete'
@@ -1136,7 +1136,7 @@
       submitForm () {
         this.$refs.dialogForm.validate((valid) => {
           if (valid) { // 验证通过
-              var checkDirNameUrl = '/api/directory/checkRootDir?dirParentId='+ this.$refs.dialogForm.model.parent_id +'&dirName='+ this.$refs.dialogForm.model.name
+              var checkDirNameUrl = '/api/directory/checkDirName?dirParentId='+ this.$refs.dialogForm.model.parent_id +'&dirName='+ this.$refs.dialogForm.model.name
                   +'&userName='+ this.$store.state.userInfo.profile.name
               var _this = this;
               _this.$http.post(checkDirNameUrl)
@@ -1166,7 +1166,7 @@
         })
       },
             fetchAddTreeNode () {
-                const url = 'api/directory/add?userName=' + this.name +'&';
+                const url = 'api/directory/add?userName=' + this.name +"&scope=" + true +"&";
                 this.dialog.submiting = true
                 var _this = this;
                 this.fetch(url, this.dialog.form, 'post')

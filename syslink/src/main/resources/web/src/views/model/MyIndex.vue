@@ -13,7 +13,7 @@
         	<div style="width: 210px;display: flex;height: inherit;align-items: center;">
                    
                          <el-button slot="trigger" size="small" type="primary" style="font-size: 12px;" @click="uploadFile()">上传文件<i class="el-icon-upload"></i></el-button>       	
-                        <el-button  size="small"  type="primary" @click="treeAdd({ id: publicDirId })"  style="margin-left: 10px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
+                        <el-button  size="small"  type="primary" @click="treeAdd({ id: privateDirId })"  style="margin-left: 10px;" :disabled="!func.authJudge('management_model_directory')">增加分类 <i class="el-icon-plus el-icon--right"></i></el-button>
                
            </div>
 
@@ -646,7 +646,7 @@
                         },],
                         tree: {
                             url: {
-                                C: '/api/directory/add?userName='+ this.$store.state.userInfo.profile.name +"&",
+                                C: '/api/directory/add?userName='+ this.$store.state.userInfo.profile.name +"&scope=" + false +"&",
                                 U: '/api/directory/update',
                                 R: 'api/directory/list?scope='+false +"&userName="+ this.$store.state.userInfo.profile.name +"&",
                                 D: '/api/directory/delete'
@@ -1142,7 +1142,7 @@
         })
       },
       fetchAddTreeNode () {
-        const url = 'api/directory/add?userName=' + this.name +'&';
+        const url = 'api/directory/add?userName=' + this.name +"&scope=" + false +"&";
         this.dialog.submiting = true
           var _this = this;
         this.fetch(url, this.dialog.form, 'post')
