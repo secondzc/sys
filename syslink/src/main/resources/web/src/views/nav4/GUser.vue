@@ -31,11 +31,11 @@
       <hr/>
      
 
-  <div  style="display: flex;height: inherit;">
+  <div  style="display: flex;height: inherit;" class="tableWrapper">
      <el-tree :data="data4" :props="defaultProps1"  :default-expand-all=true  :render-content="nodeRender1"   :expand-on-click-node=false  @node-click="getUsers" ref="tree2" style="width: 200px;height:100%;overflow-y:auto"></el-tree>
      
       <!--列表-->
-    <el-table :data="users" highlight-current-row  center    height="100%" @selection-change="selsChange" class="tableWrapper" ref="userTable">
+    <el-table :data="users" highlight-current-row  center    height="100%" @selection-change="selsChange"  ref="userTable">
       <el-table-column type="selection" width="55">
       </el-table-column>
           
@@ -371,7 +371,7 @@
     >
 
 
-     <el-transfer :data="roles"  v-model="userRole.assigned"
+     <el-transfer :data="roles"  v-model="userRole.assigned" :render-content="transferRender"
       :button-texts="['移除', '分配']" :titles="['未分配', '已分配']"
      ></el-transfer>
      <div slot="footer" class="dialog-footer">
@@ -408,7 +408,7 @@
 
     <el-dialog title="目录控制" center :visible.sync="modelVisible" v-if="modelVisible"  style="min-width:1200px ;"  >
 
- <!--    <div slot="title">    -->
+
     <el-form :model="directory" label-width="100px"  ref="directoryForm"   >
 
     <el-tree :data="data3" node-key="id"  
@@ -418,7 +418,7 @@
     </el-tree>
 
     </el-form>
-    <!-- </div> -->
+
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="modelVisible=false">取消</el-button>
         <el-button type="primary" @click.native="modelAuthSubmit" :loading="modelLoading">提交</el-button>
@@ -643,8 +643,8 @@
        
        
        var validatePass = (rule, value, callback) => {
-        if (!value) {
-
+       	 console.log(1111,this.addForm.checkPass);
+        if (!value&&this.addForm.checkPass == '') {
           callback();
         } 
         else {
@@ -656,7 +656,7 @@
           {
             if (this.addForm.checkPass !== '') {
             this.$refs.addForm.validateField('checkPass');
-          }
+             }
           callback();
           }
           
@@ -868,6 +868,15 @@
       }
     },
     methods: {
+    	
+    	
+    	transferRender(h,option)
+    	{
+    		
+    		return (
+    			<span class="spanEllipsis" title={option.label}>{option.label}</span>
+    		);
+    	},
     	    nodeRender1(h, { node, data, store }) {
              if(!data.parentId==0)
             {
@@ -1598,9 +1607,9 @@
   }
   .tableWrapper{
     width: 100%;
-/*     height: calc(100%-100px)!important;
+     height: calc(100%-200px)!important;
      height: -moz-calc(100% - 100px)!important;
-    height :-webkit-calc(100% - 100px)!important; */
+    height :-webkit-calc(100% - 100px)!important; 
 
 
    }

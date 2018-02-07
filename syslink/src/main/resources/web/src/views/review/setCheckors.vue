@@ -37,7 +37,7 @@
 
 		<!--新增界面-->
 		<el-dialog title="配置人员" :visible.sync="addItemsDialogVisible" v-model="addItemsDialogVisible" :close-on-click-modal="false">
-			<el-form :model="addItemsDialog" label-width="80px" >
+			<el-form :model="addItemsDialog" label-width="80px" :rules="addFormRules" ref="addForm">
 				<el-form-item label="节点名" prop="reviewNodeName">
 					<el-input v-model="addItemsDialog.reviewNodeName" ></el-input>
 				</el-form-item>
@@ -59,7 +59,7 @@
 
 		<!--修改界面-->
 		<el-dialog title="配置人员" :visible.sync="editItemsDialogVisible" v-model="editItemsDialogVisible" :close-on-click-modal="false">
-			<el-form :model="editItemsDialog" label-width="80px" >
+			<el-form :model="editItemsDialog" label-width="80px" :rules="editFormRules">
 				<el-form-item label="节点名" prop="reviewNodeName">
 					<el-input v-model="editItemsDialog.reviewNodeName" ></el-input>
 				</el-form-item>
@@ -96,6 +96,44 @@
 			userTree
 		},
 		data(){
+				var validateName = (rule, value, callback) => {
+        let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入节点名'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+          	
+          	if(value.length>20)
+          	{
+          		 callback(new Error('节点名不得超过20个字符'));
+          	}
+          	else
+          	{
+          		
+          		if(value.trim())
+          		{
+         
+                   callback();
+             
+          		}
+          		else
+          		{
+          			callback(new Error('不能全为空格'));
+          		}         	  
+          	}                 
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、英文、数字、下划线及空格'));
+          }
+        }
+      };
 			return {
 			  tempateId: 0,
 			  //items的形式为 "{reviewNodeName: ,description: ,userName: },{}" 		  
@@ -125,6 +163,18 @@
 			  submitAllLoading: false,
 			  nodesLoading: false,
 			  userNamesLoading: false,
+			  addFormRules: {
+                reviewNodeName:[
+                 { required:true,validator:validateName,trigger:'blur'}
+                ],
+            
+                  },
+             editFormRules: {
+                reviewNodeName:[
+                 { required:true,validator:validateName,trigger:'blur'}
+                ],
+            
+                  },
 			}
 		},
 		created(){
@@ -150,6 +200,8 @@
 				})
 			},
 			submitOne(){
+				this.$refs.addForm.validate((valid) => {
+              if (valid) {
 				let str=",";
 				let index1=this.addItemsDialog.reviewNodeName.indexOf(str);
 				let index2=str.indexOf(this.addItemsDialog.description);
@@ -175,6 +227,8 @@
 					this.addItemsDialogVisible = false;		
 				}
 			    }
+				}
+             });
 			},
 			submitAll(){
 				if(this.items.length===0){
@@ -240,6 +294,8 @@
 			},
 			//修改时将scope取得的index记录于sequence中，提交修改时删除原来的，并加上新的
 			submitEdit() {
+				this.$refs.editForm.validate((valid) => {
+              if (valid) {
 				if(this.func.isNull(this.editItemsDialog.reviewNodeName)){
 					this.editItemsDialog.reviewNodeName = '节点'+(this.sequence+1);
 				}
@@ -248,6 +304,8 @@
 				}
 				this.items.splice(this.sequence,1,this.editItemsDialog);
 				this.editItemsDialogVisible = false;
+				}
+             });
 			},
 			chooseName() {
 				this.chooseNameVisible = true;

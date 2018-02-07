@@ -22,7 +22,7 @@
     </el-form-item>
     <div style="display:flex;">
 
-    <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember" style="margin-right: 180px;">记住密码</el-checkbox>
+    <el-checkbox v-model="ruleForm2.rememberMe" checked class="remember" style="margin-right: 180px;">记住我</el-checkbox>
       <!-- <div @click="toIndex">
         <span>首页</span>
       </div> -->

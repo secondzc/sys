@@ -60,8 +60,8 @@
 
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible"  :visible.sync="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addTemplate" label-width="120px" >
-				<el-form-item label="模板名" prop="templateName" :rules="[{required:true,message:'请输入模板名',trigger:'blur'}]">
+			<el-form :model="addTemplate" label-width="120px" :rules="addFormRules" ref="addForm">
+				<el-form-item label="模板名" prop="templateName" >
 					<el-input v-model="addTemplate.templateName"></el-input>
 				</el-form-item>
 				<el-form-item label="模板描述" prop="description">
@@ -86,6 +86,45 @@
 <script>
 	export default{
 		data() {
+			
+		var validateName = (rule, value, callback) => {
+        let re = new RegExp("^[ a-zA-Z0-9_\u4e00-\u9fa5]+$");
+        console.log(value);
+
+        if(!value)
+        {
+            callback(new Error('请输入模板名'));
+        }
+        else
+        {
+          if (re.test(value))
+          {
+          	
+          	if(value.length>20)
+          	{
+          		 callback(new Error('模板名不得超过20个字符'));
+          	}
+          	else
+          	{
+          		
+          		if(value.trim())
+          		{
+         
+                   callback();
+             
+          		}
+          		else
+          		{
+          			callback(new Error('不能全为空格'));
+          		}         	  
+          	}                 
+          } 
+          else
+          {
+              callback(new Error('只允许输入中文、英文、数字、下划线及空格'));
+          }
+        }
+      };
 			return{
 				path:'/views/review/template',
 				/*	pageSize 实际的每页显示数
@@ -111,6 +150,17 @@
 				},
 				sels: [],
 				addLoading: false,
+				addFormRules: {
+                templateName:[
+                 { required:true,validator:validateName,trigger:'blur'}
+                ],
+            
+                  },
+				
+				
+				
+				
+				
 				
 			}
 		},
@@ -192,16 +242,16 @@
 				this.getTemplates(false);
 			},
 			addSubmit: function(){
-				let param = Object.assign({},this.addTemplate);
-				if(this.func.isNull(param.templateName)){
-					this.$message({
-						message:'模板名不能为空',
-					})
-				}else if(this.isRepeatedTemplate(param)){
+				
+				this.$refs.addForm.validate((valid) => {
+				if(value)
+					{
+						let param = Object.assign({},this.addTemplate);
+			       if(this.isRepeatedTemplate(param)){
 					this.$message({
 						message:'模板名不能重复',
 					})
-				}else{
+				  }else{
 					this.addLoading = true;
 			        let url = '/api/reviewFlowTemplate/addReviewFlowTemplate';
 			        param.assure = "no";
@@ -248,7 +298,10 @@
 
 			        	}
 			        })
-				}	
+				}
+					}
+				
+				   });
 			},
 			isRepeatedTemplate(param){
 				var flag=false;

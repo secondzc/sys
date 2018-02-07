@@ -127,9 +127,9 @@
 
 
 
-    <el-dialog title="目录控制" :visible.sync="modelVisible" v-if="modelVisible"   >
+    <el-dialog title="目录控制" :visible.sync="modelVisible" v-if="modelVisible" style="min-width:1200px;"  >
 
- <!--    <div slot="title">    -->
+
     <el-form :model="directory" label-width="100px"  ref="directoryForm"    >
 
     <el-tree :data="data3" node-key="id"  
@@ -139,7 +139,7 @@
     </el-tree>
 
     </el-form>
-    <!-- </div> -->
+
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="modelVisible=false">取消</el-button>
         <el-button type="primary" @click.native="modelAuthSubmit" :loading="modelLoading">提交</el-button>
@@ -369,15 +369,28 @@
 
 
         nodeRender(h, { node, data, store }) {
-             if(data.parentId!=0)
+         	let level;
+           	if(node.level<=10)
+           	{
+           		level = node.level;
+           	}
+           	else
+           	{
+           		level = 10;
+           	}
+           	let minWidth = level*18;
+           	
+             if(!data.parentId==0)
             {
                 return (
-          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-            <span>
-            <i class ="iconfont icon-wenjianjia" />
-              <span>{node.label}</span>
+          <span     style="width:100%;font-size: 14px; ">
+            <span style={{ maxWidth:200-minWidth+'px',minWidth:'100px'}} class="spanEllipsis" title={node.label}>
+              <svg class="icon" aria-hidden="true" >
+              <use xlinkHref="#icon-wenjianjiayigongxiang"></use>
+           </svg>
+              {node.label}
             </span>
-            <span>
+            <span style="margin-right:10px;min-width:250px;position:absolute;right:5%">
             <el-radio-group v-model={data.mode}>
             <el-radio  label={1}>可读</el-radio>
             <el-radio label={2}>读/写</el-radio>
@@ -393,7 +406,9 @@
                    return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-            <i class ="iconfont icon-wenjianjia" />
+              <svg class="icon" aria-hidden="true" >
+       <use xlinkHref="#icon-wenjianjiayigongxiang"></use>
+      </svg>
               <span>{node.label}</span>
             </span>
           
@@ -404,6 +419,9 @@
 
       
       },
+      
+            
+         
        modeClear(data)
       {
           data.mode=0;

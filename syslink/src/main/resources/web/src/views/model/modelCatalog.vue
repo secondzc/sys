@@ -138,7 +138,7 @@
                 );
                 }else{
                     return (
-                        <span title={node.label}>
+                        <span title={node.label} style={{width:298-18*level+'px'}}  class="spanEllipsis">
                       
                        {node.label}
                     

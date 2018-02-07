@@ -60,7 +60,7 @@
                               <searchFileList ref="getSearchList" @showModel="showModel" ></searchFileList>
                               </el-dialog>
                               <el-dialog
-                                  :title="uploadFileTitle"
+                            
                                   :visible.sync="file.dialogVisible"
                                   v-if="file.dialogVisible"
                                   width="80%"
@@ -79,7 +79,10 @@
                                       </div>
                                   </el-dialog>
                                   <upload ref="uploadModel" @closeDialog="closeDialog" @returnToModel="returnToModel" @openInnerVisible="openInnerVisible"></upload>
-
+                                  <div slot="title" class="dialog-title" style="width: 80%;overflow: hidden;text-overflow: ellipsis;
+                                     	white-space: nowrap;text-align: center;font-weight: bold;font-size: 14px;"  :title="uploadFileTitle">
+                                     {{uploadFileTitle}}
+                                    </div>
                           </el-dialog>
                           <el-dialog
                                   title="模型详细信息"
