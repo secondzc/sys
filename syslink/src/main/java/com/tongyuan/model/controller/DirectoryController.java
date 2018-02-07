@@ -295,6 +295,7 @@ public class DirectoryController extends BaseController {
     @ResponseBody
     public JSONObject update(@RequestParam(value = "id", required = false) Long id,
                              @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "scope", required = false) Boolean scope,
                              HttpServletRequest request, HttpServletResponse response) {
 
         JSONObject jo = new JSONObject();
@@ -303,6 +304,7 @@ public class DirectoryController extends BaseController {
             List<Directory> rootDirectoryList = directoryService.queryListById(id);
             if (rootDirectoryList.size() > 0) {
                 Directory directory = rootDirectoryList.get(0);
+                String beforeUpdateName = directory.getName();
                 directory.setName(name);
                 boolean res = directoryService.update(directory);
                 DirectoryModel directoryModel = new DirectoryModel();
@@ -310,7 +312,14 @@ public class DirectoryController extends BaseController {
                 directoryModel.setId(id);
                 directoryModel.setParentId(directory.getParentId() + "");
                 jsonObject = (JSONObject) JSONObject.toJSON(directoryModel);
+                if(scope)
+                {
+                    String title = "目录";
+                    String content ="用户\t"+getUserName()+"\t把目录"+ beforeUpdateName +"修改为\t"+directory.getName();
+                    logService.addLog(title,content);
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("修改目录失败!");
@@ -326,12 +335,19 @@ public class DirectoryController extends BaseController {
     public JSONObject delete(@RequestParam(value = "id", required = false) Long id,
                              @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "parent_id", required = false) Long parent_id,
+                             @RequestParam(value = "scope", required = false) Boolean scope,
                              HttpServletRequest request, HttpServletResponse response) {
         JSONObject jo = new JSONObject();
         try {
             List<Directory> rootDirectoryList = directoryService.queryListById(id);
             rootDirectoryList.get(0).setDeleted(true);
             boolean res = directoryService.update(rootDirectoryList.get(0));
+            if(scope)
+            {
+                String title = "目录";
+                String content ="用户\t"+getUserName()+"\t删除目录\t"+rootDirectoryList.get(0).getName();
+                logService.addLog(title,content);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
